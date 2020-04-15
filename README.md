@@ -5,6 +5,22 @@ Flow data from shear layer experiments and simulations presented in an open,
 modern, and unified format.
 
 
+Planned goals and features
+--------------------------
+
+- Single SQLite database as primary output file.
+
+- Python module to load and use SQLite database.
+
+- CSV files as input files and output files.
+
+- Uncertainty quantification and data validation for as many cases as possible.
+
+- Emphasis on archival quality and long-term access.
+
+    - <https://www.loc.gov/preservation/resources/rfs/>
+
+
 Tabulated data compilations being considered
 --------------------------------------------
 
@@ -18,8 +34,8 @@ Tabulated data compilations being considered
 
     - <https://ntrs.nasa.gov/search.jsp?R=19730018486>
 
-- Fernholz, H. H. and Finley, P. J. 1977.  *A Critical Compilation of Compressible Turbulent
-  Boundary Layer Data*.  AGARD-AG-223.
+- Fernholz, H. H. and Finley, P. J. 1977.  *A Critical Compilation of
+  Compressible Turbulent Boundary Layer Data*.  AGARD-AG-223.
 
     - <https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA045367.xhtml>
 
