@@ -29,6 +29,10 @@ Tabulated data compilations being considered
 
     - <https://www.worldcat.org/title/computation-of-turbulent-boundary-layers-1968-afosr-ifp-stanford-conference-proceedings/oclc/561999041>
 
+    - <https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/AD696082.xhtml>
+
+    - <https://apps.dtic.mil/sti/citations/AD0696082>
+
 - Birch, S. F. and Eggers, J. M. 1973.  *Free Turbulent Shear Flows*, Volume 2,
   "Summary of Data".  NASA-SP-321.
 
@@ -39,7 +43,7 @@ Tabulated data compilations being considered
 
     - <https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA045367.xhtml>
 
-    - <https://apps.dtic.mil/docs/citations/ADA045367>
+    - <https://apps.dtic.mil/sti/citations/ADA045367>
 
 - Fernholz, H. H. and Finley, P. J. 1980.  *A Critical Commentary on Mean Flow
   Data for Two-Dimensional Compressible Turbulent Boundary Layers*.
@@ -47,7 +51,7 @@ Tabulated data compilations being considered
 
     - <https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA087704.xhtml>
 
-    - <https://apps.dtic.mil/docs/citations/ADA087704>
+    - <https://apps.dtic.mil/sti/citations/ADA087704>
 
 - Fernholz, H. H. and Finley, P. J. and Mikulla, V. 1981.  *A Further
   Compilation of Compressible Boundary Layer Data with a Survey of Turbulence
@@ -55,7 +59,7 @@ Tabulated data compilations being considered
 
     - <https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA111638.xhtml>
 
-    - <https://apps.dtic.mil/docs/citations/ADA111638>
+    - <https://apps.dtic.mil/sti/citations/ADA111638>
 
 - Fernholz, H. H. and Finley, P. J. and Dussauge, J. P. and Smits, A. J. 1989.
   *Survey of Measurements and Measuring Techniques in Rapidly Distorted
@@ -63,7 +67,7 @@ Tabulated data compilations being considered
 
     - <https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA211107.xhtml>
 
-    - <https://apps.dtic.mil/docs/citations/ADA211107>
+    - <https://apps.dtic.mil/sti/citations/ADA211107>
 
 
 -------------------------------------------------------------------------------
