@@ -87,7 +87,7 @@ Codes reserved for future discussion:
 
 - `C` = cavity flows
 
-- `O` = waves (from "onde")
+- `L` = waves (from lambda for wavelength)
 
 - `P` = plumes
 
@@ -97,7 +97,7 @@ Codes reserved for future discussion:
 
 - `X` = shock waves (from "explosion")
 
-- Unused: `L`, `Q`, `Y`, `Z`
+- Unused: `O`, `Q`, `Y`, `Z`
 
 
 Principles of this taxonomy
