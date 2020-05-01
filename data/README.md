@@ -2,14 +2,63 @@ Data files for the shear layer data compilation
 ===============================================
 
 
-## Structure and format of the CSV files
+## Directory structure
 
-- All CSV files MUST contain only data.  Any documentation or commentary on the
-  data MUST be in separate files.
+The data directory has a flat directory structure.
 
-- The first row MUST be a left-aligned header line labeling the columns.
+- `data/README.md`
 
-- All CSV files SHOULD be as human readable as possible. 
+- `data/references.bib`
+
+    - This file should contain all references for the entire project.  I
+      considered having multiple small files, but there is a chance of
+      colliding citation keys, and a single file avoids that issue.
+
+- `data/taxonomy.md`
+
+    - A draft taxonomy of flows.
+
+- `data/$(case_identifier)`
+
+    - `README.md`
+
+        - This file should serve as the initial documentation for the case,
+          though I am considering migrating to LaTeX files instead.
+
+    - CSV files with tabulated data from the originator or other source.
+
+        - All CSV files MUST contain only data.  Any documentation or
+          commentary on the data MUST be in separate files like the directory's
+          `README.md` file.
+        
+        - The first row MUST be a left-aligned header line labeling the
+          columns.
+        
+        - All CSV files SHOULD be as human readable as possible.
+
+
+## Case identifier (accession number) structure
+
+- (REQUIRED) Flow class (1 letter)
+
+    - See `data/taxonomy.md` for more information.
+
+- (REQUIRED) Year of first publication (4 digits)
+
+- (REQUIRED) Case number (3 digits)
+
+- (OPTIONAL) Series number (2 digits)
+
+- (OPTIONAL) Profile or station number (2 digits)
+
+- (OPTIONAL) Point number (4 digits)
+
+Examples: `B1945001` or `J201901201010123`.
+
+The required portions are sufficient to identify a case.  The optional portions
+can identify a series of profiles, an individual profile, or even a single
+point in the flow if necessary.  I am considering adding dashes between the
+optional fields to make the identifier more readable.
 
 
 -------------------------------------------------------------------------------
