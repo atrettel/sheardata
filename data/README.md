@@ -10,13 +10,12 @@ The data directory has a flat directory structure.
 
 - `data/references.bib`
 
-    - This file should contain all references for the entire project.  I
-      considered having multiple small files, but there is a chance of
-      colliding citation keys, and a single file avoids that issue.
+    - This file should contain all references for the entire project.
 
 - `data/taxonomy.md`
 
-    - A draft taxonomy of flows.
+    - A draft taxonomy of flows.  This taxonomy is used as the first letter of
+      the case identifiers.
 
 - `data/$(case_identifier)`
 
