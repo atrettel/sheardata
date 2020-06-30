@@ -35,6 +35,10 @@ Here I list several other notable online databases with shear flow data.
 
     - <https://ctr.stanford.edu/research-data>
 
+- UK Turbulence Consortium database
+
+    - <https://www.ukturbulence.co.uk/database.html>
+
 - University of Madrid's data (Jimenez group)
 
     - <https://torroja.dmt.upm.es/turbdata/>
@@ -47,3 +51,10 @@ Here I list several other notable online databases with shear flow data.
 
     - <https://turbulence.oden.utexas.edu/>
 
+-------------------------------------------------------------------------------
+
+Copyright © 2020 Andrew Trettel
+
+This file is licensed under the Creative Commons Attribution 4.0 International
+license (`CC-BY-4.0`).  For more information, please visit the Creative Commons
+website at <https://creativecommons.org/licenses/by/4.0/>.
