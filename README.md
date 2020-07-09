@@ -18,7 +18,7 @@ Planned goals and features
 
 - Emphasis on archival quality and long-term access.
 
-    - <https://www.loc.gov/preservation/resources/rfs/>
+    - [Library of Congress recommended formats statement](https://www.loc.gov/preservation/resources/rfs/)
 
 
 Tabulated data compilations being considered
@@ -31,7 +31,7 @@ digitization).
   results for compressible turbulent-boundary-layer skin friction with zero
   pressure gradient".  NASA-TN-D-1795.
 
-    - <https://hdl.handle.net/2027/uiug.30112008542125?urlappend=%3Bseq=373>
+    - [HathiTrust](https://hdl.handle.net/2027/uiug.30112008542125?urlappend=%3Bseq=373)
 
     - Global data only.
 
@@ -39,7 +39,7 @@ digitization).
   Boundary Layer on a Smooth Flat Plate".  Imperial College London Ph.D.
   thesis.
 
-    - <http://hdl.handle.net/10044/1/15754>
+    - [Imperial College London](http://hdl.handle.net/10044/1/15754)
 
     - Global data only.
 
@@ -49,83 +49,86 @@ digitization).
           turbulent boundary layer on a smooth flat plate with and without heat
           transfer".  Journal of Fluid Mechanics, v. 18, n. 1, pp. 117-143.
 
-            - <https://doi.org/10.1017/S0022112064000088>
+            - [Journal of Fluid Mechanics](https://doi.org/10.1017/S0022112064000088)
 
 - Coles, D. E. and Hirst, E. A. 1969.  *Computation of Turbulent Boundary
   layers—1968 AFOSR-IFP-Stanford Conference*, Volume 2, "Compiled Data".
 
-    - <https://www.worldcat.org/title/computation-of-turbulent-boundary-layers-1968-afosr-ifp-stanford-conference-proceedings/oclc/561999041>
+    - [WorldCat](https://www.worldcat.org/title/computation-of-turbulent-boundary-layers-1968-afosr-ifp-stanford-conference-proceedings/oclc/561999041)
 
-    - <https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/AD696082.xhtml>
+    - [NTIS (abstract only)](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/AD696082.xhtml)
 
-    - <https://apps.dtic.mil/sti/citations/AD0696082>
+    - [DTIC (abstract only)](https://apps.dtic.mil/sti/citations/AD0696082)
 
     - This compilation is unavailable online.
 
 - Zwarts, F. J. 1970, "The compressible turbulent boundary layer in a pressure
   gradient".  McGill University Ph.D. thesis.
 
-    - <https://escholarship.mcgill.ca/concern/theses/xs55mc623>
+    - [McGill University](https://escholarship.mcgill.ca/concern/theses/xs55mc623)
 
     - Global data only.
 
 - Birch, S. F. and Eggers, J. M. 1973.  *Free Turbulent Shear Flows*, Volume 2,
   "Summary of Data".  NASA-SP-321.
 
-    - <https://ntrs.nasa.gov/search.jsp?R=19730018486>
+    - [NASA](https://ntrs.nasa.gov/search.jsp?R=19730018486)
 
 - Fernholz, H. H. and Finley, P. J. 1977.  *A Critical Compilation of
   Compressible Turbulent Boundary Layer Data*.  AGARD-AG-223.
 
-    - <https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA045367.xhtml>
+    - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA045367.xhtml)
 
-    - <https://apps.dtic.mil/sti/citations/ADA045367>
+    - [DTIC](https://apps.dtic.mil/sti/citations/ADA045367)
+
+    - [NATO](https://www.sto.nato.int/publications/AGARD/Forms/AGARD%20Document%20Set/docsethomepage.aspx?ID=9138&FolderCTID=0x0120D5200078F9E87043356C409A0D30823AFA16F60B00B8BCE98BB37EB24A8258823D6B11F157&List=03e8ea21-64e6-4d37-8235-04fb61e122e9&RootFolder=%2Fpublications%2FAGARD%2FAGARD%2DAG%2D223)
 
 - Fernholz, H. H. and Finley, P. J. 1980.  *A Critical Commentary on Mean Flow
   Data for Two-Dimensional Compressible Turbulent Boundary Layers*.
   AGARD-AG-253.
 
-    - <https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA087704.xhtml>
+    - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA087704.xhtml)
 
-    - <https://apps.dtic.mil/sti/citations/ADA087704>
+    - [DTIC](https://apps.dtic.mil/sti/citations/ADA087704)
 
 - Fernholz, H. H. and Finley, P. J. and Mikulla, V. 1981.  *A Further
   Compilation of Compressible Boundary Layer Data with a Survey of Turbulence
   Data*.  AGARD-AG-263.
 
-    - <https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA111638.xhtml>
+    - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA111638.xhtml)
 
-    - <https://apps.dtic.mil/sti/citations/ADA111638>
+    - [DTIC](https://apps.dtic.mil/sti/citations/ADA111638)
+
+    - [NATO](https://www.sto.nato.int/publications/AGARD/Forms/AGARD%20Document%20Set/docsethomepage.aspx?ID=9062&FolderCTID=0x0120D5200078F9E87043356C409A0D30823AFA16F60B00B8BCE98BB37EB24A8258823D6B11F157&List=03e8ea21-64e6-4d37-8235-04fb61e122e9&RootFolder=%2Fpublications%2FAGARD%2FAGARD%2DAG%2D263)
 
 - Fernholz, H. H. and Finley, P. J. and Dussauge, J. P. and Smits, A. J. 1989.
   *Survey of Measurements and Measuring Techniques in Rapidly Distorted
   Compressible Turbulent Boundary Layers*.  AGARD-AG-315.
 
-    - <https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA211107.xhtml>
+    - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA211107.xhtml)
 
-    - <https://apps.dtic.mil/sti/citations/ADA211107>
+    - [DTIC](https://apps.dtic.mil/sti/citations/ADA211107)
 
 - Settles, G. S. and Dodson, L. J. 1991, *Hypersonic Shock/Boundary-Layer
   Interaction Database*.  NASA-CR-177577.
 
-    - <https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/N9115986.xhtml>
+    - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/N9115986.xhtml)
 
-    - <https://archive.org/details/nasa_techdoc_19930015337>
+    - [Internet Archive](https://archive.org/details/nasa_techdoc_19930015337)
 
 - Settles, G. S. and Dodson, L. J. 1993, *Hypersonic Turbulent Boundary-Layer
   and Free Shear Database Datasets*.  NASA-CR-177610.
 
     - These are dataset files.
 
-    - <https://ntrs.nasa.gov/search.jsp?R=20100019476>
+    - [NASA (abstract and request link)](https://ntrs.nasa.gov/search.jsp?R=20100019476)
 
-    - Abstract:
-      <https://hdl.handle.net/2027/uva.x004872560?urlappend=%3Bseq=74>
+    - [HathiTrust (abstract only)](https://hdl.handle.net/2027/uva.x004872560?urlappend=%3Bseq=74)
 
 - Settles, G. S. and Dodson, L. J. 1994, *Hypersonic Shock/Boundary-Layer
   Interaction Database: New and Corrected Data*.  NASA-CR-177638.
 
-    - <https://archive.org/details/nasa_techdoc_19940032012>
+    - [Internet Archive](https://archive.org/details/nasa_techdoc_19940032012)
 
 
 -------------------------------------------------------------------------------
