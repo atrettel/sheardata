@@ -1,5 +1,11 @@
 # 2015, Andrew Trettel and Johan Larsson of the University of Maryland, College Park, channel flow simulation
 
+- The direct numerical simulations are described in `TrettelA+2015+eng+THES`
+  and `TrettelA+2016+eng+JOUR`.
+
+- When using the data, cite `TrettelA+2016+eng+JOUR`
+  ([link](https://doi.org/10.1063/1.4942022)).
+
 
 ## Description of columns in global parameter CSV file
 
@@ -124,3 +130,10 @@ Morkovin's scaling
 
 28. `<T''v''>_f`: Favre-averaged turbulent heat flux
 
+-------------------------------------------------------------------------------
+
+Copyright © 2020 Andrew Trettel
+
+This file is licensed under the Creative Commons Attribution 4.0 International
+license (`CC-BY-4.0`).  For more information, please visit the Creative Commons
+website at <https://creativecommons.org/licenses/by/4.0/>.
