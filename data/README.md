@@ -36,7 +36,7 @@ The data directory has a flat directory structure.
         - All CSV files SHOULD be as human readable as possible.
 
 
-## Case identifier (accession number) structure
+## Structure of identifiers
 
 - (REQUIRED) Flow class (1 letter)
 
@@ -46,18 +46,42 @@ The data directory has a flat directory structure.
 
 - (REQUIRED) Case number (3 digits)
 
-- (OPTIONAL) Series number (2 digits)
+- (OPTIONAL) Series number (3 digits)
 
-- (OPTIONAL) Profile or station number (2 digits)
+- (OPTIONAL) Profile or station number (3 digits)
 
 - (OPTIONAL) Point number (4 digits)
 
-Examples: `B1945001` or `J201901201010123`.
-
 The required portions are sufficient to identify a case.  The optional portions
 can identify a series of profiles, an individual profile, or even a single
-point in the flow if necessary.  I am considering adding dashes between the
-optional fields to make the identifier more readable.
+point in the flow if necessary.  For readability, dashes are acceptable in any
+location but removed in the database itself.
+
+Examples:
+
+- Case identifier (accession number)
+
+    - Compact form: `B1944001` (8 characters)
+
+    - Readable form: `B-1944-001` (10 characters)
+
+- Series identifier
+
+    - Compact form: `B1944001001` (11 characters)
+
+    - Readable form: `B-1944-001-001` (14 characters)
+
+- Profile identifier
+
+    - Compact form: `B1944001001001` (14 characters)
+
+    - Readable form: `B-1944-001-001-001` (18 characters)
+
+- Point identifier
+
+    - Compact form `B19440010010010001` (18 characters)
+
+    - Readable form: `B-1944-001-001-001-0001` (23 characters)
 
 
 -------------------------------------------------------------------------------
