@@ -16,6 +16,7 @@ Classes
 All classes:
 
 - Class `B` = boundary layers
+- Class `C` = wall-bounded flow
 - Class `D` = duct flows
 - Class `E` = external flows
 - Class `F` = free shear flows
@@ -43,6 +44,20 @@ Taxonomy:
 
         - `S` = shear layers
 
+            - `C` = wall-bounded flow
+
+                - `E` = external flows
+
+                    - `B` = boundary layers
+
+                    - `K` = wall jets
+
+                - `I` = internal flows
+
+                    - `D` = duct flows
+
+                    - `R` = flows with relative motion of the boundaries
+
             - `F` = free shear flows
 
                 - `J` = (free) jets
@@ -51,41 +66,27 @@ Taxonomy:
 
                 - `W` = wakes
 
-            - `E` = external flows
-
-                - `B` = boundary layers
-
-                - `K` = wall jets
-
-            - `I` = internal flows
-
-                - `D` = duct flows
-
-                - `R` = flows with relative motion of the boundaries
-
 Tree diagram:
 
           - H ----- G
          /
-        /                        -- J
-       /                        /
-    U -                   - F ----- M
-       \                 /      \
-        \               /        -- W
+        /                                -- J
+       /                                /
+    U -                   - F ----- F ----- M
+       \                 /              \
+        \               /                -- W
          \             /
-          - N ----- S ----- E ----- B
-                       \        \
-                        \        -- K
-                         \
-                          - I ----- D
-                                \
-                                 -- R
+          - N ----- S ----- C ----- E ----- B
+                               \        \
+                                \        -- K
+                                 \
+                                  - I ----- D
+                                        \
+                                         -- R
 
 Codes reserved for future discussion:
 
 - `A` = acoustic waves
-
-- `C` = cavity flows
 
 - `L` = waves (from lambda for wavelength)
 
@@ -98,6 +99,8 @@ Codes reserved for future discussion:
 - `X` = shock waves (from "explosion")
 
 - Unused: `O`, `Q`, `Y`, `Z`
+
+    - `O` should remain unused, since it is easily confused with zero.
 
 
 Principles of this taxonomy
@@ -123,6 +126,8 @@ taxonomy).  The choice of letters means that if the taxonomy needs to be
 changed, it can be changed without having to update the codes.
 
 A brief explanation of unexpected codes:
+
+- `C` for wall-bounded flows from "confinement".
 
 - `G` for isotropic flows from "grid turbulence".
 
