@@ -16,7 +16,7 @@ Classes
 All classes:
 
 - Class `B` = boundary layers
-- Class `C` = wall-bounded flow
+- Class `C` = wall-bounded flows
 - Class `D` = duct flows
 - Class `E` = external flows
 - Class `F` = free shear flows
@@ -44,7 +44,7 @@ Taxonomy:
 
         - `S` = shear layers
 
-            - `C` = wall-bounded flow
+            - `C` = wall-bounded flows
 
                 - `E` = external flows
 
