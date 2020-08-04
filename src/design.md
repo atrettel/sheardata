@@ -100,6 +100,14 @@ Design details
 - Include tables for global parameters, unweighted mean profiles, and
   density-weighted mean profiles.
 
+- Include additional fields for commentary (likely editorial commentary).  Also
+  include additional fields for the people involved, the facilities involved,
+  the organizations involved, locations of any experiments, and any contract
+  numbers.
+
+- Note the type of measurement used (though this will require an additional set
+  of codes or a taxonomy of these).
+
 
 Table fields
 ------------
@@ -133,6 +141,9 @@ being listed).
 
     - Working fluid (`S`)
 
+        - Consider using CAS registry numbers for these.  They are
+          standardized.
+
     - Working fluid phase (`S`)
 
     - Number of dimensions (`S`)
@@ -159,6 +170,11 @@ being listed).
     - Spanwise previous station (`S`)
 
     - Spanwise next station (`S`)
+
+    - Regime (`S`)
+
+        - Laminar, transitional, turbulent.  It may be better to consider this
+          algorithmically, though.
 
 - Globals (real)
 
