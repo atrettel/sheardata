@@ -221,11 +221,11 @@ class ShearLayer:
             ( int(year), self.profile_identifier(), ),
         )
 
-    def __init__( self, cursor, profile_identifier=None, flow_class=None, \
-                  year=None, case_number=None, series_number=None,        \
-                  profile_number=None, ):
-        self._cursor             = cursor
-        if ( profile_identifier == None and flow_class != None ):
+    def __init__( self, cursor, profile_identifier=None,                     \
+                  flow_class=SHEAR_LAYER_CLASS, year=None, case_number=None, \
+                  series_number=None, profile_number=None, ):
+        self._cursor = cursor
+        if ( profile_identifier == None and case_number != None ):
             self._profile_identifier = identify_profile(
                 flow_class,
                 year,
@@ -279,5 +279,115 @@ class ShearLayer:
                         readable=False,
                     ),
                 )
-        else:
+        elif ( profile_identifier != None ):
             self._profile_identifier = profile_identifier.replace("-","")
+
+class FreeShearFlow(ShearLayer):
+    def __init__( self, cursor, profile_identifier=None,       \
+                  flow_class=FREE_SHEAR_FLOW_CLASS, year=None, \
+                  case_number=None, series_number=None, profile_number=None, ):
+        super().__init__( cursor, profile_identifier=profile_identifier, \
+                          flow_class=flow_class, year=year,              \
+                          case_number=case_number,                       \
+                          series_number=series_number,                   \
+                          profile_number=profile_number )
+
+class WallBoundedFlow(ShearLayer):
+    def __init__( self, cursor, profile_identifier=None,         \
+                  flow_class=WALL_BOUNDED_FLOW_CLASS, year=None, \
+                  case_number=None, series_number=None, profile_number=None, ):
+        super().__init__( cursor, profile_identifier=profile_identifier, \
+                          flow_class=flow_class, year=year,              \
+                          case_number=case_number,                       \
+                          series_number=series_number,                   \
+                          profile_number=profile_number )
+
+class FreeJet(FreeShearFlow):
+    def __init__( self, cursor, profile_identifier=None, \
+                  flow_class=FREE_JET_CLASS, year=None,  \
+                  case_number=None, series_number=None, profile_number=None, ):
+        super().__init__( cursor, profile_identifier=profile_identifier, \
+                          flow_class=flow_class, year=year,              \
+                          case_number=case_number,                       \
+                          series_number=series_number,                   \
+                          profile_number=profile_number )
+
+class MixingLayer(FreeShearFlow):
+    def __init__( self, cursor, profile_identifier=None,    \
+                  flow_class=MIXING_LAYER_CLASS, year=None, \
+                  case_number=None, series_number=None, profile_number=None, ):
+        super().__init__( cursor, profile_identifier=profile_identifier, \
+                          flow_class=flow_class, year=year,              \
+                          case_number=case_number,                       \
+                          series_number=series_number,                   \
+                          profile_number=profile_number )
+
+class Wake(FreeShearFlow):
+    def __init__( self, cursor, profile_identifier=None, \
+                  flow_class=WAKE_CLASS, year=None,      \
+                  case_number=None, series_number=None, profile_number=None, ):
+        super().__init__( cursor, profile_identifier=profile_identifier, \
+                          flow_class=flow_class, year=year,              \
+                          case_number=case_number,                       \
+                          series_number=series_number,                   \
+                          profile_number=profile_number )
+
+class ExternalFlow(WallBoundedFlow):
+    def __init__( self, cursor, profile_identifier=None,     \
+                  flow_class=EXTERNAL_FLOW_CLASS, year=None, \
+                  case_number=None, series_number=None, profile_number=None, ):
+        super().__init__( cursor, profile_identifier=profile_identifier, \
+                          flow_class=flow_class, year=year,              \
+                          case_number=case_number,                       \
+                          series_number=series_number,                   \
+                          profile_number=profile_number )
+
+class InternalFlow(WallBoundedFlow):
+    def __init__( self, cursor, profile_identifier=None,     \
+                  flow_class=INTERNAL_FLOW_CLASS, year=None, \
+                  case_number=None, series_number=None, profile_number=None, ):
+        super().__init__( cursor, profile_identifier=profile_identifier, \
+                          flow_class=flow_class, year=year,              \
+                          case_number=case_number,                       \
+                          series_number=series_number,                   \
+                          profile_number=profile_number )
+
+class BoundaryLayer(ExternalFlow):
+    def __init__( self, cursor, profile_identifier=None,      \
+                  flow_class=BOUNDARY_LAYER_CLASS, year=None, \
+                  case_number=None, series_number=None, profile_number=None, ):
+        super().__init__( cursor, profile_identifier=profile_identifier, \
+                          flow_class=flow_class, year=year,              \
+                          case_number=case_number,                       \
+                          series_number=series_number,                   \
+                          profile_number=profile_number )
+
+class WallJet(ExternalFlow):
+    def __init__( self, cursor, profile_identifier=None, \
+                  flow_class=WALL_JET_CLASS, year=None,  \
+                  case_number=None, series_number=None, profile_number=None, ):
+        super().__init__( cursor, profile_identifier=profile_identifier, \
+                          flow_class=flow_class, year=year,              \
+                          case_number=case_number,                       \
+                          series_number=series_number,                   \
+                          profile_number=profile_number )
+
+class DuctFlow(InternalFlow):
+    def __init__( self, cursor, profile_identifier=None, \
+                  flow_class=DUCT_FLOW_CLASS, year=None, \
+                  case_number=None, series_number=None, profile_number=None, ):
+        super().__init__( cursor, profile_identifier=profile_identifier, \
+                          flow_class=flow_class, year=year,              \
+                          case_number=case_number,                       \
+                          series_number=series_number,                   \
+                          profile_number=profile_number )
+
+class FlowWithRelativeMotion(InternalFlow):
+    def __init__( self, cursor, profile_identifier=None,       \
+                  flow_class=RELATIVE_MOTION_CLASS, year=None, \
+                  case_number=None, series_number=None, profile_number=None, ):
+        super().__init__( cursor, profile_identifier=profile_identifier, \
+                          flow_class=flow_class, year=year,              \
+                          case_number=case_number,                       \
+                          series_number=series_number,                   \
+                          profile_number=profile_number )
