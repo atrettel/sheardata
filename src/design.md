@@ -50,6 +50,11 @@ Goals
       like boundary layer thickness are somewhat vague, so I would prefer to
       pick a nondimensionalization that is consistent above all else.
 
+    - Note that it is difficult to justify using wall units for the
+      nondimensionalization of wall-bounded flows.  The issue is that the wall
+      shear stress is not always measured in experiments, so the data often
+      cannot be nondimensionalized this way.
+
 - Keep variable names in both the database and classes human-readable.  Prefer
   `skin_friction_coefficient` to `c_f`.
 
@@ -82,6 +87,11 @@ Design details
           labels (wall, edge, etc.) rather than have a large number of
           additional global variables.  However, no single point in the profile
           might represent these states (but in many cases it will).
+
+        - Also note that while the globals ostensibly represent all averaging
+          systems, there could be some difference in the value of some
+          quantities like displacement thickness or momentum thickness based on
+          the averaging system used.  I need to address this problem.
 
     - `globals_s` - real uncertainties of globals
 
