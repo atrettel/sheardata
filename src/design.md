@@ -33,27 +33,21 @@ Goals
 - Prefer dimensionless variables, but use SI for any variables that require
   units.
 
-    - There are two majors unknowns here.  First, I do not know precisely what
-      nondimensionalization works best for each class, but what matters more is
-      consistency.  Any methods should return any arbitrary variable anyhow, so
-      the precise representation of the data in the database itself does not
-      matter.  The second issue relates to the previous point about how much
-      data the database should contain.  The simplest choice is to only keep a
-      single nondimensionalization in the database and to calculate other
-      nondimensionalizations when needed.  The tradeoff is same as before: it
-      is more computationally expensive.
+    - Profiles should be nondimensionalized by a standard set of well-defined
+      and unambiguous scales.  Each flow class has a different set of standard
+      scales.  The scales should be the most easily-found and common ones for
+      each case.
 
-    - The nondimensionalization should be unambiguous.  This goal is more
-      difficult that it appears.  For example, internal flows have well-defined
-      length scales (based on bulk properties and geometry), but external flows
-      and free-shear flows do not have any well-defined length scales.  Notions
-      like boundary layer thickness are somewhat vague, so I would prefer to
-      pick a nondimensionalization that is consistent above all else.
+    - There is some conflict between the two requirements.  Some scales are
+      often given in datasets, but they are sometimes ill-defined (bulk
+      density, etc. for internal flows).  Some scales are often not measured
+      too (wall shear stress in external flows), so nondimensionalizing by them
+      cannot be done without additional assumptions.  The goal here is to
+      minimize the uncertainty in the scalings themselves.
 
-    - Note that it is difficult to justify using wall units for the
-      nondimensionalization of wall-bounded flows.  The issue is that the wall
-      shear stress is not always measured in experiments, so the data often
-      cannot be nondimensionalized this way.
+    - Alternatively, I could considering using different profile scalings for
+      each case, depending what data emerge from the case.  The tradeoff with
+      this is that the database itself becomes less standardized.
 
 - Keep variable names in both the database and classes human-readable.  Prefer
   `skin_friction_coefficient` to `c_f`.
@@ -73,42 +67,38 @@ Design details
 
 - Tables
 
-    - `globals_d` - discrete globals
+    - `discrete_globals`
 
         - These are global variables that do not have any uncertainty.
 
-        - Note that Fernholz 1977 refers to what I call "globals" as
-          "kopfdaten" (header data).  That is another good term for this
-          concept.
+    - `dimensional_globals_n`, `dimensional_globals_s`
 
-    - `globals_n` - real values of globals
+        - These are global variables that have some uncertainty but do not
+          change in different averaging systems.
 
         - It would be simpler to just note various profile locations with
           labels (wall, edge, etc.) rather than have a large number of
           additional global variables.  However, no single point in the profile
-          might represent these states (but in many cases it will).
+          might represent these states (but in many cases it will).  Redundancy
+          through duplication seems like a worthwhile tradeoff in that case.
 
-        - Also note that while the globals ostensibly represent all averaging
-          systems, there could be some difference in the value of some
-          quantities like displacement thickness or momentum thickness based on
-          the averaging system used.  I need to address this problem.
+    - `uw_dimensional_globals_n`, `uw_dimensional_globals_s`
 
-    - `globals_s` - real uncertainties of globals
+    - `dw_dimensional_globals_n`, `dw_dimensional_globals_s`
 
-    - `uw_profiles_n` - real values for unweighted mean profiles
+    - `uw_dimensionless_globals_n`, `uw_dimensionless_globals_s`
 
-    - `uw_profiles_s` - real uncertainties for unweighted mean profiles
+    - `dw_dimensionless_globals_n`, `dw_dimensionless_globals_s`
 
-    - `dw_profiles_n` - real values for density-weighted mean profiles
+    - `uw_dimensionless_profiles_n`, `uw_dimensionless_profiles_s`
 
-    - `dw_profiles_s` - real uncertainties for density-weighted mean profiles
+    - `dw_dimensionless_profiles_n`, `dw_dimensionless_profiles_s`
 
 - Have corresponding tables for values and uncertainties.  The field names
   should be identical.  `n` is for the values and `s` is for uncertainties.
-  This convention follows the Python `uncertainties` package.
-
-- Include tables for global parameters, unweighted mean profiles, and
-  density-weighted mean profiles.
+  This convention follows the Python `uncertainties` package.  Also have
+  corresponding tables of unweighted variables (`uw`) and density-weighted
+  variables (`dw`).
 
 - Include additional fields for commentary (likely editorial commentary).  Also
   include additional fields for the people involved, the facilities involved,
@@ -125,7 +115,7 @@ Table fields
 Some of these only apply to certain flow classes (the most general flow class
 being listed).
 
-- Globals (discrete)
+- Discrete globals
 
     - Profile identifier (`S`)
 
@@ -163,7 +153,7 @@ being listed).
 
     - Coordinate system (`S`)
 
-        - `XYZ`, `XRT`, etc.
+        - `XYZ`, `XRT`, `RTZ`, `RTP`, etc.
 
     - Geometry (`I`)
 
@@ -186,7 +176,9 @@ being listed).
         - Laminar, transitional, turbulent.  It may be better to consider this
           algorithmically, though.
 
-- Globals (real)
+    - Trip present? (`C`)
+
+- Dimensional globals (real, use SI, averaging-system independent)
 
     - Profile identifier (`S`)
 
@@ -205,31 +197,237 @@ being listed).
 
     - Roughness height (`C`)
 
-    - Friction Reynolds number (`C`)
+    - Characteristic width (`I`)
 
-    - Semi-local friction Reynolds number (`C`)
+    - Characteristic height (`I`)
 
-    - Incompressible displacement thickness (`C`)
+    - Aspect ratio (`I`)
 
-    - Incompressible momentum thickness (`C`)
+        - This is actually dimensionless.
+
+    - Cross-sectional area (`I`)
+
+    - Wetted perimeter (`I`)
+
+    - Hydraulic diameter (`I`)
+
+    - Streamwise trip location (`C`)
+
+- Dimensional globals (real, use SI, averaging-system dependent)
+
+    - Profile identifier (`S`)
+
+    - Bulk dynamic viscosity (`I`)
+
+    - Bulk kinematic viscosity (`I`)
+
+    - Bulk mass density (`I`)
+
+    - Bulk pressure (`I`)
+
+    - Bulk specific isobaric heat capacity (`I`)
+
+    - Bulk speed of sound (`I`)
+
+    - Bulk streamwise velocity (`I`)
+
+    - Bulk temperature (`I`)
+
+    - Bulk transverse velocity (`I`)
+
+    - Center-line dynamic viscosity (`I`)
+
+    - Center-line kinematic viscosity (`I`)
+
+    - Center-line mass density (`I`)
+
+    - Center-line pressure (`I`)
+
+    - Center-line specific isobaric heat capacity (`I`)
+
+    - Center-line speed of sound (`I`)
+
+    - Center-line streamwise velocity (`I`)
+
+    - Center-line temperature (`I`)
+
+    - Center-line transverse velocity (`I`)
+
+    - Clauser thickness (`C`)
 
     - Compressible displacement thickness (`C`)
 
     - Compressible momentum thickness (`C`)
 
+    - Edge dynamic viscosity (`E` and `F`)
+
+    - Edge kinematic viscosity (`E` and `F`)
+
+    - Edge mass density (`E` and `F`)
+
+    - Edge pressure (`E` and `F`)
+
+    - Edge specific isobaric heat capacity (`E` and `F`)
+
+    - Edge speed of sound (`E` and `F`)
+
+    - Edge streamwise velocity (`E` and `F`)
+
+    - Edge temperature (`E` and `F`)
+
+    - Edge transverse velocity (`E` and `F`)
+
+    - Edge velocity gradient (`E` and `F`)
+
+    - Friction velocity (`C`)
+
+    - Friction temperature (`C`)
+
+    - Incompressible displacement thickness (`C`)
+
+    - Incompressible momentum thickness (`C`)
+
+    - Left-hand side of momentum integral (`E`)
+
+    - Mass flow rate (`I`)
+
+    - Maximum dynamic viscosity (`S`)
+
+    - Maximum kinematic viscosity (`S`)
+
+    - Maximum mass density (`S`)
+
+    - Maximum pressure (`S`)
+
+    - Maximum specific isobaric heat capacity (`S`)
+
+    - Maximum speed of sound (`S`)
+
+    - Maximum streamwise velocity (`S`)
+
+    - Maximum temperature (`S`)
+
+    - Maximum transverse velocity (`S`)
+
+    - Minimum dynamic viscosity (`S`)
+
+    - Minimum kinematic viscosity (`S`)
+
+    - Minimum mass density (`S`)
+
+    - Minimum pressure (`S`)
+
+    - Minimum specific isobaric heat capacity (`S`)
+
+    - Minimum speed of sound (`S`)
+
+    - Minimum streamwise velocity (`S`)
+
+    - Minimum temperature (`S`)
+
+    - Minimum transverse velocity (`S`)
+
+    - Reservoir pressure (`S`)
+
+    - Reservoir speed of sound (`S`)
+
+    - Reservoir temperature (`S`)
+
+    - Right-hand side of momentum integral (`E`)
+
+    - Streamwise pressure gradient (`C`)
+
+    - Viscous length scale (`C`)
+
+    - Wall dynamic viscosity (`C`)
+
+    - Wall kinematic viscosity (`C`)
+
+    - Wall mass density (`C`)
+
+    - Wall pressure (`C`)
+
+    - Wall shear stress (`C`)
+
+    - Wall specific isobaric heat capacity (`S`)
+
+    - Wall speed of sound (`C`)
+
+    - Wall streamwise velocity (`C`)
+
+    - Wall temperature (`C`)
+
+    - Wall transverse velocity (`C`)
+
+    - 99-percent velocity boundary layer thickness
+
+    - 99-percent temperature boundary layer thickness
+
+- Dimensionless globals (real, averaging-system dependent)
+
+    - Profile identifier (`S`)
+
+    - Bulk heat capacity ratio (`I`)
+
+    - Bulk Mach number (`I`)
+
+    - Bulk Prandtl number (`I`)
+
+    - Center-line heat capacity ratio (`I`)
+
+    - Center-line Mach number (`I`)
+
+    - Center-line Prandtl number (`I`)
+
+    - Dimensionless wall heat flux (`B_q`) (`C`)
+
+    - Edge heat capacity ratio (`E`)
+
+    - Edge Mach number (`E`)
+
+    - Edge Prandtl number (`E`)
+
+    - Edge Reynolds number based on displacement thickness (`E`)
+
+    - Edge Reynolds number based on momentum thickness (`E`)
+
     - Equilibrium parameter (`E`)
 
-    - Aspect ratio (`I`)
+    - Freestream turbulence intensity (`S`)
 
-    - Hydraulic diameter (`I`)
-
-    - Freestream turbulence intensity (`C`)
-
-    - Edge Mach number (`C`) 
+    - Friction factor (`I`)
 
     - Friction Mach number (`C`)
 
-- Profiles (real)
+    - Friction Reynolds number (`C`)
+
+    - Heat transfer coefficient (`E`)
+
+    - Maximum heat capacity ratio  (`S`)
+
+    - Maximum Mach number (`S`)
+
+    - Maximum Prandtl number (`S`)
+
+    - Minimum heat capacity ratio  (`S`)
+
+    - Minimum Mach number (`S`)
+
+    - Minimum Prandtl number (`S`)
+
+    - Recovery factor (`C`)
+
+    - Semi-local friction Reynolds (`C`)
+
+    - Skin friction coefficient (`E`)
+
+    - Wall heat capacity ratio (`C`)
+
+    - Wall Mach number (`C`)
+
+    - Wall Prandtl number (`C`)
+
+- Dimensionless profiles (real, averaging-system dependent)
 
     - Point identifier (`S`)
 
@@ -239,7 +437,7 @@ being listed).
 
     - Label (`S`)
 
-        - Center-line, edge, maximum, wall, etc.
+        - Center-line, edge, maximum, minimum, wall
 
     - Transverse coordinate (`S`)
 
@@ -247,81 +445,95 @@ being listed).
           origin.  For wall-bounded flows, this could interpreted as the
           wall-normal distance from the wall.
 
-    - Mean bulk viscosity (`S`)
+    - Distance from wall (`C`)
 
-    - Mean density (`S`)
+    - Bulk viscosity (`S`)
 
-    - Mean dynamic viscosity (`S`)
+    - Dynamic viscosity (`S`)
 
-    - Mean heat capacity ratio (`S`)
+    - Heat capacity ratio (`S`)
 
-    - Mean isobaric heat capacity (`S`)
+    - Specific isobaric heat capacity (`S`)
 
-    - Mean isochoric heat capacity (`S`)
+    - Specific isochoric heat capacity (`S`)
 
-    - Mean kinematic viscosity (`S`)
+    - Kinematic viscosity (`S`)
 
-    - Mean Mach number (`S`)
+    - Mach number (`S`)
 
-    - Mean Momentum density (`S`)
+    - Mass density (`S`)
 
-    - Mean Prandtl number (`S`)
+    - Momentum density (`S`)
 
-    - Mean pressure (`S`)
+    - Prandtl number (`S`)
 
-    - Mean shear stress (`S`)
+    - Pressure (`S`)
 
-    - Mean spanwise velocity (`S`)
+    - Shear stress (`S`)
 
-    - Mean spanwise vorticity (`S`)
+    - Spanwise velocity (`S`)
 
-    - Mean specific enthalpy (`S`)
+    - Spanwise vorticity (`S`)
 
-    - Mean specific entropy (`S`)
+    - Specific enthalpy (`S`)
 
-    - Mean specific internal energy (`S`)
+    - Specific entropy (`S`)
 
-    - Mean specific total enthalpy (`S`)
+    - Specific internal energy (`S`)
 
-    - Mean specific total internal energy (`S`)
+    - Specific total enthalpy (`S`)
 
-    - Mean specific volume (`S`)
+    - Specific total internal energy (`S`)
 
-    - Mean speed (`S`)
+    - Specific volume (`S`)
 
-    - Mean speed of sound (`S`)
+    - Speed (`S`)
 
-    - Mean stagnation pressure (`S`)
+    - Speed of sound (`S`)
 
-    - Mean stagnation temperature (`S`)
+    - Stagnation pressure (`S`)
 
-    - Mean streamwise velocity (`S`)
+    - Stagnation temperature (`S`)
 
-    - Mean streamwise vorticity (`S`)
+    - Streamwise velocity (`S`)
 
-    - Mean temperature (`S`)
+    - Streamwise vorticity (`S`)
 
-    - Mean thermal conductivity (`S`)
+    - Temperature (`S`)
 
-    - Mean thermal diffusivity (`S`)
+    - Thermal conductivity (`S`)
 
-    - Mean transverse velocity (`S`)
+    - Thermal diffusivity (`S`)
 
-    - Mean transverse vorticity (`S`)
+    - Transverse velocity (`S`)
 
-    - Mean turbulent kinetic energy (`S`)
+    - Transverse vorticity (`S`)
 
-    - Mean turbulent stress UU (`S`)
+    - Turbulent kinetic energy (`S`)
 
-    - Mean turbulent stress UV (`S`)
+    - Turbulent stress UU (`S`)
 
-    - Mean turbulent stress UW (`S`)
+    - Turbulent stress UV (`S`)
 
-    - Mean turbulent stress VV (`S`)
+    - Turbulent stress UW (`S`)
 
-    - Mean turbulent stress VW (`S`)
+    - Turbulent stress VV (`S`)
 
-    - Mean turbulent stress WW (`S`)
+    - Turbulent stress VW (`S`)
+
+    - Turbulent stress WW (`S`)
+
+    - Velocity covariance UU (`S`)
+
+    - Velocity covariance UV (`S`)
+
+    - Velocity covariance UW (`S`)
+
+    - Velocity covariance VV (`S`)
+
+    - Velocity covariance VW (`S`)
+
+    - Velocity covariance WW (`S`)
 
 -------------------------------------------------------------------------------
 
