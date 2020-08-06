@@ -8,6 +8,10 @@ Goals
 - Use SQLite as the database backend.  The goal here is to ensure that it is
   possible to use SQL commands to select and find data.
 
+    - Limit the number of calls to the database itself (separate use and
+      implementation).  This could allow me to change the kind of database
+      later.
+
 - Use the `uncertainties` package to handle uncertainties.  The uncertainties
   will be standard uncertainties (standard deviations of the distribution of
   "reasonable" values from the measurements).
