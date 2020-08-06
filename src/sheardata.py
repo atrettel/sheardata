@@ -102,30 +102,50 @@ class ShearLayer:
     _cursor             = None
     _profile_identifier = None
 
-    # TODO: This is insecure at the moment.  Later I will add in checks on the
-    # table and variable.
+    def _table_exists( self, table ):
+        self._cursor.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+            ( str(table), ),
+        )
+        if ( self._cursor.fetchone() == None ):
+            return False
+        else:
+            return True
+
+    def _table_and_variable_exists( self, table, variable ):
+        if ( self._table_exists(table) ):
+            self._cursor.execute(
+                "PRAGMA table_info("+table+")",
+            )
+            for column in self._cursor.fetchall():
+                if ( variable == column[1] ):
+                    return True
+        return False
+
     def _set_integer( self, table, variable, value ):
+        assert( self._table_and_variable_exists(table,variable) )
         self._cursor.execute(
             "UPDATE "+table+" SET "+variable+"=? WHERE profile_identifier=?",
             ( int(value), self.profile_identifier(), ),
         )
 
     def _get_integer( self, table, variable ):
+        assert( self._table_and_variable_exists(table,variable) )
         self._cursor.execute(
             "SELECT "+variable+" FROM "+table+" WHERE profile_identifier=?",
             ( self.profile_identifier(), ),
         )
         return int(self._cursor.fetchone()[0])
 
-    # TODO: This is insecure at the moment.  Later I will add in checks on the
-    # table and variable.
     def _set_string( self, table, variable, value ):
+        assert( self._table_and_variable_exists(table,variable) )
         self._cursor.execute(
             "UPDATE "+table+" SET "+variable+"=? WHERE profile_identifier=?",
             ( str(value), self.profile_identifier(), ),
         )
 
     def _get_string( self, table, variable ):
+        assert( self._table_and_variable_exists(table,variable) )
         self._cursor.execute(
             "SELECT "+variable+" FROM "+table+" WHERE profile_identifier=?",
             ( self.profile_identifier(), ),
