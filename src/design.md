@@ -139,6 +139,11 @@ being listed).
 
     - Number of points (`S`)
 
+    - Number of dimensions (`S`)
+
+        - 2 or 3.  Setting this to 2 should enforce certain values for certain
+          profiles.
+
     - Originator's identifier (`S`)
 
     - Working fluid (`S`)
@@ -148,11 +153,6 @@ being listed).
           exist.
 
     - Working fluid phase (`S`)
-
-    - Number of dimensions (`S`)
-
-        - 2 or 3.  Setting this to 2 should enforce certain values for certain
-          profiles.
 
     - Coordinate system (`S`)
 
