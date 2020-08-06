@@ -137,12 +137,15 @@ being listed).
 
         - `E` for experimental, `N` for numerical.
 
+    - Number of points (`S`)
+
     - Originator's identifier (`S`)
 
     - Working fluid (`S`)
 
-        - Consider using CAS registry numbers for these.  They are
-          standardized.
+        - Consider using CAS registry numbers for these.  These are
+          standardized.  A separate table for fluid properties could then also
+          exist.
 
     - Working fluid phase (`S`)
 
@@ -165,9 +168,14 @@ being listed).
 
     - Streamwise previous station (`S`)
 
+        - Pointers like these are much more flexible than assuming that the
+          profile numbers are in order by station number.
+
     - Streamwise next station (`S`)
 
     - Spanwise previous station (`S`)
+
+        - These should also be null for 2D flows.
 
     - Spanwise next station (`S`)
 
