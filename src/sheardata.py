@@ -221,9 +221,17 @@ class ShearLayer:
             ( int(year), self.profile_identifier(), ),
         )
 
-    def __init__( self, cursor, profile_identifier=None,                     \
-                  flow_class=SHEAR_LAYER_CLASS, year=None, case_number=None, \
-                  series_number=None, profile_number=None, ):
+    def __init__( self,                             \
+                  cursor,                           \
+                  profile_identifier=None,          \
+                  flow_class=SHEAR_LAYER_CLASS,     \
+                  year=None,                        \
+                  case_number=None,                 \
+                  series_number=None,               \
+                  profile_number=None,              \
+                  data_type=EXPERIMENTAL_DATA_TYPE, \
+                  number_of_points=0,               \
+                  number_of_dimensions=2, ):
         self._cursor = cursor
         if ( profile_identifier == None and case_number != None ):
             self._profile_identifier = identify_profile(
@@ -283,111 +291,255 @@ class ShearLayer:
             self._profile_identifier = profile_identifier.replace("-","")
 
 class FreeShearFlow(ShearLayer):
-    def __init__( self, cursor, profile_identifier=None,       \
-                  flow_class=FREE_SHEAR_FLOW_CLASS, year=None, \
-                  case_number=None, series_number=None, profile_number=None, ):
-        super().__init__( cursor, profile_identifier=profile_identifier, \
-                          flow_class=flow_class, year=year,              \
-                          case_number=case_number,                       \
-                          series_number=series_number,                   \
-                          profile_number=profile_number )
+    def __init__( self,                             \
+                  cursor,                           \
+                  profile_identifier=None,          \
+                  flow_class=FREE_SHEAR_FLOW_CLASS, \
+                  year=None,                        \
+                  case_number=None,                 \
+                  series_number=None,               \
+                  profile_number=None,              \
+                  data_type=EXPERIMENTAL_DATA_TYPE, \
+                  number_of_points=0,               \
+                  number_of_dimensions=2, ):
+        super().__init__( cursor,
+                          profile_identifier=profile_identifier,     \
+                          flow_class=flow_class,                     \
+                          year=year,                                 \
+                          case_number=case_number,                   \
+                          series_number=series_number,               \
+                          profile_number=profile_number,             \
+                          data_type=data_type,                       \
+                          number_of_points=number_of_points,         \
+                          number_of_dimensions=number_of_dimensions, )
 
 class WallBoundedFlow(ShearLayer):
-    def __init__( self, cursor, profile_identifier=None,         \
-                  flow_class=WALL_BOUNDED_FLOW_CLASS, year=None, \
-                  case_number=None, series_number=None, profile_number=None, ):
-        super().__init__( cursor, profile_identifier=profile_identifier, \
-                          flow_class=flow_class, year=year,              \
-                          case_number=case_number,                       \
-                          series_number=series_number,                   \
-                          profile_number=profile_number )
+    def __init__( self,                               \
+                  cursor,                             \
+                  profile_identifier=None,            \
+                  flow_class=WALL_BOUNDED_FLOW_CLASS, \
+                  year=None,                          \
+                  case_number=None,                   \
+                  series_number=None,                 \
+                  profile_number=None,                \
+                  data_type=EXPERIMENTAL_DATA_TYPE,   \
+                  number_of_points=0,                 \
+                  number_of_dimensions=2, ):
+        super().__init__( cursor,
+                          profile_identifier=profile_identifier,     \
+                          flow_class=flow_class,                     \
+                          year=year,                                 \
+                          case_number=case_number,                   \
+                          series_number=series_number,               \
+                          profile_number=profile_number,             \
+                          data_type=data_type,                       \
+                          number_of_points=number_of_points,         \
+                          number_of_dimensions=number_of_dimensions, )
 
 class FreeJet(FreeShearFlow):
-    def __init__( self, cursor, profile_identifier=None, \
-                  flow_class=FREE_JET_CLASS, year=None,  \
-                  case_number=None, series_number=None, profile_number=None, ):
-        super().__init__( cursor, profile_identifier=profile_identifier, \
-                          flow_class=flow_class, year=year,              \
-                          case_number=case_number,                       \
-                          series_number=series_number,                   \
-                          profile_number=profile_number )
+    def __init__( self,                             \
+                  cursor,                           \
+                  profile_identifier=None,          \
+                  flow_class=FREE_JET_CLASS,        \
+                  year=None,                        \
+                  case_number=None,                 \
+                  series_number=None,               \
+                  profile_number=None,              \
+                  data_type=EXPERIMENTAL_DATA_TYPE, \
+                  number_of_points=0,               \
+                  number_of_dimensions=2, ):
+        super().__init__( cursor,
+                          profile_identifier=profile_identifier,     \
+                          flow_class=flow_class,                     \
+                          year=year,                                 \
+                          case_number=case_number,                   \
+                          series_number=series_number,               \
+                          profile_number=profile_number,             \
+                          data_type=data_type,                       \
+                          number_of_points=number_of_points,         \
+                          number_of_dimensions=number_of_dimensions, )
 
 class MixingLayer(FreeShearFlow):
-    def __init__( self, cursor, profile_identifier=None,    \
-                  flow_class=MIXING_LAYER_CLASS, year=None, \
-                  case_number=None, series_number=None, profile_number=None, ):
-        super().__init__( cursor, profile_identifier=profile_identifier, \
-                          flow_class=flow_class, year=year,              \
-                          case_number=case_number,                       \
-                          series_number=series_number,                   \
-                          profile_number=profile_number )
+    def __init__( self,                             \
+                  cursor,                           \
+                  profile_identifier=None,          \
+                  flow_class=MIXING_LAYER_CLASS,    \
+                  year=None,                        \
+                  case_number=None,                 \
+                  series_number=None,               \
+                  profile_number=None,              \
+                  data_type=EXPERIMENTAL_DATA_TYPE, \
+                  number_of_points=0,               \
+                  number_of_dimensions=2, ):
+        super().__init__( cursor,
+                          profile_identifier=profile_identifier,     \
+                          flow_class=flow_class,                     \
+                          year=year,                                 \
+                          case_number=case_number,                   \
+                          series_number=series_number,               \
+                          profile_number=profile_number,             \
+                          data_type=data_type,                       \
+                          number_of_points=number_of_points,         \
+                          number_of_dimensions=number_of_dimensions, )
 
 class Wake(FreeShearFlow):
-    def __init__( self, cursor, profile_identifier=None, \
-                  flow_class=WAKE_CLASS, year=None,      \
-                  case_number=None, series_number=None, profile_number=None, ):
-        super().__init__( cursor, profile_identifier=profile_identifier, \
-                          flow_class=flow_class, year=year,              \
-                          case_number=case_number,                       \
-                          series_number=series_number,                   \
-                          profile_number=profile_number )
+    def __init__( self,                             \
+                  cursor,                           \
+                  profile_identifier=None,          \
+                  flow_class=WAKE_CLASS,            \
+                  year=None,                        \
+                  case_number=None,                 \
+                  series_number=None,               \
+                  profile_number=None,              \
+                  data_type=EXPERIMENTAL_DATA_TYPE, \
+                  number_of_points=0,               \
+                  number_of_dimensions=2, ):
+        super().__init__( cursor,
+                          profile_identifier=profile_identifier,     \
+                          flow_class=flow_class,                     \
+                          year=year,                                 \
+                          case_number=case_number,                   \
+                          series_number=series_number,               \
+                          profile_number=profile_number,             \
+                          data_type=data_type,                       \
+                          number_of_points=number_of_points,         \
+                          number_of_dimensions=number_of_dimensions, )
 
 class ExternalFlow(WallBoundedFlow):
-    def __init__( self, cursor, profile_identifier=None,     \
-                  flow_class=EXTERNAL_FLOW_CLASS, year=None, \
-                  case_number=None, series_number=None, profile_number=None, ):
-        super().__init__( cursor, profile_identifier=profile_identifier, \
-                          flow_class=flow_class, year=year,              \
-                          case_number=case_number,                       \
-                          series_number=series_number,                   \
-                          profile_number=profile_number )
+    def __init__( self,                             \
+                  cursor,                           \
+                  profile_identifier=None,          \
+                  flow_class=EXTERNAL_FLOW_CLASS,   \
+                  year=None,                        \
+                  case_number=None,                 \
+                  series_number=None,               \
+                  profile_number=None,              \
+                  data_type=EXPERIMENTAL_DATA_TYPE, \
+                  number_of_points=0,               \
+                  number_of_dimensions=2, ):
+        super().__init__( cursor,
+                          profile_identifier=profile_identifier,     \
+                          flow_class=flow_class,                     \
+                          year=year,                                 \
+                          case_number=case_number,                   \
+                          series_number=series_number,               \
+                          profile_number=profile_number,             \
+                          data_type=data_type,                       \
+                          number_of_points=number_of_points,         \
+                          number_of_dimensions=number_of_dimensions, )
 
 class InternalFlow(WallBoundedFlow):
-    def __init__( self, cursor, profile_identifier=None,     \
-                  flow_class=INTERNAL_FLOW_CLASS, year=None, \
-                  case_number=None, series_number=None, profile_number=None, ):
-        super().__init__( cursor, profile_identifier=profile_identifier, \
-                          flow_class=flow_class, year=year,              \
-                          case_number=case_number,                       \
-                          series_number=series_number,                   \
-                          profile_number=profile_number )
+    def __init__( self,                             \
+                  cursor,                           \
+                  profile_identifier=None,          \
+                  flow_class=INTERNAL_FLOW_CLASS,   \
+                  year=None,                        \
+                  case_number=None,                 \
+                  series_number=None,               \
+                  profile_number=None,              \
+                  data_type=EXPERIMENTAL_DATA_TYPE, \
+                  number_of_points=0,               \
+                  number_of_dimensions=2, ):
+        super().__init__( cursor,
+                          profile_identifier=profile_identifier,     \
+                          flow_class=flow_class,                     \
+                          year=year,                                 \
+                          case_number=case_number,                   \
+                          series_number=series_number,               \
+                          profile_number=profile_number,             \
+                          data_type=data_type,                       \
+                          number_of_points=number_of_points,         \
+                          number_of_dimensions=number_of_dimensions, )
+
 
 class BoundaryLayer(ExternalFlow):
-    def __init__( self, cursor, profile_identifier=None,      \
-                  flow_class=BOUNDARY_LAYER_CLASS, year=None, \
-                  case_number=None, series_number=None, profile_number=None, ):
-        super().__init__( cursor, profile_identifier=profile_identifier, \
-                          flow_class=flow_class, year=year,              \
-                          case_number=case_number,                       \
-                          series_number=series_number,                   \
-                          profile_number=profile_number )
+    def __init__( self,                             \
+                  cursor,                           \
+                  profile_identifier=None,          \
+                  flow_class=BOUNDARY_LAYER_CLASS,  \
+                  year=None,                        \
+                  case_number=None,                 \
+                  series_number=None,               \
+                  profile_number=None,              \
+                  data_type=EXPERIMENTAL_DATA_TYPE, \
+                  number_of_points=0,               \
+                  number_of_dimensions=2, ):
+        super().__init__( cursor,
+                          profile_identifier=profile_identifier,     \
+                          flow_class=flow_class,                     \
+                          year=year,                                 \
+                          case_number=case_number,                   \
+                          series_number=series_number,               \
+                          profile_number=profile_number,             \
+                          data_type=data_type,                       \
+                          number_of_points=number_of_points,         \
+                          number_of_dimensions=number_of_dimensions, )
 
 class WallJet(ExternalFlow):
-    def __init__( self, cursor, profile_identifier=None, \
-                  flow_class=WALL_JET_CLASS, year=None,  \
-                  case_number=None, series_number=None, profile_number=None, ):
-        super().__init__( cursor, profile_identifier=profile_identifier, \
-                          flow_class=flow_class, year=year,              \
-                          case_number=case_number,                       \
-                          series_number=series_number,                   \
-                          profile_number=profile_number )
+    def __init__( self,                             \
+                  cursor,                           \
+                  profile_identifier=None,          \
+                  flow_class=WALL_JET_CLASS,        \
+                  year=None,                        \
+                  case_number=None,                 \
+                  series_number=None,               \
+                  profile_number=None,              \
+                  data_type=EXPERIMENTAL_DATA_TYPE, \
+                  number_of_points=0,               \
+                  number_of_dimensions=2, ):
+        super().__init__( cursor,
+                          profile_identifier=profile_identifier,     \
+                          flow_class=flow_class,                     \
+                          year=year,                                 \
+                          case_number=case_number,                   \
+                          series_number=series_number,               \
+                          profile_number=profile_number,             \
+                          data_type=data_type,                       \
+                          number_of_points=number_of_points,         \
+                          number_of_dimensions=number_of_dimensions, )
 
 class DuctFlow(InternalFlow):
-    def __init__( self, cursor, profile_identifier=None, \
-                  flow_class=DUCT_FLOW_CLASS, year=None, \
-                  case_number=None, series_number=None, profile_number=None, ):
-        super().__init__( cursor, profile_identifier=profile_identifier, \
-                          flow_class=flow_class, year=year,              \
-                          case_number=case_number,                       \
-                          series_number=series_number,                   \
-                          profile_number=profile_number )
+    def __init__( self,                             \
+                  cursor,                           \
+                  profile_identifier=None,          \
+                  flow_class=DUCT_FLOW_CLASS,       \
+                  year=None,                        \
+                  case_number=None,                 \
+                  series_number=None,               \
+                  profile_number=None,              \
+                  data_type=EXPERIMENTAL_DATA_TYPE, \
+                  number_of_points=0,               \
+                  number_of_dimensions=2, ):
+        super().__init__( cursor,
+                          profile_identifier=profile_identifier,     \
+                          flow_class=flow_class,                     \
+                          year=year,                                 \
+                          case_number=case_number,                   \
+                          series_number=series_number,               \
+                          profile_number=profile_number,             \
+                          data_type=data_type,                       \
+                          number_of_points=number_of_points,         \
+                          number_of_dimensions=number_of_dimensions, )
 
 class FlowWithRelativeMotion(InternalFlow):
-    def __init__( self, cursor, profile_identifier=None,       \
-                  flow_class=RELATIVE_MOTION_CLASS, year=None, \
-                  case_number=None, series_number=None, profile_number=None, ):
-        super().__init__( cursor, profile_identifier=profile_identifier, \
-                          flow_class=flow_class, year=year,              \
-                          case_number=case_number,                       \
-                          series_number=series_number,                   \
-                          profile_number=profile_number )
+    def __init__( self,                             \
+                  cursor,                           \
+                  profile_identifier=None,          \
+                  flow_class=RELATIVE_MOTION_CLASS, \
+                  year=None,                        \
+                  case_number=None,                 \
+                  series_number=None,               \
+                  profile_number=None,              \
+                  data_type=EXPERIMENTAL_DATA_TYPE, \
+                  number_of_points=0,               \
+                  number_of_dimensions=2, ):
+        super().__init__( cursor,
+                          profile_identifier=profile_identifier,     \
+                          flow_class=flow_class,                     \
+                          year=year,                                 \
+                          case_number=case_number,                   \
+                          series_number=series_number,               \
+                          profile_number=profile_number,             \
+                          data_type=data_type,                       \
+                          number_of_points=number_of_points,         \
+                          number_of_dimensions=number_of_dimensions, )
