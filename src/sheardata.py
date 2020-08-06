@@ -102,7 +102,7 @@ class ShearLayer:
     _cursor             = None
     _profile_identifier = None
 
-    # TODO: This is unsafe at the moment.  Later I will add in checks on the
+    # TODO: This is insecure at the moment.  Later I will add in checks on the
     # table and variable.
     def _set_integer( self, table, variable, value ):
         self._cursor.execute(
@@ -110,13 +110,27 @@ class ShearLayer:
             ( int(value), self.profile_identifier(), ),
         )
 
-    # TODO: This is unsafe at the moment.  Later I will add in checks on the
+    def _get_integer( self, table, variable ):
+        self._cursor.execute(
+            "SELECT "+variable+" FROM "+table+" WHERE profile_identifier=?",
+            ( self.profile_identifier(), ),
+        )
+        return int(self._cursor.fetchone()[0])
+
+    # TODO: This is insecure at the moment.  Later I will add in checks on the
     # table and variable.
     def _set_string( self, table, variable, value ):
         self._cursor.execute(
             "UPDATE "+table+" SET "+variable+"=? WHERE profile_identifier=?",
             ( str(value), self.profile_identifier(), ),
         )
+
+    def _get_string( self, table, variable ):
+        self._cursor.execute(
+            "SELECT "+variable+" FROM "+table+" WHERE profile_identifier=?",
+            ( self.profile_identifier(), ),
+        )
+        return str(self._cursor.fetchone()[0])
 
     def case_identifier( self, readable=False ):
         if ( readable ):
@@ -127,11 +141,10 @@ class ShearLayer:
                 readable=True,
             )
         else:
-            self._cursor.execute(
-                "SELECT case_identifier FROM globals_d WHERE profile_identifier=?",
-                ( self.profile_identifier(), ),
+            return self._get_string(
+                DISCRETE_GLOBALS_TABLE,
+                "case_identifier",
             )
-            return str(self._cursor.fetchone()[0])
 
     def set_case_identifier( self, case_identifier ):
         self._set_string(
@@ -141,11 +154,10 @@ class ShearLayer:
         )
 
     def case_number( self ):
-        self._cursor.execute(
-            "SELECT case_number FROM globals_d WHERE profile_identifier=?",
-            ( self.profile_identifier(), ),
+        return self._get_integer(
+            DISCRETE_GLOBALS_TABLE,
+            "case_number",
         )
-        return int(self._cursor.fetchone()[0])
 
     def set_case_number( self, case_number ):
         self._set_integer(
@@ -155,11 +167,10 @@ class ShearLayer:
         )
 
     def flow_class( self ):
-        self._cursor.execute(
-            "SELECT flow_class FROM globals_d WHERE profile_identifier=?",
-            ( self.profile_identifier(), ),
+        return self._get_string(
+            DISCRETE_GLOBALS_TABLE,
+            "flow_class",
         )
-        return str(self._cursor.fetchone()[0])
 
     def set_flow_class( self, flow_class ):
         self._set_string(
@@ -182,11 +193,10 @@ class ShearLayer:
             return self._profile_identifier
 
     def profile_number( self ):
-        self._cursor.execute(
-            "SELECT profile_number FROM globals_d WHERE profile_identifier=?",
-            ( self.profile_identifier(), ),
+        return self._get_integer(
+            DISCRETE_GLOBALS_TABLE,
+            "profile_number",
         )
-        return int(self._cursor.fetchone()[0])
 
     def set_profile_number( self, profile_number ):
         self._set_integer(
@@ -205,11 +215,10 @@ class ShearLayer:
                 readable=True,
             )
         else:
-            self._cursor.execute(
-                "SELECT series_identifier FROM globals_d WHERE profile_identifier=?",
-                ( self.profile_identifier(), ),
+            return self._get_string(
+                DISCRETE_GLOBALS_TABLE,
+                "series_identifier",
             )
-            return str(self._cursor.fetchone()[0])
 
     def set_series_identifier( self, series_identifier ):
         self._set_string(
@@ -219,11 +228,10 @@ class ShearLayer:
         )
 
     def series_number( self ):
-        self._cursor.execute(
-            "SELECT series_number FROM globals_d WHERE profile_identifier=?",
-            ( self.profile_identifier(), ),
+        return self._get_integer(
+            DISCRETE_GLOBALS_TABLE,
+            "series_number",
         )
-        return int(self._cursor.fetchone()[0])
 
     def set_series_number( self, series_number ):
         self._set_integer(
@@ -233,11 +241,10 @@ class ShearLayer:
         )
 
     def year( self ):
-        self._cursor.execute(
-            "SELECT year FROM globals_d WHERE profile_identifier=?",
-            ( self.profile_identifier(), ),
+        return self._get_integer(
+            DISCRETE_GLOBALS_TABLE,
+            "year",
         )
-        return int(self._cursor.fetchone()[0])
 
     def set_year( self, year ):
         self._set_integer(
