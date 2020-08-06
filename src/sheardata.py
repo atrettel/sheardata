@@ -42,7 +42,7 @@ MULTIPHASE   = "M"
 
 DEFAULT_PROFILE_IDENTIFIER = "S9999001001001"
 
-DISCRETE_GLOBALS_TABLE = "globals_d"
+DISCRETE_GLOBALS_TABLE = "discrete_globals"
 
 def identify_case( flow_class, year, case_number, readable=False ):
     separator = ""
@@ -186,6 +186,19 @@ class ShearLayer:
             case_number,
         )
 
+    def data_type( self ):
+        return self._get_string(
+            DISCRETE_GLOBALS_TABLE,
+            "data_type",
+        )
+
+    def set_data_type( self, data_type ):
+        self._set_string(
+            DISCRETE_GLOBALS_TABLE,
+            "data_type",
+            data_type,
+        )
+
     def flow_class( self ):
         return self._get_string(
             DISCRETE_GLOBALS_TABLE,
@@ -197,6 +210,32 @@ class ShearLayer:
             DISCRETE_GLOBALS_TABLE,
             "flow_class",
             flow_class,
+        )
+
+    def number_of_dimensions( self ):
+        return self._get_integer(
+            DISCRETE_GLOBALS_TABLE,
+            "number_of_dimensions",
+        )
+
+    def set_number_of_dimensions( self, number_of_dimensions ):
+        self._set_integer(
+            DISCRETE_GLOBALS_TABLE,
+            "number_of_dimensions",
+            number_of_dimensions,
+        )
+
+    def number_of_points( self ):
+        return self._get_integer(
+            DISCRETE_GLOBALS_TABLE,
+            "number_of_points",
+        )
+
+    def set_number_of_points( self, number_of_points ):
+        self._set_integer(
+            DISCRETE_GLOBALS_TABLE,
+            "number_of_points",
+            number_of_points,
         )
 
     def profile_identifier( self, readable=False ):
@@ -297,17 +336,17 @@ class ShearLayer:
 
             cursor.execute(
             """
-            SELECT profile_identifier FROM globals_d WHERE profile_identifier=?
+            SELECT profile_identifier FROM discrete_globals WHERE profile_identifier=?
             LIMIT 1
             """,
             ( self._profile_identifier, ) )
 
             if ( cursor.fetchone() == None ):
-                cursor.execute( "INSERT INTO globals_d DEFAULT VALUES" )
+                cursor.execute( "INSERT INTO discrete_globals DEFAULT VALUES" )
 
                 cursor.execute(
                 """
-                UPDATE globals_d SET profile_identifier=?
+                UPDATE discrete_globals SET profile_identifier=?
                 WHERE profile_identifier=?
                 """,
                 (
@@ -321,6 +360,9 @@ class ShearLayer:
                 self.set_case_number( case_number )
                 self.set_series_number( series_number )
                 self.set_profile_number( profile_number )
+                self.set_data_type( data_type )
+                self.set_number_of_points( number_of_points )
+                self.set_number_of_dimensions( number_of_dimensions )
 
                 self.set_case_identifier(
                     identify_case(
