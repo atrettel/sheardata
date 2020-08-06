@@ -42,7 +42,15 @@ MULTIPHASE   = "M"
 
 DEFAULT_PROFILE_IDENTIFIER = "S9999001001001"
 
-DISCRETE_GLOBALS_TABLE = "discrete_globals"
+DISCRETE_GLOBALS_TABLE       =      "discrete_globals"
+DIMENSIONAL_GLOBALS_TABLE    =   "dimensional_globals"
+DIMENSIONLESS_GLOBALS_TABLE  = "dimensionless_globals"
+DIMENSIONLESS_PROFILES_TABLE = "dimensionless_profiles"
+
+UNWEIGHTED_PREFIX       = "uw_"
+DENSITY_WEIGHTED_PREFIX = "dw_"
+VALUE_POSTFIX           = "_n"
+UNCERTAINTY_POSTFIX     = "_s"
 
 def identify_case( flow_class, year, case_number, readable=False ):
     separator = ""
