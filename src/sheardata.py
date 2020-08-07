@@ -118,7 +118,7 @@ def sanitize_identifier( identifier ):
     return identifier.replace("-","")
 
 class ShearLayer:
-    _cursor             = None
+    _database           = None
     _profile_identifier = None
 
     def __repr__( self ):
@@ -127,40 +127,57 @@ class ShearLayer:
     def __str__( self ):
         return self.profile_identifier( readable=True )
 
+    def _connection( self ):
+        connection = sqlite3.connect( self._database )
+        cursor = connection.cursor()
+        return connection, cursor
+
     def _table_exists( self, table ):
-        self._cursor.execute(
+        connection, cursor = self._connection()
+
+        cursor.execute(
             "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
             ( str(table), ),
         )
-        if ( self._cursor.fetchone() == None ):
+        answer = cursor.fetchone()
+        connection.close()
+        if ( answer == None ):
             return False
         else:
             return True
 
     def _table_and_variable_exists( self, table, variable ):
         if ( self._table_exists(table) ):
-            self._cursor.execute(
+            connection, cursor = self._connection()
+            cursor.execute(
                 "PRAGMA table_info("+table+")",
             )
-            for column in self._cursor.fetchall():
+            for column in cursor.fetchall():
                 if ( variable == column[1] ):
+                    connection.close()
                     return True
+            connection.close()
         return False
 
     def _set_integer( self, table, variable, value ):
         assert( self._table_and_variable_exists(table,variable) )
-        self._cursor.execute(
+        connection, cursor = self._connection()
+        cursor.execute(
             "UPDATE "+table+" SET "+variable+"=? WHERE profile_identifier=?",
-            ( int(value), self.profile_identifier(), ),
+            ( int(value), self._profile_identifier, ),
         )
+        connection.commit()
+        connection.close()
 
     def _get_integer( self, table, variable ):
         assert( self._table_and_variable_exists(table,variable) )
-        self._cursor.execute(
+        connection, cursor = self._connection()
+        cursor.execute(
             "SELECT "+variable+" FROM "+table+" WHERE profile_identifier=?",
-            ( self.profile_identifier(), ),
+            ( self._profile_identifier, ),
         )
-        answer = self._cursor.fetchone()[0]
+        answer = cursor.fetchone()[0]
+        connection.close()
         if ( answer == None ):
             return answer
         else:
@@ -168,18 +185,23 @@ class ShearLayer:
 
     def _set_string( self, table, variable, value ):
         assert( self._table_and_variable_exists(table,variable) )
-        self._cursor.execute(
+        connection, cursor = self._connection()
+        cursor.execute(
             "UPDATE "+table+" SET "+variable+"=? WHERE profile_identifier=?",
-            ( str(value), self.profile_identifier(), ),
+            ( str(value), self._profile_identifier, ),
         )
+        connection.commit()
+        connection.close()
 
     def _get_string( self, table, variable ):
         assert( self._table_and_variable_exists(table,variable) )
-        self._cursor.execute(
+        connection, cursor = self._connection()
+        cursor.execute(
             "SELECT "+variable+" FROM "+table+" WHERE profile_identifier=?",
-            ( self.profile_identifier(), ),
+            ( self._profile_identifier, ),
         )
-        answer = self._cursor.fetchone()[0]
+        answer = cursor.fetchone()[0]
+        connection.close()
         if ( answer == None ):
             return answer
         else:
@@ -462,7 +484,7 @@ class ShearLayer:
         )
 
     def __init__( self,                             \
-                  cursor,                           \
+                  database,                         \
                   profile_identifier=None,          \
                   flow_class=SHEAR_LAYER_CLASS,     \
                   year=None,                        \
@@ -472,7 +494,7 @@ class ShearLayer:
                   data_type=EXPERIMENTAL_DATA_TYPE, \
                   number_of_points=0,               \
                   number_of_dimensions=2, ):
-        self._cursor = cursor
+        self._database = database
         if ( profile_identifier == None and case_number != None ):
             self._profile_identifier = identify_profile(
                 flow_class,
@@ -482,6 +504,9 @@ class ShearLayer:
                 profile_number,
                 readable=False,
             )
+
+            connection = sqlite3.connect( self._database )
+            cursor = connection.cursor()
 
             cursor.execute(
             """
@@ -503,6 +528,10 @@ class ShearLayer:
                     _DEFAULT_PROFILE_IDENTIFIER,
                 )
                 )
+
+                connection.commit()
+                cursor.close()
+                connection.close()
 
                 self.set_flow_class( flow_class )
                 self.set_year( year )
@@ -535,7 +564,7 @@ class ShearLayer:
 
 class FreeShearFlow(ShearLayer):
     def __init__( self,                             \
-                  cursor,                           \
+                  database,                         \
                   profile_identifier=None,          \
                   flow_class=FREE_SHEAR_FLOW_CLASS, \
                   year=None,                        \
@@ -545,7 +574,7 @@ class FreeShearFlow(ShearLayer):
                   data_type=EXPERIMENTAL_DATA_TYPE, \
                   number_of_points=0,               \
                   number_of_dimensions=2, ):
-        super().__init__( cursor,
+        super().__init__( database,                                  \
                           profile_identifier=profile_identifier,     \
                           flow_class=flow_class,                     \
                           year=year,                                 \
@@ -558,7 +587,7 @@ class FreeShearFlow(ShearLayer):
 
 class WallBoundedFlow(ShearLayer):
     def __init__( self,                               \
-                  cursor,                             \
+                  database,                           \
                   profile_identifier=None,            \
                   flow_class=WALL_BOUNDED_FLOW_CLASS, \
                   year=None,                          \
@@ -568,7 +597,7 @@ class WallBoundedFlow(ShearLayer):
                   data_type=EXPERIMENTAL_DATA_TYPE,   \
                   number_of_points=0,                 \
                   number_of_dimensions=2, ):
-        super().__init__( cursor,
+        super().__init__( database,                                  \
                           profile_identifier=profile_identifier,     \
                           flow_class=flow_class,                     \
                           year=year,                                 \
@@ -580,7 +609,7 @@ class WallBoundedFlow(ShearLayer):
                           number_of_dimensions=number_of_dimensions, )
 
 class FreeJet(FreeShearFlow):
-    def __init__( self,                             \
+    def __init__( database,                         \
                   cursor,                           \
                   profile_identifier=None,          \
                   flow_class=FREE_JET_CLASS,        \
@@ -591,7 +620,7 @@ class FreeJet(FreeShearFlow):
                   data_type=EXPERIMENTAL_DATA_TYPE, \
                   number_of_points=0,               \
                   number_of_dimensions=2, ):
-        super().__init__( cursor,
+        super().__init__( database,                                  \
                           profile_identifier=profile_identifier,     \
                           flow_class=flow_class,                     \
                           year=year,                                 \
@@ -604,7 +633,7 @@ class FreeJet(FreeShearFlow):
 
 class MixingLayer(FreeShearFlow):
     def __init__( self,                             \
-                  cursor,                           \
+                  database,                         \
                   profile_identifier=None,          \
                   flow_class=MIXING_LAYER_CLASS,    \
                   year=None,                        \
@@ -614,7 +643,7 @@ class MixingLayer(FreeShearFlow):
                   data_type=EXPERIMENTAL_DATA_TYPE, \
                   number_of_points=0,               \
                   number_of_dimensions=2, ):
-        super().__init__( cursor,
+        super().__init__( database,                                  \
                           profile_identifier=profile_identifier,     \
                           flow_class=flow_class,                     \
                           year=year,                                 \
@@ -627,7 +656,7 @@ class MixingLayer(FreeShearFlow):
 
 class Wake(FreeShearFlow):
     def __init__( self,                             \
-                  cursor,                           \
+                  database,                         \
                   profile_identifier=None,          \
                   flow_class=WAKE_CLASS,            \
                   year=None,                        \
@@ -637,7 +666,7 @@ class Wake(FreeShearFlow):
                   data_type=EXPERIMENTAL_DATA_TYPE, \
                   number_of_points=0,               \
                   number_of_dimensions=2, ):
-        super().__init__( cursor,
+        super().__init__( database,                                  \
                           profile_identifier=profile_identifier,     \
                           flow_class=flow_class,                     \
                           year=year,                                 \
@@ -650,7 +679,7 @@ class Wake(FreeShearFlow):
 
 class ExternalFlow(WallBoundedFlow):
     def __init__( self,                             \
-                  cursor,                           \
+                  database,                         \
                   profile_identifier=None,          \
                   flow_class=EXTERNAL_FLOW_CLASS,   \
                   year=None,                        \
@@ -660,7 +689,7 @@ class ExternalFlow(WallBoundedFlow):
                   data_type=EXPERIMENTAL_DATA_TYPE, \
                   number_of_points=0,               \
                   number_of_dimensions=2, ):
-        super().__init__( cursor,
+        super().__init__( database,                                  \
                           profile_identifier=profile_identifier,     \
                           flow_class=flow_class,                     \
                           year=year,                                 \
@@ -699,7 +728,7 @@ class InternalFlow(WallBoundedFlow):
             )
 
     def __init__( self,                             \
-                  cursor,                           \
+                  database,                         \
                   profile_identifier=None,          \
                   flow_class=INTERNAL_FLOW_CLASS,   \
                   year=None,                        \
@@ -709,7 +738,7 @@ class InternalFlow(WallBoundedFlow):
                   data_type=EXPERIMENTAL_DATA_TYPE, \
                   number_of_points=0,               \
                   number_of_dimensions=2, ):
-        super().__init__( cursor,
+        super().__init__( database,                                  \
                           profile_identifier=profile_identifier,     \
                           flow_class=flow_class,                     \
                           year=year,                                 \
@@ -723,7 +752,7 @@ class InternalFlow(WallBoundedFlow):
 
 class BoundaryLayer(ExternalFlow):
     def __init__( self,                             \
-                  cursor,                           \
+                  database,                         \
                   profile_identifier=None,          \
                   flow_class=BOUNDARY_LAYER_CLASS,  \
                   year=None,                        \
@@ -733,7 +762,7 @@ class BoundaryLayer(ExternalFlow):
                   data_type=EXPERIMENTAL_DATA_TYPE, \
                   number_of_points=0,               \
                   number_of_dimensions=2, ):
-        super().__init__( cursor,
+        super().__init__( database,                                  \
                           profile_identifier=profile_identifier,     \
                           flow_class=flow_class,                     \
                           year=year,                                 \
@@ -746,7 +775,7 @@ class BoundaryLayer(ExternalFlow):
 
 class WallJet(ExternalFlow):
     def __init__( self,                             \
-                  cursor,                           \
+                  database,                         \
                   profile_identifier=None,          \
                   flow_class=WALL_JET_CLASS,        \
                   year=None,                        \
@@ -756,7 +785,7 @@ class WallJet(ExternalFlow):
                   data_type=EXPERIMENTAL_DATA_TYPE, \
                   number_of_points=0,               \
                   number_of_dimensions=2, ):
-        super().__init__( cursor,
+        super().__init__( database,                                  \
                           profile_identifier=profile_identifier,     \
                           flow_class=flow_class,                     \
                           year=year,                                 \
@@ -769,7 +798,7 @@ class WallJet(ExternalFlow):
 
 class DuctFlow(InternalFlow):
     def __init__( self,                             \
-                  cursor,                           \
+                  database,                         \
                   profile_identifier=None,          \
                   flow_class=DUCT_FLOW_CLASS,       \
                   year=None,                        \
@@ -792,7 +821,7 @@ class DuctFlow(InternalFlow):
 
 class FlowWithRelativeMotion(InternalFlow):
     def __init__( self,                             \
-                  cursor,                           \
+                  database,                         \
                   profile_identifier=None,          \
                   flow_class=RELATIVE_MOTION_CLASS, \
                   year=None,                        \
@@ -802,7 +831,7 @@ class FlowWithRelativeMotion(InternalFlow):
                   data_type=EXPERIMENTAL_DATA_TYPE, \
                   number_of_points=0,               \
                   number_of_dimensions=2, ):
-        super().__init__( cursor,
+        super().__init__( database,                                  \
                           profile_identifier=profile_identifier,     \
                           flow_class=flow_class,                     \
                           year=year,                                 \
@@ -988,4 +1017,5 @@ def create_empty_database( filename ):
             """,
             )
 
-    return connection
+    connection.commit()
+    connection.close()
