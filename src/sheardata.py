@@ -40,6 +40,9 @@ GAS_PHASE    = "G"
 PLASMA_PHASE = "P"
 MULTIPHASE   = "M"
 
+AIR_WORKING_FLUID   = "132259-10-0"
+WATER_WORKING_FLUID =   "7732-18-5"
+
 _DEFAULT_PROFILE_IDENTIFIER = "S9999001001001"
 
 _DISCRETE_GLOBALS_TABLE       =      "discrete_globals"
@@ -326,6 +329,31 @@ class ShearLayer:
             _DISCRETE_GLOBALS_TABLE,
             "series_number",
             series_number,
+        )
+
+    def working_fluid( self ):
+        return self._get_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "working_fluid",
+        )
+
+    def working_fluid_phase( self ):
+        return self._get_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "working_fluid_phase",
+        )
+
+    def set_working_fluid( self, fluid, phase=GAS_PHASE ):
+        self._set_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "working_fluid",
+            fluid,
+        )
+
+        self._set_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "working_fluid_phase",
+            phase,
         )
 
     def year( self ):
