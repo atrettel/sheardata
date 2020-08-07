@@ -143,7 +143,11 @@ class ShearLayer:
             "SELECT "+variable+" FROM "+table+" WHERE profile_identifier=?",
             ( self.profile_identifier(), ),
         )
-        return int(self._cursor.fetchone()[0])
+        answer = self._cursor.fetchone()[0]
+        if ( answer == None ):
+            return answer
+        else:
+            return int(answer)
 
     def _set_string( self, table, variable, value ):
         assert( self._table_and_variable_exists(table,variable) )
@@ -158,7 +162,11 @@ class ShearLayer:
             "SELECT "+variable+" FROM "+table+" WHERE profile_identifier=?",
             ( self.profile_identifier(), ),
         )
-        return str(self._cursor.fetchone()[0])
+        answer = self._cursor.fetchone()[0]
+        if ( answer == None ):
+            return answer
+        else:
+            return str(answer)
 
     def case_identifier( self, readable=False ):
         if ( readable ):
