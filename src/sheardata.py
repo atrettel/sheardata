@@ -43,6 +43,8 @@ MULTIPHASE   = "M"
 AIR_WORKING_FLUID   = "132259-10-0"
 WATER_WORKING_FLUID =   "7732-18-5"
 
+RECTANGULAR_COORDINATES = "XYZ"
+
 _DEFAULT_PROFILE_IDENTIFIER = "S9999001001001"
 
 _DISCRETE_GLOBALS_TABLE       =      "discrete_globals"
@@ -203,6 +205,19 @@ class ShearLayer:
             _DISCRETE_GLOBALS_TABLE,
             "case_number",
             case_number,
+        )
+
+    def coordinate_system( self ):
+        return self._get_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "coordinate_system",
+        )
+
+    def set_coordinate_system( self, coordinate_system ):
+        self._set_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "coordinate_system",
+            coordinate_system,
         )
 
     def data_type( self ):
