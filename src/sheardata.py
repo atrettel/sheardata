@@ -254,6 +254,19 @@ class ShearLayer:
             number_of_points,
         )
 
+    def originators_identifier( self ):
+        return self._get_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "originators_identifier",
+        )
+
+    def set_originators_identifier( self, originators_identifier ):
+        self._set_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "originators_identifier",
+            originators_identifier,
+        )
+
     def profile_identifier( self, readable=False ):
         if ( readable ):
             return identify_profile(
