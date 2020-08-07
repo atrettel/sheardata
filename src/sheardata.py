@@ -45,6 +45,9 @@ WATER_WORKING_FLUID =   "7732-18-5"
 
 RECTANGULAR_COORDINATES = "XYZ"
 
+ELLIPTICAL_GEOMETRY = "E"
+POLYGONAL_GEOMETRY  = "P"
+
 _DEFAULT_PROFILE_IDENTIFIER = "S9999001001001"
 
 _DISCRETE_GLOBALS_TABLE       =      "discrete_globals"
@@ -595,6 +598,32 @@ class ExternalFlow(WallBoundedFlow):
                           number_of_dimensions=number_of_dimensions, )
 
 class InternalFlow(WallBoundedFlow):
+    def geometry( self ):
+        return self._get_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "geometry",
+        )
+
+    def number_of_sides( self ):
+        return self._get_integer(
+            _DISCRETE_GLOBALS_TABLE,
+            "number_of_sides",
+        )
+
+    def set_geometry( self, geometry, number_of_sides=4 ):
+        self._set_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "geometry",
+            geometry,
+        )
+
+        if ( geometry == POLYGONAL_GEOMETRY ):
+            self._set_integer(
+                _DISCRETE_GLOBALS_TABLE,
+                "number_of_sides",
+                number_of_sides,
+            )
+
     def __init__( self,                             \
                   cursor,                           \
                   profile_identifier=None,          \
