@@ -40,17 +40,17 @@ GAS_PHASE    = "G"
 PLASMA_PHASE = "P"
 MULTIPHASE   = "M"
 
-DEFAULT_PROFILE_IDENTIFIER = "S9999001001001"
+_DEFAULT_PROFILE_IDENTIFIER = "S9999001001001"
 
-DISCRETE_GLOBALS_TABLE       =      "discrete_globals"
-DIMENSIONAL_GLOBALS_TABLE    =   "dimensional_globals"
-DIMENSIONLESS_GLOBALS_TABLE  = "dimensionless_globals"
-DIMENSIONLESS_PROFILES_TABLE = "dimensionless_profiles"
+_DISCRETE_GLOBALS_TABLE       =      "discrete_globals"
+_DIMENSIONAL_GLOBALS_TABLE    =   "dimensional_globals"
+_DIMENSIONLESS_GLOBALS_TABLE  = "dimensionless_globals"
+_DIMENSIONLESS_PROFILES_TABLE = "dimensionless_profiles"
 
-UNWEIGHTED_PREFIX       = "uw_"
-DENSITY_WEIGHTED_PREFIX = "dw_"
-VALUE_POSTFIX           = "_n"
-UNCERTAINTY_POSTFIX     = "_s"
+_UNWEIGHTED_PREFIX       = "uw_"
+_DENSITY_WEIGHTED_PREFIX = "dw_"
+_VALUE_POSTFIX           = "_n"
+_UNCERTAINTY_POSTFIX     = "_s"
 
 def identify_case( flow_class, year, case_number, readable=False ):
     separator = ""
@@ -178,78 +178,78 @@ class ShearLayer:
             )
         else:
             return self._get_string(
-                DISCRETE_GLOBALS_TABLE,
+                _DISCRETE_GLOBALS_TABLE,
                 "case_identifier",
             )
 
     def set_case_identifier( self, case_identifier ):
         self._set_string(
-            DISCRETE_GLOBALS_TABLE,
+            _DISCRETE_GLOBALS_TABLE,
             "case_identifier",
             case_identifier,
         )
 
     def case_number( self ):
         return self._get_integer(
-            DISCRETE_GLOBALS_TABLE,
+            _DISCRETE_GLOBALS_TABLE,
             "case_number",
         )
 
     def set_case_number( self, case_number ):
         self._set_integer(
-            DISCRETE_GLOBALS_TABLE,
+            _DISCRETE_GLOBALS_TABLE,
             "case_number",
             case_number,
         )
 
     def data_type( self ):
         return self._get_string(
-            DISCRETE_GLOBALS_TABLE,
+            _DISCRETE_GLOBALS_TABLE,
             "data_type",
         )
 
     def set_data_type( self, data_type ):
         self._set_string(
-            DISCRETE_GLOBALS_TABLE,
+            _DISCRETE_GLOBALS_TABLE,
             "data_type",
             data_type,
         )
 
     def flow_class( self ):
         return self._get_string(
-            DISCRETE_GLOBALS_TABLE,
+            _DISCRETE_GLOBALS_TABLE,
             "flow_class",
         )
 
     def set_flow_class( self, flow_class ):
         self._set_string(
-            DISCRETE_GLOBALS_TABLE,
+            _DISCRETE_GLOBALS_TABLE,
             "flow_class",
             flow_class,
         )
 
     def number_of_dimensions( self ):
         return self._get_integer(
-            DISCRETE_GLOBALS_TABLE,
+            _DISCRETE_GLOBALS_TABLE,
             "number_of_dimensions",
         )
 
     def set_number_of_dimensions( self, number_of_dimensions ):
         self._set_integer(
-            DISCRETE_GLOBALS_TABLE,
+            _DISCRETE_GLOBALS_TABLE,
             "number_of_dimensions",
             number_of_dimensions,
         )
 
     def number_of_points( self ):
         return self._get_integer(
-            DISCRETE_GLOBALS_TABLE,
+            _DISCRETE_GLOBALS_TABLE,
             "number_of_points",
         )
 
     def set_number_of_points( self, number_of_points ):
         self._set_integer(
-            DISCRETE_GLOBALS_TABLE,
+            _DISCRETE_GLOBALS_TABLE,
             "number_of_points",
             number_of_points,
         )
@@ -269,13 +269,13 @@ class ShearLayer:
 
     def profile_number( self ):
         return self._get_integer(
-            DISCRETE_GLOBALS_TABLE,
+            _DISCRETE_GLOBALS_TABLE,
             "profile_number",
         )
 
     def set_profile_number( self, profile_number ):
         self._set_integer(
-            DISCRETE_GLOBALS_TABLE,
+            _DISCRETE_GLOBALS_TABLE,
             "profile_number",
             profile_number,
         )
@@ -291,39 +291,39 @@ class ShearLayer:
             )
         else:
             return self._get_string(
-                DISCRETE_GLOBALS_TABLE,
+                _DISCRETE_GLOBALS_TABLE,
                 "series_identifier",
             )
 
     def set_series_identifier( self, series_identifier ):
         self._set_string(
-            DISCRETE_GLOBALS_TABLE,
+            _DISCRETE_GLOBALS_TABLE,
             "series_identifier",
             series_identifier,
         )
 
     def series_number( self ):
         return self._get_integer(
-            DISCRETE_GLOBALS_TABLE,
+            _DISCRETE_GLOBALS_TABLE,
             "series_number",
         )
 
     def set_series_number( self, series_number ):
         self._set_integer(
-            DISCRETE_GLOBALS_TABLE,
+            _DISCRETE_GLOBALS_TABLE,
             "series_number",
             series_number,
         )
 
     def year( self ):
         return self._get_integer(
-            DISCRETE_GLOBALS_TABLE,
+            _DISCRETE_GLOBALS_TABLE,
             "year",
         )
 
     def set_year( self, year ):
         self._set_integer(
-            DISCRETE_GLOBALS_TABLE,
+            _DISCRETE_GLOBALS_TABLE,
             "year",
             year,
         )
@@ -367,7 +367,7 @@ class ShearLayer:
                 """,
                 (
                     self._profile_identifier,
-                    DEFAULT_PROFILE_IDENTIFIER,
+                    _DEFAULT_PROFILE_IDENTIFIER,
                 )
                 )
 
@@ -659,7 +659,7 @@ def create_empty_database( filename ):
     cursor = connection.cursor()
 
     cursor.execute(
-    "CREATE TABLE "+DISCRETE_GLOBALS_TABLE+" ("+
+    "CREATE TABLE "+_DISCRETE_GLOBALS_TABLE+" ("+
     """
     profile_identifier TEXT NOT NULL UNIQUE DEFAULT "S9999001001001",
     series_identifier TEXT NOT NULL DEFAULT "S9999001001",
@@ -688,9 +688,9 @@ def create_empty_database( filename ):
     """
     )
 
-    for postfix in [ VALUE_POSTFIX, UNCERTAINTY_POSTFIX ]:
+    for postfix in [ _VALUE_POSTFIX, _UNCERTAINTY_POSTFIX ]:
         cursor.execute(
-        "CREATE TABLE "+DIMENSIONAL_GLOBALS_TABLE+postfix+" ("+
+        "CREATE TABLE "+_DIMENSIONAL_GLOBALS_TABLE+postfix+" ("+
         """
         profile_identifier TEXT NOT NULL UNIQUE DEFAULT "S9999001001001",
         origin_streamwise_coordinate REAL DEFAULT NULL,
@@ -709,9 +709,9 @@ def create_empty_database( filename ):
         """,
         )
 
-        for prefix in [ UNWEIGHTED_PREFIX, DENSITY_WEIGHTED_PREFIX ]:
+        for prefix in [ _UNWEIGHTED_PREFIX, _DENSITY_WEIGHTED_PREFIX ]:
             cursor.execute(
-            "CREATE TABLE "+prefix+DIMENSIONAL_GLOBALS_TABLE+postfix+" ("+
+            "CREATE TABLE "+prefix+_DIMENSIONAL_GLOBALS_TABLE+postfix+" ("+
             """
             profile_identifier TEXT NOT NULL UNIQUE DEFAULT "S9999001001001",
             bulk_dynamic_viscosity REAL DEFAULT NULL,
@@ -792,7 +792,7 @@ def create_empty_database( filename ):
             )
 
             cursor.execute(
-            "CREATE TABLE "+prefix+DIMENSIONLESS_GLOBALS_TABLE+postfix+" ("+
+            "CREATE TABLE "+prefix+_DIMENSIONLESS_GLOBALS_TABLE+postfix+" ("+
             """
             profile_identifier TEXT NOT NULL UNIQUE DEFAULT "S9999001001001",
             bulk_heat_capacity_ratio REAL DEFAULT NULL,
