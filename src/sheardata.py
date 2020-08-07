@@ -114,9 +114,18 @@ def identify_point( flow_class, year, case_number, series_number, \
         int(point_number),
     ).replace(" ","0")
 
+def sanitize_identifier( identifier ):
+    return identifier.replace("-","")
+
 class ShearLayer:
     _cursor             = None
     _profile_identifier = None
+
+    def __repr__( self ):
+        return self.profile_identifier( readable=False )
+
+    def __str__( self ):
+        return self.profile_identifier( readable=True )
 
     def _table_exists( self, table ):
         self._cursor.execute(
@@ -349,6 +358,71 @@ class ShearLayer:
             series_number,
         )
 
+    # Stations
+    #
+    # These functions return profile identifiers.  The function to set the
+    # stations accepts both profile identifiers and shear layer objects.
+    #
+    # TODO: add option to selectors for readable output.
+    def previous_streamwise_station( self ):
+        return self._get_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "previous_streamwise_station",
+        )
+
+    def next_streamwise_station( self ):
+        return self._get_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "next_streamwise_station",
+        )
+
+    def previous_spanwise_station( self ):
+        return self._get_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "previous_spanwise_station",
+        )
+
+    def next_spanwise_station( self ):
+        return self._get_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "next_spanwise_station",
+        )
+
+    # TODO: This function should check to ensure that a profile marked as the
+    # previous station has the current profile as its next station.
+    def set_stations( self,
+                      previous_streamwise=None,
+                      next_streamwise=None,
+                      previous_spanwise=None,
+                      next_spanwise=None, ):
+        if ( previous_streamwise != None ):
+            self._set_string(
+                _DISCRETE_GLOBALS_TABLE,
+                "previous_streamwise_station",
+                sanitize_identifier( str(previous_streamwise) ),
+            )
+
+        if ( next_streamwise != None ):
+            self._set_string(
+                _DISCRETE_GLOBALS_TABLE,
+                "next_streamwise_station",
+                sanitize_identifier( str(next_streamwise) ),
+            )
+
+        if ( previous_spanwise != None ):
+            self._set_string(
+                _DISCRETE_GLOBALS_TABLE,
+                "previous_spanwise_station",
+                sanitize_identifier( str(previous_spanwise) ),
+            )
+
+        if ( next_spanwise != None ):
+            self._set_string(
+                _DISCRETE_GLOBALS_TABLE,
+                "next_spanwise_station",
+                sanitize_identifier( str(next_spanwise) ),
+            )
+
     def working_fluid( self ):
         return self._get_string(
             _DISCRETE_GLOBALS_TABLE,
@@ -457,7 +531,7 @@ class ShearLayer:
                     ),
                 )
         elif ( profile_identifier != None ):
-            self._profile_identifier = profile_identifier.replace("-","")
+            self._profile_identifier = sanitize_identifier(profile_identifier)
 
 class FreeShearFlow(ShearLayer):
     def __init__( self,                             \
@@ -763,12 +837,12 @@ def create_empty_database( filename ):
     coordinate_system TEXT DEFAULT NULL,
     geometry TEXT DEFAULT NULL,
     number_of_sides INTEGER DEFAULT NULL,
-    streamwise_previous_station TEXT DEFAULT NULL,
-    streamwise_next_station TEXT DEFAULT NULL,
-    spanwise_previous_station TEXT DEFAULT NULL,
-    spanwise_next_station TEXT DEFAULT NULL,
+    previous_streamwise_station TEXT_DEFAULT_NULL,
+    next_streamwise_station TEXT_DEFAULT_NULL,
+    previous_spanwise_station TEXT_DEFAULT_NULL,
+    next_spanwise_station TEXT_DEFAULT_NULL,
     regime TEXT DEFAULT NULL,
-    trip_present TEXT DEFAULT NULL
+    trip_present INTEGER DEFAULT NULL
     )
     """
     )
