@@ -653,3 +653,180 @@ class FlowWithRelativeMotion(InternalFlow):
                           data_type=data_type,                       \
                           number_of_points=number_of_points,         \
                           number_of_dimensions=number_of_dimensions, )
+
+def create_empty_database( filename ):
+    connection = sqlite3.connect( filename )
+    cursor = connection.cursor()
+
+    cursor.execute(
+    "CREATE TABLE "+DISCRETE_GLOBALS_TABLE+" ("+
+    """
+    profile_identifier TEXT NOT NULL UNIQUE DEFAULT "S9999001001001",
+    series_identifier TEXT NOT NULL DEFAULT "S9999001001",
+    case_identifier TEXT NOT NULL DEFAULT "S9999001",
+    flow_class TEXT NOT NULL DEFAULT "S",
+    year INTEGER NOT NULL DEFAULT 9999,
+    case_number INTEGER NOT NULL DEFAULT 1,
+    series_number INTEGER NOT NULL DEFAULT 1,
+    profile_number INTEGER NOT NULL DEFAULT 1,
+    data_type TEXT NOT NULL DEFAULT "E",
+    number_of_points INTEGER NOT NULL DEFAULT 0,
+    number_of_dimensions INTEGER NOT NULL DEFAULT 2,
+    originators_identifier TEXT DEFAULT NULL,
+    working_fluid TEXT DEFAULT NULL,
+    working_fluid_phase TEXT DEFAULT NULL,
+    coordinate_system TEXT DEFAULT NULL,
+    geometry TEXT DEFAULT NULL,
+    number_of_sides INTEGER DEFAULT NULL,
+    streamwise_previous_station TEXT DEFAULT NULL,
+    streamwise_next_station TEXT DEFAULT NULL,
+    spanwise_previous_station TEXT DEFAULT NULL,
+    spanwise_next_station TEXT DEFAULT NULL,
+    regime TEXT DEFAULT NULL,
+    trip_present TEXT DEFAULT NULL
+    )
+    """
+    )
+
+    for postfix in [ VALUE_POSTFIX, UNCERTAINTY_POSTFIX ]:
+        cursor.execute(
+        "CREATE TABLE "+DIMENSIONAL_GLOBALS_TABLE+postfix+" ("+
+        """
+        profile_identifier TEXT NOT NULL UNIQUE DEFAULT "S9999001001001",
+        origin_streamwise_coordinate REAL DEFAULT NULL,
+        origin_transverse_coordinate REAL DEFAULT NULL,
+        origin_spanwise_coordinate REAL DEFAULT NULL,
+        streamwise_wall_curvature REAL DEFAULT NULL,
+        spanwise_wall_curvature REAL DEFAULT NULL,
+        roughness_height REAL DEFAULT NULL,
+        characteristic_width REAL DEFAULT NULL,
+        characteristic_height REAL DEFAULT NULL,
+        cross_sectional_area REAL DEFAULT NULL,
+        wetted_perimeter REAL DEFAULT NULL,
+        hydraulic_diameter REAL DEFAULT NULL,
+        streamwise_trip_location REAL DEFAULT NULL
+        )
+        """,
+        )
+
+        for prefix in [ UNWEIGHTED_PREFIX, DENSITY_WEIGHTED_PREFIX ]:
+            cursor.execute(
+            "CREATE TABLE "+prefix+DIMENSIONAL_GLOBALS_TABLE+postfix+" ("+
+            """
+            profile_identifier TEXT NOT NULL UNIQUE DEFAULT "S9999001001001",
+            bulk_dynamic_viscosity REAL DEFAULT NULL,
+            bulk_kinematic_viscosity REAL DEFAULT NULL,
+            bulk_mass_density REAL DEFAULT NULL,
+            bulk_pressure REAL DEFAULT NULL,
+            bulk_specific_isobaric_heat_capacity REAL DEFAULT NULL,
+            bulk_speed_of_sound REAL DEFAULT NULL,
+            bulk_streamwise_velocity REAL DEFAULT NULL,
+            bulk_temperature REAL DEFAULT NULL,
+            bulk_transverse_velocity REAL DEFAULT NULL,
+            center_line_dynamic_viscosity REAL DEFAULT NULL,
+            center_line_kinematic_viscosity REAL DEFAULT NULL,
+            center_line_mass_density REAL DEFAULT NULL,
+            center_line_pressure REAL DEFAULT NULL,
+            center_line_specific_isobaric_heat_capacity REAL DEFAULT NULL,
+            center_line_speed_of_sound REAL DEFAULT NULL,
+            center_line_streamwise_velocity REAL DEFAULT NULL,
+            center_line_temperature REAL DEFAULT NULL,
+            center_line_transverse_velocity REAL DEFAULT NULL,
+            clauser_thickness REAL DEFAULT NULL,
+            compressible_displacement_thickness REAL DEFAULT NULL,
+            compressible_momentum_thickness REAL DEFAULT NULL,
+            edge_dynamic_viscosity REAL DEFAULT NULL,
+            edge_kinematic_viscosity REAL DEFAULT NULL,
+            edge_mass_density REAL DEFAULT NULL,
+            edge_pressure REAL DEFAULT NULL,
+            edge_specific_isobaric_heat_capacity REAL DEFAULT NULL,
+            edge_speed_of_sound REAL DEFAULT NULL,
+            edge_streamwise_velocity REAL DEFAULT NULL,
+            edge_temperature REAL DEFAULT NULL,
+            edge_transverse_velocity REAL DEFAULT NULL,
+            edge_velocity_gradient REAL DEFAULT NULL,
+            friction_velocity REAL DEFAULT NULL,
+            friction_temperature REAL DEFAULT NULL,
+            incompressible_displacement_thickness REAL DEFAULT NULL,
+            incompressible_momentum_thickness REAL DEFAULT NULL,
+            left_hand_side_of_momentum_integral REAL DEFAULT NULL,
+            mass_flow_rate REAL DEFAULT NULL,
+            maximum_dynamic_viscosity REAL DEFAULT NULL,
+            maximum_kinematic_viscosity REAL DEFAULT NULL,
+            maximum_mass_density REAL DEFAULT NULL,
+            maximum_pressure REAL DEFAULT NULL,
+            maximum_specific_isobaric_heat_capacity REAL DEFAULT NULL,
+            maximum_speed_of_sound REAL DEFAULT NULL,
+            maximum_streamwise_velocity REAL DEFAULT NULL,
+            maximum_temperature REAL DEFAULT NULL,
+            maximum_transverse_velocity REAL DEFAULT NULL,
+            minimum_dynamic_viscosity REAL DEFAULT NULL,
+            minimum_kinematic_viscosity REAL DEFAULT NULL,
+            minimum_mass_density REAL DEFAULT NULL,
+            minimum_pressure REAL DEFAULT NULL,
+            minimum_specific_isobaric_heat_capacity REAL DEFAULT NULL,
+            minimum_speed_of_sound REAL DEFAULT NULL,
+            minimum_streamwise_velocity REAL DEFAULT NULL,
+            minimum_temperature REAL DEFAULT NULL,
+            minimum_transverse_velocity REAL DEFAULT NULL,
+            reservoir_pressure REAL DEFAULT NULL,
+            reservoir_speed_of_sound REAL DEFAULT NULL,
+            reservoir_temperature REAL DEFAULT NULL,
+            right_hand_side_of_momentum_integral REAL DEFAULT NULL,
+            streamwise_pressure_gradient REAL DEFAULT NULL,
+            viscous_length_scale REAL DEFAULT NULL,
+            wall_dynamic_viscosity REAL DEFAULT NULL,
+            wall_kinematic_viscosity REAL DEFAULT NULL,
+            wall_mass_density REAL DEFAULT NULL,
+            wall_pressure REAL DEFAULT NULL,
+            wall_shear_stress REAL DEFAULT NULL,
+            wall_specific_isobaric_heat_capacity REAL DEFAULT NULL,
+            wall_speed_of_sound REAL DEFAULT NULL,
+            wall_streamwise_velocity REAL DEFAULT NULL,
+            wall_temperature REAL DEFAULT NULL,
+            wall_transverse_velocity REAL DEFAULT NULL,
+            ninety_nine_percent_velocity_boundary_layer_thickness REAL DEFAULT NULL,
+            ninety_nine_percent_temperature_boundary_layer_thickness REAL DEFAULT NULL
+            )
+            """,
+            )
+
+            cursor.execute(
+            "CREATE TABLE "+prefix+DIMENSIONLESS_GLOBALS_TABLE+postfix+" ("+
+            """
+            profile_identifier TEXT NOT NULL UNIQUE DEFAULT "S9999001001001",
+            bulk_heat_capacity_ratio REAL DEFAULT NULL,
+            bulk_mach_number REAL DEFAULT NULL,
+            bulk_prandtl_number REAL DEFAULT NULL,
+            center_line_heat_capacity_ratio REAL DEFAULT NULL,
+            center_line_mach_number REAL DEFAULT NULL,
+            center_line_prandtl_number REAL DEFAULT NULL,
+            dimensionless_wall_heat_flux REAL DEFAULT NULL,
+            edge_heat_capacity_ratio REAL DEFAULT NULL,
+            edge_mach_number REAL DEFAULT NULL,
+            edge_prandtl_number REAL DEFAULT NULL,
+            edge_reynolds_number_based_on_displacement_thickness REAL DEFAULT NULL,
+            edge_reynolds_number_based_on_momentum_thickness REAL DEFAULT NULL,
+            equilibrium_parameter REAL DEFAULT NULL,
+            freestream_turbulence_intensity REAL DEFAULT NULL,
+            friction_factor REAL DEFAULT NULL,
+            friction_mach_number REAL DEFAULT NULL,
+            friction_reynolds_number REAL DEFAULT NULL,
+            heat_transfer_coefficient REAL DEFAULT NULL,
+            maximum_heat_capacity_ratio_ REAL DEFAULT NULL,
+            maximum_mach_number REAL DEFAULT NULL,
+            maximum_prandtl_number REAL DEFAULT NULL,
+            minimum_heat_capacity_ratio_ REAL DEFAULT NULL,
+            minimum_mach_number REAL DEFAULT NULL,
+            minimum_prandtl_number REAL DEFAULT NULL,
+            recovery_factor REAL DEFAULT NULL,
+            semi_local_friction_reynolds_number REAL DEFAULT NULL,
+            skin_friction_coefficient REAL DEFAULT NULL,
+            wall_heat_capacity_ratio REAL DEFAULT NULL,
+            wall_mach_number REAL DEFAULT NULL,
+            wall_prandtl_number REAL DEFAULT NULL
+            )
+            """,
+            )
+
+    return connection
