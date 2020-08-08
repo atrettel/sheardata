@@ -1019,9 +1019,6 @@ def create_empty_database( filename ):
         "CREATE TABLE "+_DIMENSIONAL_GLOBALS_TABLE+postfix+" ("+
         """
         profile_identifier TEXT NOT NULL UNIQUE DEFAULT "S9999001001001",
-        origin_streamwise_coordinate REAL DEFAULT NULL,
-        origin_transverse_coordinate REAL DEFAULT NULL,
-        origin_spanwise_coordinate REAL DEFAULT NULL,
         streamwise_wall_curvature REAL DEFAULT NULL,
         spanwise_wall_curvature REAL DEFAULT NULL,
         roughness_height REAL DEFAULT NULL,
