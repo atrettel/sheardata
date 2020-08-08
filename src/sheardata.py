@@ -386,6 +386,37 @@ class ShearLayer:
             originators_identifier,
         )
 
+    def primary_reference( self ):
+        return self._get_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "primary_reference",
+        )
+
+    def set_primary_reference( self, primary_reference ):
+        self._set_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "primary_reference",
+            primary_reference,
+        )
+
+    def additional_references( self ):
+        return self._get_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "additional_references",
+        ).split(",")
+
+    def set_additional_references( self, references ):
+        self._set_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "additional_references",
+            ",".join(references),
+        )
+
+    def references( self ):
+        references = self.additional_references()
+        references.insert( 0, self.primary_reference() )
+        return references
+
     def profile_identifier( self, readable=False ):
         if ( readable ):
             return identify_profile(
@@ -976,7 +1007,9 @@ def create_empty_database( filename ):
     previous_spanwise_station TEXT_DEFAULT_NULL,
     next_spanwise_station TEXT_DEFAULT_NULL,
     regime TEXT DEFAULT NULL,
-    trip_present INTEGER DEFAULT NULL
+    trip_present INTEGER DEFAULT NULL,
+    primary_reference TEXT DEFAULT NULL,
+    additional_references TEXT DEFAULT NULL
     )
     """
     )
