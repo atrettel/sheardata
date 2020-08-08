@@ -111,6 +111,12 @@ Design details
   the organizations involved, locations of any experiments, and any contract
   numbers.
 
+- I also want to include separate upper and lower boundary conditions for
+  internal flows, but I have not thought of a completely general way to do
+  this.  So far I do not distinguish between different walls; the database
+  assumes there is only one wall (and some kind of symmetry).  This assumptions
+  works for my initial cases but does not work in general.
+
 - Note the type of measurement used (though this will require an additional set
   of codes or a taxonomy of these).
 
@@ -150,7 +156,7 @@ being listed).
         - 2 or 3.  Setting this to 2 should enforce certain values for certain
           profiles.
 
-    - Originator's identifier (`S`)
+    - Originators' identifier (`S`)
 
     - Working fluid (`S`)
 
@@ -194,15 +200,13 @@ being listed).
 
     - Trip present? (`C`)
 
+    - Primary reference
+
+    - Additional references
+
 - Dimensional globals (real, use SI, averaging-system independent)
 
     - Profile identifier (`S`)
-
-    - Origin, streamwise coordinate (`S`)
-
-    - Origin, transverse coordinate (`S`)
-
-    - Origin, spanwise coordinate (`S`)
 
     - Streamwise wall curvature (`C`)
 
@@ -367,6 +371,8 @@ being listed).
 
     - Wall speed of sound (`C`)
 
+    - Wall spanwise velocity (`C`)
+
     - Wall streamwise velocity (`C`)
 
     - Wall temperature (`C`)
@@ -433,7 +439,7 @@ being listed).
 
     - Semi-local friction Reynolds number (`C`)
 
-    - Skin friction coefficient (`E`)
+    - Local skin friction coefficient (`E`)
 
     - Wall heat capacity ratio (`C`)
 
@@ -453,11 +459,23 @@ being listed).
 
         - Center-line, edge, maximum, minimum, wall
 
+    - Streamwise coordinate (`S`)
+
+        - I originally considered setting these are some kind of origin in the
+          dimensional globals table, but this choice is more general (the
+          tradeoff being additional complexity).  I was concerned about how
+          easily derivatives in the streamwise direction could be calculated,
+          and this choice makes operations like that simpler.
+
     - Transverse coordinate (`S`)
 
-        - It might be better to refer to this as the distance from the local
-          origin.  For wall-bounded flows, this could interpreted as the
-          wall-normal distance from the wall.
+    - Spanwise coordinate (`S`)
+
+    - Streamwise velocity (`S`)
+
+    - Spanwise velocity (`S`)
+
+    - Transverse velocity (`S`)
 
     - Distance from wall (`C`)
 
@@ -485,8 +503,6 @@ being listed).
 
     - Shear stress (`S`)
 
-    - Spanwise velocity (`S`)
-
     - Spanwise vorticity (`S`)
 
     - Specific enthalpy (`S`)
@@ -509,8 +525,6 @@ being listed).
 
     - Stagnation temperature (`S`)
 
-    - Streamwise velocity (`S`)
-
     - Streamwise vorticity (`S`)
 
     - Temperature (`S`)
@@ -518,8 +532,6 @@ being listed).
     - Thermal conductivity (`S`)
 
     - Thermal diffusivity (`S`)
-
-    - Transverse velocity (`S`)
 
     - Transverse vorticity (`S`)
 
@@ -548,6 +560,7 @@ being listed).
     - Velocity covariance VW (`S`)
 
     - Velocity covariance WW (`S`)
+
 
 -------------------------------------------------------------------------------
 
