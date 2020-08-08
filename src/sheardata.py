@@ -34,6 +34,25 @@ SHEAR_LAYER_CLASS        = "S"
 FLOW_CLASS               = "U"
 WAKE_CLASS               = "W"
 
+FLOW_CLASS_DESCRIPTIONS = {
+        BOUNDARY_LAYER_CLASS:"boundary layer",
+     WALL_BOUNDED_FLOW_CLASS:"wall-bounded flow",
+             DUCT_FLOW_CLASS:"duct flow",
+         EXTERNAL_FLOW_CLASS:"external flow",
+       FREE_SHEAR_FLOW_CLASS:"free shear flow",
+        ISOTROPIC_FLOW_CLASS:"isotropic flow",
+      HOMOGENEOUS_FLOW_CLASS:"homogeneous flow",
+         INTERNAL_FLOW_CLASS:"internal flow",
+              FREE_JET_CLASS:"free jet",
+              WALL_JET_CLASS:"wall jet",
+          MIXING_LAYER_CLASS:"mixing layer",
+    INHOMOGENEOUS_FLOW_CLASS:"inhomogeneous flow",
+       RELATIVE_MOTION_CLASS:"flow with relative motion",
+           SHEAR_LAYER_CLASS:"shear layer",
+                  FLOW_CLASS:"flow",
+                  WAKE_CLASS:"wake",
+}
+
 SOLID_PHASE  = "S"
 LIQUID_PHASE = "L"
 GAS_PHASE    = "G"
@@ -130,6 +149,18 @@ class ShearLayer:
 
     def __str__( self ):
         return self.profile_identifier( readable=True )
+
+    def __call__( self ):
+        print( " Identifier: {:s}".format(
+            self.profile_identifier( readable=True ),
+        ) )
+        print( "Description: {:d} point profile from a {:d}D {:s} {:s} {:s}".format(
+            self.number_of_points(),
+            self.number_of_dimensions(),
+            self.regime( readable=True ),
+            self.flow_class( readable=True ),
+            self.data_type( readable=True ),
+        ) )
 
     def _connection( self ):
         connection = sqlite3.connect( self._database )
@@ -274,11 +305,21 @@ class ShearLayer:
             coordinate_system,
         )
 
-    def data_type( self ):
-        return self._get_string(
+    def data_type( self, readable=False ):
+        data_type =  self._get_string(
             _DISCRETE_GLOBALS_TABLE,
             "data_type",
         )
+
+        if ( readable ):
+            if ( data_type == EXPERIMENTAL_DATA_TYPE ):
+                return "experiment"
+            elif ( data_type == NUMERICAL_DATA_TYPE ):
+                return "numerical simulation"
+            else:
+                return data_type
+        else:
+            return data_type
 
     def set_data_type( self, data_type ):
         self._set_string(
@@ -287,11 +328,17 @@ class ShearLayer:
             data_type,
         )
 
-    def flow_class( self ):
-        return self._get_string(
+    def flow_class( self, readable=False ):
+        flow_class = self._get_string(
             _DISCRETE_GLOBALS_TABLE,
             "flow_class",
         )
+
+        if ( readable ):
+            return FLOW_CLASS_DESCRIPTIONS[flow_class]
+        else:
+            return flow_class
+
 
     def set_flow_class( self, flow_class ):
         self._set_string(
@@ -365,11 +412,23 @@ class ShearLayer:
             profile_number,
         )
 
-    def regime( self ):
-        return self._get_string(
+    def regime( self, readable=False ):
+        regime = self._get_string(
             _DISCRETE_GLOBALS_TABLE,
             "regime",
         )
+
+        if ( readable ):
+            if ( regime == LAMINAR_REGIME ):
+                return "laminar"
+            elif ( regime == TRANSITIONAL_REGIME ):
+                return "transitional"
+            elif ( regime == TURBULENT_REGIME ):
+                return "turbulent"
+            else:
+                return regime
+        else:
+            return regime
 
     def set_regime( self, regime ):
         self._set_string(
