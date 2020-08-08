@@ -211,6 +211,22 @@ class ShearLayer:
         else:
             return str(answer)
 
+    def _set_boolean( self, table, variable, value ):
+        if ( value == True ):
+            self._set_integer( table, variable, 1 )
+        else:
+            self._set_integer( table, variable, 0 )
+
+    def _get_boolean( self, table, variable ):
+        value = self._get_integer( table, variable )
+
+        if ( value == 1 ):
+            return True
+        elif ( value == 0 ):
+            return False
+        else:
+            return None
+
     def case_identifier( self, readable=False ):
         if ( readable ):
             return identify_case(
@@ -461,6 +477,19 @@ class ShearLayer:
                 "next_spanwise_station",
                 sanitize_identifier( str(next_spanwise) ),
             )
+
+    def trip_present( self ):
+        return self._get_boolean(
+            _DISCRETE_GLOBALS_TABLE,
+            "trip_present",
+        )
+
+    def set_trip_present( self, trip_present ):
+        self._set_boolean(
+            _DISCRETE_GLOBALS_TABLE,
+            "trip_present",
+            trip_present,
+        )
 
     def working_fluid( self ):
         return self._get_string(
