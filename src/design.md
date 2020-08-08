@@ -10,7 +10,9 @@ Goals
 
     - Limit the number of calls to the database itself (separate use and
       implementation).  This could allow me to change the kind of database
-      later.
+      later.  Write the interfaces in such a way that the user may be unaware
+      what kind of database is operating underneath (no need to load `sqlite3`
+      package manually...).
 
 - Use the `uncertainties` package to handle uncertainties.  The uncertainties
   will be standard uncertainties (standard deviations of the distribution of
@@ -170,23 +172,25 @@ being listed).
 
         - 3 for triangular duct, 4 for rectangular ducts, ...
 
-    - Streamwise previous station (`S`)
+    - Previous streamwise station (`S`)
 
         - Pointers like these are much more flexible than assuming that the
           profile numbers are in order by station number.
 
-    - Streamwise next station (`S`)
+    - Next streamwise station (`S`)
 
-    - Spanwise previous station (`S`)
+    - Previous spanwise station (`S`)
 
         - These should also be null for 2D flows.
 
-    - Spanwise next station (`S`)
+    - Next spanwise station (`S`)
 
     - Regime (`S`)
 
         - Laminar, transitional, turbulent.  It may be better to consider this
-          algorithmically, though.
+          algorithmically, though.  However, it is difficult to come up
+          "sure-fire" criteria for this.  It is worth more thought later,
+          though.
 
     - Trip present? (`C`)
 
@@ -213,9 +217,7 @@ being listed).
 
     - Characteristic height (`I`)
 
-    - Aspect ratio (`I`)
-
-        - This is actually dimensionless.
+        - Create a function to access the aspect ratio.
 
     - Cross-sectional area (`I`)
 
@@ -371,9 +373,9 @@ being listed).
 
     - Wall transverse velocity (`C`)
 
-    - 99-percent velocity boundary layer thickness
+    - 99-percent velocity boundary layer thickness (`E`)
 
-    - 99-percent temperature boundary layer thickness
+    - 99-percent temperature boundary layer thickness (`E`)
 
 - Dimensionless globals (real, averaging-system dependent)
 
@@ -429,7 +431,7 @@ being listed).
 
     - Recovery factor (`C`)
 
-    - Semi-local friction Reynolds (`C`)
+    - Semi-local friction Reynolds number (`C`)
 
     - Skin friction coefficient (`E`)
 
