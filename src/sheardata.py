@@ -48,6 +48,10 @@ RECTANGULAR_COORDINATES = "XYZ"
 ELLIPTICAL_GEOMETRY = "E"
 POLYGONAL_GEOMETRY  = "P"
 
+LAMINAR_REGIME      = "L"
+TRANSITIONAL_REGIME = "U"
+TURBULENT_REGIME    = "T"
+
 _DEFAULT_PROFILE_IDENTIFIER = "S9999001001001"
 
 _DISCRETE_GLOBALS_TABLE       =      "discrete_globals"
@@ -343,6 +347,19 @@ class ShearLayer:
             _DISCRETE_GLOBALS_TABLE,
             "profile_number",
             profile_number,
+        )
+
+    def regime( self ):
+        return self._get_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "regime",
+        )
+
+    def set_regime( self, regime ):
+        self._set_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "regime",
+            regime,
         )
 
     def series_identifier( self, readable=False ):
