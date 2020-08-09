@@ -12,7 +12,9 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
+import math
 import sqlite3
+from uncertainties import ufloat
 
 EXPERIMENTAL_DATA_TYPE = "E"
 NUMERICAL_DATA_TYPE    = "N"
@@ -257,6 +259,70 @@ class ShearLayer:
             return False
         else:
             return None
+
+    def _set_float( self, table, variable, value ):
+        value_table       = table +       _VALUE_POSTFIX
+        uncertainty_table = table + _UNCERTAINTY_POSTFIX
+
+        assert( self._table_and_variable_exists(value_table,variable) )
+        assert( self._table_and_variable_exists(uncertainty_table,variable) )
+
+        value_n = float(value.n)
+        value_s = float(0.0)
+        if ( math.isnan(value.s) ):
+            value_s = None
+        else:
+            value_s = float(value.s)
+
+        connection, cursor = self._connection()
+
+        # Value
+        cursor.execute(
+            "UPDATE "+value_table+" SET "+variable+"=? WHERE profile_identifier=?",
+            ( value_n, self._profile_identifier, ),
+        )
+
+        # Uncertainty
+        cursor.execute(
+            "UPDATE "+uncertainty_table+" SET "+variable+"=? WHERE profile_identifier=?",
+            ( value_s, self._profile_identifier, ),
+        )
+
+        connection.commit()
+        connection.close()
+
+    def _get_float( self, table, variable ):
+        value_table       = table +       _VALUE_POSTFIX
+        uncertainty_table = table + _UNCERTAINTY_POSTFIX
+
+        assert( self._table_and_variable_exists(value_table,variable) )
+        assert( self._table_and_variable_exists(uncertainty_table,variable) )
+
+        connection, cursor = self._connection()
+
+        # Value
+        cursor.execute(
+            "SELECT "+variable+" FROM "+value_table+" WHERE profile_identifier=?",
+            ( self._profile_identifier, ),
+        )
+        value_n = float(cursor.fetchone()[0])
+
+        # Uncertainty
+        cursor.execute(
+            "SELECT "+variable+" FROM "+uncertainty_table+" WHERE profile_identifier=?",
+            ( self._profile_identifier, ),
+        )
+        answer = cursor.fetchone()[0]
+        value_s = float(0.0)
+        if ( answer == None ):
+            value_s = float("nan")
+        else:
+            value_s = float(answer)
+
+        connection.commit()
+        connection.close()
+
+        return ufloat( value_n, value_s )
 
     def case_identifier( self, readable=False ):
         if ( readable ):
@@ -657,6 +723,32 @@ class ShearLayer:
                 cursor.execute(
                 """
                 UPDATE discrete_globals SET profile_identifier=?
+                WHERE profile_identifier=?
+                """,
+                (
+                    self._profile_identifier,
+                    _DEFAULT_PROFILE_IDENTIFIER,
+                )
+                )
+
+                cursor.execute( "INSERT INTO dimensional_globals_n DEFAULT VALUES" )
+
+                cursor.execute(
+                """
+                UPDATE dimensional_globals_n SET profile_identifier=?
+                WHERE profile_identifier=?
+                """,
+                (
+                    self._profile_identifier,
+                    _DEFAULT_PROFILE_IDENTIFIER,
+                )
+                )
+
+                cursor.execute( "INSERT INTO dimensional_globals_s DEFAULT VALUES" )
+
+                cursor.execute(
+                """
+                UPDATE dimensional_globals_s SET profile_identifier=?
                 WHERE profile_identifier=?
                 """,
                 (
