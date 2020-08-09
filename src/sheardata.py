@@ -511,6 +511,19 @@ class ShearLayer:
             profile_number,
         )
 
+    def provenance( self ):
+        return self._get_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "provenance",
+        )
+
+    def set_provenance( self, provenance ):
+        self._set_string(
+            _DISCRETE_GLOBALS_TABLE,
+            "provenance",
+            provenance.strip(),
+        )
+
     def regime( self, readable=False ):
         regime = self._get_string(
             _DISCRETE_GLOBALS_TABLE,
@@ -1103,7 +1116,8 @@ def create_empty_database( filename ):
     regime TEXT DEFAULT NULL,
     trip_present INTEGER DEFAULT NULL,
     primary_reference TEXT DEFAULT NULL,
-    additional_references TEXT DEFAULT NULL
+    additional_references TEXT DEFAULT NULL,
+    provenance TEXT DEFAULT NULL
     )
     """
     )
