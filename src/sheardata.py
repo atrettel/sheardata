@@ -73,6 +73,8 @@ LAMINAR_REGIME      = "L"
 TRANSITIONAL_REGIME = "U"
 TURBULENT_REGIME    = "T"
 
+UNKNOWN_UNCERTAINTY = float("nan")
+
 _DEFAULT_PROFILE_IDENTIFIER = "S9999001001001"
 
 _DISCRETE_GLOBALS_TABLE       =      "discrete_globals"
@@ -315,7 +317,7 @@ class ShearLayer:
         answer = cursor.fetchone()[0]
         value_s = float(0.0)
         if ( answer == None ):
-            value_s = float("nan")
+            value_s = UNKNOWN_UNCERTAINTY
         else:
             value_s = float(answer)
 
