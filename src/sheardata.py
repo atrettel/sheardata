@@ -393,6 +393,23 @@ class ShearLayer:
 
         return ufloat( value_n, value_s )
 
+    def _case_exists( self ):
+        assert( self._variable_exists( _CASES_TABLE, "case_identifier" ) )
+
+        connection, cursor = self._connection()
+        cursor.execute(
+            "SELECT case_identifier FROM "+_CASES_TABLE+" WHERE case_identifier=? LIMIT 1",
+            ( self.case_identifier(), )
+        )
+        answer = cursor.fetchone()
+        connection.commit()
+        connection.close()
+
+        if ( answer == None ):
+            return False
+        else:
+            return True
+
     def _profile_exists( self ):
         assert( self._variable_exists( _DISCRETE_GLOBALS_TABLE, "profile_identifier" ) )
 
@@ -834,6 +851,9 @@ class ShearLayer:
                 profile_number,
                 readable=False,
             )
+
+            if ( self._case_exists() == False ):
+                self._create_empty_row( _CASES_TABLE, key_type=_CASE_KEY_TYPE )
 
             if ( self._profile_exists() == False ):
                 self._create_empty_row( _DISCRETE_GLOBALS_TABLE )
