@@ -75,7 +75,9 @@ TURBULENT_REGIME    = "T"
 
 UNKNOWN_UNCERTAINTY = float("nan")
 
+_DEFAULT_CASE_IDENTIFIER    = "S9999001"
 _DEFAULT_PROFILE_IDENTIFIER = "S9999001001001"
+_DEFAULT_POINT_IDENTIFIER   = "S9999001001001001"
 
 _CASES_TABLE                  = "cases"
 _DISCRETE_GLOBALS_TABLE       =      "discrete_globals"
@@ -407,6 +409,30 @@ class ShearLayer:
             return False
         else:
             return True
+
+    def _create_empty_row( self, table, key_type=_PROFILE_KEY_TYPE ):
+        key_variable = key_type + "_identifier"
+        assert( self._variable_exists( table, key_variable ) )
+
+        identifier         = self.profile_identifier()
+        default_identifier = _DEFAULT_PROFILE_IDENTIFIER
+        if ( key_type == _CASE_KEY_TYPE ):
+            identifier         = self.case_identifier()
+            default_identifier = _DEFAULT_CASE_IDENTIFIER
+        if ( key_type == _POINT_KEY_TYPE ):
+            identifier         = self.point_identifier( point_number )
+            default_identifier = _DEFAULT_POINT_IDENTIFIER
+
+        connection, cursor = self._connection()
+        cursor.execute(
+            "INSERT INTO "+table+" DEFAULT VALUES"
+        )
+        cursor.execute(
+            "UPDATE "+table+" SET "+key_variable+"=? WHERE "+key_variable+"=?",
+            ( identifier, default_identifier, ),
+        )
+        connection.commit()
+        connection.close()
 
     def case_identifier( self, readable=False ):
         if ( readable ):
@@ -810,49 +836,12 @@ class ShearLayer:
             )
 
             if ( self._profile_exists() == False ):
-                connection, cursor = self._connection()
-
-                cursor.execute( "INSERT INTO discrete_globals DEFAULT VALUES" )
-
-                cursor.execute(
-                """
-                UPDATE discrete_globals SET profile_identifier=?
-                WHERE profile_identifier=?
-                """,
-                (
-                    self._profile_identifier,
-                    _DEFAULT_PROFILE_IDENTIFIER,
-                )
-                )
-
-                cursor.execute( "INSERT INTO dimensional_globals_n DEFAULT VALUES" )
-
-                cursor.execute(
-                """
-                UPDATE dimensional_globals_n SET profile_identifier=?
-                WHERE profile_identifier=?
-                """,
-                (
-                    self._profile_identifier,
-                    _DEFAULT_PROFILE_IDENTIFIER,
-                )
-                )
-
-                cursor.execute( "INSERT INTO dimensional_globals_s DEFAULT VALUES" )
-
-                cursor.execute(
-                """
-                UPDATE dimensional_globals_s SET profile_identifier=?
-                WHERE profile_identifier=?
-                """,
-                (
-                    self._profile_identifier,
-                    _DEFAULT_PROFILE_IDENTIFIER,
-                )
-                )
-
-                connection.commit()
-                connection.close()
+                self._create_empty_row( _DISCRETE_GLOBALS_TABLE )
+                for postfix in [ _VALUE_POSTFIX, _UNCERTAINTY_POSTFIX ]:
+                    self._create_empty_row( _DIMENSIONAL_GLOBALS_TABLE+postfix )
+                    for prefix in [ _UNWEIGHTED_PREFIX, _DENSITY_WEIGHTED_PREFIX ]:
+                        self._create_empty_row( prefix+_DIMENSIONAL_GLOBALS_TABLE+postfix )
+                        self._create_empty_row( prefix+_DIMENSIONLESS_GLOBALS_TABLE+postfix )
 
                 self.set_flow_class( flow_class )
                 self.set_year( year )
