@@ -893,6 +893,13 @@ class ShearLayer:
                         self._create_empty_row( prefix+_DIMENSIONAL_GLOBALS_TABLE+postfix )
                         self._create_empty_row( prefix+_DIMENSIONLESS_GLOBALS_TABLE+postfix )
 
+                        for i in range(number_of_points):
+                            self._create_empty_row(
+                                prefix+_DIMENSIONLESS_PROFILES_TABLE+postfix,
+                                key_type=_POINT_KEY_TYPE,
+                                point_number=(i+1),
+                            )
+
                 self.set_flow_class( flow_class )
                 self.set_year( year )
                 self.set_case_number( case_number )
@@ -1404,6 +1411,60 @@ def create_empty_database( filename ):
             wall_heat_capacity_ratio REAL DEFAULT NULL,
             wall_mach_number REAL DEFAULT NULL,
             wall_prandtl_number REAL DEFAULT NULL
+            )
+            """,
+            )
+
+            cursor.execute(
+            "CREATE TABLE "+prefix+_DIMENSIONLESS_PROFILES_TABLE+postfix+" ("+
+            """
+            point_identifier TEXT NOT NULL UNIQUE DEFAULT "S99990010010010001",
+            profile_identifier TEXT NOT NULL DEFAULT "S9999001001001",
+            point_number INTEGER DEFAULT NULL,
+            bulk_viscosity REAL DEFAULT NULL,
+            dynamic_viscosity REAL DEFAULT NULL,
+            heat_capacity_ratio REAL DEFAULT NULL,
+            specific_isobaric_heat_capacity REAL DEFAULT NULL,
+            specific_isochoric_heat_capacity REAL DEFAULT NULL,
+            kinematic_viscosity REAL DEFAULT NULL,
+            mach_number REAL DEFAULT NULL,
+            mass_density REAL DEFAULT NULL,
+            momentum_density REAL DEFAULT NULL,
+            prandtl_number REAL DEFAULT NULL,
+            pressure REAL DEFAULT NULL,
+            shear_stress REAL DEFAULT NULL,
+            spanwise_velocity REAL DEFAULT NULL,
+            spanwise_vorticity REAL DEFAULT NULL,
+            specific_enthalpy REAL DEFAULT NULL,
+            specific_entropy REAL DEFAULT NULL,
+            specific_internal_energy REAL DEFAULT NULL,
+            specific_total_enthalpy REAL DEFAULT NULL,
+            specific_total_internal_energy REAL DEFAULT NULL,
+            specific_volume REAL DEFAULT NULL,
+            speed REAL DEFAULT NULL,
+            speed_of_sound REAL DEFAULT NULL,
+            stagnation_pressure REAL DEFAULT NULL,
+            stagnation_temperature REAL DEFAULT NULL,
+            streamwise_velocity REAL DEFAULT NULL,
+            streamwise_vorticity REAL DEFAULT NULL,
+            temperature REAL DEFAULT NULL,
+            thermal_conductivity REAL DEFAULT NULL,
+            thermal_diffusivity REAL DEFAULT NULL,
+            transverse_velocity REAL DEFAULT NULL,
+            transverse_vorticity REAL DEFAULT NULL,
+            turbulent_kinetic_energy REAL DEFAULT NULL,
+            turbulent_stress_uu REAL DEFAULT NULL,
+            turbulent_stress_uv REAL DEFAULT NULL,
+            turbulent_stress_uw REAL DEFAULT NULL,
+            turbulent_stress_vv REAL DEFAULT NULL,
+            turbulent_stress_vw REAL DEFAULT NULL,
+            turbulent_stress_ww REAL DEFAULT NULL,
+            velocity_covariance_uu REAL DEFAULT NULL,
+            velocity_covariance_uv REAL DEFAULT NULL,
+            velocity_covariance_uw REAL DEFAULT NULL,
+            velocity_covariance_vv REAL DEFAULT NULL,
+            velocity_covariance_vw REAL DEFAULT NULL,
+            velocity_covariance_ww REAL DEFAULT NULL
             )
             """,
             )
