@@ -203,9 +203,8 @@ class ShearLayer:
         return False
 
     def _set_integer( self, table, variable, value, \
-        key_type=_PROFILE_KEY_TYPE, point_number=1 ):
+            key_type=_PROFILE_KEY_TYPE, point_number=1 ):
         key_variable = key_type + "_identifier"
-
         assert( self._variable_exists( table, key_variable ) )
         assert( self._variable_exists( table,     variable ) )
 
@@ -223,12 +222,22 @@ class ShearLayer:
         connection.commit()
         connection.close()
 
-    def _get_integer( self, table, variable ):
-        assert( self._variable_exists(table,variable) )
+    def _get_integer( self, table, variable, \
+            key_type=_PROFILE_KEY_TYPE, point_number=1 ):
+        key_variable = key_type + "_identifier"
+        assert( self._variable_exists( table, key_variable ) )
+        assert( self._variable_exists( table,     variable ) )
+
+        identifier = self.profile_identifier()
+        if ( key_type == _CASE_KEY_TYPE ):
+            identifier = self.case_identifier()
+        if ( key_type == _POINT_KEY_TYPE ):
+            identifier = self.point_identifier( point_number )
+
         connection, cursor = self._connection()
         cursor.execute(
-            "SELECT "+variable+" FROM "+table+" WHERE profile_identifier=?",
-            ( self._profile_identifier, ),
+            "SELECT "+variable+" FROM "+table+" WHERE "+key_variable+"=?",
+            ( identifier, ),
         )
         answer = cursor.fetchone()[0]
         connection.close()
