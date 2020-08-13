@@ -246,22 +246,42 @@ class ShearLayer:
         else:
             return int(answer)
 
-    def _set_string( self, table, variable, value ):
-        assert( self._variable_exists(table,variable) )
+    def _set_string( self, table, variable, value, \
+            key_type=_PROFILE_KEY_TYPE, point_number=1 ):
+        key_variable = key_type + "_identifier"
+        assert( self._variable_exists( table, key_variable ) )
+        assert( self._variable_exists( table,     variable ) )
+
+        identifier = self.profile_identifier()
+        if ( key_type == _CASE_KEY_TYPE ):
+            identifier = self.case_identifier()
+        if ( key_type == _POINT_KEY_TYPE ):
+            identifier = self.point_identifier( point_number )
+
         connection, cursor = self._connection()
         cursor.execute(
-            "UPDATE "+table+" SET "+variable+"=? WHERE profile_identifier=?",
-            ( str(value), self._profile_identifier, ),
+            "UPDATE "+table+" SET "+variable+"=? WHERE "+key_variable+"=?",
+            ( str(value), identifier, ),
         )
         connection.commit()
         connection.close()
 
-    def _get_string( self, table, variable ):
-        assert( self._variable_exists(table,variable) )
+    def _get_string( self, table, variable, \
+            key_type=_PROFILE_KEY_TYPE, point_number=1 ):
+        key_variable = key_type + "_identifier"
+        assert( self._variable_exists( table, key_variable ) )
+        assert( self._variable_exists( table,     variable ) )
+
+        identifier = self.profile_identifier()
+        if ( key_type == _CASE_KEY_TYPE ):
+            identifier = self.case_identifier()
+        if ( key_type == _POINT_KEY_TYPE ):
+            identifier = self.point_identifier( point_number )
+
         connection, cursor = self._connection()
         cursor.execute(
-            "SELECT "+variable+" FROM "+table+" WHERE profile_identifier=?",
-            ( self._profile_identifier, ),
+            "SELECT "+variable+" FROM "+table+" WHERE "+key_variable+"=?",
+            ( identifier, ),
         )
         answer = cursor.fetchone()[0]
         connection.close()
@@ -286,12 +306,22 @@ class ShearLayer:
         else:
             return None
 
-    def _set_float( self, table, variable, value ):
+    def _set_float( self, table, variable, value, \
+            key_type=_PROFILE_KEY_TYPE, point_number=1 ):
+        key_variable      = key_type + "_identifier"
         value_table       = table +       _VALUE_POSTFIX
         uncertainty_table = table + _UNCERTAINTY_POSTFIX
 
-        assert( self._variable_exists(value_table,variable) )
-        assert( self._variable_exists(uncertainty_table,variable) )
+        assert( self._variable_exists(       value_table, key_variable ) )
+        assert( self._variable_exists( uncertainty_table, key_variable ) )
+        assert( self._variable_exists(       value_table,     variable ) )
+        assert( self._variable_exists( uncertainty_table,     variable ) )
+
+        identifier = self.profile_identifier()
+        if ( key_type == _CASE_KEY_TYPE ):
+            identifier = self.case_identifier()
+        if ( key_type == _POINT_KEY_TYPE ):
+            identifier = self.point_identifier( point_number )
 
         value_n = float(value.n)
         value_s = float(0.0)
@@ -304,39 +334,49 @@ class ShearLayer:
 
         # Value
         cursor.execute(
-            "UPDATE "+value_table+" SET "+variable+"=? WHERE profile_identifier=?",
-            ( value_n, self._profile_identifier, ),
+            "UPDATE "+value_table+" SET "+variable+"=? WHERE "+key_variable+"=?",
+            ( value_n, identifier, ),
         )
 
         # Uncertainty
         cursor.execute(
-            "UPDATE "+uncertainty_table+" SET "+variable+"=? WHERE profile_identifier=?",
-            ( value_s, self._profile_identifier, ),
+            "UPDATE "+uncertainty_table+" SET "+variable+"=? WHERE "+key_variable+"=?",
+            ( value_s, identifier, ),
         )
 
         connection.commit()
         connection.close()
 
-    def _get_float( self, table, variable ):
+    def _get_float( self, table, variable, \
+            key_type=_PROFILE_KEY_TYPE, point_number=1 ):
+        key_variable      = key_type + "_identifier"
         value_table       = table +       _VALUE_POSTFIX
         uncertainty_table = table + _UNCERTAINTY_POSTFIX
 
-        assert( self._variable_exists(value_table,variable) )
-        assert( self._variable_exists(uncertainty_table,variable) )
+        assert( self._variable_exists(       value_table, key_variable ) )
+        assert( self._variable_exists( uncertainty_table, key_variable ) )
+        assert( self._variable_exists(       value_table,     variable ) )
+        assert( self._variable_exists( uncertainty_table,     variable ) )
+
+        identifier = self.profile_identifier()
+        if ( key_type == _CASE_KEY_TYPE ):
+            identifier = self.case_identifier()
+        if ( key_type == _POINT_KEY_TYPE ):
+            identifier = self.point_identifier( point_number )
 
         connection, cursor = self._connection()
 
         # Value
         cursor.execute(
-            "SELECT "+variable+" FROM "+value_table+" WHERE profile_identifier=?",
-            ( self._profile_identifier, ),
+            "SELECT "+variable+" FROM "+value_table+" WHERE "+key_variable+"=?",
+            ( identifier, ),
         )
         value_n = float(cursor.fetchone()[0])
 
         # Uncertainty
         cursor.execute(
-            "SELECT "+variable+" FROM "+uncertainty_table+" WHERE profile_identifier=?",
-            ( self._profile_identifier, ),
+            "SELECT "+variable+" FROM "+uncertainty_table+" WHERE "+key_variable+"=?",
+            ( identifier, ),
         )
         answer = cursor.fetchone()[0]
         value_s = float(0.0)
