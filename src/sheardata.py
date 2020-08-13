@@ -185,7 +185,7 @@ class ShearLayer:
         else:
             return True
 
-    def _table_and_variable_exists( self, table, variable ):
+    def _variable_exists( self, table, variable ):
         if ( self._table_exists(table) ):
             connection, cursor = self._connection()
             cursor.execute(
@@ -199,7 +199,7 @@ class ShearLayer:
         return False
 
     def _set_integer( self, table, variable, value ):
-        assert( self._table_and_variable_exists(table,variable) )
+        assert( self._variable_exists(table,variable) )
         connection, cursor = self._connection()
         cursor.execute(
             "UPDATE "+table+" SET "+variable+"=? WHERE profile_identifier=?",
@@ -209,7 +209,7 @@ class ShearLayer:
         connection.close()
 
     def _get_integer( self, table, variable ):
-        assert( self._table_and_variable_exists(table,variable) )
+        assert( self._variable_exists(table,variable) )
         connection, cursor = self._connection()
         cursor.execute(
             "SELECT "+variable+" FROM "+table+" WHERE profile_identifier=?",
@@ -223,7 +223,7 @@ class ShearLayer:
             return int(answer)
 
     def _set_string( self, table, variable, value ):
-        assert( self._table_and_variable_exists(table,variable) )
+        assert( self._variable_exists(table,variable) )
         connection, cursor = self._connection()
         cursor.execute(
             "UPDATE "+table+" SET "+variable+"=? WHERE profile_identifier=?",
@@ -233,7 +233,7 @@ class ShearLayer:
         connection.close()
 
     def _get_string( self, table, variable ):
-        assert( self._table_and_variable_exists(table,variable) )
+        assert( self._variable_exists(table,variable) )
         connection, cursor = self._connection()
         cursor.execute(
             "SELECT "+variable+" FROM "+table+" WHERE profile_identifier=?",
@@ -266,8 +266,8 @@ class ShearLayer:
         value_table       = table +       _VALUE_POSTFIX
         uncertainty_table = table + _UNCERTAINTY_POSTFIX
 
-        assert( self._table_and_variable_exists(value_table,variable) )
-        assert( self._table_and_variable_exists(uncertainty_table,variable) )
+        assert( self._variable_exists(value_table,variable) )
+        assert( self._variable_exists(uncertainty_table,variable) )
 
         value_n = float(value.n)
         value_s = float(0.0)
@@ -297,8 +297,8 @@ class ShearLayer:
         value_table       = table +       _VALUE_POSTFIX
         uncertainty_table = table + _UNCERTAINTY_POSTFIX
 
-        assert( self._table_and_variable_exists(value_table,variable) )
-        assert( self._table_and_variable_exists(uncertainty_table,variable) )
+        assert( self._variable_exists(value_table,variable) )
+        assert( self._variable_exists(uncertainty_table,variable) )
 
         connection, cursor = self._connection()
 
