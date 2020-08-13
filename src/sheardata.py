@@ -77,12 +77,13 @@ UNKNOWN_UNCERTAINTY = float("nan")
 
 _DEFAULT_CASE_IDENTIFIER    = "S9999001"
 _DEFAULT_PROFILE_IDENTIFIER = "S9999001001001"
-_DEFAULT_POINT_IDENTIFIER   = "S9999001001001001"
+_DEFAULT_POINT_IDENTIFIER   = "S99990010010010001"
 
 _CASES_TABLE                  = "cases"
 _DISCRETE_GLOBALS_TABLE       =      "discrete_globals"
 _DIMENSIONAL_GLOBALS_TABLE    =   "dimensional_globals"
 _DIMENSIONLESS_GLOBALS_TABLE  = "dimensionless_globals"
+_DIMENSIONAL_PROFILES_TABLE   =   "dimensional_profiles"
 _DIMENSIONLESS_PROFILES_TABLE = "dimensionless_profiles"
 
 _UNWEIGHTED_PREFIX       = "uw_"
@@ -427,7 +428,8 @@ class ShearLayer:
         else:
             return True
 
-    def _create_empty_row( self, table, key_type=_PROFILE_KEY_TYPE ):
+    def _create_empty_row( self, table, key_type=_PROFILE_KEY_TYPE, \
+            point_number=1 ):
         key_variable = key_type + "_identifier"
         assert( self._variable_exists( table, key_variable ) )
 
@@ -448,6 +450,19 @@ class ShearLayer:
             "UPDATE "+table+" SET "+key_variable+"=? WHERE "+key_variable+"=?",
             ( identifier, default_identifier, ),
         )
+
+        if ( key_type == _POINT_KEY_TYPE ):
+            assert( self._variable_exists( table, "profile_identifier" ) )
+            assert( self._variable_exists( table, "point_number" ) )
+            cursor.execute(
+                "UPDATE "+table+" SET profile_identifier=? WHERE "+key_variable+"=?",
+                ( self.profile_identifier(), identifier, ),
+            )
+            cursor.execute(
+                "UPDATE "+table+" SET point_number=? WHERE "+key_variable+"=?",
+                ( int(point_number), identifier, ),
+            )
+
         connection.commit()
         connection.close()
 
@@ -576,16 +591,22 @@ class ShearLayer:
             originators_identifier,
         )
 
-    def point_identifier( point_number, readable=False ):
-        return identify_point(
-            self.flow_class(),
-            self.year(),
-            self.case_number(),
-            self.series_number(),
-            self.profile_number(),
-            point_number,
-            readable=readable,
-        )
+    def point_identifier( self, point_number, readable=False ):
+        if ( readable ):
+            return identify_point(
+                self.flow_class(),
+                self.year(),
+                self.case_number(),
+                self.series_number(),
+                self.profile_number(),
+                point_number,
+                readable=readable,
+            )
+        else:
+            return "{:s}{:4d}".format(
+                self._profile_identifier,
+                int(point_number),
+            ).replace( " ", "0" )
 
     def primary_reference( self ):
         return self._get_string(
@@ -857,8 +878,17 @@ class ShearLayer:
 
             if ( self._profile_exists() == False ):
                 self._create_empty_row( _DISCRETE_GLOBALS_TABLE )
+
                 for postfix in [ _VALUE_POSTFIX, _UNCERTAINTY_POSTFIX ]:
                     self._create_empty_row( _DIMENSIONAL_GLOBALS_TABLE+postfix )
+
+                    for i in range(number_of_points):
+                        self._create_empty_row(
+                            _DIMENSIONAL_PROFILES_TABLE+postfix,
+                            key_type=_POINT_KEY_TYPE,
+                            point_number=(i+1),
+                        )
+
                     for prefix in [ _UNWEIGHTED_PREFIX, _DENSITY_WEIGHTED_PREFIX ]:
                         self._create_empty_row( prefix+_DIMENSIONAL_GLOBALS_TABLE+postfix )
                         self._create_empty_row( prefix+_DIMENSIONLESS_GLOBALS_TABLE+postfix )
@@ -1239,6 +1269,21 @@ def create_empty_database( filename ):
         wetted_perimeter REAL DEFAULT NULL,
         hydraulic_diameter REAL DEFAULT NULL,
         streamwise_trip_location REAL DEFAULT NULL
+        )
+        """,
+        )
+
+        cursor.execute(
+        "CREATE TABLE "+_DIMENSIONAL_PROFILES_TABLE+postfix+" ("+
+        """
+        point_identifier TEXT NOT NULL UNIQUE DEFAULT "S99990010010010001",
+        profile_identifier TEXT NOT NULL DEFAULT "S9999001001001",
+        point_number INTEGER DEFAULT NULL,
+        label TEXT DEFAULT NULL,
+        streamwise_coordinate REAL DEFAULT NULL,
+        transverse_coordinate REAL DEFAULT NULL,
+        spanwise_coordinate REAL DEFAULT NULL,
+        distance_from_wall REAL DEFAULT NULL
         )
         """,
         )
