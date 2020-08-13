@@ -89,6 +89,7 @@ _UNCERTAINTY_POSTFIX     = "_s"
 
 _CASE_KEY_TYPE    = "case"
 _PROFILE_KEY_TYPE = "profile"
+_POINT_KEY_TYPE   = "point"
 
 def identify_case( flow_class, year, case_number, readable=False ):
     separator = ""
@@ -201,15 +202,18 @@ class ShearLayer:
             connection.close()
         return False
 
-    def _set_integer( self, table, variable, value, key_type=_PROFILE_KEY_TYPE ):
+    def _set_integer( self, table, variable, value, \
+        key_type=_PROFILE_KEY_TYPE, point_number=1 ):
         key_variable = key_type + "_identifier"
 
         assert( self._variable_exists( table, key_variable ) )
         assert( self._variable_exists( table,     variable ) )
 
-        identifier = self._profile_identifier
+        identifier = self.profile_identifier()
         if ( key_type == _CASE_KEY_TYPE ):
             identifier = self.case_identifier()
+        if ( key_type == _POINT_KEY_TYPE ):
+            identifier = self.point_identifier( point_number )
 
         connection, cursor = self._connection()
         cursor.execute(
@@ -460,6 +464,17 @@ class ShearLayer:
             _DISCRETE_GLOBALS_TABLE,
             "originators_identifier",
             originators_identifier,
+        )
+
+    def point_identifier( point_number, readable=False ):
+        return identify_point(
+            self.flow_class(),
+            self.year(),
+            self.case_number(),
+            self.series_number(),
+            self.profile_number(),
+            point_number,
+            readable=readable,
         )
 
     def primary_reference( self ):
