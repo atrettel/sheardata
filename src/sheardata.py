@@ -391,6 +391,21 @@ class ShearLayer:
 
         return ufloat( value_n, value_s )
 
+    def _profile_exists( self ):
+        connection, cursor = self._connection()
+        cursor.execute(
+            "SELECT profile_identifier FROM discrete_globals WHERE profile_identifier=? LIMIT 1",
+            ( self.profile_identifier(), )
+        )
+        answer = cursor.fetchone()
+        connection.commit()
+        connection.close()
+
+        if ( answer == None ):
+            return False
+        else:
+            return True
+
     def case_identifier( self, readable=False ):
         if ( readable ):
             return identify_case(
@@ -792,17 +807,9 @@ class ShearLayer:
                 readable=False,
             )
 
-            connection = sqlite3.connect( self._database )
-            cursor = connection.cursor()
+            if ( self._profile_exists() == False ):
+                connection, cursor = self._connection()
 
-            cursor.execute(
-            """
-            SELECT profile_identifier FROM discrete_globals WHERE profile_identifier=?
-            LIMIT 1
-            """,
-            ( self._profile_identifier, ) )
-
-            if ( cursor.fetchone() == None ):
                 cursor.execute( "INSERT INTO discrete_globals DEFAULT VALUES" )
 
                 cursor.execute(
@@ -843,7 +850,6 @@ class ShearLayer:
                 )
 
                 connection.commit()
-                cursor.close()
                 connection.close()
 
                 self.set_flow_class( flow_class )
