@@ -335,10 +335,7 @@ class ShearLayer:
                 readable=True,
             )
         else:
-            return self._get_string(
-                _DISCRETE_GLOBALS_TABLE,
-                "case_identifier",
-            )
+            return self._profile_identifier[0:8]
 
     def set_case_identifier( self, case_identifier ):
         self._set_string(
@@ -559,10 +556,7 @@ class ShearLayer:
                 readable=True,
             )
         else:
-            return self._get_string(
-                _DISCRETE_GLOBALS_TABLE,
-                "series_identifier",
-            )
+            return self._profile_identifier[0:11]
 
     def set_series_identifier( self, series_identifier ):
         self._set_string(
