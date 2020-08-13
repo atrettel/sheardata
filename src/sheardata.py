@@ -77,6 +77,7 @@ UNKNOWN_UNCERTAINTY = float("nan")
 
 _DEFAULT_PROFILE_IDENTIFIER = "S9999001001001"
 
+_CASES_TABLE                  = "cases"
 _DISCRETE_GLOBALS_TABLE       =      "discrete_globals"
 _DIMENSIONAL_GLOBALS_TABLE    =   "dimensional_globals"
 _DIMENSIONLESS_GLOBALS_TABLE  = "dimensionless_globals"
@@ -1157,6 +1158,22 @@ class FlowWithRelativeMotion(InternalFlow):
 def create_empty_database( filename ):
     connection = sqlite3.connect( filename )
     cursor = connection.cursor()
+
+    cursor.execute(
+    "CREATE TABLE "+_CASES_TABLE+" ("+
+    """
+    case_identifier TEXT NOT NULL DEFAULT "S9999001",
+    flow_class TEXT NOT NULL DEFAULT "S",
+    year INTEGER NOT NULL DEFAULT 9999,
+    case_number INTEGER NOT NULL DEFAULT 1,
+    data_type TEXT NOT NULL DEFAULT "E",
+    description TEXT DEFAULT NULL,
+    provenance TEXT DEFAULT NULL,
+    primary_reference TEXT DEFAULT NULL,
+    additional_references TEXT DEFAULT NULL
+    )
+    """
+    )
 
     cursor.execute(
     "CREATE TABLE "+_DISCRETE_GLOBALS_TABLE+" ("+
