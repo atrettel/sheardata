@@ -392,9 +392,11 @@ class ShearLayer:
         return ufloat( value_n, value_s )
 
     def _profile_exists( self ):
+        assert( self._variable_exists( _DISCRETE_GLOBALS_TABLE, "profile_identifier" ) )
+
         connection, cursor = self._connection()
         cursor.execute(
-            "SELECT profile_identifier FROM discrete_globals WHERE profile_identifier=? LIMIT 1",
+            "SELECT profile_identifier FROM "+_DISCRETE_GLOBALS_TABLE+" WHERE profile_identifier=? LIMIT 1",
             ( self.profile_identifier(), )
         )
         answer = cursor.fetchone()
