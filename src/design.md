@@ -73,6 +73,8 @@ Design details
 
 - Tables
 
+    - `cases`
+
     - `discrete_globals`
 
         - These are global variables that do not have any uncertainty.
@@ -127,11 +129,7 @@ Table fields
 Some of these only apply to certain flow classes (the most general flow class
 being listed).
 
-- Discrete globals
-
-    - Profile identifier (`S`)
-
-    - Series identifier (`S`)
+- Cases
 
     - Case identifier (`S`)
 
@@ -141,13 +139,58 @@ being listed).
 
     - Case number (`S`)
 
-    - Series number (`S`)
-
-    - Profile number (`S`)
-
     - Data type (`S`)
 
         - `E` for experimental, `N` for numerical.
+
+    - Description
+
+    - Provenance (chain of custody for data)
+
+        - A description of how the data ended up in the collection.  Was the
+          data extracted graphically and from what references?  Was the data
+          published in tabulated form?  Was the data sent through private
+          correspondence?  Has the transmission of the data altered it in any
+          way?
+
+        - <https://en.wikipedia.org/wiki/Provenance#Data_provenance>
+
+        - <https://en.wikipedia.org/wiki/Data_lineage>
+
+    - Primary reference
+
+    - Additional references
+
+        - These references (and the primary reference) should all be primary
+          sources.
+
+    - Number of series
+
+- Discrete globals
+
+    - Profile identifier (`S`)
+
+    - Series identifier (`S`)
+
+    - Case identifier (`S`)
+
+        - Redundant with cases table?
+
+    - Flow class (`S`)
+
+        - Redundant with cases table?
+
+    - Year (`S`)
+
+        - Redundant with cases table?
+
+    - Case number (`S`)
+
+        - Redundant with cases table?
+
+    - Series number (`S`)
+
+    - Profile number (`S`)
 
     - Number of points (`S`)
 
@@ -199,10 +242,6 @@ being listed).
           though.
 
     - Trip present? (`C`)
-
-    - Primary reference
-
-    - Additional references
 
 - Dimensional globals (real, use SI, averaging-system independent)
 
@@ -447,7 +486,7 @@ being listed).
 
     - Wall Prandtl number (`C`)
 
-- Dimensionless profiles (real, averaging-system dependent)
+- Dimensional profiles (real, use SI, averaging-system independent)
 
     - Point identifier (`S`)
 
@@ -461,23 +500,15 @@ being listed).
 
     - Streamwise coordinate (`S`)
 
-        - I originally considered setting these are some kind of origin in the
-          dimensional globals table, but this choice is more general (the
-          tradeoff being additional complexity).  I was concerned about how
-          easily derivatives in the streamwise direction could be calculated,
-          and this choice makes operations like that simpler.
-
     - Transverse coordinate (`S`)
 
     - Spanwise coordinate (`S`)
 
-    - Streamwise velocity (`S`)
-
-    - Spanwise velocity (`S`)
-
-    - Transverse velocity (`S`)
-
     - Distance from wall (`C`)
+
+- Dimensionless profiles (real, averaging-system dependent)
+
+    - Point identifier (`S`)
 
     - Bulk viscosity (`S`)
 
@@ -503,6 +534,8 @@ being listed).
 
     - Shear stress (`S`)
 
+    - Spanwise velocity (`S`)
+
     - Spanwise vorticity (`S`)
 
     - Specific enthalpy (`S`)
@@ -525,6 +558,8 @@ being listed).
 
     - Stagnation temperature (`S`)
 
+    - Streamwise velocity (`S`)
+
     - Streamwise vorticity (`S`)
 
     - Temperature (`S`)
@@ -532,6 +567,8 @@ being listed).
     - Thermal conductivity (`S`)
 
     - Thermal diffusivity (`S`)
+
+    - Transverse velocity (`S`)
 
     - Transverse vorticity (`S`)
 
