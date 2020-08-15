@@ -498,6 +498,9 @@ being listed).
 
         - Center-line, edge, maximum, minimum, wall
 
+        - Consider putting this as a global field that points to a particular
+          point instead.
+
     - Streamwise coordinate (`S`)
 
     - Transverse coordinate (`S`)
@@ -509,6 +512,10 @@ being listed).
 - Dimensionless profiles (real, averaging-system dependent)
 
     - Point identifier (`S`)
+
+    - Profile identifier (`S`)
+
+    - Point number (`S`)
 
     - Bulk viscosity (`S`)
 
