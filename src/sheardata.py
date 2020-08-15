@@ -466,6 +466,39 @@ class ShearLayer:
         connection.commit()
         connection.close()
 
+    def _create_empty_profile_points( self, table, number_of_points ):
+        key_variable = "point_identifier"
+        assert( self._variable_exists( table, key_variable ) )
+
+        connection, cursor = self._connection()
+
+        for i in range(number_of_points):
+            point_number       = i + 1
+            identifier         = self.point_identifier( point_number )
+            default_identifier = _DEFAULT_POINT_IDENTIFIER
+
+            cursor.execute(
+                "INSERT INTO "+table+" DEFAULT VALUES"
+            )
+            cursor.execute(
+                "UPDATE "+table+" SET "+key_variable+"=? WHERE "+key_variable+"=?",
+                ( identifier, default_identifier, ),
+            )
+
+            assert( self._variable_exists( table, "profile_identifier" ) )
+            assert( self._variable_exists( table, "point_number" ) )
+            cursor.execute(
+                "UPDATE "+table+" SET profile_identifier=? WHERE "+key_variable+"=?",
+                ( self.profile_identifier(), identifier, ),
+            )
+            cursor.execute(
+                "UPDATE "+table+" SET point_number=? WHERE "+key_variable+"=?",
+                ( int(point_number), identifier, ),
+            )
+
+        connection.commit()
+        connection.close()
+
     def case_identifier( self, readable=False ):
         if ( readable ):
             return identify_case(
@@ -882,23 +915,19 @@ class ShearLayer:
                 for postfix in [ _VALUE_POSTFIX, _UNCERTAINTY_POSTFIX ]:
                     self._create_empty_row( _DIMENSIONAL_GLOBALS_TABLE+postfix )
 
-                    for i in range(number_of_points):
-                        self._create_empty_row(
-                            _DIMENSIONAL_PROFILES_TABLE+postfix,
-                            key_type=_POINT_KEY_TYPE,
-                            point_number=(i+1),
-                        )
+                    self._create_empty_profile_points(
+                        _DIMENSIONAL_PROFILES_TABLE+postfix,
+                        number_of_points,
+                    )
 
                     for prefix in [ _UNWEIGHTED_PREFIX, _DENSITY_WEIGHTED_PREFIX ]:
                         self._create_empty_row( prefix+_DIMENSIONAL_GLOBALS_TABLE+postfix )
                         self._create_empty_row( prefix+_DIMENSIONLESS_GLOBALS_TABLE+postfix )
 
-                        for i in range(number_of_points):
-                            self._create_empty_row(
-                                prefix+_DIMENSIONLESS_PROFILES_TABLE+postfix,
-                                key_type=_POINT_KEY_TYPE,
-                                point_number=(i+1),
-                            )
+                        self._create_empty_profile_points(
+                            prefix+_DIMENSIONLESS_PROFILES_TABLE+postfix,
+                            number_of_points,
+                        )
 
                 self.set_flow_class( flow_class )
                 self.set_year( year )
