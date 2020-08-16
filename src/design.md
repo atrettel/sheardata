@@ -164,8 +164,6 @@ being listed).
         - These references (and the primary reference) should all be primary
           sources.
 
-    - Number of series
-
 - Discrete globals
 
     - Profile identifier (`S`)
@@ -256,15 +254,12 @@ being listed).
 
     - Roughness height (`C`)
 
-    - Characteristic width (`I`)
+    - Aspect ratio (`I`)
 
-    - Characteristic height (`I`)
-
-        - Create a function to access the aspect ratio.
+        - Yes, this is dimensionless, but it was easier to put it here than
+          make another table.
 
     - Cross-sectional area (`I`)
-
-    - Wetted perimeter (`I`)
 
     - Hydraulic diameter (`I`)
 
