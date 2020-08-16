@@ -153,6 +153,7 @@ def sanitize_identifier( identifier ):
     return identifier.replace("-","")
 
 class ShearLayer:
+    _connection         = None
     _database           = None
     _profile_identifier = None
 
@@ -175,9 +176,21 @@ class ShearLayer:
         ) )
 
     def _connection( self ):
-        connection = sqlite3.connect( self._database )
+        if ( self._connection_persists() ):
+            connection = self._connection
+        else:
+            connection = sqlite3.connect( self._database )
         cursor = connection.cursor()
         return connection, cursor
+
+    def _close_connection( self, connection, commit_changes=False ):
+        if ( self._connection_persists() == False ):
+            if ( commit_changes == True ):
+                connection.commit()
+            connection.close()
+
+    def _connection_persists( self ):
+        return ( self._database == None )
 
     def _table_exists( self, table ):
         connection, cursor = self._connection()
@@ -187,7 +200,7 @@ class ShearLayer:
             ( str(table), ),
         )
         answer = cursor.fetchone()
-        connection.close()
+        self._close_connection( connection )
         if ( answer == None ):
             return False
         else:
@@ -201,9 +214,9 @@ class ShearLayer:
             )
             for column in cursor.fetchall():
                 if ( variable == column[1] ):
-                    connection.close()
+                    self._close_connection( connection )
                     return True
-            connection.close()
+            self._close_connection( connection )
         return False
 
     def _set_integer( self, table, variable, value, \
@@ -223,8 +236,7 @@ class ShearLayer:
             "UPDATE "+table+" SET "+variable+"=? WHERE "+key_variable+"=?",
             ( int(value), identifier, ),
         )
-        connection.commit()
-        connection.close()
+        self._close_connection( connection, commit_changes=True )
 
     def _get_integer( self, table, variable, \
             key_type=_PROFILE_KEY_TYPE, point_number=1 ):
@@ -244,7 +256,7 @@ class ShearLayer:
             ( identifier, ),
         )
         answer = cursor.fetchone()[0]
-        connection.close()
+        self._close_connection( connection )
         if ( answer == None ):
             return answer
         else:
@@ -267,8 +279,7 @@ class ShearLayer:
             "UPDATE "+table+" SET "+variable+"=? WHERE "+key_variable+"=?",
             ( str(value), identifier, ),
         )
-        connection.commit()
-        connection.close()
+        self._close_connection( connection, commit_changes=True )
 
     def _get_string( self, table, variable, \
             key_type=_PROFILE_KEY_TYPE, point_number=1 ):
@@ -288,7 +299,7 @@ class ShearLayer:
             ( identifier, ),
         )
         answer = cursor.fetchone()[0]
-        connection.close()
+        self._close_connection( connection )
         if ( answer == None ):
             return answer
         else:
@@ -348,8 +359,7 @@ class ShearLayer:
             ( value_s, identifier, ),
         )
 
-        connection.commit()
-        connection.close()
+        self._close_connection( connection, commit_changes=True )
 
     def _get_float( self, table, variable, \
             key_type=_PROFILE_KEY_TYPE, point_number=1 ):
@@ -389,8 +399,7 @@ class ShearLayer:
         else:
             value_s = float(answer)
 
-        connection.commit()
-        connection.close()
+        self._close_connection( connection )
 
         return ufloat( value_n, value_s )
 
@@ -403,8 +412,7 @@ class ShearLayer:
             ( self.case_identifier(), )
         )
         answer = cursor.fetchone()
-        connection.commit()
-        connection.close()
+        self._close_connection( connection )
 
         if ( answer == None ):
             return False
@@ -420,8 +428,7 @@ class ShearLayer:
             ( self.profile_identifier(), )
         )
         answer = cursor.fetchone()
-        connection.commit()
-        connection.close()
+        self._close_connection( connection )
 
         if ( answer == None ):
             return False
@@ -463,8 +470,7 @@ class ShearLayer:
                 ( int(point_number), identifier, ),
             )
 
-        connection.commit()
-        connection.close()
+        self._close_connection( connection, commit_changes=True )
 
     def _create_empty_profile_points( self, table, number_of_points ):
         key_variable = "point_identifier"
@@ -496,8 +502,7 @@ class ShearLayer:
                 ( int(point_number), identifier, ),
             )
 
-        connection.commit()
-        connection.close()
+        self._close_connection( connection, commit_changes=True )
 
     def case_identifier( self, readable=False ):
         if ( readable ):
