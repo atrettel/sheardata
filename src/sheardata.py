@@ -1211,6 +1211,32 @@ class ExternalFlow(WallBoundedFlow):
                           number_of_dimensions=number_of_dimensions, )
 
 class InternalFlow(WallBoundedFlow):
+    def aspect_ratio( self ):
+        return self._get_float(
+            _DIMENSIONAL_GLOBALS_TABLE,
+            "aspect_ratio",
+        )
+
+    def set_aspect_ratio( self, aspect_ratio ):
+        self._set_float(
+            _DIMENSIONAL_GLOBALS_TABLE,
+            "aspect_ratio",
+            aspect_ratio,
+        )
+
+    def cross_sectional_area( self ):
+        return self._get_float(
+            _DIMENSIONAL_GLOBALS_TABLE,
+            "cross_sectional_area",
+        )
+
+    def set_cross_sectional_area( self, cross_sectional_area ):
+        self._set_float(
+            _DIMENSIONAL_GLOBALS_TABLE,
+            "cross_sectional_area",
+            cross_sectional_area,
+        )
+
     def geometry( self ):
         return self._get_string(
             _DISCRETE_GLOBALS_TABLE,
@@ -1236,6 +1262,19 @@ class InternalFlow(WallBoundedFlow):
                 "number_of_sides",
                 number_of_sides,
             )
+
+    def hydraulic_diameter( self ):
+        return self._get_float(
+            _DIMENSIONAL_GLOBALS_TABLE,
+            "hydraulic_diameter",
+        )
+
+    def set_hydraulic_diameter( self, hydraulic_diameter ):
+        self._set_float(
+            _DIMENSIONAL_GLOBALS_TABLE,
+            "hydraulic_diameter",
+            hydraulic_diameter,
+        )
 
     def __init__( self,                             \
                   database,                         \
@@ -1318,7 +1357,7 @@ class DuctFlow(InternalFlow):
                   data_type=EXPERIMENTAL_DATA_TYPE, \
                   number_of_points=0,               \
                   number_of_dimensions=2, ):
-        super().__init__( cursor,
+        super().__init__( database,
                           profile_identifier=profile_identifier,     \
                           flow_class=flow_class,                     \
                           year=year,                                 \
@@ -1410,10 +1449,8 @@ def create_empty_database( filename ):
         streamwise_wall_curvature REAL DEFAULT NULL,
         spanwise_wall_curvature REAL DEFAULT NULL,
         roughness_height REAL DEFAULT NULL,
-        characteristic_width REAL DEFAULT NULL,
-        characteristic_height REAL DEFAULT NULL,
+        aspect_ratio REAL DEFAULT NULL,
         cross_sectional_area REAL DEFAULT NULL,
-        wetted_perimeter REAL DEFAULT NULL,
         hydraulic_diameter REAL DEFAULT NULL,
         streamwise_trip_location REAL DEFAULT NULL
         )
