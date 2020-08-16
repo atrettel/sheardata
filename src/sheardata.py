@@ -531,6 +531,13 @@ class ShearLayer:
 
     def set_case_number( self, case_number ):
         self._set_integer(
+            _CASES_TABLE,
+            "case_number",
+            case_number,
+            key_type=_CASE_KEY_TYPE,
+        )
+
+        self._set_integer(
             _DISCRETE_GLOBALS_TABLE,
             "case_number",
             case_number,
@@ -567,6 +574,13 @@ class ShearLayer:
 
     def set_data_type( self, data_type ):
         self._set_string(
+            _CASES_TABLE,
+            "data_type",
+            data_type,
+            key_type=_CASE_KEY_TYPE,
+        )
+
+        self._set_string(
             _DISCRETE_GLOBALS_TABLE,
             "data_type",
             data_type,
@@ -585,6 +599,13 @@ class ShearLayer:
 
 
     def set_flow_class( self, flow_class ):
+        self._set_string(
+            _CASES_TABLE,
+            "flow_class",
+            flow_class,
+            key_type=_CASE_KEY_TYPE,
+        )
+
         self._set_string(
             _DISCRETE_GLOBALS_TABLE,
             "flow_class",
@@ -884,6 +905,13 @@ class ShearLayer:
         )
 
     def set_year( self, year ):
+        self._set_integer(
+            _CASES_TABLE,
+            "year",
+            year,
+            key_type=_CASE_KEY_TYPE,
+        )
+
         self._set_integer(
             _DISCRETE_GLOBALS_TABLE,
             "year",
