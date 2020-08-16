@@ -586,6 +586,21 @@ class ShearLayer:
             data_type,
         )
 
+    def description( self ):
+        return self._get_string(
+            _CASES_TABLE,
+            "description",
+            key_type=_CASE_KEY_TYPE,
+        )
+
+    def set_description( self, description ):
+        self._set_string(
+            _CASES_TABLE,
+            "description",
+            description.strip(),
+            key_type=_CASE_KEY_TYPE,
+        )
+
     def flow_class( self, readable=False ):
         flow_class = self._get_string(
             _DISCRETE_GLOBALS_TABLE,
