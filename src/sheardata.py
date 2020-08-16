@@ -670,28 +670,32 @@ class ShearLayer:
 
     def primary_reference( self ):
         return self._get_string(
-            _DISCRETE_GLOBALS_TABLE,
+            _CASES_TABLE,
             "primary_reference",
+            key_type=_CASE_KEY_TYPE,
         )
 
     def set_primary_reference( self, primary_reference ):
         self._set_string(
-            _DISCRETE_GLOBALS_TABLE,
+            _CASES_TABLE,
             "primary_reference",
             primary_reference,
+            key_type=_CASE_KEY_TYPE,
         )
 
     def additional_references( self ):
         return self._get_string(
-            _DISCRETE_GLOBALS_TABLE,
+            _CASES_TABLE,
             "additional_references",
+            key_type=_CASE_KEY_TYPE,
         ).split(",")
 
     def set_additional_references( self, references ):
         self._set_string(
-            _DISCRETE_GLOBALS_TABLE,
+            _CASES_TABLE,
             "additional_references",
             ",".join(references),
+            key_type=_CASE_KEY_TYPE,
         )
 
     def references( self ):
@@ -727,15 +731,17 @@ class ShearLayer:
 
     def provenance( self ):
         return self._get_string(
-            _DISCRETE_GLOBALS_TABLE,
+            _CASES_TABLE,
             "provenance",
+            key_type=_CASE_KEY_TYPE,
         )
 
     def set_provenance( self, provenance ):
         self._set_string(
-            _DISCRETE_GLOBALS_TABLE,
+            _CASES_TABLE,
             "provenance",
             provenance.strip(),
+            key_type=_CASE_KEY_TYPE,
         )
 
     def regime( self, readable=False ):
@@ -1322,10 +1328,7 @@ def create_empty_database( filename ):
     previous_spanwise_station TEXT_DEFAULT_NULL,
     next_spanwise_station TEXT_DEFAULT_NULL,
     regime TEXT DEFAULT NULL,
-    trip_present INTEGER DEFAULT NULL,
-    primary_reference TEXT DEFAULT NULL,
-    additional_references TEXT DEFAULT NULL,
-    provenance TEXT DEFAULT NULL
+    trip_present INTEGER DEFAULT NULL
     )
     """
     )
