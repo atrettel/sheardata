@@ -894,34 +894,6 @@ class ShearLayer:
             trip_present,
         )
 
-    # Wall curvatures
-    def streamwise_wall_curvature( self ):
-        return self._get_float(
-            _DIMENSIONAL_GLOBALS_TABLE,
-            "streamwise_wall_curvature",
-        )
-
-    def spanwise_wall_curvature( self ):
-        return self._get_float(
-            _DIMENSIONAL_GLOBALS_TABLE,
-            "spanwise_wall_curvature",
-        )
-
-    def set_wall_curvatures( self,
-                             streamwise_wall_curvature=ufloat( 0.0, 0.0 ),
-                             spanwise_wall_curvature=ufloat( 0.0, 0.0 ), ):
-        self._set_float(
-            _DIMENSIONAL_GLOBALS_TABLE,
-            "streamwise_wall_curvature",
-            streamwise_wall_curvature,
-        )
-
-        self._set_float(
-            _DIMENSIONAL_GLOBALS_TABLE,
-            "spanwise_wall_curvature",
-            spanwise_wall_curvature,
-        )
-
     def working_fluid( self ):
         return self._get_string(
             _DISCRETE_GLOBALS_TABLE,
@@ -1070,6 +1042,47 @@ class FreeShearFlow(ShearLayer):
                           number_of_dimensions=number_of_dimensions, )
 
 class WallBoundedFlow(ShearLayer):
+    def roughness_height( self ):
+        return self._get_float(
+            _DIMENSIONAL_GLOBALS_TABLE,
+            "roughness_height",
+        )
+
+    def set_roughness_height( self, roughness_height ):
+        self._set_float(
+            _DIMENSIONAL_GLOBALS_TABLE,
+            "roughness_height",
+            roughness_height,
+        )
+
+    # Wall curvatures
+    def streamwise_wall_curvature( self ):
+        return self._get_float(
+            _DIMENSIONAL_GLOBALS_TABLE,
+            "streamwise_wall_curvature",
+        )
+
+    def spanwise_wall_curvature( self ):
+        return self._get_float(
+            _DIMENSIONAL_GLOBALS_TABLE,
+            "spanwise_wall_curvature",
+        )
+
+    def set_wall_curvatures( self,
+                             streamwise_wall_curvature=ufloat( 0.0, 0.0 ),
+                             spanwise_wall_curvature=ufloat( 0.0, 0.0 ), ):
+        self._set_float(
+            _DIMENSIONAL_GLOBALS_TABLE,
+            "streamwise_wall_curvature",
+            streamwise_wall_curvature,
+        )
+
+        self._set_float(
+            _DIMENSIONAL_GLOBALS_TABLE,
+            "spanwise_wall_curvature",
+            spanwise_wall_curvature,
+        )
+
     def __init__( self,                               \
                   database,                           \
                   profile_identifier=None,            \
