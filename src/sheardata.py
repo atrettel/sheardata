@@ -894,6 +894,34 @@ class ShearLayer:
             trip_present,
         )
 
+    # Wall curvatures
+    def streamwise_wall_curvature( self ):
+        return self._get_float(
+            _DIMENSIONAL_GLOBALS_TABLE,
+            "streamwise_wall_curvature",
+        )
+
+    def spanwise_wall_curvature( self ):
+        return self._get_float(
+            _DIMENSIONAL_GLOBALS_TABLE,
+            "spanwise_wall_curvature",
+        )
+
+    def set_wall_curvatures( self,
+                             streamwise_wall_curvature=ufloat( 0.0, 0.0 ),
+                             spanwise_wall_curvature=ufloat( 0.0, 0.0 ), ):
+        self._set_float(
+            _DIMENSIONAL_GLOBALS_TABLE,
+            "streamwise_wall_curvature",
+            streamwise_wall_curvature,
+        )
+
+        self._set_float(
+            _DIMENSIONAL_GLOBALS_TABLE,
+            "spanwise_wall_curvature",
+            spanwise_wall_curvature,
+        )
+
     def working_fluid( self ):
         return self._get_string(
             _DISCRETE_GLOBALS_TABLE,
