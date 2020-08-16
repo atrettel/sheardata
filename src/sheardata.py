@@ -1055,6 +1055,19 @@ class WallBoundedFlow(ShearLayer):
             roughness_height,
         )
 
+    def streamwise_trip_location( self ):
+        return self._get_float(
+            _DIMENSIONAL_GLOBALS_TABLE,
+            "streamwise_trip_location",
+        )
+
+    def set_streamwise_trip_location( self, streamwise_trip_location ):
+        self._set_float(
+            _DIMENSIONAL_GLOBALS_TABLE,
+            "streamwise_trip_location",
+            streamwise_trip_location,
+        )
+
     # Wall curvatures
     def streamwise_wall_curvature( self ):
         return self._get_float(
