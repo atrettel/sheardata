@@ -153,7 +153,7 @@ def sanitize_identifier( identifier ):
     return identifier.replace("-","")
 
 class ShearLayer:
-    _connection         = None
+    _connection_object  = None
     _database           = None
     _profile_identifier = None
 
@@ -177,16 +177,17 @@ class ShearLayer:
 
     def _connection( self ):
         if ( self._connection_persists() ):
-            connection = self._connection
+            connection = self._connection_object
         else:
             connection = sqlite3.connect( self._database )
         cursor = connection.cursor()
+
         return connection, cursor
 
     def _close_connection( self, connection, commit_changes=False ):
+        if ( commit_changes == True ):
+            connection.commit()
         if ( self._connection_persists() == False ):
-            if ( commit_changes == True ):
-                connection.commit()
             connection.close()
 
     def _connection_persists( self ):
@@ -890,7 +891,7 @@ class ShearLayer:
         )
 
     def __init__( self,                             \
-                  database,                         \
+                  source,                           \
                   profile_identifier=None,          \
                   flow_class=SHEAR_LAYER_CLASS,     \
                   year=None,                        \
@@ -900,7 +901,12 @@ class ShearLayer:
                   data_type=EXPERIMENTAL_DATA_TYPE, \
                   number_of_points=0,               \
                   number_of_dimensions=2, ):
-        self._database = database
+
+        if ( isinstance( source, str ) ):
+            self._database = source
+        else:
+            self._connection_object = source
+
         if ( profile_identifier == None and case_number != None ):
             self._profile_identifier = identify_profile(
                 flow_class,
