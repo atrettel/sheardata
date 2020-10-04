@@ -1,0 +1,6 @@
+"Series", "Case", "Roughness", "Diameter",
+       1,      1,     "Rough",       5.08,
+       1,      2,     "Rough",       7.35,
+       2,      1,    "Smooth",       4.93,
+       2,      2,    "Smooth",       7.40,
+       2,      3,    "Smooth",       7.40,
