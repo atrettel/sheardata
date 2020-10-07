@@ -73,215 +73,219 @@ Goals
 - Remember that at least some of the "structure" here really is "data".  Prefer
   data over structure, since data is mutable (or at least more easily mutable).
 
+- Include additional fields for commentary (likely editorial commentary).  Also
+  include additional fields for the people involved, the facilities involved,
+  the organizations involved, locations of any experiments, and any contract
+  numbers.
+
 
 Design details
 --------------
 
 - Tables
 
-    - `cases`
+    - `studies`
 
-    - `discrete_globals`
+        - study identifier
 
-        - These are global variables that do not have any uncertainty.
+        - flow class
 
-    - `dimensional_globals_n`, `dimensional_globals_s`
+        - year
 
-        - These are global variables that have some uncertainty but do not
-          change in different averaging systems.
+        - study number
 
-        - It would be simpler to just note various profile locations with
-          labels (wall, edge, etc.) rather than have a large number of
-          additional global variables.  However, no single point in the profile
-          might represent these states (but in many cases it will).  Redundancy
-          through duplication seems like a worthwhile tradeoff in that case.
+        - study type (experimental or numerical)
 
-    - `uw_dimensional_globals_n`, `uw_dimensional_globals_s`
+        - description
 
-    - `dw_dimensional_globals_n`, `dw_dimensional_globals_s`
+        - provenance (chain of custody for data)
 
-    - `uw_dimensionless_globals_n`, `uw_dimensionless_globals_s`
+            - A description of how the data ended up in the collection.  Was
+              the data extracted graphically and from what references?  Was the
+              data published in tabulated form?  Was the data sent through
+              private correspondence?  Has the transmission of the data altered
+              it in any way?
 
-    - `dw_dimensionless_globals_n`, `dw_dimensionless_globals_s`
+            - <https://en.wikipedia.org/wiki/Provenance#Data_provenance>
 
-    - `uw_dimensionless_profiles_n`, `uw_dimensionless_profiles_s`
+            - <https://en.wikipedia.org/wiki/Data_lineage>
 
-    - `dw_dimensionless_profiles_n`, `dw_dimensionless_profiles_s`
+        - primary reference
 
-- Have corresponding tables for values and uncertainties.  The field names
-  should be identical.  `n` is for the values and `s` is for uncertainties.
-  This convention follows the Python `uncertainties` package.  Also have
-  corresponding tables of unweighted variables (`uw`) and density-weighted
-  variables (`dw`).
+        - additional references
 
-- Include additional fields for commentary (likely editorial commentary).  Also
-  include additional fields for the people involved, the facilities involved,
-  the organizations involved, locations of any experiments, and any contract
-  numbers.
+            - These references (and the primary reference) should all be
+              primary sources.
 
-- I also want to include separate upper and lower boundary conditions for
-  internal flows, but I have not thought of a completely general way to do
-  this.  So far I do not distinguish between different walls; the database
-  assumes there is only one wall (and some kind of symmetry).  This assumptions
-  works for my initial cases but does not work in general.
+        - notes
 
-- Note the type of measurement used (though this will require an additional set
-  of codes or a taxonomy of these).
+    - `series`
 
+        - series identifier
 
-Table fields
-------------
+        - series number
 
-Some of these only apply to certain flow classes (the most general flow class
-being listed).
+        - study identifier
 
-- Cases
+        - number of dimensions (2 or 3)
 
-    - Case identifier (`S`)
+        - coordinate system
 
-    - Flow class (`S`)
+        - working fluid
 
-    - Year (`S`)
+        - working fluid phase
 
-    - Case number (`S`)
+            - Also consider combining these two into a single field.
 
-    - Data type (`S`)
+        - trip present?
 
-        - `E` for experimental, `N` for numerical.
+            - It might be better to set this as a series variable that notes
+              the location of the trip rather than whether it was tripped.
 
-    - Description
+        - geometry (`I`)
 
-    - Provenance (chain of custody for data)
+            - `E` for ellipse, `P` for polygon
 
-        - A description of how the data ended up in the collection.  Was the
-          data extracted graphically and from what references?  Was the data
-          published in tabulated form?  Was the data sent through private
-          correspondence?  Has the transmission of the data altered it in any
-          way?
+        - number of sides (`I`)
 
-        - <https://en.wikipedia.org/wiki/Provenance#Data_provenance>
+            - 3 for triangular duct, 4 for rectangular ducts, ...
 
-        - <https://en.wikipedia.org/wiki/Data_lineage>
+        - description
 
-    - Primary reference
+        - notes
 
-    - Additional references
+    - `profiles`
 
-        - These references (and the primary reference) should all be primary
-          sources.
+        - profile identifier
 
-- Series
+        - profile number
 
-    - Series identifier (`S`)
+        - originator's identifier
 
-    - Series number (`S`)
+        - regime
 
-    - Case identifier (`S`)
+            - Laminar, transitional, turbulent.  This might involve a "judgment
+              call", but it is necessary to sort through data.
 
-    - Description (`S`)
+        - previous streamwise station
 
-    - Number of dimensions (`S`)
+        - next streamwise station
 
-        - 2 or 3.  Setting this to 2 should enforce certain values for certain
-          profiles.
+        - previous spanwise station
 
-    - Coordinate system (`S`)
+        - next spanwise station
 
-        - `XYZ`, `XRT`, `RTZ`, `RTP`, etc.
+        - outlier?
 
-    - Geometry (`I`)
+        - description
 
-        - `E` for ellipse, `P` for polygon
+        - notes
 
-    - Number of sides (`I`)
+    - `points`
 
-        - 3 for triangular duct, 4 for rectangular ducts, ...
+        - point identifier
 
-    - Working fluid (`S`)
+        - point number
 
-        - Consider using CAS registry numbers for these.  These are
-          standardized.  A separate table for fluid properties could then also
-          exist.
+        - profile identifier
 
-    - Working fluid phase (`S`)
+        - label
 
-    - Trip present? (`C`)
+            - Center-line, edge, wall
 
-- Discrete globals
+            - Note that for some flows, there can be two walls.
 
-    - Profile identifier (`S`)
+        - streamwise coordinate
 
-    - Series identifier (`S`)
+        - transverse coordinate
 
-    - Profile number (`S`)
+        - spanwise coordinate
 
-    - Number of points (`S`)
+            - It might be better to put these as a profile quantity.
 
-    - Originators' identifier (`S`)
+        - outlier?
 
-    - Previous streamwise station (`S`)
+        - notes
 
-        - Pointers like these are much more flexible than assuming that the
-          profile numbers are in order by station number.
+    - `quantities`
 
-    - Next streamwise station (`S`)
+    - `fluids`
 
-    - Previous spanwise station (`S`)
+    - `measurement_techniques`
 
-        - These should also be null for 2D flows.
+    - `study_values`
 
-    - Next spanwise station (`S`)
+    - `series_values`
 
-    - Regime (`S`)
+    - `profile_values`
 
-        - Laminar, transitional, turbulent.  It may be better to consider this
-          algorithmically, though.  However, it is difficult to come up
-          "sure-fire" criteria for this.  It is worth more thought later,
-          though.
+    - `point_values`
 
-    - Outlier?
+        - profile identifier
 
-    - Wall shear stress measurement technique
+        - point number
 
-        - Pressure gradient (for internal flows only)
+        - quantity identifier
 
-        - Direct measurement
+        - value
 
-        - Viscous sublayer gradient
+        - uncertainty
 
-        - Stanton tube
+        - averaging system
 
-        - Preston tube
+        - measurement technique
 
-        - Clauser chart
+        - outlier?
 
-- Dimensional globals (real, use SI, averaging-system independent)
+        - notes
 
-    - Profile identifier (`S`)
 
-    - Streamwise wall curvature (`C`)
+Measurement techniques
+----------------------
 
-    - Spanwise wall curvature (`C`)
+- Flow measurement technique
 
-        - Fernholz 1977, p. 13 defines this as positive for external flows and
-          negative for internal flows.
+- Velocity measurement technique
 
-    - Roughness height (`C`)
+    - Pitot tube
+
+    - Pitot-static tube
+
+    - Hot-wire anemometer
+
+    - Laser Doppler velocimetry or anemometer
+
+    - Particle image velocimetry
+
+- Wall shear stress measurement technique
+
+    - Pressure gradient (for internal flows only)
+
+    - Direct measurement
+
+    - Viscous sublayer gradient
+
+    - Stanton tube
+
+    - Preston tube
+
+    - Clauser chart
+
+
+Quantities
+----------
+
+- Series quantities
+
+    - Streamwise trip location (`C`)
+
+- Profile quantities
 
     - Aspect ratio (`I`)
-
-        - Yes, this is dimensionless, but it was easier to put it here than
-          make another table.
 
     - Cross-sectional area (`I`)
 
     - Hydraulic diameter (`I`)
-
-    - Streamwise trip location (`C`)
-
-- Dimensional globals (real, use SI, averaging-system dependent)
-
-    - Profile identifier (`S`)
 
     - Bulk dynamic viscosity (`I`)
 
@@ -301,49 +305,11 @@ being listed).
 
     - Bulk transverse velocity (`I`)
 
-    - Center-line dynamic viscosity (`I`)
-
-    - Center-line kinematic viscosity (`I`)
-
-    - Center-line mass density (`I`)
-
-    - Center-line pressure (`I`)
-
-    - Center-line specific isobaric heat capacity (`I`)
-
-    - Center-line speed of sound (`I`)
-
-    - Center-line streamwise velocity (`I`)
-
-    - Center-line temperature (`I`)
-
-    - Center-line transverse velocity (`I`)
-
     - Clauser thickness (`C`)
 
     - Compressible displacement thickness (`C`)
 
     - Compressible momentum thickness (`C`)
-
-    - Edge dynamic viscosity (`E` and `F`)
-
-    - Edge kinematic viscosity (`E` and `F`)
-
-    - Edge mass density (`E` and `F`)
-
-    - Edge pressure (`E` and `F`)
-
-    - Edge specific isobaric heat capacity (`E` and `F`)
-
-    - Edge speed of sound (`E` and `F`)
-
-    - Edge streamwise velocity (`E` and `F`)
-
-    - Edge temperature (`E` and `F`)
-
-    - Edge transverse velocity (`E` and `F`)
-
-    - Edge velocity gradient (`E` and `F`)
 
     - Friction velocity (`C`)
 
@@ -357,41 +323,7 @@ being listed).
 
     - Mass flow rate (`I`)
 
-    - Maximum dynamic viscosity (`S`)
-
-    - Maximum kinematic viscosity (`S`)
-
-    - Maximum mass density (`S`)
-
-    - Maximum pressure (`S`)
-
-    - Maximum specific isobaric heat capacity (`S`)
-
-    - Maximum speed of sound (`S`)
-
-    - Maximum streamwise velocity (`S`)
-
-    - Maximum temperature (`S`)
-
-    - Maximum transverse velocity (`S`)
-
-    - Minimum dynamic viscosity (`S`)
-
-    - Minimum kinematic viscosity (`S`)
-
-    - Minimum mass density (`S`)
-
-    - Minimum pressure (`S`)
-
-    - Minimum specific isobaric heat capacity (`S`)
-
-    - Minimum speed of sound (`S`)
-
-    - Minimum streamwise velocity (`S`)
-
-    - Minimum temperature (`S`)
-
-    - Minimum transverse velocity (`S`)
+    - Volume flow rate (`I`)
 
     - Reservoir pressure (`S`)
 
@@ -405,35 +337,9 @@ being listed).
 
     - Viscous length scale (`C`)
 
-    - Wall dynamic viscosity (`C`)
-
-    - Wall kinematic viscosity (`C`)
-
-    - Wall mass density (`C`)
-
-    - Wall pressure (`C`)
-
-    - Wall shear stress (`C`)
-
-    - Wall specific isobaric heat capacity (`S`)
-
-    - Wall speed of sound (`C`)
-
-    - Wall spanwise velocity (`C`)
-
-    - Wall streamwise velocity (`C`)
-
-    - Wall temperature (`C`)
-
-    - Wall transverse velocity (`C`)
-
     - 99-percent velocity boundary layer thickness (`E`)
 
     - 99-percent temperature boundary layer thickness (`E`)
-
-- Dimensionless globals (real, averaging-system dependent)
-
-    - Profile identifier (`S`)
 
     - Bulk heat capacity ratio (`I`)
 
@@ -441,23 +347,7 @@ being listed).
 
     - Bulk Prandtl number (`I`)
 
-    - Center-line heat capacity ratio (`I`)
-
-    - Center-line Mach number (`I`)
-
-    - Center-line Prandtl number (`I`)
-
     - Dimensionless wall heat flux (`B_q`) (`C`)
-
-    - Edge heat capacity ratio (`E`)
-
-    - Edge Mach number (`E`)
-
-    - Edge Prandtl number (`E`)
-
-    - Edge Reynolds number based on displacement thickness (`E`)
-
-    - Edge Reynolds number based on momentum thickness (`E`)
 
     - Equilibrium parameter (`E`)
 
@@ -465,23 +355,13 @@ being listed).
 
     - Friction factor (`I`)
 
+        - Which one is up to debate right now.
+
     - Friction Mach number (`C`)
 
     - Friction Reynolds number (`C`)
 
     - Heat transfer coefficient (`E`)
-
-    - Maximum heat capacity ratio  (`S`)
-
-    - Maximum Mach number (`S`)
-
-    - Maximum Prandtl number (`S`)
-
-    - Minimum heat capacity ratio  (`S`)
-
-    - Minimum Mach number (`S`)
-
-    - Minimum Prandtl number (`S`)
 
     - Recovery factor (`C`)
 
@@ -489,34 +369,24 @@ being listed).
 
     - Local skin friction coefficient (`E`)
 
-    - Wall heat capacity ratio (`C`)
+    - Streamwise coordinate
 
-    - Wall Mach number (`C`)
+    - Spanwise coordinate
 
-    - Wall Prandtl number (`C`)
+        - It might be better to put these under points.
 
-- Discrete profiles (real, use SI, averaging-system independent)
+- Wall profile quantities - these can appear twice
 
-    - Point identifier (`S`)
+    - Streamwise wall curvature (`C`)
 
-    - Profile identifier (`S`)
+    - Spanwise wall curvature (`C`)
 
-    - Point number (`S`)
+        - Fernholz 1977, p. 13 defines this as positive for external flows and
+          negative for internal flows.
 
-    - Label (`S`)
+    - Roughness height (`C`)
 
-        - Center-line, edge, maximum, minimum, wall
-
-    - Velocity measurement technique (`S`)
-
-        - `PT` or `PST`, `HWA`, `LDV` or `LDA`, `PIV`
-
-    - Temperature measurement technique (`S`)
-
-- Dimensionless profiles (real, averaging-system dependent, inner and outer
-  layers)
-
-    - Point identifier (`S`) (unique)
+- Point quantities
 
     - Bulk viscosity (`S`)
 
