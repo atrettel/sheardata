@@ -67,6 +67,12 @@ Goals
 
 - Use assertions and other checks on the data.
 
+- Eliminate redundancy in the tables.  Each data point MUST have one and only
+  one location.
+
+- Remember that at least some of the "structure" here really is "data".  Prefer
+  data over structure, since data is mutable (or at least more easily mutable).
+
 
 Design details
 --------------
@@ -164,48 +170,20 @@ being listed).
         - These references (and the primary reference) should all be primary
           sources.
 
-- Discrete globals
-
-    - Profile identifier (`S`)
+- Series
 
     - Series identifier (`S`)
 
-    - Case identifier (`S`)
-
-        - Redundant with cases table?
-
-    - Flow class (`S`)
-
-        - Redundant with cases table?
-
-    - Year (`S`)
-
-        - Redundant with cases table?
-
-    - Case number (`S`)
-
-        - Redundant with cases table?
-
     - Series number (`S`)
 
-    - Profile number (`S`)
+    - Case identifier (`S`)
 
-    - Number of points (`S`)
+    - Description (`S`)
 
     - Number of dimensions (`S`)
 
         - 2 or 3.  Setting this to 2 should enforce certain values for certain
           profiles.
-
-    - Originators' identifier (`S`)
-
-    - Working fluid (`S`)
-
-        - Consider using CAS registry numbers for these.  These are
-          standardized.  A separate table for fluid properties could then also
-          exist.
-
-    - Working fluid phase (`S`)
 
     - Coordinate system (`S`)
 
@@ -218,6 +196,28 @@ being listed).
     - Number of sides (`I`)
 
         - 3 for triangular duct, 4 for rectangular ducts, ...
+
+    - Working fluid (`S`)
+
+        - Consider using CAS registry numbers for these.  These are
+          standardized.  A separate table for fluid properties could then also
+          exist.
+
+    - Working fluid phase (`S`)
+
+    - Trip present? (`C`)
+
+- Discrete globals
+
+    - Profile identifier (`S`)
+
+    - Series identifier (`S`)
+
+    - Profile number (`S`)
+
+    - Number of points (`S`)
+
+    - Originators' identifier (`S`)
 
     - Previous streamwise station (`S`)
 
@@ -239,7 +239,21 @@ being listed).
           "sure-fire" criteria for this.  It is worth more thought later,
           though.
 
-    - Trip present? (`C`)
+    - Outlier?
+
+    - Wall shear stress measurement technique
+
+        - Pressure gradient (for internal flows only)
+
+        - Direct measurement
+
+        - Viscous sublayer gradient
+
+        - Stanton tube
+
+        - Preston tube
+
+        - Clauser chart
 
 - Dimensional globals (real, use SI, averaging-system independent)
 
@@ -481,7 +495,7 @@ being listed).
 
     - Wall Prandtl number (`C`)
 
-- Dimensional profiles (real, use SI, averaging-system independent)
+- Discrete profiles (real, use SI, averaging-system independent)
 
     - Point identifier (`S`)
 
@@ -493,24 +507,16 @@ being listed).
 
         - Center-line, edge, maximum, minimum, wall
 
-        - Consider putting this as a global field that points to a particular
-          point instead.
+    - Velocity measurement technique (`S`)
 
-    - Streamwise coordinate (`S`)
+        - `PT` or `PST`, `HWA`, `LDV` or `LDA`, `PIV`
 
-    - Transverse coordinate (`S`)
+    - Temperature measurement technique (`S`)
 
-    - Spanwise coordinate (`S`)
+- Dimensionless profiles (real, averaging-system dependent, inner and outer
+  layers)
 
-    - Distance from wall (`C`)
-
-- Dimensionless profiles (real, averaging-system dependent)
-
-    - Point identifier (`S`)
-
-    - Profile identifier (`S`)
-
-    - Point number (`S`)
+    - Point identifier (`S`) (unique)
 
     - Bulk viscosity (`S`)
 
