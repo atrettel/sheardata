@@ -82,399 +82,145 @@ Goals
 Design details
 --------------
 
-- Tables
+The identifiers are intentionally simple and systematic so that it is possible
+to extract information about profiles from the points (and in other
+combinations).  For example, consider the following SQL command
 
-    - `studies`
+    SELECT value FROM point_values WHERE identifier LIKE 'D9999002%';
 
-        - study identifier
+This selects all values for the points that have a particular profile
+identifier.
 
-        - flow class
 
-        - year
+Tables
+------
 
-        - study number
+- `studies`
 
-        - study type (experimental or numerical)
+    - study identifier
 
-        - description
+    - flow class
 
-        - provenance (chain of custody for data)
+    - year
 
-            - A description of how the data ended up in the collection.  Was
-              the data extracted graphically and from what references?  Was the
-              data published in tabulated form?  Was the data sent through
-              private correspondence?  Has the transmission of the data altered
-              it in any way?
+    - study number
 
-            - <https://en.wikipedia.org/wiki/Provenance#Data_provenance>
+    - study type (experimental or numerical)
 
-            - <https://en.wikipedia.org/wiki/Data_lineage>
+    - description
 
-        - primary reference
+    - provenance (chain of custody for data)
 
-        - additional references
+        - A description of how the data ended up in the collection.  Was the
+          data extracted graphically and from what references?  Was the data
+          published in tabulated form?  Was the data sent through private
+          correspondence?  Has the transmission of the data altered it in any
+          way?
 
-            - These references (and the primary reference) should all be
-              primary sources.
+        - <https://en.wikipedia.org/wiki/Provenance#Data_provenance>
 
-        - notes
+        - <https://en.wikipedia.org/wiki/Data_lineage>
 
-    - `series`
+    - primary reference
 
-        - series identifier
+    - additional references
 
-        - series number
+        - These references (and the primary reference) should all be
+          primary sources.
 
-        - study identifier
+    - notes
 
-        - number of dimensions (2 or 3)
+- `series`
 
-        - coordinate system
+    - series identifier
 
-        - working fluid
+    - series number
 
-        - working fluid phase
+    - number of dimensions (2 or 3)
 
-            - Also consider combining these two into a single field.
+    - coordinate system
 
-        - trip present?
+    - working fluid
 
-            - It might be better to set this as a series variable that notes
-              the location of the trip rather than whether it was tripped.
+    - trip present?
 
-        - geometry (`I`)
+        - It might be better to set this as a series variable that notes
+          the location of the trip rather than whether it was tripped.
 
-            - `E` for ellipse, `P` for polygon
+    - geometry (`I`)
 
-        - number of sides (`I`)
+        - `E` for ellipse, `P` for polygon
 
-            - 3 for triangular duct, 4 for rectangular ducts, ...
+    - number of sides (`I`)
 
-        - description
+        - 3 for triangular duct, 4 for rectangular ducts, ...
 
-        - notes
+    - description
 
-    - `profiles`
+    - notes
 
-        - profile identifier
+- `profiles`
 
-        - profile number
+    - profile identifier
 
-        - originator's identifier
+    - profile number
 
-        - regime
+    - originator's identifier
 
-            - Laminar, transitional, turbulent.  This might involve a "judgment
-              call", but it is necessary to sort through data.
+    - regime
 
-        - previous streamwise station
+        - Laminar, transitional, turbulent.  This might involve a "judgment
+          call", but it is necessary to sort through data.
 
-        - next streamwise station
+    - previous streamwise station
 
-        - previous spanwise station
+    - next streamwise station
 
-        - next spanwise station
+    - previous spanwise station
 
-        - outlier?
+    - next spanwise station
 
-        - description
+    - outlier?
 
-        - notes
+    - description
 
-    - `points`
+    - notes
 
-        - point identifier
+- `points`
 
-        - point number
+    - point identifier
 
-        - profile identifier
+    - point number
 
-        - label
+    - label
 
-            - Center-line, edge, wall
+    - outlier?
 
-            - Note that for some flows, there can be two walls.
+    - notes
 
-        - streamwise coordinate
+- `study_values`
 
-        - transverse coordinate
+- `series_values`
 
-        - spanwise coordinate
+- `profile_values`
 
-            - It might be better to put these as a profile quantity.
+- `point_values`
 
-        - outlier?
+    - point identifier
 
-        - notes
+    - quantity identifier
 
-    - `quantities`
+    - value
 
-    - `fluids`
+    - uncertainty
 
-    - `measurement_techniques`
+    - averaging system
 
-    - `study_values`
+    - measurement technique
 
-    - `series_values`
+    - outlier?
 
-    - `profile_values`
-
-    - `point_values`
-
-        - profile identifier
-
-        - point number
-
-        - quantity identifier
-
-        - value
-
-        - uncertainty
-
-        - averaging system
-
-        - measurement technique
-
-        - outlier?
-
-        - notes
-
-
-Measurement techniques
-----------------------
-
-- Flow measurement technique
-
-- Velocity measurement technique
-
-    - Pitot tube
-
-    - Pitot-static tube
-
-    - Hot-wire anemometer
-
-    - Laser Doppler velocimetry or anemometer
-
-    - Particle image velocimetry
-
-- Wall shear stress measurement technique
-
-    - Pressure gradient (for internal flows only)
-
-    - Direct measurement
-
-    - Viscous sublayer gradient
-
-    - Stanton tube
-
-    - Preston tube
-
-    - Clauser chart
-
-
-Quantities
-----------
-
-- Series quantities
-
-    - Streamwise trip location (`C`)
-
-- Profile quantities
-
-    - Aspect ratio (`I`)
-
-    - Cross-sectional area (`I`)
-
-    - Hydraulic diameter (`I`)
-
-    - Bulk dynamic viscosity (`I`)
-
-    - Bulk kinematic viscosity (`I`)
-
-    - Bulk mass density (`I`)
-
-    - Bulk pressure (`I`)
-
-    - Bulk specific isobaric heat capacity (`I`)
-
-    - Bulk speed of sound (`I`)
-
-    - Bulk streamwise velocity (`I`)
-
-    - Bulk temperature (`I`)
-
-    - Bulk transverse velocity (`I`)
-
-    - Clauser thickness (`C`)
-
-    - Compressible displacement thickness (`C`)
-
-    - Compressible momentum thickness (`C`)
-
-    - Friction velocity (`C`)
-
-    - Friction temperature (`C`)
-
-    - Incompressible displacement thickness (`C`)
-
-    - Incompressible momentum thickness (`C`)
-
-    - Left-hand side of momentum integral (`E`)
-
-    - Mass flow rate (`I`)
-
-    - Volume flow rate (`I`)
-
-    - Reservoir pressure (`S`)
-
-    - Reservoir speed of sound (`S`)
-
-    - Reservoir temperature (`S`)
-
-    - Right-hand side of momentum integral (`E`)
-
-    - Streamwise pressure gradient (`C`)
-
-    - Viscous length scale (`C`)
-
-    - 99-percent velocity boundary layer thickness (`E`)
-
-    - 99-percent temperature boundary layer thickness (`E`)
-
-    - Bulk heat capacity ratio (`I`)
-
-    - Bulk Mach number (`I`)
-
-    - Bulk Prandtl number (`I`)
-
-    - Dimensionless wall heat flux (`B_q`) (`C`)
-
-    - Equilibrium parameter (`E`)
-
-    - Freestream turbulence intensity (`S`)
-
-    - Friction factor (`I`)
-
-        - Which one is up to debate right now.
-
-    - Friction Mach number (`C`)
-
-    - Friction Reynolds number (`C`)
-
-    - Heat transfer coefficient (`E`)
-
-    - Recovery factor (`C`)
-
-    - Semi-local friction Reynolds number (`C`)
-
-    - Local skin friction coefficient (`E`)
-
-    - Streamwise coordinate
-
-    - Spanwise coordinate
-
-        - It might be better to put these under points.
-
-- Wall profile quantities - these can appear twice
-
-    - Streamwise wall curvature (`C`)
-
-    - Spanwise wall curvature (`C`)
-
-        - Fernholz 1977, p. 13 defines this as positive for external flows and
-          negative for internal flows.
-
-    - Roughness height (`C`)
-
-- Point quantities
-
-    - Bulk viscosity (`S`)
-
-    - Dynamic viscosity (`S`)
-
-    - Heat capacity ratio (`S`)
-
-    - Specific isobaric heat capacity (`S`)
-
-    - Specific isochoric heat capacity (`S`)
-
-    - Kinematic viscosity (`S`)
-
-    - Mach number (`S`)
-
-    - Mass density (`S`)
-
-    - Momentum density (`S`)
-
-    - Prandtl number (`S`)
-
-    - Pressure (`S`)
-
-    - Shear stress (`S`)
-
-    - Spanwise velocity (`S`)
-
-    - Spanwise vorticity (`S`)
-
-    - Specific enthalpy (`S`)
-
-    - Specific entropy (`S`)
-
-    - Specific internal energy (`S`)
-
-    - Specific total enthalpy (`S`)
-
-    - Specific total internal energy (`S`)
-
-    - Specific volume (`S`)
-
-    - Speed (`S`)
-
-    - Speed of sound (`S`)
-
-    - Stagnation pressure (`S`)
-
-    - Stagnation temperature (`S`)
-
-    - Streamwise velocity (`S`)
-
-    - Streamwise vorticity (`S`)
-
-    - Temperature (`S`)
-
-    - Thermal conductivity (`S`)
-
-    - Thermal diffusivity (`S`)
-
-    - Transverse velocity (`S`)
-
-    - Transverse vorticity (`S`)
-
-    - Turbulent kinetic energy (`S`)
-
-    - Turbulent stress UU (`S`)
-
-    - Turbulent stress UV (`S`)
-
-    - Turbulent stress UW (`S`)
-
-    - Turbulent stress VV (`S`)
-
-    - Turbulent stress VW (`S`)
-
-    - Turbulent stress WW (`S`)
-
-    - Velocity covariance UU (`S`)
-
-    - Velocity covariance UV (`S`)
-
-    - Velocity covariance UW (`S`)
-
-    - Velocity covariance VV (`S`)
-
-    - Velocity covariance VW (`S`)
-
-    - Velocity covariance WW (`S`)
+    - notes
 
 
 -------------------------------------------------------------------------------
