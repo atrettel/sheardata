@@ -144,29 +144,38 @@ CREATE TABLE quantities (
     note                 TEXT DEFAULT NULL
 );
 
--- Profile quantities (some can appear twice)
+-- Profile quantities
 INSERT INTO quantities( identifier, name                                                ) VALUES( "AR",      "Aspect ratio"                                     );
 INSERT INTO quantities( identifier, name, length_exponent, time_exponent                ) VALUES( "u_b",     "Bulk velocity",                  +1.0, -1.0       );
 INSERT INTO quantities( identifier, name, length_exponent                               ) VALUES( "DELTA",   "Clauser thickness",              +1.0             );
 INSERT INTO quantities( identifier, name, length_exponent                               ) VALUES( "A",       "Cross-sectional area",           +2.0             );
-INSERT INTO quantities( identifier, name                                                ) VALUES( "f_D",     "Darcy friction factor"                            );
 INSERT INTO quantities( identifier, name                                                ) VALUES( "PI",      "Equilibrium parameter"                            );
-INSERT INTO quantities( identifier, name                                                ) VALUES( "f",       "Fanning friction factor"                          );
-INSERT INTO quantities( identifier, name, temperature_exponent                          ) VALUES( "T_tau",   "Friction temperature",           +1.0             );
-INSERT INTO quantities( identifier, name, length_exponent, time_exponent                ) VALUES( "u_tau",   "Friction velocity",              +1.0, -1.0       );
-INSERT INTO quantities( identifier, name                                                ) VALUES( "Ma_tau",  "Friction Mach number"                             );
-INSERT INTO quantities( identifier, name                                                ) VALUES( "Re_tau",  "Friction Reynolds number"                         );
 INSERT INTO quantities( identifier, name, length_exponent                               ) VALUES( "d_h",     "Hydraulic diameter",             +1.0             );
-INSERT INTO quantities( identifier, name                                                ) VALUES( "c_f",     "Local skin friction coefficient"                  );
 INSERT INTO quantities( identifier, name, mass_exponent, time_exponent                  ) VALUES( "mdot",    "Mass flow rate",                 +1.0, -1.0       );
 INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent ) VALUES( "dp/dx",   "Pressure gradient",              -2.0, +1.0, -2.0 );
 INSERT INTO quantities( identifier, name                                                ) VALUES( "RF",      "Recovery factor"                                  );
-INSERT INTO quantities( identifier, name, length_exponent                               ) VALUES( "k",       "Roughness height",               +1.0             );
-INSERT INTO quantities( identifier, name, length_exponent, note                         ) VALUES( "kappa_z", "Spanwise wall curvature",        -1.0,
-                                                                                                  "Positive for external flows and negative for internal flows" );
-INSERT INTO quantities( identifier, name, length_exponent                               ) VALUES( "kappa_x", "Streamwise wall curvature",      -1.0             );
-INSERT INTO quantities( identifier, name, length_exponent                               ) VALUES( "l_nu",    "Viscous length scale",           +1.0             );
 INSERT INTO quantities( identifier, name, length_exponent, time_exponent                ) VALUES( "Vdot",    "Volume flow rate",               +3.0, -1.0       );
+
+/* Wall point quantities
+ *
+ * Arguably these quantities are profile quantities, but there could be
+ * multiple of them, one for each wall.  For the sake of simplicity, treat
+ * these as point quantities, since that is what they are.  They should only
+ * occur at walls, though.
+ */
+INSERT INTO quantities( identifier, name                                 ) VALUES( "f_D",     "Darcy friction factor"                            );
+INSERT INTO quantities( identifier, name                                 ) VALUES( "f",       "Fanning friction factor"                          );
+INSERT INTO quantities( identifier, name, temperature_exponent           ) VALUES( "T_tau",   "Friction temperature",           +1.0             );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent ) VALUES( "u_tau",   "Friction velocity",              +1.0, -1.0       );
+INSERT INTO quantities( identifier, name                                 ) VALUES( "Ma_tau",  "Friction Mach number"                             );
+INSERT INTO quantities( identifier, name                                 ) VALUES( "Re_tau",  "Friction Reynolds number"                         );
+INSERT INTO quantities( identifier, name                                 ) VALUES( "c_f",     "Local skin friction coefficient"                  );
+INSERT INTO quantities( identifier, name, length_exponent                ) VALUES( "k",       "Roughness height",               +1.0             );
+INSERT INTO quantities( identifier, name, length_exponent, note          ) VALUES( "kappa_z", "Spanwise wall curvature",        -1.0,
+                                                                                   "Positive for external flows and negative for internal flows" );
+INSERT INTO quantities( identifier, name, length_exponent                ) VALUES( "kappa_x", "Streamwise wall curvature",      -1.0             );
+INSERT INTO quantities( identifier, name, length_exponent                ) VALUES( "l_nu",    "Viscous length scale",           +1.0             );
+
 
 -- Point quantities
 INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent        ) VALUES( "mu",    "Dynamic viscosity",                -1.0, +1.0, -1.0 );
