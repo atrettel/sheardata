@@ -144,6 +144,17 @@ CREATE TABLE quantities (
     note                 TEXT DEFAULT NULL
 );
 
+-- Series quantities
+INSERT INTO quantities( identifier, name                                                ) VALUES( "Re_inf",  "body Reynolds number"                     );
+INSERT INTO quantities( identifier, name                                                ) VALUES( "Sr",      "body Strouhal number"                     );
+INSERT INTO quantities( identifier, name                                                ) VALUES( "c_D",     "drag coefficient"                         );
+INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent ) VALUES( "F_D",     "drag force",             +1.0, +1.0, -2.0 );
+INSERT INTO quantities( identifier, name                                                ) VALUES( "Ma_inf",  "freestream Mach number"                   );
+INSERT INTO quantities( identifier, name, temperature_exponent                          ) VALUES( "T_inf",   "freestream temperature", +1.0             );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent                ) VALUES( "u_inf",   "freestream velocity",    +1.0, -1.0       );
+INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent ) VALUES( "F_L",     "lift force",             +1.0, +1.0, -2.0 );
+INSERT INTO quantities( identifier, name                                                ) VALUES( "c_L",     "lift coefficient"                         );
+
 -- Profile quantities
 INSERT INTO quantities( identifier, name                                                ) VALUES( "AR",      "aspect ratio"                                     );
 INSERT INTO quantities( identifier, name, length_exponent, time_exponent                ) VALUES( "u_b",     "bulk velocity",                  +1.0, -1.0       );
