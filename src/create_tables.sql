@@ -154,6 +154,8 @@ INSERT INTO quantities( identifier, name, temperature_exponent                  
 INSERT INTO quantities( identifier, name, length_exponent, time_exponent                ) VALUES( "u_inf",   "freestream velocity",    +1.0, -1.0       );
 INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent ) VALUES( "F_L",     "lift force",             +1.0, +1.0, -2.0 );
 INSERT INTO quantities( identifier, name                                                ) VALUES( "c_L",     "lift coefficient"                         );
+INSERT INTO quantities( identifier, name, mass_exponent, time_exponent                  ) VALUES( "mdot",    "mass flow rate",         +1.0, -1.0       );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent                ) VALUES( "Vdot",    "volume flow rate",       +3.0, -1.0       );
 
 -- Profile quantities
 INSERT INTO quantities( identifier, name                                                ) VALUES( "AR",      "aspect ratio"                                     );
@@ -162,10 +164,8 @@ INSERT INTO quantities( identifier, name, length_exponent                       
 INSERT INTO quantities( identifier, name, length_exponent                               ) VALUES( "A",       "cross-sectional area",           +2.0             );
 INSERT INTO quantities( identifier, name                                                ) VALUES( "PI",      "equilibrium parameter"                            );
 INSERT INTO quantities( identifier, name, length_exponent                               ) VALUES( "d_h",     "hydraulic diameter",             +1.0             );
-INSERT INTO quantities( identifier, name, mass_exponent, time_exponent                  ) VALUES( "mdot",    "mass flow rate",                 +1.0, -1.0       );
 INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent ) VALUES( "dp/dx",   "pressure gradient",              -2.0, +1.0, -2.0 );
 INSERT INTO quantities( identifier, name                                                ) VALUES( "RF",      "recovery factor"                                  );
-INSERT INTO quantities( identifier, name, length_exponent, time_exponent                ) VALUES( "Vdot",    "volume flow rate",               +3.0, -1.0       );
 
 /* Wall point quantities
  *
