@@ -157,7 +157,7 @@ INSERT INTO quantities( identifier, name                                        
 INSERT INTO quantities( identifier, name, mass_exponent, time_exponent                  ) VALUES( "mdot",    "mass flow rate",         +1.0, -1.0       );
 INSERT INTO quantities( identifier, name, length_exponent, time_exponent                ) VALUES( "Vdot",    "volume flow rate",       +3.0, -1.0       );
 
--- Profile quantities
+-- Station quantities
 INSERT INTO quantities( identifier, name                                                ) VALUES( "AR",      "aspect ratio"                                     );
 INSERT INTO quantities( identifier, name, length_exponent, time_exponent                ) VALUES( "u_b",     "bulk velocity",                  +1.0, -1.0       );
 INSERT INTO quantities( identifier, name, length_exponent                               ) VALUES( "DELTA",   "Clauser thickness",              +1.0             );
@@ -169,7 +169,7 @@ INSERT INTO quantities( identifier, name                                        
 
 /* Wall point quantities
  *
- * Arguably these quantities are profile quantities, but there could be
+ * Arguably these quantities are station quantities, but there could be
  * multiple of them, one for each wall.  For the sake of simplicity, treat
  * these as point quantities, since that is what they are.  They should only
  * occur at walls, though.
@@ -255,9 +255,9 @@ CREATE TABLE series (
     FOREIGN KEY(geometry)          REFERENCES         geometries(identifier)
 );
 
-CREATE TABLE profiles (
+CREATE TABLE stations (
     identifier                   TEXT PRIMARY KEY UNIQUE,
-    profile_number               INTEGER NOT NULL CHECK ( profile_number > 0 AND profile_number <=  999 ),
+    station_number               INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <=  999 ),
     originators_identifier       TEXT UNIQUE DEFAULT NULL,
     flow_regime                  TEXT DEFAULT NULL,
     previous_streamwise_station  TEXT DEFAULT NULL,
@@ -268,10 +268,10 @@ CREATE TABLE profiles (
     description                  TEXT DEFAULT NULL,
     notes                        TEXT DEFAULT NULL,
     FOREIGN KEY(flow_regime)                 REFERENCES flow_regimes(identifier),
-    FOREIGN KEY(previous_streamwise_station) REFERENCES     profiles(identifier),
-    FOREIGN KEY(next_streamwise_station)     REFERENCES     profiles(identifier),
-    FOREIGN KEY(previous_spanwise_station)   REFERENCES     profiles(identifier),
-    FOREIGN KEY(next_spanwise_station)       REFERENCES     profiles(identifier)
+    FOREIGN KEY(previous_streamwise_station) REFERENCES     stations(identifier),
+    FOREIGN KEY(next_streamwise_station)     REFERENCES     stations(identifier),
+    FOREIGN KEY(previous_spanwise_station)   REFERENCES     stations(identifier),
+    FOREIGN KEY(next_spanwise_station)       REFERENCES     stations(identifier)
 );
 
 CREATE TABLE points (
@@ -316,8 +316,8 @@ CREATE TABLE series_values (
     FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier)
 );
 
-CREATE TABLE profile_values (
-    profile               TEXT NOT NULL,
+CREATE TABLE station_values (
+    station               TEXT NOT NULL,
     quantity              TEXT NOT NULL,
     value                 REAL NOT NULL,
     uncertainty           REAL DEFAULT NULL CHECK ( uncertainty >= 0.0 ),
@@ -325,8 +325,8 @@ CREATE TABLE profile_values (
     measurement_technique TEXT DEFAULT NULL,
     outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     notes                 TEXT DEFAULT NULL,
-    PRIMARY KEY(profile, quantity),
-    FOREIGN KEY(profile)               REFERENCES               profiles(identifier),
+    PRIMARY KEY(station, quantity),
+    FOREIGN KEY(station)               REFERENCES               stations(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
     FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier),
     FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier)
