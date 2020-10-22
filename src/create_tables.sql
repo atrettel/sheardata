@@ -21,8 +21,8 @@ CREATE TABLE averaging_systems (
     notes      TEXT DEFAULT NULL
 );
 
-INSERT INTO averaging_systems( identifier, name ) VALUES( "UW",       "unweighted averaging" );
-INSERT INTO averaging_systems( identifier, name ) VALUES( "DW", "density-weighted averaging" );
+INSERT INTO averaging_systems( identifier, name ) VALUES( 'UW',       'unweighted averaging' );
+INSERT INTO averaging_systems( identifier, name ) VALUES( 'DW', 'density-weighted averaging' );
 
 CREATE TABLE coordinate_systems (
     identifier TEXT PRIMARY KEY UNIQUE,
@@ -30,8 +30,8 @@ CREATE TABLE coordinate_systems (
     notes      TEXT DEFAULT NULL
 );
 
-INSERT INTO coordinate_systems( identifier, name ) VALUES( "XYZ", "rectangular coordinates" );
-INSERT INTO coordinate_systems( identifier, name ) VALUES( "XRT", "cylindrical coordinates" );
+INSERT INTO coordinate_systems( identifier, name ) VALUES( 'XYZ', 'rectangular coordinates' );
+INSERT INTO coordinate_systems( identifier, name ) VALUES( 'XRT', 'cylindrical coordinates' );
 
 CREATE TABLE flow_classes (
     identifier TEXT PRIMARY KEY UNIQUE CHECK ( length(identifier) = 1 ),
@@ -41,45 +41,45 @@ CREATE TABLE flow_classes (
     FOREIGN KEY(parent) REFERENCES flow_classes(identifier)
 );
 
-INSERT INTO flow_classes( identifier, name ) VALUES( "B", "boundary layer"                              );
-INSERT INTO flow_classes( identifier, name ) VALUES( "C", "wall-bounded flow"                           );
-INSERT INTO flow_classes( identifier, name ) VALUES( "D", "duct flow"                                   );
-INSERT INTO flow_classes( identifier, name ) VALUES( "E", "external flow"                               );
-INSERT INTO flow_classes( identifier, name ) VALUES( "F", "free shear flow"                             );
-INSERT INTO flow_classes( identifier, name ) VALUES( "G", "isotropic flow"                              );
-INSERT INTO flow_classes( identifier, name ) VALUES( "H", "homogeneous flow"                            );
-INSERT INTO flow_classes( identifier, name ) VALUES( "I", "internal flow"                               );
-INSERT INTO flow_classes( identifier, name ) VALUES( "J", "free jet"                                    );
-INSERT INTO flow_classes( identifier, name ) VALUES( "K", "wall jet"                                    );
-INSERT INTO flow_classes( identifier, name ) VALUES( "M", "mixing layer"                                );
-INSERT INTO flow_classes( identifier, name ) VALUES( "N", "inhomogeneous flow"                          );
-INSERT INTO flow_classes( identifier, name ) VALUES( "R", "flow with relative motion of the boundaries" );
-INSERT INTO flow_classes( identifier, name ) VALUES( "S", "shear layer"                                 );
-INSERT INTO flow_classes( identifier, name ) VALUES( "U", "flow"                                        );
-INSERT INTO flow_classes( identifier, name ) VALUES( "W", "wake"                                        );
+INSERT INTO flow_classes( identifier, name ) VALUES( 'B', 'boundary layer'                              );
+INSERT INTO flow_classes( identifier, name ) VALUES( 'C', 'wall-bounded flow'                           );
+INSERT INTO flow_classes( identifier, name ) VALUES( 'D', 'duct flow'                                   );
+INSERT INTO flow_classes( identifier, name ) VALUES( 'E', 'external flow'                               );
+INSERT INTO flow_classes( identifier, name ) VALUES( 'F', 'free shear flow'                             );
+INSERT INTO flow_classes( identifier, name ) VALUES( 'G', 'isotropic flow'                              );
+INSERT INTO flow_classes( identifier, name ) VALUES( 'H', 'homogeneous flow'                            );
+INSERT INTO flow_classes( identifier, name ) VALUES( 'I', 'internal flow'                               );
+INSERT INTO flow_classes( identifier, name ) VALUES( 'J', 'free jet'                                    );
+INSERT INTO flow_classes( identifier, name ) VALUES( 'K', 'wall jet'                                    );
+INSERT INTO flow_classes( identifier, name ) VALUES( 'M', 'mixing layer'                                );
+INSERT INTO flow_classes( identifier, name ) VALUES( 'N', 'inhomogeneous flow'                          );
+INSERT INTO flow_classes( identifier, name ) VALUES( 'R', 'flow with relative motion of the boundaries' );
+INSERT INTO flow_classes( identifier, name ) VALUES( 'S', 'shear layer'                                 );
+INSERT INTO flow_classes( identifier, name ) VALUES( 'U', 'flow'                                        );
+INSERT INTO flow_classes( identifier, name ) VALUES( 'W', 'wake'                                        );
 
-UPDATE flow_classes SET parent="U" WHERE identifier="H";
-UPDATE flow_classes SET parent="U" WHERE identifier="N";
+UPDATE flow_classes SET parent='U' WHERE identifier='H';
+UPDATE flow_classes SET parent='U' WHERE identifier='N';
 
-UPDATE flow_classes SET parent="H" WHERE identifier="G";
+UPDATE flow_classes SET parent='H' WHERE identifier='G';
 
-UPDATE flow_classes SET parent="N" WHERE identifier="S";
+UPDATE flow_classes SET parent='N' WHERE identifier='S';
 
-UPDATE flow_classes SET parent="S" WHERE identifier="C";
-UPDATE flow_classes SET parent="S" WHERE identifier="F";
+UPDATE flow_classes SET parent='S' WHERE identifier='C';
+UPDATE flow_classes SET parent='S' WHERE identifier='F';
 
-UPDATE flow_classes SET parent="F" WHERE identifier="J";
-UPDATE flow_classes SET parent="F" WHERE identifier="M";
-UPDATE flow_classes SET parent="F" WHERE identifier="W";
+UPDATE flow_classes SET parent='F' WHERE identifier='J';
+UPDATE flow_classes SET parent='F' WHERE identifier='M';
+UPDATE flow_classes SET parent='F' WHERE identifier='W';
 
-UPDATE flow_classes SET parent="C" WHERE identifier="E";
-UPDATE flow_classes SET parent="C" WHERE identifier="I";
+UPDATE flow_classes SET parent='C' WHERE identifier='E';
+UPDATE flow_classes SET parent='C' WHERE identifier='I';
 
-UPDATE flow_classes SET parent="E" WHERE identifier="B";
-UPDATE flow_classes SET parent="E" WHERE identifier="K";
+UPDATE flow_classes SET parent='E' WHERE identifier='B';
+UPDATE flow_classes SET parent='E' WHERE identifier='K';
 
-UPDATE flow_classes SET parent="I" WHERE identifier="D";
-UPDATE flow_classes SET parent="I" WHERE identifier="R";
+UPDATE flow_classes SET parent='I' WHERE identifier='D';
+UPDATE flow_classes SET parent='I' WHERE identifier='R';
 
 CREATE TABLE flow_regimes (
     identifier TEXT PRIMARY KEY UNIQUE CHECK ( length(identifier) = 2 ),
@@ -87,9 +87,9 @@ CREATE TABLE flow_regimes (
     notes      TEXT DEFAULT NULL
 );
 
-INSERT INTO flow_regimes( identifier, name ) VALUES( "LA",      "laminar flow" );
-INSERT INTO flow_regimes( identifier, name ) VALUES( "TR", "transitional flow" );
-INSERT INTO flow_regimes( identifier, name ) VALUES( "TU",    "turbulent flow" );
+INSERT INTO flow_regimes( identifier, name ) VALUES( 'LA',      'laminar flow' );
+INSERT INTO flow_regimes( identifier, name ) VALUES( 'TR', 'transitional flow' );
+INSERT INTO flow_regimes( identifier, name ) VALUES( 'TU',    'turbulent flow' );
 
 CREATE TABLE fluids (
     identifier TEXT PRIMARY KEY UNIQUE,
@@ -98,11 +98,11 @@ CREATE TABLE fluids (
     notes      TEXT DEFAULT NULL
 );
 
-INSERT INTO fluids( identifier, name, phase ) VALUES( "dry_air",   "dry air",             "G" );
-INSERT INTO fluids( identifier, name, phase ) VALUES( "moist_air", "moist air",           "M" );
-INSERT INTO fluids( identifier, name, phase ) VALUES( "water",     "water",               "L" );
-INSERT INTO fluids( identifier, name, phase ) VALUES( "steam",     "steam",               "G" );
-INSERT INTO fluids( identifier, name, phase ) VALUES( "thick_oil", "thick oil (generic)", "L" );
+INSERT INTO fluids( identifier, name, phase ) VALUES( 'dry_air',   'dry air',             'G' );
+INSERT INTO fluids( identifier, name, phase ) VALUES( 'moist_air', 'moist air',           'M' );
+INSERT INTO fluids( identifier, name, phase ) VALUES( 'water',     'water',               'L' );
+INSERT INTO fluids( identifier, name, phase ) VALUES( 'steam',     'steam',               'G' );
+INSERT INTO fluids( identifier, name, phase ) VALUES( 'thick_oil', 'thick oil (generic)', 'L' );
 
 CREATE TABLE geometries (
     identifier TEXT PRIMARY KEY UNIQUE,
@@ -110,8 +110,8 @@ CREATE TABLE geometries (
     notes      TEXT DEFAULT NULL
 );
 
-INSERT INTO geometries( identifier, name ) VALUES( "E",  "elliptical geometry" );
-INSERT INTO geometries( identifier, name ) VALUES( "R", "rectangular geometry" );
+INSERT INTO geometries( identifier, name ) VALUES( 'E',  'elliptical geometry' );
+INSERT INTO geometries( identifier, name ) VALUES( 'R', 'rectangular geometry' );
 
 CREATE TABLE measurement_techniques (
     identifier TEXT PRIMARY KEY UNIQUE,
@@ -119,10 +119,10 @@ CREATE TABLE measurement_techniques (
     notes      TEXT DEFAULT NULL
 );
 
-INSERT INTO measurement_techniques( identifier, name ) VALUES( "FEB", "floating element balance" );
-INSERT INTO measurement_techniques( identifier, name ) VALUES( "IT",  "impact tube"              );
-INSERT INTO measurement_techniques( identifier, name ) VALUES( "PST", "Pitot-static tube"        );
-INSERT INTO measurement_techniques( identifier, name ) VALUES( "SPT", "static pressure tap"      );
+INSERT INTO measurement_techniques( identifier, name ) VALUES( 'FEB', 'floating element balance' );
+INSERT INTO measurement_techniques( identifier, name ) VALUES( 'IT',  'impact tube'              );
+INSERT INTO measurement_techniques( identifier, name ) VALUES( 'PST', 'Pitot-static tube'        );
+INSERT INTO measurement_techniques( identifier, name ) VALUES( 'SPT', 'static pressure tap'      );
 
 CREATE TABLE point_labels (
     identifier TEXT PRIMARY KEY UNIQUE,
@@ -130,9 +130,9 @@ CREATE TABLE point_labels (
     notes      TEXT DEFAULT NULL
 );
 
-INSERT INTO point_labels( identifier, name ) VALUES( "C", "center-line" );
-INSERT INTO point_labels( identifier, name ) VALUES( "E", "edge"        );
-INSERT INTO point_labels( identifier, name ) VALUES( "W", "wall"        );
+INSERT INTO point_labels( identifier, name ) VALUES( 'C', 'center-line' );
+INSERT INTO point_labels( identifier, name ) VALUES( 'E', 'edge'        );
+INSERT INTO point_labels( identifier, name ) VALUES( 'W', 'wall'        );
 
 CREATE TABLE quantities (
     identifier           TEXT PRIMARY KEY UNIQUE,
@@ -145,27 +145,27 @@ CREATE TABLE quantities (
 );
 
 -- Series quantities
-INSERT INTO quantities( identifier, name                                                ) VALUES( "Re_inf",  "body Reynolds number"                     );
-INSERT INTO quantities( identifier, name                                                ) VALUES( "Sr",      "body Strouhal number"                     );
-INSERT INTO quantities( identifier, name                                                ) VALUES( "c_D",     "drag coefficient"                         );
-INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent ) VALUES( "F_D",     "drag force",             +1.0, +1.0, -2.0 );
-INSERT INTO quantities( identifier, name                                                ) VALUES( "Ma_inf",  "freestream Mach number"                   );
-INSERT INTO quantities( identifier, name, temperature_exponent                          ) VALUES( "T_inf",   "freestream temperature", +1.0             );
-INSERT INTO quantities( identifier, name, length_exponent, time_exponent                ) VALUES( "u_inf",   "freestream velocity",    +1.0, -1.0       );
-INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent ) VALUES( "F_L",     "lift force",             +1.0, +1.0, -2.0 );
-INSERT INTO quantities( identifier, name                                                ) VALUES( "c_L",     "lift coefficient"                         );
-INSERT INTO quantities( identifier, name, mass_exponent, time_exponent                  ) VALUES( "mdot",    "mass flow rate",         +1.0, -1.0       );
-INSERT INTO quantities( identifier, name, length_exponent, time_exponent                ) VALUES( "Vdot",    "volume flow rate",       +3.0, -1.0       );
+INSERT INTO quantities( identifier, name                                                ) VALUES( 'Re_inf',  'body Reynolds number'                     );
+INSERT INTO quantities( identifier, name                                                ) VALUES( 'Sr',      'body Strouhal number'                     );
+INSERT INTO quantities( identifier, name                                                ) VALUES( 'c_D',     'drag coefficient'                         );
+INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent ) VALUES( 'F_D',     'drag force',             +1.0, +1.0, -2.0 );
+INSERT INTO quantities( identifier, name                                                ) VALUES( 'Ma_inf',  'freestream Mach number'                   );
+INSERT INTO quantities( identifier, name, temperature_exponent                          ) VALUES( 'T_inf',   'freestream temperature', +1.0             );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent                ) VALUES( 'u_inf',   'freestream velocity',    +1.0, -1.0       );
+INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent ) VALUES( 'F_L',     'lift force',             +1.0, +1.0, -2.0 );
+INSERT INTO quantities( identifier, name                                                ) VALUES( 'c_L',     'lift coefficient'                         );
+INSERT INTO quantities( identifier, name, mass_exponent, time_exponent                  ) VALUES( 'mdot',    'mass flow rate',         +1.0, -1.0       );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent                ) VALUES( 'Vdot',    'volume flow rate',       +3.0, -1.0       );
 
 -- Station quantities
-INSERT INTO quantities( identifier, name                                                ) VALUES( "AR",      "aspect ratio"                                     );
-INSERT INTO quantities( identifier, name, length_exponent, time_exponent                ) VALUES( "u_b",     "bulk velocity",                  +1.0, -1.0       );
-INSERT INTO quantities( identifier, name, length_exponent                               ) VALUES( "DELTA",   "Clauser thickness",              +1.0             );
-INSERT INTO quantities( identifier, name, length_exponent                               ) VALUES( "A",       "cross-sectional area",           +2.0             );
-INSERT INTO quantities( identifier, name                                                ) VALUES( "PI",      "equilibrium parameter"                            );
-INSERT INTO quantities( identifier, name, length_exponent                               ) VALUES( "d_h",     "hydraulic diameter",             +1.0             );
-INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent ) VALUES( "dp/dx",   "pressure gradient",              -2.0, +1.0, -2.0 );
-INSERT INTO quantities( identifier, name                                                ) VALUES( "RF",      "recovery factor"                                  );
+INSERT INTO quantities( identifier, name                                                ) VALUES( 'AR',      'aspect ratio'                                     );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent                ) VALUES( 'u_b',     'bulk velocity',                  +1.0, -1.0       );
+INSERT INTO quantities( identifier, name, length_exponent                               ) VALUES( 'DELTA',   'Clauser thickness',              +1.0             );
+INSERT INTO quantities( identifier, name, length_exponent                               ) VALUES( 'A',       'cross-sectional area',           +2.0             );
+INSERT INTO quantities( identifier, name                                                ) VALUES( 'PI',      'equilibrium parameter'                            );
+INSERT INTO quantities( identifier, name, length_exponent                               ) VALUES( 'd_h',     'hydraulic diameter',             +1.0             );
+INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent ) VALUES( 'dp/dx',   'pressure gradient',              -2.0, +1.0, -2.0 );
+INSERT INTO quantities( identifier, name                                                ) VALUES( 'RF',      'recovery factor'                                  );
 
 /* Wall point quantities
  *
@@ -174,47 +174,47 @@ INSERT INTO quantities( identifier, name                                        
  * these as point quantities, since that is what they are.  They should only
  * occur at walls, though.
  */
-INSERT INTO quantities( identifier, name                                 ) VALUES( "f_D",     "Darcy friction factor"                            );
-INSERT INTO quantities( identifier, name                                 ) VALUES( "f",       "Fanning friction factor"                          );
-INSERT INTO quantities( identifier, name, temperature_exponent           ) VALUES( "T_tau",   "Friction temperature",           +1.0             );
-INSERT INTO quantities( identifier, name, length_exponent, time_exponent ) VALUES( "u_tau",   "friction velocity",              +1.0, -1.0       );
-INSERT INTO quantities( identifier, name                                 ) VALUES( "Ma_tau",  "friction Mach number"                             );
-INSERT INTO quantities( identifier, name                                 ) VALUES( "Re_tau",  "friction Reynolds number"                         );
-INSERT INTO quantities( identifier, name                                 ) VALUES( "c_f",     "local skin friction coefficient"                  );
-INSERT INTO quantities( identifier, name, length_exponent                ) VALUES( "k",       "roughness height",               +1.0             );
-INSERT INTO quantities( identifier, name, length_exponent, note          ) VALUES( "kappa_z", "spanwise wall curvature",        -1.0,
-                                                                                   "positive for external flows and negative for internal flows" );
-INSERT INTO quantities( identifier, name, length_exponent                ) VALUES( "kappa_x", "streamwise wall curvature",      -1.0             );
-INSERT INTO quantities( identifier, name, length_exponent                ) VALUES( "l_nu",    "viscous length scale",           +1.0             );
+INSERT INTO quantities( identifier, name                                 ) VALUES( 'f_D',     'Darcy friction factor'                            );
+INSERT INTO quantities( identifier, name                                 ) VALUES( 'f',       'Fanning friction factor'                          );
+INSERT INTO quantities( identifier, name, temperature_exponent           ) VALUES( 'T_tau',   'Friction temperature',           +1.0             );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent ) VALUES( 'u_tau',   'friction velocity',              +1.0, -1.0       );
+INSERT INTO quantities( identifier, name                                 ) VALUES( 'Ma_tau',  'friction Mach number'                             );
+INSERT INTO quantities( identifier, name                                 ) VALUES( 'Re_tau',  'friction Reynolds number'                         );
+INSERT INTO quantities( identifier, name                                 ) VALUES( 'c_f',     'local skin friction coefficient'                  );
+INSERT INTO quantities( identifier, name, length_exponent                ) VALUES( 'k',       'roughness height',               +1.0             );
+INSERT INTO quantities( identifier, name, length_exponent, note          ) VALUES( 'kappa_z', 'spanwise wall curvature',        -1.0,
+                                                                                   'positive for external flows and negative for internal flows' );
+INSERT INTO quantities( identifier, name, length_exponent                ) VALUES( 'kappa_x', 'streamwise wall curvature',      -1.0             );
+INSERT INTO quantities( identifier, name, length_exponent                ) VALUES( 'l_nu',    'viscous length scale',           +1.0             );
 
 
 -- Point quantities
-INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent        ) VALUES( "mu",    "dynamic viscosity",                -1.0, +1.0, -1.0 );
-INSERT INTO quantities( identifier, name                                                       ) VALUES( "gamma", "heat capacity ratio"                                );
-INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( "nu",    "kinematic viscosity",              +2.0, -1.0       );
-INSERT INTO quantities( identifier, name                                                       ) VALUES( "Ma",    "Mach number"                                        );
-INSERT INTO quantities( identifier, name, length_exponent, mass_exponent                       ) VALUES( "rho",   "mass density",                     -3.0, +1.0       );
-INSERT INTO quantities( identifier, name                                                       ) VALUES( "Pr",    "Prandtl number"                                     );
-INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent        ) VALUES( "p",     "pressure",                         -1.0, +1.0, -2.0 );
-INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent        ) VALUES( "tau",   "shear stress",                     -1.0, +1.0, -2.0 );
-INSERT INTO quantities( identifier, name, length_exponent                                      ) VALUES( "z",     "spanwise coordinate",              +1.0             );
-INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( "w",     "spanwise velocity",                +1.0, -1.0       );
-INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( "h",     "specific enthalpy",                +2.0, -2.0       );
-INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( "e",     "specific internal energy",         +2.0, -2.0       );
-INSERT INTO quantities( identifier, name, length_exponent, time_exponent, temperature_exponent ) VALUES( "c_p",   "specific isobaric heat capacity",  +2.0, -2.0, -1.0 );
-INSERT INTO quantities( identifier, name, length_exponent, time_exponent, temperature_exponent ) VALUES( "c_v",   "specific isochoric heat capacity", +2.0, -2.0, -1.0 );
-INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( "h_0",   "specific total enthalpy",          +2.0, -2.0       );
-INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( "e_0",   "specific total internal energy",   +2.0, -2.0       );
-INSERT INTO quantities( identifier, name, length_exponent, mass_exponent                       ) VALUES( "vbar",  "specific volume",                  +3.0, -1.0       );
-INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( "V",     "speed",                            +1.0, -1.0       );
-INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( "a",     "speed of sound",                   +1.0, -1.0       );
-INSERT INTO quantities( identifier, name, length_exponent                                      ) VALUES( "x",     "streamwise coordinate",            +1.0             );
-INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( "u",     "streamwise velocity",              +1.0, -1.0       );
-INSERT INTO quantities( identifier, name, temperature_exponent                                 ) VALUES( "T",     "temperature",                      +1.0             );
-INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent        ) VALUES( "p_0",   "total pressure",                   -1.0, +1.0, -2.0 );
-INSERT INTO quantities( identifier, name, temperature_exponent                                 ) VALUES( "T_0",   "total temperature",                +1.0             );
-INSERT INTO quantities( identifier, name, length_exponent                                      ) VALUES( "y",     "transverse coordinate",            +1.0             );
-INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( "v",     "transverse velocity",              +1.0, -1.0       );
+INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent        ) VALUES( 'mu',    'dynamic viscosity',                -1.0, +1.0, -1.0 );
+INSERT INTO quantities( identifier, name                                                       ) VALUES( 'gamma', 'heat capacity ratio'                                );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( 'nu',    'kinematic viscosity',              +2.0, -1.0       );
+INSERT INTO quantities( identifier, name                                                       ) VALUES( 'Ma',    'Mach number'                                        );
+INSERT INTO quantities( identifier, name, length_exponent, mass_exponent                       ) VALUES( 'rho',   'mass density',                     -3.0, +1.0       );
+INSERT INTO quantities( identifier, name                                                       ) VALUES( 'Pr',    'Prandtl number'                                     );
+INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent        ) VALUES( 'p',     'pressure',                         -1.0, +1.0, -2.0 );
+INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent        ) VALUES( 'tau',   'shear stress',                     -1.0, +1.0, -2.0 );
+INSERT INTO quantities( identifier, name, length_exponent                                      ) VALUES( 'z',     'spanwise coordinate',              +1.0             );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( 'w',     'spanwise velocity',                +1.0, -1.0       );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( 'h',     'specific enthalpy',                +2.0, -2.0       );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( 'e',     'specific internal energy',         +2.0, -2.0       );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent, temperature_exponent ) VALUES( 'c_p',   'specific isobaric heat capacity',  +2.0, -2.0, -1.0 );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent, temperature_exponent ) VALUES( 'c_v',   'specific isochoric heat capacity', +2.0, -2.0, -1.0 );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( 'h_0',   'specific total enthalpy',          +2.0, -2.0       );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( 'e_0',   'specific total internal energy',   +2.0, -2.0       );
+INSERT INTO quantities( identifier, name, length_exponent, mass_exponent                       ) VALUES( 'vbar',  'specific volume',                  +3.0, -1.0       );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( 'V',     'speed',                            +1.0, -1.0       );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( 'a',     'speed of sound',                   +1.0, -1.0       );
+INSERT INTO quantities( identifier, name, length_exponent                                      ) VALUES( 'x',     'streamwise coordinate',            +1.0             );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( 'u',     'streamwise velocity',              +1.0, -1.0       );
+INSERT INTO quantities( identifier, name, temperature_exponent                                 ) VALUES( 'T',     'temperature',                      +1.0             );
+INSERT INTO quantities( identifier, name, length_exponent, mass_exponent, time_exponent        ) VALUES( 'p_0',   'total pressure',                   -1.0, +1.0, -2.0 );
+INSERT INTO quantities( identifier, name, temperature_exponent                                 ) VALUES( 'T_0',   'total temperature',                +1.0             );
+INSERT INTO quantities( identifier, name, length_exponent                                      ) VALUES( 'y',     'transverse coordinate',            +1.0             );
+INSERT INTO quantities( identifier, name, length_exponent, time_exponent                       ) VALUES( 'v',     'transverse velocity',              +1.0, -1.0       );
 
 CREATE TABLE study_types (
     identifier TEXT PRIMARY KEY UNIQUE CHECK ( length(identifier) = 1 ),
@@ -222,12 +222,12 @@ CREATE TABLE study_types (
     notes      TEXT DEFAULT NULL
 );
 
-INSERT INTO study_types( identifier, name ) VALUES( "E", "experimental study" );
-INSERT INTO study_types( identifier, name ) VALUES( "N",    "numerical study" );
+INSERT INTO study_types( identifier, name ) VALUES( 'E', 'experimental study' );
+INSERT INTO study_types( identifier, name ) VALUES( 'N',    'numerical study' );
 
 CREATE TABLE studies (
     identifier            TEXT PRIMARY KEY UNIQUE,
-    flow_class            TEXT NOT NULL DEFAULT "U",
+    flow_class            TEXT NOT NULL DEFAULT 'U',
     year                  INTEGER NOT NULL CHECK (        year  >= 0 AND         year <= 9999 ),
     study_number          INTEGER NOT NULL CHECK ( study_number >  0 AND study_number <=  999 ),
     study_type            TEXT NOT NULL,
@@ -244,7 +244,7 @@ CREATE TABLE series (
     identifier           TEXT PRIMARY KEY UNIQUE,
     series_number        INTEGER NOT NULL CHECK ( series_number > 0 AND series_number <=  999 ),
     number_of_dimensions INTEGER NOT NULL DEFAULT 2 CHECK ( number_of_dimensions > 0 AND number_of_dimensions <= 3 ),
-    coordinate_system    TEXT NOT NULL DEFAULT "XYZ",
+    coordinate_system    TEXT NOT NULL DEFAULT 'XYZ',
     working_fluid        TEXT NOT NULL,
     geometry             TEXT DEFAULT NULL,
     number_of_sides      TEXT DEFAULT NULL CHECK ( number_of_sides > 1 ),
