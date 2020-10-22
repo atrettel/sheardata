@@ -243,7 +243,7 @@ CREATE TABLE studies (
 
 CREATE TABLE series (
     identifier           TEXT PRIMARY KEY UNIQUE,
-    series_number        INTEGER NOT NULL CHECK ( series_number > 0 AND series_number <=  999 ),
+    series_number        INTEGER NOT NULL CHECK ( series_number > 0 AND series_number <= 999 ),
     number_of_dimensions INTEGER NOT NULL DEFAULT 2 CHECK ( number_of_dimensions > 0 AND number_of_dimensions <= 3 ),
     coordinate_system    TEXT NOT NULL DEFAULT 'XYZ',
     working_fluid        TEXT NOT NULL,
@@ -258,7 +258,7 @@ CREATE TABLE series (
 
 CREATE TABLE stations (
     identifier                   TEXT PRIMARY KEY UNIQUE,
-    station_number               INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <=  999 ),
+    station_number               INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <= 999 ),
     originators_identifier       TEXT UNIQUE DEFAULT NULL,
     flow_regime                  TEXT DEFAULT NULL,
     previous_streamwise_station  TEXT DEFAULT NULL,
