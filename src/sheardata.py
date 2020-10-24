@@ -16,10 +16,27 @@ import math
 import sqlite3
 from uncertainties import ufloat
 
-UNKNOWN_UNCERTAINTY = float("nan")
-
 EXPERIMENTAL_STUDY_TYPE = "E"
 NUMERICAL_STUDY_TYPE    = "N"
+
+def split_float( value ):
+    if ( isinstance( value, float ) ):
+        sql_value       = value
+        sql_uncertainty = None
+    else:
+        sql_value       = value.n
+        sql_uncertainty = value.s
+        if ( math.isnan(sql_uncertainty) ):
+            sql_uncertainty = None
+    return sql_value, sql_uncertainty
+
+def join_float( sql_value, sql_uncertainty=None ):
+    uncertainty = float(0.0)
+    if ( sql_uncertainty == None ):
+        uncertainty = float("nan")
+    else:
+        uncertainty = float(sql_uncertainty)
+    return ufloat( float(sql_value), uncertainty )
 
 def identify_study( flow_class, year, study_number, readable=False ):
     separator = ""
@@ -126,5 +143,26 @@ def update_study_notes( cursor, identifier, notes ):
     (
         notes.strip(),
         identifier,
+    )
+    )
+
+def set_study_value( cursor, study, quantity, value, averaging_system=None, \
+                     measurement_technique=None, outlier=False, notes=None ):
+    study_value, study_uncertainty = split_float( value )
+    cursor.execute(
+    """
+    INSERT INTO study_values( study, quantity, study_value, study_uncertainty,
+    averaging_system, measurement_technique, outlier, notes ) VALUES( ?, ?, ?,
+    ?, ?, ?, ?, ? );
+    """,
+    (
+        str(study),
+        str(quantity),
+        study_value,
+        study_uncertainty,
+        averaging_system,
+        measurement_technique,
+        int(outlier),
+        notes,
     )
     )
