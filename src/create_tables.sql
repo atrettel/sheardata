@@ -295,6 +295,9 @@ CREATE TABLE sources (
     FOREIGN KEY(study) REFERENCES studies(identifier)
 );
 
+/* Technically, there are no quantities that could be study values, but I have
+ * included the table for completeness nonetheless.
+ */
 CREATE TABLE study_values (
     study                 TEXT NOT NULL,
     quantity              TEXT NOT NULL,
