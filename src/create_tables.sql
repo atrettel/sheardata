@@ -234,8 +234,6 @@ CREATE TABLE studies (
     study_type            TEXT NOT NULL,
     description           TEXT DEFAULT NULL,
     provenance            TEXT DEFAULT NULL,
-    primary_reference     TEXT DEFAULT NULL,
-    additional_references TEXT DEFAULT NULL,
     notes                 TEXT DEFAULT NULL,
     FOREIGN KEY(flow_class) REFERENCES flow_classes(identifier),
     FOREIGN KEY(study_type) REFERENCES  study_types(identifier)
@@ -283,6 +281,18 @@ CREATE TABLE points (
     description          TEXT DEFAULT NULL,
     notes                TEXT DEFAULT NULL,
     FOREIGN KEY(point_label) REFERENCES point_labels(identifier)
+);
+
+/* The classification refers to whether this source (reference) is a primary
+ * source (1) created during the study or whether this source is a secondary
+ * source (2) created later.
+ */
+CREATE TABLE sources (
+    study          TEXT NOT NULL,
+    source         TEXT NOT NULL,
+    classification INTEGER NOT NULL DEFAULT 1 CHECK ( classification = 1 OR classification = 2 ),
+    PRIMARY KEY(study, source),
+    FOREIGN KEY(study) REFERENCES studies(identifier)
 );
 
 CREATE TABLE study_values (
