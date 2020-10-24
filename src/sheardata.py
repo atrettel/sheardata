@@ -18,7 +18,7 @@ from uncertainties import ufloat
 
 UNKNOWN_UNCERTAINTY = float("nan")
 
-def identify_study( flow_class, year, case_number, readable=False ):
+def identify_study( flow_class, year, study_number, readable=False ):
     separator = ""
     if ( readable ):
         separator = "-"
@@ -28,44 +28,44 @@ def identify_study( flow_class, year, case_number, readable=False ):
         str(separator),
         int(year),
         str(separator),
-        int(case_number),
+        int(study_number),
     ).replace(" ","0")
 
-def identify_series( flow_class, year, case_number, series_number, \
+def identify_series( flow_class, year, study_number, series_number, \
                      readable=False ):
     separator = ""
     if ( readable ):
         separator = "-"
 
     return "{:s}{:s}{:3d}".format(
-        identify_study( flow_class, year, case_number, readable=readable, ),
+        identify_study( flow_class, year, study_number, readable=readable, ),
         str(separator),
         int(series_number),
     ).replace(" ","0")
 
-def identify_profile( flow_class, year, case_number, series_number, \
-                      profile_number, readable=False ):
+def identify_station( flow_class, year, study_number, series_number, \
+                      station_number, readable=False ):
     separator = ""
     if ( readable ):
         separator = "-"
 
     return "{:s}{:s}{:3d}".format(
         identify_series(
-            flow_class, year, case_number, series_number, readable=readable,
+            flow_class, year, study_number, series_number, readable=readable,
         ),
         str(separator),
-        int(profile_number),
+        int(station_number),
     ).replace(" ","0")
 
-def identify_point( flow_class, year, case_number, series_number, \
-                    profile_number, point_number, readable=False ):
+def identify_point( flow_class, year, study_number, series_number, \
+                    station_number, point_number, readable=False ):
     separator = ""
     if ( readable ):
         separator = "-"
 
     return "{:s}{:s}{:4d}".format(
-        identify_profile(
-            flow_class, year, case_number, series_number, profile_number, \
+        identify_station(
+            flow_class, year, study_number, series_number, station_number, \
             readable=readable,
         ),
         str(separator),
