@@ -18,6 +18,9 @@ from uncertainties import ufloat
 
 UNKNOWN_UNCERTAINTY = float("nan")
 
+EXPERIMENTAL_STUDY_TYPE = "E"
+NUMERICAL_STUDY_TYPE    = "N"
+
 def identify_study( flow_class, year, study_number, readable=False ):
     separator = ""
     if ( readable ):
@@ -74,3 +77,54 @@ def identify_point( flow_class, year, study_number, series_number, \
 
 def sanitize_identifier( identifier ):
     return identifier.replace("-","")
+
+def add_study( cursor, flow_class, year, study_number, study_type ):
+    identifier = identify_study( flow_class, year, study_number )
+    cursor.execute(
+    """
+    INSERT INTO studies( identifier, flow_class, year, study_number, study_type
+    ) VALUES( ?, ?, ?, ?, ? );
+    """,
+    (
+        identifier,
+        str(flow_class),
+        int(year),
+        int(study_number),
+        str(study_type),
+    )
+    )
+
+    return identifier
+
+def update_study_description( cursor, identifier, description ):
+    cursor.execute(
+    """
+    UPDATE studies SET description=? WHERE identifier=?
+    """,
+    (
+        description.strip(),
+        identifier,
+    )
+    )
+
+def update_study_provenance( cursor, identifier, provenance ):
+    cursor.execute(
+    """
+    UPDATE studies SET provenance=? WHERE identifier=?
+    """,
+    (
+        provenance.strip(),
+        identifier,
+    )
+    )
+
+def update_study_notes( cursor, identifier, notes ):
+    cursor.execute(
+    """
+    UPDATE studies SET notes=? WHERE identifier=?
+    """,
+    (
+        notes.strip(),
+        identifier,
+    )
+    )
