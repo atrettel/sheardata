@@ -78,6 +78,11 @@ Goals
   the organizations involved, locations of any experiments, and any contract
   numbers.
 
+- Note that for duct flows that are fully-developed, it could be possible to
+  note this by specifying that both the previous and next stations are the
+  current station.  That signifies that the flow is not developing.  Then
+  derivatives in the streamwise direction will always be zero automatically.
+
 
 Design details
 --------------
