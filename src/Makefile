@@ -24,7 +24,7 @@ $(project).tmp: create_tables.sql
 	sqlite3 $(database) < $^
 
 %.tmp:: %.py
-	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B $^ | tee $@
+	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B $^ $(database) | tee $@
 
 .PHONY: clean
 clean:
