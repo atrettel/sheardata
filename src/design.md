@@ -8,70 +8,51 @@ Goals
 - Use SQLite as the database backend.  The goal here is to ensure that it is
   possible to use SQL commands to select and find data.
 
-    - Limit the number of calls to the database itself (separate use and
-      implementation).  This could allow me to change the kind of database
-      later.  Write the interfaces in such a way that the user may be unaware
-      what kind of database is operating underneath (no need to load `sqlite3`
-      package manually...).
+    - The identifiers are intentionally simple and systematic so that it is
+      possible to extract information about profiles from the points (and in
+      other combinations).  For example, consider the following SQL command:
+      `SELECT value FROM point_values WHERE identifier LIKE 'D9999002%';`.
+      This selects all values for the points that have a particular profile
+      identifier.
 
 - Use the `uncertainties` package to handle uncertainties.  The uncertainties
   will be standard uncertainties (standard deviations of the distribution of
   "reasonable" values from the measurements).
 
-- Develop a series of classes based on the flow taxonomy.  These classes act as
-  interfaces to the database.  Their methods access the data and perform
-  calculations based on it.
+- Store the data as generic records.  This means that each data point in a flow
+  is merely a record in a particular table depending on its type.  This design
+  is flexible; it can store different data for the same variable easily,
+  including data for different averaging systems and measurement techniques.
 
-    - Keep the amount of data in memory (in the objects themselves) to a
-      minimum.  The objects are interfaces to the database and do not store the
-      data themselves.  In a sense, all procedures have side effects.
+    - Group data into 4 main categories:
 
-    - The unknown here is how much data the database *should* contain.  It
-      could contain a bare minimum --- say, the minimum amount of data to
-      calculate everything else --- and most methods then calculate the data
-      when it is needed.  Or it could contain a much larger amount of data that
-      could be accessible by other interfaces.  In this case, some data is
-      "pre-calculated".  For now I am opting for the minimal amount of data.
-      The tradeoff is that most operations are computationally expensive, but
-      only the computations that are needed are performed, and the database is
-      simpler.
+        1. study data (data that applies to an entire study)
 
-- Prefer dimensionless variables, but use SI for any variables that require
-  units.
+        2. series data (data that applies to a series of profiles, like drag
+        coefficients, etc.)
 
-    - Profiles should be nondimensionalized by a standard set of well-defined
-      and unambiguous scales.  Each flow class has a different set of standard
-      scales.  The scales should be the most easily-found and common ones for
-      each case.
+        3. station data (data that applies to a single profile, like the
+        momentum thickness)
 
-    - There is some conflict between the two requirements.  Some scales are
-      often given in datasets, but they are sometimes ill-defined (bulk
-      density, etc. for internal flows).  Some scales are often not measured
-      too (wall shear stress in external flows), so nondimensionalizing by them
-      cannot be done without additional assumptions.  The goal here is to
-      minimize the uncertainty in the scalings themselves.
+        4. point data (data that applies to a single point in a flow, like the
+        local unweighted averaged velocity)
 
-    - Alternatively, I could considering using different profile scalings for
-      each case, depending what data emerge from the case.  The tradeoff with
-      this is that the database itself becomes less standardized.
+    - Eliminate redundancy in the tables.  Each data point MUST have one and
+      only one location.
 
-- Keep variable names in both the database and classes human-readable.  Prefer
-  `skin_friction_coefficient` to `c_f`.
+    - Remember that at least some of the "structure" here really is "data".
+      Prefer data over structure, since data is mutable (or at least more
+      easily mutable).
 
-- Keep track of assumptions for each case.
-
-- Keep track of which parameters are "input" parameters and which are
-  calculated.
-
-- Use a dependency graph to automatically calculate all possible variables.
+    - Specifying the measurement techniques allows for all assumptions
+      underlying that data to be specified as well for each record in the
+      database.  Calculated parameters can be noted as either exact or
+      approximate, for example, and the method of calculation can be specified.
 
 - Use assertions and other checks on the data.
 
-- Eliminate redundancy in the tables.  Each data point MUST have one and only
-  one location.
-
-- Remember that at least some of the "structure" here really is "data".  Prefer
-  data over structure, since data is mutable (or at least more easily mutable).
+- Consider using a dependency graph to automatically calculate all possible
+  variables.
 
 - Include additional fields for commentary (likely editorial commentary).  Also
   include additional fields for the people involved, the facilities involved,
@@ -82,19 +63,6 @@ Goals
   note this by specifying that both the previous and next stations are the
   current station.  That signifies that the flow is not developing.  Then
   derivatives in the streamwise direction will always be zero automatically.
-
-
-Design details
---------------
-
-The identifiers are intentionally simple and systematic so that it is possible
-to extract information about profiles from the points (and in other
-combinations).  For example, consider the following SQL command
-
-    SELECT value FROM point_values WHERE identifier LIKE 'D9999002%';
-
-This selects all values for the points that have a particular profile
-identifier.
 
 
 Tables
@@ -147,18 +115,9 @@ Tables
 
     - working fluid
 
-    - trip present?
+    - geometry
 
-        - It might be better to set this as a series variable that notes
-          the location of the trip rather than whether it was tripped.
-
-    - geometry (`I`)
-
-        - `E` for ellipse, `P` for polygon
-
-    - number of sides (`I`)
-
-        - 3 for triangular duct, 4 for rectangular ducts, ...
+    - number of sides
 
     - description
 
@@ -185,7 +144,7 @@ Tables
 
     - next spanwise station
 
-    - outlier?
+    - outlier
 
     - description
 
@@ -199,31 +158,7 @@ Tables
 
     - label
 
-    - outlier?
-
-    - notes
-
-- `study_values`
-
-- `series_values`
-
-- `profile_values`
-
-- `point_values`
-
-    - point identifier
-
-    - quantity identifier
-
-    - value
-
-    - uncertainty
-
-    - averaging system
-
-    - measurement technique
-
-    - outlier?
+    - outlier
 
     - notes
 
