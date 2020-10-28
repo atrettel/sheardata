@@ -168,3 +168,19 @@ def set_study_value( cursor, study, quantity, value, averaging_system=None, \
         notes,
     )
     )
+
+def get_study_value( cursor, study, quantity, averaging_system=None ):
+    cursor.execute(
+    """
+    SELECT study_value, study_uncertainty FROM study_values WHERE study=? AND
+    quantity=? AND averaging_system=?;
+    """,
+    (
+        str(study),
+        str(quantity),
+        averaging_system,
+    )
+    )
+    result = cursor.fetchone()
+
+    return join_float( result[0], result[1] )
