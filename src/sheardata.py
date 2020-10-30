@@ -254,3 +254,47 @@ def add_series( cursor, flow_class, year, study_number, series_number, \
     )
     )
     return identifier
+
+def update_series_geometry( cursor, identifier, geometry ):
+    cursor.execute(
+    """
+    UPDATE series SET geometry=? WHERE identifier=?
+    """,
+    (
+        str(geometry),
+        identifier,
+    )
+    )
+
+def update_series_number_of_sides( cursor, identifier, number_of_sides ):
+    cursor.execute(
+    """
+    UPDATE series SET number_of_sides=? WHERE identifier=?
+    """,
+    (
+        int(number_of_sides),
+        identifier,
+    )
+    )
+
+def update_series_description( cursor, identifier, description ):
+    cursor.execute(
+    """
+    UPDATE series SET description=? WHERE identifier=?
+    """,
+    (
+        description.strip(),
+        identifier,
+    )
+    )
+
+def update_series_notes( cursor, identifier, notes ):
+    cursor.execute(
+    """
+    UPDATE series SET notes=? WHERE identifier=?
+    """,
+    (
+        notes.strip(),
+        identifier,
+    )
+    )
