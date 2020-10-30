@@ -18,6 +18,15 @@ import math
 import sqlite3
 from uncertainties import ufloat
 
+# Averaging systems
+DENSITY_WEIGHTED_AVERAGING_SYSTEM = "DW"
+UNWEIGHTED_AVERAGING_SYSTEM       = "UW"
+
+# Coordinate systems
+CYLINDRICAL_COORDINATE_SYSTEM = "XRT"
+RECTANGULAR_COORDINATE_SYSTEM = "XYZ"
+
+# Flow classes
 BOUNDARY_LAYER_FLOW_CLASS  = "B"
 WALL_BOUNDED_FLOW_CLASS    = "C"
 DUCT_FLOW_CLASS            = "D"
@@ -35,6 +44,16 @@ SHEAR_LAYER_FLOW_CLASS     = "S"
 UNCLASSIFIED_FLOW_CLASS    = "U"
 WAKE_FLOW_CLASS            = "W"
 
+# Fluids
+DRY_AIR_FLUID = "dry_air"
+WATER_FLUID   = "water"
+STEAM         = "steam"
+
+# Geometries
+ELLIPTICAL_GEOMETRY  = "E"
+RECTANGULAR_GEOMETRY = "R"
+
+# Study types
 EXPERIMENTAL_STUDY_TYPE = "E"
 NUMERICAL_STUDY_TYPE    = "N"
 
@@ -201,3 +220,22 @@ def get_study_value( cursor, study, quantity, averaging_system=None ):
     result = cursor.fetchone()
 
     return join_float( result[0], result[1] )
+
+def add_series( cursor, flow_class, year, study_number, series_number, \
+                number_of_dimensions, coordinate_system, working_fluid ):
+    identifier = identify_series( flow_class, year, study_number, series_number )
+    cursor.execute(
+    """
+    INSERT INTO series( identifier, series_number, number_of_dimensions,
+    coordinate_system, working_fluid ) VALUES( ?, ?, ?, ?, ? );
+    """,
+    (
+        identifier,
+        int(series_number),
+        int(number_of_dimensions),
+        str(coordinate_system),
+        str(working_fluid),
+    )
+    )
+
+    return identifier
