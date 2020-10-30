@@ -298,3 +298,24 @@ def update_series_notes( cursor, identifier, notes ):
         identifier,
     )
     )
+
+def set_series_value( cursor, series, quantity, value, averaging_system=None, \
+                     measurement_technique=None, outlier=False, notes=None ):
+    series_value, series_uncertainty = split_float( value )
+    cursor.execute(
+    """
+    INSERT INTO series_values( series, quantity, series_value,
+    series_uncertainty, averaging_system, measurement_technique, outlier, notes
+    ) VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
+    """,
+    (
+        str(series),
+        str(quantity),
+        series_value,
+        series_uncertainty,
+        averaging_system,
+        measurement_technique,
+        int(outlier),
+        notes,
+    )
+    )
