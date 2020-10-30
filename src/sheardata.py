@@ -76,6 +76,10 @@ def join_float( sql_value, sql_uncertainty=None ):
         uncertainty = float(sql_uncertainty)
     return ufloat( float(sql_value), uncertainty )
 
+def fetch_float( cursor ):
+    result = cursor.fetchone()
+    return join_float( result[0], result[1] )
+
 def identify_study( flow_class, year, study_number, readable=False ):
     separator = ""
     if ( readable ):
@@ -217,8 +221,7 @@ def get_study_value( cursor, study, quantity, averaging_system=None ):
         averaging_system,
     )
     )
-    result = cursor.fetchone()
-    return join_float( result[0], result[1] )
+    return fetch_float( cursor )
 
 def add_source( cursor, study, source, classification ):
     cursor.execute(
