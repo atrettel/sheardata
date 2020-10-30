@@ -137,8 +137,8 @@ def add_study( cursor, flow_class, year, study_number, study_type ):
     identifier = identify_study( flow_class, year, study_number )
     cursor.execute(
     """
-    INSERT INTO studies( identifier, flow_class, year, study_number, study_type
-    ) VALUES( ?, ?, ?, ?, ? );
+    INSERT INTO studies( identifier, flow_class, year, study_number,
+    study_type) VALUES( ?, ?, ?, ?, ? );
     """,
     (
         identifier,
@@ -218,12 +218,28 @@ def get_study_value( cursor, study, quantity, averaging_system=None ):
     )
     )
     result = cursor.fetchone()
-
     return join_float( result[0], result[1] )
+
+def add_source( cursor, study, source, classification ):
+    cursor.execute(
+    """
+    INSERT INTO sources( study, source, classification ) VALUES( ?, ?, ? );
+    """,
+    (
+        str(study),
+        str(source),
+        int(classification),
+    )
+    )
 
 def add_series( cursor, flow_class, year, study_number, series_number, \
                 number_of_dimensions, coordinate_system, working_fluid ):
-    identifier = identify_series( flow_class, year, study_number, series_number )
+    identifier = identify_series(
+        flow_class,
+        year,
+        study_number,
+        series_number,
+    )
     cursor.execute(
     """
     INSERT INTO series( identifier, series_number, number_of_dimensions,
@@ -237,5 +253,4 @@ def add_series( cursor, flow_class, year, study_number, series_number, \
         str(working_fluid),
     )
     )
-
     return identifier
