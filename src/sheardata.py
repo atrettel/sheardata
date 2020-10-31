@@ -322,3 +322,23 @@ def set_series_value( cursor, series, quantity, value, averaging_system=None, \
         notes,
     )
     )
+
+def add_station( cursor, flow_class, year, study_number, series_number, \
+                station_number ):
+    identifier = identify_station(
+        flow_class,
+        year,
+        study_number,
+        series_number,
+        station_number,
+    )
+    cursor.execute(
+    """
+    INSERT INTO stations( identifier, station_number ) VALUES( ?, ? );
+    """,
+    (
+        identifier,
+        int(series_number),
+    )
+    )
+    return identifier
