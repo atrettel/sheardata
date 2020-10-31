@@ -259,7 +259,7 @@ CREATE TABLE series (
 CREATE TABLE stations (
     identifier                   TEXT PRIMARY KEY UNIQUE,
     station_number               INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <= 999 ),
-    originators_identifier       TEXT UNIQUE DEFAULT NULL,
+    originators_identifier       TEXT DEFAULT NULL,
     flow_regime                  TEXT DEFAULT NULL,
     previous_streamwise_station  TEXT DEFAULT NULL,
     next_streamwise_station      TEXT DEFAULT NULL,
