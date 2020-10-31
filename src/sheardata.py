@@ -338,7 +338,30 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
     """,
     (
         identifier,
-        int(series_number),
+        int(station_number),
+    )
+    )
+    return identifier
+
+def add_point( cursor, flow_class, year, study_number, series_number, \
+                station_number, point_number, point_label=None ):
+    identifier = identify_point(
+        flow_class,
+        year,
+        study_number,
+        series_number,
+        station_number,
+        point_number,
+    )
+    cursor.execute(
+    """
+    INSERT INTO points( identifier, point_number, point_label ) VALUES( ?, ?,
+    ?);
+    """,
+    (
+        identifier,
+        int(point_number),
+        str(point_label),
     )
     )
     return identifier
