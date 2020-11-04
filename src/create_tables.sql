@@ -123,10 +123,12 @@ CREATE TABLE measurement_techniques (
     notes          TEXT DEFAULT NULL
 );
 
-INSERT INTO measurement_techniques( identifier, technique_name ) VALUES( 'FEB', 'floating element balance' );
-INSERT INTO measurement_techniques( identifier, technique_name ) VALUES( 'IT',  'impact tube'              );
-INSERT INTO measurement_techniques( identifier, technique_name ) VALUES( 'PST', 'Pitot-static tube'        );
-INSERT INTO measurement_techniques( identifier, technique_name ) VALUES( 'SPT', 'static pressure tap'      );
+INSERT INTO measurement_techniques( identifier, technique_name ) VALUES( 'A',    'assumption'               );
+INSERT INTO measurement_techniques( identifier, technique_name ) VALUES( 'CALC', 'calculation'              );
+INSERT INTO measurement_techniques( identifier, technique_name ) VALUES( 'FEB',  'floating element balance' );
+INSERT INTO measurement_techniques( identifier, technique_name ) VALUES( 'IT',   'impact tube'              );
+INSERT INTO measurement_techniques( identifier, technique_name ) VALUES( 'PST',  'Pitot-static tube'        );
+INSERT INTO measurement_techniques( identifier, technique_name ) VALUES( 'SPT',  'static pressure tap'      );
 
 CREATE TABLE point_labels (
     identifier TEXT PRIMARY KEY UNIQUE,
