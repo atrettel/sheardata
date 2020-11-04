@@ -387,7 +387,7 @@ def add_point( cursor, flow_class, year, study_number, series_number, \
     (
         identifier,
         int(point_number),
-        str(point_label),
+        point_label,
     )
     )
     return identifier
