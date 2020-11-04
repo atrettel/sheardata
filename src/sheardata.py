@@ -19,6 +19,7 @@ import sqlite3
 from uncertainties import ufloat
 
 # Averaging systems
+ANY_AVERAGING_SYSTEM              = "ANY"
 DENSITY_WEIGHTED_AVERAGING_SYSTEM = "DW"
 UNWEIGHTED_AVERAGING_SYSTEM       = "UW"
 
@@ -214,18 +215,31 @@ def set_study_value( cursor, study, quantity, value, averaging_system=None, \
     )
     )
 
-def get_study_value( cursor, study, quantity, averaging_system=None ):
-    cursor.execute(
-    """
-    SELECT study_value, study_uncertainty FROM study_values WHERE study=? AND
-    quantity=? AND averaging_system=?;
-    """,
-    (
-        str(study),
-        str(quantity),
-        averaging_system,
-    )
-    )
+def get_study_value( cursor, study, quantity, \
+                     averaging_system=ANY_AVERAGING_SYSTEM ):
+    if ( averaging_system == ANY_AVERAGING_SYSTEM ):
+        cursor.execute(
+        """
+        SELECT study_value, study_uncertainty FROM study_values WHERE study=?
+        AND quantity=?;
+        """,
+        (
+            str(study),
+            str(quantity),
+        )
+        )
+    else:
+        cursor.execute(
+        """
+        SELECT study_value, study_uncertainty FROM study_values WHERE study=?
+        AND quantity=? AND averaging_system=?;
+        """,
+        (
+            str(study),
+            str(quantity),
+            averaging_system,
+        )
+        )
     return fetch_float( cursor )
 
 def add_source( cursor, study, source, classification ):
@@ -328,6 +342,33 @@ def set_series_value( cursor, series, quantity, value, averaging_system=None, \
     )
     )
 
+def get_series_value( cursor, series, quantity, \
+                      averaging_system=ANY_AVERAGING_SYSTEM ):
+    if ( averaging_system == ANY_AVERAGING_SYSTEM ):
+        cursor.execute(
+        """
+        SELECT series_value, series_uncertainty FROM series_values WHERE
+        series=? AND quantity=?;
+        """,
+        (
+            str(series),
+            str(quantity),
+        )
+        )
+    else:
+        cursor.execute(
+        """
+        SELECT series_value, series_uncertainty FROM series_values WHERE
+        series=? AND quantity=? AND averaging_system=?;
+        """,
+        (
+            str(series),
+            str(quantity),
+            averaging_system,
+        )
+        )
+    return fetch_float( cursor )
+
 def add_station( cursor, flow_class, year, study_number, series_number, \
                 station_number ):
     identifier = identify_station(
@@ -368,6 +409,33 @@ def set_station_value( cursor, station, quantity, value, averaging_system=None, 
         notes,
     )
     )
+
+def get_station_value( cursor, station, quantity, \
+                       averaging_system=ANY_AVERAGING_SYSTEM ):
+    if ( averaging_system == ANY_AVERAGING_SYSTEM ):
+        cursor.execute(
+        """
+        SELECT station_value, station_uncertainty FROM station_values WHERE
+        station=? AND quantity=?;
+        """,
+        (
+            str(station),
+            str(quantity),
+        )
+        )
+    else:
+        cursor.execute(
+        """
+        SELECT station_value, station_uncertainty FROM station_values WHERE
+        station=? AND quantity=? AND averaging_system=?;
+        """,
+        (
+            str(station),
+            str(quantity),
+            averaging_system,
+        )
+        )
+    return fetch_float( cursor )
 
 def add_point( cursor, flow_class, year, study_number, series_number, \
                 station_number, point_number, point_label=None ):
@@ -412,3 +480,31 @@ def set_point_value( cursor, point, quantity, value, averaging_system=None, \
         notes,
     )
     )
+
+def get_point_value( cursor, point, quantity, \
+                     averaging_system=ANY_AVERAGING_SYSTEM ):
+    if ( averaging_system == ANY_AVERAGING_SYSTEM ):
+        cursor.execute(
+        """
+        SELECT point_value, point_uncertainty FROM point_values WHERE point=?
+        AND quantity=?;
+        """,
+        (
+            str(point),
+            str(quantity),
+        )
+        )
+    else:
+        cursor.execute(
+        """
+        SELECT point_value, point_uncertainty FROM point_values WHERE point=?
+        AND quantity=? AND averaging_system=?;
+        """,
+        (
+            str(point),
+            str(quantity),
+            averaging_system,
+        )
+        )
+    return fetch_float( cursor )
+
