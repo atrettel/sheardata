@@ -168,7 +168,7 @@ def update_study_description( cursor, identifier, description ):
     """,
     (
         description.strip(),
-        identifier,
+        sanitize_identifier(identifier),
     )
     )
 
@@ -179,7 +179,7 @@ def update_study_provenance( cursor, identifier, provenance ):
     """,
     (
         provenance.strip(),
-        identifier,
+        sanitize_identifier(identifier),
     )
     )
 
@@ -190,7 +190,7 @@ def update_study_notes( cursor, identifier, notes ):
     """,
     (
         notes.strip(),
-        identifier,
+        sanitize_identifier(identifier),
     )
     )
 
@@ -284,7 +284,7 @@ def update_series_geometry( cursor, identifier, geometry ):
     """,
     (
         str(geometry),
-        identifier,
+        sanitize_identifier(identifier),
     )
     )
 
@@ -295,7 +295,7 @@ def update_series_number_of_sides( cursor, identifier, number_of_sides ):
     """,
     (
         int(number_of_sides),
-        identifier,
+        sanitize_identifier(identifier),
     )
     )
 
@@ -306,7 +306,7 @@ def update_series_description( cursor, identifier, description ):
     """,
     (
         description.strip(),
-        identifier,
+        sanitize_identifier(identifier),
     )
     )
 
@@ -317,7 +317,7 @@ def update_series_notes( cursor, identifier, notes ):
     """,
     (
         notes.strip(),
-        identifier,
+        sanitize_identifier(identifier),
     )
     )
 
