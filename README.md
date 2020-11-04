@@ -5,8 +5,8 @@ Flow data from shear layer experiments and simulations presented in an open,
 modern, and unified format.
 
 
-Planned goals and features
---------------------------
+Goals
+-----
 
 - Single SQLite database as primary output file.
 
@@ -21,11 +21,16 @@ Planned goals and features
     - [Library of Congress recommended formats statement](https://www.loc.gov/preservation/resources/rfs/)
 
 
-Tabulated data compilations being considered
---------------------------------------------
+Previous tabulated data compilations
+------------------------------------
 
-All of these compilations are older and presented in tabulated form (ready for
-digitization).
+I have already conducted an extensive literature search to identify relevant
+individual studies to include in the database.  However, many previous data
+compilations already exist and provide an extensive amount of data in an
+already processed format that is ready for both reference and study.  All of
+these compilations are older and presented in tabulated form, which requires
+digitization for use.  I identify several of these previous data compilations
+below.
 
 - Peterson, J. B. Jr. 1963, "A comparison of experimental and theoretical
   results for compressible turbulent-boundary-layer skin friction with zero
