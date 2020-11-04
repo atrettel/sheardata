@@ -44,22 +44,22 @@ The data directory has a flat directory structure.
 
 - (REQUIRED) Year of first publication (4 digits)
 
-- (REQUIRED) Case number (3 digits)
+- (REQUIRED) Study number (3 digits)
 
 - (OPTIONAL) Series number (3 digits)
 
-- (OPTIONAL) Profile or station number (3 digits)
+- (OPTIONAL) Station number (3 digits)
 
 - (OPTIONAL) Point number (4 digits)
 
-The required portions are sufficient to identify a case.  The optional portions
-can identify a series of profiles, an individual profile, or even a single
-point in the flow if necessary.  For readability, dashes are acceptable in any
-location but removed in the database itself.
+The required portions are sufficient to identify a study.  The optional
+portions can identify a series of profiles/stations, an individual station, or
+even a single point in the flow if necessary.  For readability, dashes are
+acceptable in any location but removed in the database itself.
 
 Examples:
 
-- Case identifier (accession number)
+- Study identifier (accession number)
 
     - Compact form: `B1944001` (8 characters)
 
@@ -71,7 +71,7 @@ Examples:
 
     - Readable form: `B-1944-001-001` (14 characters)
 
-- Profile identifier
+- Station identifier
 
     - Compact form: `B1944001001001` (14 characters)
 
@@ -82,6 +82,13 @@ Examples:
     - Compact form `B19440010010010001` (18 characters)
 
     - Readable form: `B-1944-001-001-001-0001` (23 characters)
+
+Longer identifiers specify the data to a greater extent.  For example, the
+study identifier specifies what flow class the data falls under, the series
+identifier specifies what flow field is being considered (for all points), the
+station identifier specifies which station with known streamwise and spanwise
+coordinates, and the point identifier specifies which point with known
+streamwise, transverse, and spanwise coordinates.
 
 
 -------------------------------------------------------------------------------
