@@ -53,6 +53,11 @@ STEAM         = "steam"
 ELLIPTICAL_GEOMETRY  = "E"
 RECTANGULAR_GEOMETRY = "R"
 
+# Point labels
+CENTER_LINE_POINT_LABEL = "CL"
+EDGE_POINT_LABEL        = "E"
+WALL_POINT_LABEL        = "W"
+
 # Study types
 EXPERIMENTAL_STUDY_TYPE = "E"
 NUMERICAL_STUDY_TYPE    = "N"
@@ -343,6 +348,27 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
     )
     return identifier
 
+def set_station_value( cursor, station, quantity, value, averaging_system=None, \
+                     measurement_technique=None, outlier=False, notes=None ):
+    station_value, station_uncertainty = split_float( value )
+    cursor.execute(
+    """
+    INSERT INTO station_values( station, quantity, station_value,
+    station_uncertainty, averaging_system, measurement_technique, outlier,
+    notes ) VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
+    """,
+    (
+        str(station),
+        str(quantity),
+        station_value,
+        station_uncertainty,
+        averaging_system,
+        measurement_technique,
+        int(outlier),
+        notes,
+    )
+    )
+
 def add_point( cursor, flow_class, year, study_number, series_number, \
                 station_number, point_number, point_label=None ):
     identifier = identify_point(
@@ -365,3 +391,24 @@ def add_point( cursor, flow_class, year, study_number, series_number, \
     )
     )
     return identifier
+
+def set_point_value( cursor, point, quantity, value, averaging_system=None, \
+                     measurement_technique=None, outlier=False, notes=None ):
+    point_value, point_uncertainty = split_float( value )
+    cursor.execute(
+    """
+    INSERT INTO point_values( point, quantity, point_value,
+    point_uncertainty, averaging_system, measurement_technique, outlier,
+    notes ) VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
+    """,
+    (
+        str(point),
+        str(quantity),
+        point_value,
+        point_uncertainty,
+        averaging_system,
+        measurement_technique,
+        int(outlier),
+        notes,
+    )
+    )
