@@ -32,6 +32,13 @@ these compilations are older and presented in tabulated form, which requires
 digitization for use.  I identify several of these previous data compilations
 below.
 
+- Koos, Eugene Chen 1932, "Mechanisms of isothermal and non-isothermal flow of
+  fluids in pipes".  Massachusetts Institute of Technology Ph.D. thesis.
+
+    - [MIT](http://hdl.handle.net/1721.1/61824)
+
+    - Global and profile data.
+
 - Peterson, J. B. Jr. 1963, "A comparison of experimental and theoretical
   results for compressible turbulent-boundary-layer skin friction with zero
   pressure gradient".  NASA-TN-D-1795.
