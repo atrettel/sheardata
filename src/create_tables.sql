@@ -134,9 +134,9 @@ CREATE TABLE point_labels (
     notes      TEXT DEFAULT NULL
 );
 
-INSERT INTO point_labels( identifier, label_name ) VALUES( 'C', 'center-line' );
-INSERT INTO point_labels( identifier, label_name ) VALUES( 'E', 'edge'        );
-INSERT INTO point_labels( identifier, label_name ) VALUES( 'W', 'wall'        );
+INSERT INTO point_labels( identifier, label_name ) VALUES( 'CL', 'center-line' );
+INSERT INTO point_labels( identifier, label_name ) VALUES( 'E',  'edge'        );
+INSERT INTO point_labels( identifier, label_name ) VALUES( 'W',  'wall'        );
 
 CREATE TABLE quantities (
     identifier           TEXT PRIMARY KEY UNIQUE,
