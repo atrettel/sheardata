@@ -369,3 +369,9 @@ CREATE VIEW external_flow_classes   AS WITH RECURSIVE children(identifier) AS ( 
 CREATE VIEW free_shear_flow_classes AS WITH RECURSIVE children(identifier) AS ( VALUES('F') UNION SELECT flow_classes.identifier FROM flow_classes, children WHERE flow_classes.parent=children.identifier ) SELECT identifier FROM children ORDER BY identifier;
 CREATE VIEW internal_flow_classes   AS WITH RECURSIVE children(identifier) AS ( VALUES('I') UNION SELECT flow_classes.identifier FROM flow_classes, children WHERE flow_classes.parent=children.identifier ) SELECT identifier FROM children ORDER BY identifier;
 CREATE VIEW shear_layer_classes     AS WITH RECURSIVE children(identifier) AS ( VALUES('S') UNION SELECT flow_classes.identifier FROM flow_classes, children WHERE flow_classes.parent=children.identifier ) SELECT identifier FROM children ORDER BY identifier;
+
+CREATE VIEW confined_flow_studies   AS SELECT studies.identifier FROM studies WHERE studies.flow_class IN ( SELECT identifier FROM confined_flow_classes   );
+CREATE VIEW external_flow_studies   AS SELECT studies.identifier FROM studies WHERE studies.flow_class IN ( SELECT identifier FROM external_flow_classes   );
+CREATE VIEW free_shear_flow_studies AS SELECT studies.identifier FROM studies WHERE studies.flow_class IN ( SELECT identifier FROM free_shear_flow_classes );
+CREATE VIEW internal_flow_studies   AS SELECT studies.identifier FROM studies WHERE studies.flow_class IN ( SELECT identifier FROM internal_flow_classes   );
+CREATE VIEW shear_layer_studies     AS SELECT studies.identifier FROM studies WHERE studies.flow_class IN ( SELECT identifier FROM shear_layer_classes     );
