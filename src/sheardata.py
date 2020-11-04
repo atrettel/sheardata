@@ -204,7 +204,7 @@ def set_study_value( cursor, study, quantity, value, averaging_system=None, \
     ?, ?, ?, ?, ? );
     """,
     (
-        str(study),
+        sanitize_identifier(study),
         str(quantity),
         study_value,
         study_uncertainty,
@@ -224,7 +224,7 @@ def get_study_value( cursor, study, quantity, \
         AND quantity=?;
         """,
         (
-            str(study),
+            sanitize_identifier(study),
             str(quantity),
         )
         )
@@ -235,7 +235,7 @@ def get_study_value( cursor, study, quantity, \
         AND quantity=? AND averaging_system=?;
         """,
         (
-            str(study),
+            sanitize_identifier(study),
             str(quantity),
             averaging_system,
         )
@@ -248,7 +248,7 @@ def add_source( cursor, study, source, classification ):
     INSERT INTO sources( study, source, classification ) VALUES( ?, ?, ? );
     """,
     (
-        str(study),
+        sanitize_identifier(study),
         str(source),
         int(classification),
     )
@@ -331,7 +331,7 @@ def set_series_value( cursor, series, quantity, value, averaging_system=None, \
     ) VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
     """,
     (
-        str(series),
+        sanitize_identifier(series),
         str(quantity),
         series_value,
         series_uncertainty,
@@ -351,7 +351,7 @@ def get_series_value( cursor, series, quantity, \
         series=? AND quantity=?;
         """,
         (
-            str(series),
+            sanitize_identifer(series),
             str(quantity),
         )
         )
@@ -362,7 +362,7 @@ def get_series_value( cursor, series, quantity, \
         series=? AND quantity=? AND averaging_system=?;
         """,
         (
-            str(series),
+            sanitize_identifer(series),
             str(quantity),
             averaging_system,
         )
@@ -399,7 +399,7 @@ def set_station_value( cursor, station, quantity, value, averaging_system=None, 
     notes ) VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
     """,
     (
-        str(station),
+        sanitize_identifier(station),
         str(quantity),
         station_value,
         station_uncertainty,
@@ -419,7 +419,7 @@ def get_station_value( cursor, station, quantity, \
         station=? AND quantity=?;
         """,
         (
-            str(station),
+            sanitize_identifier(station),
             str(quantity),
         )
         )
@@ -430,7 +430,7 @@ def get_station_value( cursor, station, quantity, \
         station=? AND quantity=? AND averaging_system=?;
         """,
         (
-            str(station),
+            sanitize_identifier(station),
             str(quantity),
             averaging_system,
         )
@@ -470,7 +470,7 @@ def set_point_value( cursor, point, quantity, value, averaging_system=None, \
     notes ) VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
     """,
     (
-        str(point),
+        sanitize_identifier(point),
         str(quantity),
         point_value,
         point_uncertainty,
@@ -490,7 +490,7 @@ def get_point_value( cursor, point, quantity, \
         AND quantity=?;
         """,
         (
-            str(point),
+            sanitize_identifier(point),
             str(quantity),
         )
         )
@@ -501,7 +501,7 @@ def get_point_value( cursor, point, quantity, \
         AND quantity=? AND averaging_system=?;
         """,
         (
-            str(point),
+            sanitize_identifier(point),
             str(quantity),
             averaging_system,
         )
