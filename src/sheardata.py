@@ -15,6 +15,7 @@
 # this file.  If not, see <https://www.gnu.org/licenses/>.
 
 import math
+import numpy as np
 import sqlite3
 from uncertainties import ufloat
 
@@ -627,3 +628,39 @@ def get_point_value( cursor, point, quantity,               \
             )
     return fetch_float( cursor )
 
+def get_twin_profiles( cursor, station, quantity1, quantity2 ):
+    cursor.execute(
+    """
+    SELECT point FROM point_values WHERE point LIKE ? AND
+    quantity=? INTERSECT SELECT point FROM point_values WHERE point LIKE
+    ? AND quantity=? ORDER BY point;
+    """,
+    (
+        sanitize_identifier(station)+'%',
+        str(quantity1),
+        sanitize_identifier(station)+'%',
+        str(quantity2),
+    )
+    )
+    results = cursor.fetchall()
+
+    points = []
+    for result in results:
+        points.append( result[0] )
+    n_points = len(points)
+
+    profile1 = []
+    profile2 = []
+    for point in points:
+        profile1.append( get_point_value(
+            cursor,
+            point,
+            quantity1,
+        ) )
+        profile2.append( get_point_value(
+            cursor,
+            point,
+            quantity2,
+        ) )
+
+    return np.array(profile1), np.array(profile2)
