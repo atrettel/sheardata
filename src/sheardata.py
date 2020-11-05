@@ -631,9 +631,9 @@ def get_point_value( cursor, point, quantity,               \
 def get_twin_profiles( cursor, station, quantity1, quantity2 ):
     cursor.execute(
     """
-    SELECT point FROM point_values WHERE point LIKE ? AND
-    quantity=? INTERSECT SELECT point FROM point_values WHERE point LIKE
-    ? AND quantity=? ORDER BY point;
+    SELECT point FROM point_values WHERE point LIKE ? AND quantity=? AND
+    outlier=0 INTERSECT SELECT point FROM point_values WHERE point LIKE ? AND
+    quantity=? AND outlier=0 ORDER BY point;
     """,
     (
         sanitize_identifier(station)+'%',
