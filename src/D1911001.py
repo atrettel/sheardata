@@ -32,8 +32,8 @@ study_number = 1
 study_identifier = sd.add_study(
     cursor,
     flow_class=flow_class,
-    year=1911,
-    study_number=1,
+    year=year,
+    study_number=study_number,
     study_type=sd.EXPERIMENTAL_STUDY_TYPE,
 )
 
