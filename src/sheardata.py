@@ -665,9 +665,7 @@ def get_twin_profiles( cursor, station, quantity1, quantity2 ):
 
     return np.array(profile1), np.array(profile2)
 
-def set_labeled_value( cursor, station, quantity, label, value,           \
-                       averaging_system=None, measurement_technique=None, \
-                       outlier=False, notes=None ):
+def locate_labeled_point( cursor, station, label ):
     cursor.execute(
     """
     SELECT identifier FROM points WHERE identifier LIKE ? AND point_label=?
@@ -679,9 +677,14 @@ def set_labeled_value( cursor, station, quantity, label, value,           \
     )
     )
     result = cursor.fetchone()
+    return result[0]
+
+def set_labeled_value( cursor, station, quantity, label, value,           \
+                       averaging_system=None, measurement_technique=None, \
+                       outlier=False, notes=None ):
     set_point_value(
         cursor,
-        result[0],
+        locate_labeled_point( cursor, station, label ),
         quantity,
         value,
         averaging_system=averaging_system,
@@ -693,20 +696,9 @@ def set_labeled_value( cursor, station, quantity, label, value,           \
 def get_labeled_value( cursor, station, quantity, label,    \
                      averaging_system=ANY_AVERAGING_SYSTEM, \
                      measurement_technique=ANY_MEASUREMENT_TECHNIQUE, ):
-    cursor.execute(
-    """
-    SELECT identifier FROM points WHERE identifier LIKE ? AND point_label=?
-    ORDER BY identifier LIMIT 1;
-    """,
-    (
-        sanitize_identifier(station)+'%',
-        str(label),
-    )
-    )
-    result = cursor.fetchone()
     return get_point_value(
         cursor,
-        result[0],
+        locate_labeled_point( cursor, station, label ),
         quantity,
         averaging_system=averaging_system,
         measurement_technique=measurement_technique,
