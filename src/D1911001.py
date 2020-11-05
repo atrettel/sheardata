@@ -174,14 +174,6 @@ with open( globals_filename, "r" ) as globals_file:
                 point_label=point_label,
             )
 
-            if ( point_number == 1 ):
-                sd.set_point_value(
-                    cursor,
-                    point_identifier,
-                    "k",
-                    roughness_height,
-                )
-
             sd.set_point_value(
                 cursor,
                 point_identifier,
@@ -217,6 +209,14 @@ with open( globals_filename, "r" ) as globals_file:
             )
 
             i += 1
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            "k",
+            sd.WALL_POINT_LABEL,
+            roughness_height,
+        )
 
 # Wall shear stress measurement technique
 #
