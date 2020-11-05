@@ -89,6 +89,20 @@ with open( globals_filename, "r" ) as globals_file:
             study_identifier,
             series_number,
         )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            "d_h",
+            diameter,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            "AR",
+            1.0,
+        )
         
         # Pitot-static tube dimensions
         #
@@ -191,6 +205,15 @@ with open( globals_filename, "r" ) as globals_file:
                 u_reversed[i],
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
                 measurement_technique="PST"
+            )
+
+            sd.set_point_value(
+                cursor,
+                point_identifier,
+                "T",
+                15.0+273.15,
+                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                measurement_technique="A"
             )
 
             i += 1
