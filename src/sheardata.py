@@ -665,6 +665,31 @@ def get_twin_profiles( cursor, station, quantity1, quantity2 ):
 
     return np.array(profile1), np.array(profile2)
 
+def set_labeled_value( cursor, station, quantity, label, value,           \
+                       averaging_system=None, measurement_technique=None, \
+                       outlier=False, notes=None ):
+    cursor.execute(
+    """
+    SELECT identifier FROM points WHERE identifier LIKE ? AND point_label=?
+    ORDER BY identifier LIMIT 1;
+    """,
+    (
+        sanitize_identifier(station)+'%',
+        str(label),
+    )
+    )
+    result = cursor.fetchone()
+    set_point_value(
+        cursor,
+        result[0],
+        quantity,
+        value,
+        averaging_system=averaging_system,
+        measurement_technique=measurement_technique,
+        outlier=outlier,
+        notes=notes,
+    )
+
 def get_labeled_value( cursor, station, quantity, label,    \
                      averaging_system=ANY_AVERAGING_SYSTEM, \
                      measurement_technique=ANY_MEASUREMENT_TECHNIQUE, ):
