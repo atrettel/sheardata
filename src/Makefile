@@ -16,12 +16,12 @@ project=shearlayers
 
 database=$(project).db
 
-study_targets := $(filter-out sheardata.tmp,$(patsubst %.py,%.tmp,$(wildcard *.py)))
+study_targets := $(filter-out create_tables.tmp sheardata.tmp,$(patsubst %.py,%.tmp,$(wildcard *.py)))
 
 $(database): $(project).tmp $(study_targets)
 
-$(project).tmp: create_tables.sql
-	sqlite3 $(database) < $^
+$(project).tmp: create_tables.py
+	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B $^ $(database) | tee $@
 
 %.tmp:: %.py $(project).tmp
 	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B $< $(database) | tee $@
