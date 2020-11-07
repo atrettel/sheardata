@@ -68,6 +68,8 @@ with open( globals_filename, "r" ) as globals_file:
             coordinate_system=sd.CYLINDRICAL_COORDINATE_SYSTEM,
         )
 
+        sd.add_air_components( cursor, series_identifier )
+
         sd.update_series_geometry(
             cursor,
             series_identifier,
