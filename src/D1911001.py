@@ -93,7 +93,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value(
             cursor,
             station_identifier,
-            "d_h",
+            "D_H",
             diameter,
         )
 
@@ -213,7 +213,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_labeled_value(
             cursor,
             station_identifier,
-            "k",
+            "eps",
             sd.WALL_POINT_LABEL,
             roughness_height,
         )
