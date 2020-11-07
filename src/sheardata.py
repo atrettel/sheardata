@@ -66,6 +66,12 @@ OXYGEN_GAS         = "O2(g)"
 WATER_LIQUID       = "H2O(l)"
 WATER_VAPOR        = "H2O(g)"
 
+AIR_COMPONENTS = [ NITROGEN_GAS,
+                   OXYGEN_GAS,
+                   ARGON_GAS,
+                   CARBON_DIOXIDE_GAS,
+                   WATER_VAPOR, ]
+
 # Geometries
 ELLIPTICAL_GEOMETRY  = "E"
 RECTANGULAR_GEOMETRY = "R"
@@ -804,7 +810,7 @@ def get_labeled_value( cursor, station, quantity, label,    \
         measurement_technique=measurement_technique,
     )
 
-def add_component( cursor, series, fluid ):
+def add_working_fluid_component( cursor, series, fluid ):
     cursor.execute(
     """
     INSERT INTO components( series, fluid )
@@ -823,14 +829,10 @@ def set_working_fluid_name( cursor, series, name ):
     )
 
 def add_air_components( cursor, series ):
-    for fluid in [ NITROGEN_GAS,
-                   OXYGEN_GAS,
-                   ARGON_GAS,
-                   CARBON_DIOXIDE_GAS,
-                   WATER_VAPOR, ]:
-        add_component( cursor, series, fluid )
+    for fluid in AIR_COMPONENTS:
+        add_working_fluid_component( cursor, series, fluid )
 
-def get_components( cursor, series ):
+def get_working_fluid_components( cursor, series ):
     cursor.execute(
     """
     SELECT fluid FROM components WHERE series=? ORDER BY fluid;
@@ -839,5 +841,48 @@ def get_components( cursor, series ):
     )
     components = []
     for component in cursor.fetchall():
-        components.append( str(component[0]) )
+        if ( component[0] != None ):
+            components.append( str(component[0]) )
     return components
+
+def get_working_fluid_name( cursor, series ):
+    components = get_working_fluid_components( cursor, series )
+    n_components = len(components)
+    if not components:
+        cursor.execute(
+        """
+        SELECT name FROM components WHERE series=? LIMIT 1;
+        """,
+        ( sanitize_identifier(series), )
+        )
+        result = cursor.fetchone()
+        return result[0]
+    else:
+        if all( comp in components for comp in AIR_COMPONENTS ):
+            return "air (g)"
+        elif ( n_components == 1 ):
+            cursor.execute(
+            """
+            SELECT fluid_name, phase FROM fluids WHERE identifier=? LIMIT 1;
+            """,
+            ( str(components[0]), )
+            )
+            result = cursor.fetchone()
+            return "{:s} ({:s})".format( result[0], result[1] )
+        else:
+            name = "mixture of "
+            i_component = 0
+            for component in components:
+                cursor.execute(
+                """
+                SELECT fluid_name, phase FROM fluids WHERE identifier=?
+                LIMIT 1;
+                """,
+                ( str(component), )
+                )
+                result = cursor.fetchone()
+                name += "{:s} ({:s})".format( result[0], result[1] )
+                i_component += 1
+                if ( i_component != n_components ):
+                    name += " and "
+            return name
