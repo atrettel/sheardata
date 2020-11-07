@@ -539,6 +539,19 @@ CREATE TABLE sources (
 """
 )
 
+# Components
+cursor.execute(
+"""
+CREATE TABLE components (
+    series TEXT NOT NULL,
+    fluid  TEXT NOT NULL,
+    PRIMARY KEY(series, fluid),
+    FOREIGN KEY(series) REFERENCES series(identifier),
+    FOREIGN KEY(fluid)  REFERENCES fluids(identifier)
+);
+"""
+)
+
 # Study values
 #
 # Technically, there are no quantities that could be study values, but the

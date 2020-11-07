@@ -805,3 +805,32 @@ def get_labeled_value( cursor, station, quantity, label,    \
         averaging_system=averaging_system,
         measurement_technique=measurement_technique,
     )
+
+def add_component( cursor, series, fluid ):
+    cursor.execute(
+    """
+    INSERT INTO components( series, fluid )
+    VALUES( ?, ? );
+    """,
+    ( sanitize_identifier(series), str(fluid), )
+    )
+
+def add_air_components( cursor, series ):
+    for fluid in [ NITROGEN_GAS,
+                   OXYGEN_GAS,
+                   ARGON_GAS,
+                   CARBON_DIOXIDE_GAS,
+                   WATER_VAPOR, ]:
+        add_component( cursor, series, fluid )
+
+def get_components( cursor, series ):
+    cursor.execute(
+    """
+    SELECT fluid FROM components WHERE series=? ORDER BY fluid;
+    """,
+    ( sanitize_identifier(series), )
+    )
+    components = []
+    for component in cursor.fetchall():
+        components.append( str(component[0]) )
+    return components
