@@ -558,7 +558,11 @@ cursor.execute(
 """
 CREATE TABLE components (
     series TEXT NOT NULL,
-    fluid  TEXT NOT NULL,
+    fluid  TEXT DEFAULT NULL,
+    name   TEXT DEFAULT NULL CHECK (
+        fluid IS NULL     AND name IS NOT NULL
+        OR
+        fluid IS NOT NULL AND name IS NULL ),
     PRIMARY KEY(series, fluid),
     FOREIGN KEY(series) REFERENCES series(identifier),
     FOREIGN KEY(fluid)  REFERENCES fluids(identifier)

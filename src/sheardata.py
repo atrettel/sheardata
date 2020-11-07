@@ -813,6 +813,15 @@ def add_component( cursor, series, fluid ):
     ( sanitize_identifier(series), str(fluid), )
     )
 
+def set_working_fluid_name( cursor, series, name ):
+    cursor.execute(
+    """
+    INSERT INTO components( series, name )
+    VALUES( ?, ? );
+    """,
+    ( sanitize_identifier(series), str(name), )
+    )
+
 def add_air_components( cursor, series ):
     for fluid in [ NITROGEN_GAS,
                    OXYGEN_GAS,
