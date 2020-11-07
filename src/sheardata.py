@@ -57,9 +57,13 @@ LIQUID_PHASE = "l"
 SOLID_PHASE  = "s"
 
 # Fluids
-DRY_AIR_FLUID = "dry_air"
-WATER_FLUID   = "water"
-STEAM_FLUID   = "steam"
+ARGON_GAS          = "Ar(g)"
+CARBON_DIOXIDE_GAS = "CO2(g)"
+HELIUM_GAS         = "He(g)"
+NITROGEN_GAS       = "N2(g)"
+OXYGEN_GAS         = "O2(g)"
+WATER_LIQUID       = "H2O(l)"
+WATER_VAPOR        = "H2O(g)"
 
 # Geometries
 ELLIPTICAL_GEOMETRY  = "E"
@@ -68,7 +72,8 @@ RECTANGULAR_GEOMETRY = "R"
 # Measurement techniques
 ANY_MEASUREMENT_TECHNIQUE                      = "ANY"
 ASSUMPTION_MEASUREMENT_TECHNIQUE               = "A"
-CALCULATION_MEASUREMENT_TECHNIQUE              = "CALC"
+CALCULATION_MEASUREMENT_TECHNIQUE              = "C"
+ESTIMATION_MEASUREMENT_TECHNIQUE               = "E"
 FLOATING_ELEMENT_BALANCE_MEASUREMENT_TECHNIQUE = "FEB"
 IMPACT_TUBE_MEASUREMENT_TECHNIQUE              = "IT"
 PITOT_STATIC_TUBE_MEASUREMENT_TECHNIQUE        = "PST"
@@ -385,7 +390,7 @@ def add_source( cursor, study, source, classification ):
     )
 
 def add_series( cursor, flow_class, year, study_number, series_number, \
-                number_of_dimensions, coordinate_system, working_fluid ):
+                number_of_dimensions, coordinate_system ):
     identifier = identify_series(
         flow_class,
         year,
@@ -395,14 +400,13 @@ def add_series( cursor, flow_class, year, study_number, series_number, \
     cursor.execute(
     """
     INSERT INTO series( identifier, series_number, number_of_dimensions,
-    coordinate_system, working_fluid ) VALUES( ?, ?, ?, ?, ? );
+    coordinate_system ) VALUES( ?, ?, ?, ? );
     """,
     (
         identifier,
         int(series_number),
         int(number_of_dimensions),
         str(coordinate_system),
-        str(working_fluid),
     )
     )
     return identifier

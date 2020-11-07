@@ -203,9 +203,13 @@ class fluid:
         self.phase      = phase
 
 fluids = {}
-fluids[ sd.DRY_AIR_FLUID ] = fluid( "dry air", "g" )
-fluids[ sd.WATER_FLUID   ] = fluid( "water",   "l" )
-fluids[ sd.STEAM_FLUID   ] = fluid( "steam",   "g" )
+fluids[ sd.ARGON_GAS          ] = fluid( "argon",          "g" )
+fluids[ sd.CARBON_DIOXIDE_GAS ] = fluid( "carbon dioxide", "g" )
+fluids[ sd.HELIUM_GAS         ] = fluid( "helium",         "g" )
+fluids[ sd.NITROGEN_GAS       ] = fluid( "nitrogen",       "g" )
+fluids[ sd.OXYGEN_GAS         ] = fluid( "oxygen",         "g" )
+fluids[ sd.WATER_LIQUID       ] = fluid( "water",          "l" )
+fluids[ sd.WATER_VAPOR        ] = fluid( "water",          "g" )
 
 for identifier in fluids:
     cursor.execute(
@@ -468,12 +472,10 @@ CREATE TABLE series (
     series_number        INTEGER NOT NULL CHECK ( series_number > 0 AND series_number <= 999 ),
     number_of_dimensions INTEGER NOT NULL DEFAULT 2 CHECK ( number_of_dimensions > 0 AND number_of_dimensions <= 3 ),
     coordinate_system    TEXT NOT NULL DEFAULT 'XYZ',
-    working_fluid        TEXT NOT NULL,
     geometry             TEXT DEFAULT NULL,
     number_of_sides      TEXT DEFAULT NULL CHECK ( number_of_sides > 1 ),
     description          TEXT DEFAULT NULL,
     notes                TEXT DEFAULT NULL,
-    FOREIGN KEY(working_fluid)     REFERENCES             fluids(identifier),
     FOREIGN KEY(coordinate_system) REFERENCES coordinate_systems(identifier),
     FOREIGN KEY(geometry)          REFERENCES         geometries(identifier)
 );

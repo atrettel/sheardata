@@ -66,7 +66,6 @@ with open( globals_filename, "r" ) as globals_file:
             series_number=series_number,
             number_of_dimensions=2,
             coordinate_system=sd.CYLINDRICAL_COORDINATE_SYSTEM,
-            working_fluid=sd.DRY_AIR_FLUID,
         )
 
         sd.update_series_geometry(
