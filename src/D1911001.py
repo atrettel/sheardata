@@ -93,14 +93,14 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value(
             cursor,
             station_identifier,
-            "D_H",
+            sd.HYDRAULIC_DIAMETER_QUANTITY,
             diameter,
         )
 
         sd.set_station_value(
             cursor,
             station_identifier,
-            "AR",
+            sd.ASPECT_RATIO_QUANTITY,
             1.0,
         )
         
@@ -177,8 +177,15 @@ with open( globals_filename, "r" ) as globals_file:
             sd.set_point_value(
                 cursor,
                 point_identifier,
-                "y",
+                sd.DISTANCE_FROM_WALL_QUANTITY,
                 0.5*diameter - r_reversed[i],
+            )
+
+            sd.set_point_value(
+                cursor,
+                point_identifier,
+                sd.TRANSVERSE_COORDINATE_QUANTITY,
+                r_reversed[i],
             )
 
             # Velocity measurement technique
@@ -193,19 +200,19 @@ with open( globals_filename, "r" ) as globals_file:
             sd.set_point_value(
                 cursor,
                 point_identifier,
-                "u",
+                sd.STREAMWISE_VELOCITY_QUANTITY,
                 u_reversed[i],
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-                measurement_technique="PST"
+                measurement_technique=sd.PITOT_STATIC_TUBE_MEASUREMENT_TECHNIQUE,
             )
 
             sd.set_point_value(
                 cursor,
                 point_identifier,
-                "T",
+                sd.TEMPERATURE_QUANTITY,
                 15.0+273.15,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-                measurement_technique="A"
+                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
             )
 
             i += 1
@@ -213,7 +220,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_labeled_value(
             cursor,
             station_identifier,
-            "eps",
+            sd.ROUGHNESS_HEIGHT_QUANTITY,
             sd.WALL_POINT_LABEL,
             roughness_height,
         )
