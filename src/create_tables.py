@@ -206,6 +206,7 @@ fluids = {}
 fluids[ sd.ARGON_GAS          ] = fluid( "argon",          "g" )
 fluids[ sd.CARBON_DIOXIDE_GAS ] = fluid( "carbon dioxide", "g" )
 fluids[ sd.HELIUM_GAS         ] = fluid( "helium",         "g" )
+fluids[ sd.HYDROGEN_GAS       ] = fluid( "hydrogen",       "g" )
 fluids[ sd.NITROGEN_GAS       ] = fluid( "nitrogen",       "g" )
 fluids[ sd.OXYGEN_GAS         ] = fluid( "oxygen",         "g" )
 fluids[ sd.WATER_LIQUID       ] = fluid( "water",          "l" )
