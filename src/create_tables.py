@@ -309,7 +309,7 @@ CREATE TABLE quantities (
     mass_exponent        REAL NOT NULL DEFAULT 0.0,
     time_exponent        REAL NOT NULL DEFAULT 0.0,
     temperature_exponent REAL NOT NULL DEFAULT 0.0,
-    note                 TEXT DEFAULT NULL
+    notes                TEXT DEFAULT NULL
 );
 """
 )
