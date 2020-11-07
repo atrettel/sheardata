@@ -320,14 +320,17 @@ class quantity:
     mass_exponent        = None
     time_exponent        = None
     temperature_exponent = None
+    amount_exponent      = None
 
     def __init__( self, name, length_exponent=0.0, mass_exponent=0.0, \
-                  time_exponent=0.0, temperature_exponent=0.0, ):
+                  time_exponent=0.0, temperature_exponent=0.0,        \
+                  amount_exponent=0.0, ):
         self.name                 = str(name)
         self.length_exponent      = length_exponent
         self.mass_exponent        = mass_exponent
         self.time_exponent        = time_exponent
         self.temperature_exponent = temperature_exponent
+        self.amount_exponent      = amount_exponent
 
 quantities = {}
 
@@ -406,6 +409,17 @@ quantities[ sd.TOTAL_PRESSURE_QUANTITY                   ] = quantity( "total pr
 quantities[ sd.TOTAL_TEMPERATURE_QUANTITY                ] = quantity( "total temperature",                temperature_exponent=+1.0,                                                  )
 quantities[ sd.TRANSVERSE_COORDINATE_QUANTITY            ] = quantity( "transverse coordinate",                 length_exponent=+1.0,                                                  )
 quantities[ sd.TRANSVERSE_VELOCITY_QUANTITY              ] = quantity( "transverse velocity",                   length_exponent=+1.0,   time_exponent=-1.0,                            )
+
+# Quantities, point, component-based
+for prefix in [ sd.AMOUNT_FRACTION_PREFIX,
+                sd.MASS_FRACTION_PREFIX, ]:
+    for fluid in fluids:
+        name = "unknown quantity"
+        if ( prefix == sd.AMOUNT_FRACTION_PREFIX ):
+            name = "amount fraction for "
+        elif ( prefix == sd.MASS_FRACTION_PREFIX ):
+            name = "mass fraction for "
+        quantities[ prefix+fluid ] = quantity( name+fluids[fluid].name+" ("+fluids[fluid].phase+")" )
 
 for identifier in quantities:
     cursor.execute(
