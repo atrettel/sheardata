@@ -58,15 +58,21 @@ with open( globals_filename, "r" ) as globals_file:
         series_number =   int(globals_row[0])
         diameter      = float(globals_row[2]) * 1.0e-2
 
-        roughness_height = float("inf") if (int(globals_row[1]) == 1) else 0.0
-
-        # Working fluid
+        # The rough pipe measurements are in the fully-rough regime.
         #
-        # pp. 366-367
-        # 
+        # p. 369
+        #
         # \begin{quote}
-        # air was the fluid chosen for the experiments
+        # In order to simplify the problem, an attempt was made to eliminate
+        # any effect due to a variation in $f( \nu / v_c \ell )$ by
+        # artificially roughening the pipes used until the friction was
+        # proportional to the square of the velocity.
         # \end{quote}
+        #
+        # This does not tell the precise roughness height, but it does indicate
+        # that it is very large for the rough wall cases.
+        is_rough_wall = ( int(globals_row[1]) == 1 )
+
         series_identifier = sd.add_series(
             cursor,
             flow_class=flow_class,
@@ -77,6 +83,13 @@ with open( globals_filename, "r" ) as globals_file:
             coordinate_system=sd.CYLINDRICAL_COORDINATE_SYSTEM,
         )
 
+        # Working fluid
+        #
+        # pp. 366-367
+        #
+        # \begin{quote}
+        # air was the fluid chosen for the experiments
+        # \end{quote}
         sd.add_air_components( cursor, series_identifier )
 
         sd.update_series_geometry(
@@ -213,7 +226,7 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.STREAMWISE_VELOCITY_QUANTITY,
                 u_reversed[i],
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-                measurement_technique=sd.IMPACT_TUBE_MEASUREMENT_TECHNIQUE,
+                measurement_technique=sd.PITOT_STATIC_TUBE_MEASUREMENT_TECHNIQUE,
                 notes=( series_1_center_line_note if ( series_number == 1 and point_number == n_points ) else None ),
             )
 
@@ -228,52 +241,55 @@ with open( globals_filename, "r" ) as globals_file:
 
             i += 1
 
+        if ( is_rough_wall == False ):
+            for quantity in [ sd.ROUGHNESS_HEIGHT_QUANTITY,
+                              sd.INNER_LAYER_ROUGHNESS_HEIGHT_QUANTITY,
+                              sd.OUTER_LAYER_ROUGHNESS_HEIGHT_QUANTITY, ]:
+                sd.set_labeled_value(
+                    cursor,
+                    station_identifier,
+                    quantity,
+                    sd.WALL_POINT_LABEL,
+                    0.0,
+                    measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+                )
+
         sd.set_labeled_value(
             cursor,
             station_identifier,
-            sd.ROUGHNESS_HEIGHT_QUANTITY,
+            sd.TRANSVERSE_VELOCITY_QUANTITY,
             sd.WALL_POINT_LABEL,
-            roughness_height,
+            ufloat( 0.0, 0.0 ),
         )
 
-# Wall shear stress measurement technique
-#
-# p. 368
-#
-# \begin{quote}
-# The determination of the shearing stress on any cylindrical portion of the
-# fluid of radius $r$ was made by a direct measurement of the drop of pressure
-# at the surface along the pipe, together with the measurement of the variation
-# of pressure along the radius.
-# \end{quote}
-wall_shear_stress_measurement_technique = "PD"
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.TRANSVERSE_VELOCITY_QUANTITY,
+            sd.CENTER_LINE_POINT_LABEL,
+            ufloat( 0.0, 0.0 ),
+        )
 
-# Rough pipe measurements are in the fully rough regime.
-#
-# p. 369
-#
-# \begin{quote}
-# In order to simplify the problem, an attempt was made to eliminate any effect
-# due to a variation in $f( \nu / v_c \ell )$ by artificially roughening the
-# pipes used until the friction was proportional to the square of the velocity.
-# \end{quote}
-#
-# This does not tell the precise roughness height, but it does indicate that it
-# is very large.  The roughness height therefore is any value between the
-# minimum required for the fully rough regime at that particular Reynolds
-# number and the pipe radius.
-
-# Wall shear stress for rough pipe measurements
-#
-# p. 369
-#
-# \begin{quote}
-# After several trials, two pipes were produced, of diameters 7.35 and 5.08
-# cm., in which the friction varied as the square of the velocity, and
-# consequently the friction per unit are at the same velocities was found to be
-# the same for each pipe, the numerical value being $4.6 v_c^2 \times 10^{-6}$
-# dynes per square centimeter.
-# \end{quote}
+        # Wall shear stress measurements
+        #
+        # p. 368
+        #
+        # \begin{quote}
+        # The determination of the shearing stress on any cylindrical portion
+        # of the fluid of radius $r$ was made by a direct measurement of the
+        # drop of pressure at the surface along the pipe, together with the
+        # measurement of the variation of pressure along the radius.
+        # \end{quote}
+        #
+        # p. 369
+        #
+        # \begin{quote}
+        # After several trials, two pipes were produced, of diameters 7.35 and
+        # 5.08 cm., in which the friction varied as the square of the velocity,
+        # and consequently the friction per unit are at the same velocities was
+        # found to be the same for each pipe, the numerical value being $4.6
+        # v_c^2 \times 10^{-6}$ dynes per square centimeter.
+        # \end{quote}
 
 conn.commit()
 conn.close()
