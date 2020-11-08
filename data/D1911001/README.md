@@ -13,10 +13,6 @@
   also assumes the air temperature is 59 °F (15 °C) for the smooth wall cases.
   This temperature appears reasonable.
 
-- There is an inconsistency in the center-line mean velocities of the 5.08 cm
-  pipe.  Page 371 says 1525 cm/s and page 372 says 1526 cm/s.  The CSV file
-  uses 1525 cm/s since it is used twice on page 371 and only once on page 372.
-
 -------------------------------------------------------------------------------
 
 Copyright © 2020 Andrew Trettel
