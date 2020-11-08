@@ -200,7 +200,6 @@ with open( elements_filename, "r" ) as elements_file:
         skipinitialspace=True )
     next(elements_reader)
     for elements_row in elements_reader:
-        print( elements_row )
         atomic_number  =   int(elements_row[0])
         element_symbol =   str(elements_row[1])
         element_name   =   str(elements_row[2])
