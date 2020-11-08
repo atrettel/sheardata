@@ -21,10 +21,12 @@ study_targets := $(filter-out create_tables.tmp sheardata.tmp,$(patsubst %.py,%.
 $(database): $(project).tmp $(study_targets)
 
 $(project).tmp: create_tables.py
-	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B $^ $(database) | tee $@
+	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B $^ $(database)
+	@touch $@
 
 %.tmp:: %.py $(project).tmp
-	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B $< $(database) | tee $@
+	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B $< $(database)
+	@touch $@
 
 .PHONY: clean
 clean:
