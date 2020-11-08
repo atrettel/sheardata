@@ -15,6 +15,7 @@
 # this file.  If not, see <https://www.gnu.org/licenses/>.
 
 import csv
+import math
 import sqlite3
 import sheardata as sd
 import sys
@@ -207,6 +208,13 @@ with open( globals_filename, "r" ) as globals_file:
             sd.set_point_value(
                 cursor,
                 point_identifier,
+                sd.OUTER_LAYER_COORDINATE_QUANTITY,
+                ( 0.5*diameter - r_reversed[i] ) / ( 0.5*diameter ),
+            )
+
+            sd.set_point_value(
+                cursor,
+                point_identifier,
                 sd.TRANSVERSE_COORDINATE_QUANTITY,
                 r_reversed[i],
             )
@@ -229,6 +237,17 @@ with open( globals_filename, "r" ) as globals_file:
                 measurement_technique=sd.PITOT_STATIC_TUBE_MEASUREMENT_TECHNIQUE,
                 notes=( series_1_center_line_note if ( series_number == 1 and point_number == n_points ) else None ),
             )
+
+            for quantity in [ sd.TRANSVERSE_VELOCITY_QUANTITY,
+                              sd.SPANWISE_VELOCITY_QUANTITY, ]:
+                sd.set_point_value(
+                    cursor,
+                    point_identifier,
+                    quantity,
+                    ufloat( 0.0, 0.0 ),
+                    averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                    measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+                )
 
             sd.set_point_value(
                 cursor,
@@ -254,20 +273,33 @@ with open( globals_filename, "r" ) as globals_file:
                     measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
                 )
 
-        sd.set_labeled_value(
+        r_prof, u_prof = sd.get_twin_profiles(
             cursor,
             station_identifier,
-            sd.TRANSVERSE_VELOCITY_QUANTITY,
-            sd.WALL_POINT_LABEL,
-            ufloat( 0.0, 0.0 ),
+            sd.TRANSVERSE_COORDINATE_QUANTITY,
+            sd.STREAMWISE_VELOCITY_QUANTITY,
         )
 
-        sd.set_labeled_value(
+        Q = -2.0 * math.pi * sd.integrate_using_trapezoid_rule( r_prof, u_prof * r_prof )
+
+        u_bulk = 4.0 * Q / ( math.pi * diameter**2.0 )
+
+        sd.set_station_value(
             cursor,
             station_identifier,
-            sd.TRANSVERSE_VELOCITY_QUANTITY,
-            sd.CENTER_LINE_POINT_LABEL,
-            ufloat( 0.0, 0.0 ),
+            sd.VOLUMETRIC_FLOW_RATE_QUANTITY,
+            Q,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.BULK_VELOCITY_QUANTITY,
+            u_bulk,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
         )
 
         # Wall shear stress measurements
