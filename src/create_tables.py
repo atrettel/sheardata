@@ -264,6 +264,7 @@ measurement_techniques[ sd.FLOATING_ELEMENT_BALANCE_MEASUREMENT_TECHNIQUE ] = "f
 measurement_techniques[ sd.IMPACT_TUBE_MEASUREMENT_TECHNIQUE ]              = "impact tube"
 measurement_techniques[ sd.PITOT_STATIC_TUBE_MEASUREMENT_TECHNIQUE ]        = "Pitot-static tube"
 measurement_techniques[ sd.STATIC_PRESSURE_TAP_MEASUREMENT_TECHNIQUE ]      = "static pressure tap"
+measurement_techniques[ sd.PRESSURE_DROP_MEASUREMENT_TECHNIQUE ]            = "pressure drop"
 
 for identifier in measurement_techniques:
     cursor.execute(
@@ -383,9 +384,11 @@ quantities[ sd.FRICTION_MACH_NUMBER_QUANTITY                ] = quantity( "frict
 quantities[ sd.FRICTION_REYNOLDS_NUMBER_QUANTITY            ] = quantity( "friction Reynolds number",                                                           )
 quantities[ sd.FRICTION_TEMPERATURE_QUANTITY                ] = quantity( "friction temperature",                temperature_exponent=+1.0,                     )
 quantities[ sd.FRICTION_VELOCITY_QUANTITY                   ] = quantity( "friction velocity",                        length_exponent=+1.0, time_exponent=-1.0, )
+quantities[ sd.INNER_LAYER_ROUGHNESS_HEIGHT_QUANTITY        ] = quantity( "inner-layer roughness height",                                                       )
 quantities[ sd.LOCAL_SKIN_FRICTION_COEFFICIENT_QUANTITY     ] = quantity( "local skin friction coefficient",                                                    )
+quantities[ sd.OUTER_LAYER_ROUGHNESS_HEIGHT_QUANTITY        ] = quantity( "outer-layer roughness height",                                                       )
 quantities[ sd.PRESSURE_COEFFICIENT_QUANTITY                ] = quantity( "pressure coefficient",                                                               )
-quantities[ sd.ROUGHNESS_HEIGHT_QUANTITY                    ] = quantity( "roughness height",                                                                   )
+quantities[ sd.ROUGHNESS_HEIGHT_QUANTITY                    ] = quantity( "roughness height",                         length_exponent=+1.0,                     )
 quantities[ sd.SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER_QUANTITY ] = quantity( "semi-local friction Reynolds number",                                                )
 quantities[ sd.SPANWISE_WALL_CURVATURE                      ] = quantity( "spanwise wall curvature",                  length_exponent=-1.0,                     )
 quantities[ sd.STREAMWISE_WALL_CURVATURE                    ] = quantity( "streamwise wall curvature",                length_exponent=-1.0,                     )
