@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this file.  If not, see <https://www.gnu.org/licenses/>.
 
+import csv
 import sqlite3
 import sheardata as sd
 import sys
@@ -180,6 +181,42 @@ for identifier in phases:
     """,
     ( identifier, phases[identifier], )
     )
+
+# Elements
+cursor.execute(
+"""
+CREATE TABLE elements (
+    atomic_number  INTEGER PRIMARY KEY UNIQUE,
+    element_symbol TEXT NOT NULL,
+    element_name   TEXT NOT NULL,
+    atomic_weight  REAL NOT NULL CHECK ( atomic_weight > 0.0 )
+);
+"""
+)
+
+elements_filename = "../data/elements.csv"
+with open( elements_filename, "r" ) as elements_file:
+    elements_reader = csv.reader( elements_file, delimiter=",", quotechar='"', \
+        skipinitialspace=True )
+    next(elements_reader)
+    for elements_row in elements_reader:
+        print( elements_row )
+        atomic_number  =   int(elements_row[0])
+        element_symbol =   str(elements_row[1])
+        element_name   =   str(elements_row[2])
+        atomic_weight  = float(elements_row[3])
+
+        cursor.execute(
+        """
+        INSERT INTO elements VALUES( ?, ?, ?, ? );
+        """,
+        (
+            atomic_number,
+            element_symbol,
+            element_name,
+            atomic_weight,
+        )
+        )
 
 # Fluids
 cursor.execute(
