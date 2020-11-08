@@ -40,6 +40,15 @@ study_identifier = sd.add_study(
 sd.add_source( cursor, study_identifier, "StantonTE+1911+eng+JOUR", 1 )
 sd.add_source( cursor, study_identifier, "KooEC+1932+eng+THES",     2 )
 
+series_1_center_line_note = \
+"""
+There is an inconsistency in the center-line mean velocities of the
+\SI{5.08}{\cm} pipe.  \citet[p.~371]{StantonTE+1911+eng+JOUR} says
+\SI{1525}{\cm\per\s} and \citet[p.~372]{StantonTE+1911+eng+JOUR} says
+\SI{1526}{\cm\per\s}.  The database uses \SI{1525}{\cm\per\s} since it is used
+twice.
+"""
+
 globals_filename = "../data/{:s}/globals.csv".format( study_identifier )
 with open( globals_filename, "r" ) as globals_file:
     globals_reader = csv.reader( globals_file, delimiter=",", quotechar='"', \
@@ -204,7 +213,8 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.STREAMWISE_VELOCITY_QUANTITY,
                 u_reversed[i],
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-                measurement_technique=sd.PITOT_STATIC_TUBE_MEASUREMENT_TECHNIQUE,
+                measurement_technique=sd.IMPACT_TUBE_MEASUREMENT_TECHNIQUE,
+                notes=( series_1_center_line_note if ( series_number == 1 and point_number == n_points ) else None ),
             )
 
             sd.set_point_value(
