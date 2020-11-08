@@ -912,3 +912,44 @@ def integrate_using_trapezoid_rule( x, f, F0=ufloat(0.0,0.0) ):
         F += 0.5 * ( x[i+1] - x[i] ) * ( f[i+1] + f[i] )
     return F
 
+def extract_element_counts( formula ):
+    element_counts = {}
+
+    fragments = []
+    i_start = 0
+    i_end   = 0
+    for i_end in range(len(formula)):
+        if ( formula[i_end].isupper() and i_end != 0 ):
+            fragments.append( formula[i_start:i_end] )
+            i_start = i_end
+    fragments.append( formula[i_start:i_end+1] )
+
+    for fragment in fragments:
+        i = 0
+        while ( i < len(fragment) and fragment[i].isdigit() == False ):
+            i += 1
+        if ( i == len(fragment) ):
+            element = fragment
+            count   = 1
+        else:
+            element = str(fragment[:i])
+            count   = int(fragment[i:])
+        element_counts[element] = count
+
+    return element_counts
+
+def calculate_molar_mass_of_molecular_formula( cursor, formula ):
+    element_counts = extract_element_counts( formula )
+    molar_mass      = 0.0
+    for element in element_counts:
+        count = element_counts[element]
+        cursor.execute(
+        """
+        SELECT atomic_weight FROM elements WHERE element_symbol=?
+        """,
+        ( element, )
+        )
+        result = cursor.fetchone()
+        atomic_weight = float(result[0])
+        molar_mass += count * 1.0e-3 * atomic_weight
+    return molar_mass
