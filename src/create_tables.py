@@ -352,7 +352,7 @@ quantities[ sd.LIFT_FORCE_QUANTITY                     ] = quantity( "lift force
 quantities[ sd.LIFT_TO_DRAG_RATIO_QUANTITY             ] = quantity( "lift-to-drag ratio",                                                                                )
 quantities[ sd.MASS_FLOW_RATE_QUANTITY                 ] = quantity( "mass flow rate",                        mass_exponent=+1.0, time_exponent=-1.0,                     )
 quantities[ sd.TEST_LENGTH_QUANTITY                    ] = quantity( "test length",                         length_exponent=+1.0,                                         )
-quantities[ sd.VOLUME_FLOW_RATE_QUANTITY               ] = quantity( "volume flow rate",                    length_exponent=+3.0, time_exponent=-1.0,                     )
+quantities[ sd.VOLUMETRIC_FLOW_RATE_QUANTITY           ] = quantity( "volumetric flow rate",                length_exponent=+3.0, time_exponent=-1.0,                     )
 
 # Quantities, station
 quantities[ sd.ASPECT_RATIO_QUANTITY                  ] = quantity( "aspect ratio",                                                                                           )

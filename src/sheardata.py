@@ -109,7 +109,7 @@ LIFT_FORCE_QUANTITY                     = "F_L"
 LIFT_TO_DRAG_RATIO_QUANTITY             = "L/D"
 MASS_FLOW_RATE_QUANTITY                 = "mdot"
 TEST_LENGTH_QUANTITY                    = "L_t"
-VOLUME_FLOW_RATE_QUANTITY               = "Vdot"
+VOLUMETRIC_FLOW_RATE_QUANTITY           = "Vdot"
 
 # Quantities, station
 ASPECT_RATIO_QUANTITY                  = "AR"
@@ -905,3 +905,10 @@ def get_working_fluid_name( cursor, series ):
                 if ( i_component != n_components ):
                     name += " and "
             return name
+
+def integrate_using_trapezoid_rule( x, f, F0=ufloat(0.0,0.0) ):
+    F = F0
+    for i in range(len(x)-1):
+        F += 0.5 * ( x[i+1] - x[i] ) * ( f[i+1] + f[i] )
+    return F
+
