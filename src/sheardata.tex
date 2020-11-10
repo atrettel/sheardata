@@ -1,0 +1,66 @@
+% Copyright (C) 2020 Andrew Trettel
+%
+% This file is free software: you can redistribute it and/or modify it under
+% the terms of the GNU General Public License as published by the Free Software
+% Foundation, either version 3 of the License, or (at your option) any later
+% version.
+%
+% This file is distributed in the hope that it will be useful, but WITHOUT ANY
+% WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+% A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License along with
+% this file.  If not, see <https://www.gnu.org/licenses/>.
+
+\documentclass[12pt,oneside]{book}
+
+\usepackage{iftex}
+
+\usepackage[
+    letterpaper,
+    top=1.0in,
+    bottom=1.0in,
+    inner=1.0in,
+    outer=1.0in
+]{geometry}
+
+\usepackage[pdfpagelabels]{hyperref}
+\usepackage{siunitx}
+
+\usepackage{mathptmx}
+\usepackage{tgheros}
+\usepackage{tgcursor}
+
+\usepackage[T1]{fontenc}
+\ifLuaTeX
+    \usepackage[utf8]{luainputenc}
+\else
+    \usepackage[utf8]{inputenc}
+\fi
+
+\pagenumbering{arabic}
+
+\title{Shear layer data compilation}
+\date{\today}
+\author{Andrew Trettel}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+
+\clearpage\null\vfill
+\pagestyle{empty}
+\begin{center}
+Copyright~\textcopyright~2020~Andrew~Trettel
+\end{center}
+
+\tableofcontents
+
+\mainmatter
+
+\chapter{Taxonomy}
+
+\chapter{Studies}
+
+\end{document}
