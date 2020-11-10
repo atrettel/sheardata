@@ -14,6 +14,9 @@
 
 project=sheardata
 
+latex_compiler=pdflatex
+bib_compiler=biber
+
 database=$(project).db
 
 study_targets := $(filter-out create_tables.tmp sheardata.tmp,$(patsubst %.py,%.tmp,$(wildcard *.py)))
@@ -28,7 +31,28 @@ $(project).tmp: create_tables.py
 	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B $< $(database)
 	@touch $@
 
+$(project).pdf: $(project).tex $(database)
+	$(latex_compiler) $<
+	$(latex_compiler) $<
+
 .PHONY: clean
 clean:
 	-rm -fv $(database)
+	-rm -fv *-blx.bib
+	-rm -fv *.aux
+	-rm -fv *.bak
+	-rm -fv *.bbl
+	-rm -fv *.bcf
+	-rm -fv *.blg
+	-rm -fv *.end
+	-rm -fv *.lof
+	-rm -fv *.log
+	-rm -fv *.lot
+	-rm -fv *.out
+	-rm -fv *.pdf
+	-rm -fv *.pgf
+	-rm -fv *.run.xml
 	-rm -fv *.tmp
+	-rm -fv *.toc
+	-rm -fv *.xwm
+	-rm -fv *Notes.bib
