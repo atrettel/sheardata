@@ -1,0 +1,127 @@
+% Copyright (C) 2020 Andrew Trettel
+%
+% This file is licensed under the Creative Commons Attribution 4.0
+% International license (`CC-BY-4.0`).  For more information, please visit the
+% Creative Commons website at <https://creativecommons.org/licenses/by/4.0/>.
+
+\section{Classes}
+
+\section{Principles}
+
+Any practical taxonomy should organize information in a useful manner.  This
+project tries to organize a wide variety of data from different shear layers
+into a unified framework, so it requires some means to distinguish between
+different kinds of flows.  Previous classification systems have tended to be
+too complex, with too many classes and too much ambiguity.  A simpler
+classification scheme with a limited number of classes will be much easier to
+use.  To achieve this goal, this taxonomy follows 5 principles (language
+following RFC 2119):
+
+\begin{enumerate}
+
+
+\item
+Each flow class MUST be identified by a single letter related to the flow's
+name.
+
+This principle limits the maximum number of classes to 26\footnote{
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Strictly speaking, only 25 classes are available.  To reduce ambiguity, the
+taxonomy MUST not use letter \texttt{O}, since it is easily confused with the
+number \texttt{0}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+} and creates a simple and obvious code to identify a study's class.  Moreover,
+using letters for the code allows changes to the taxonomy much more readily
+than using hierarchical information for the code (the location of the class in
+the taxonomy).  The choice of letters means that if the taxonomy needs to be
+changed, it can be changed without having to update the codes.
+
+A brief explanation of unexpected codes:
+
+    \begin{itemize}
+
+    \item
+    \texttt{C} for wall-bounded flows from ``confinement''.
+
+    \item
+    \texttt{G} for isotropic flows from ``grid turbulence''.
+
+    \item
+    \texttt{K} for wall jets since it is the next letter after \texttt{J}, the
+    code for free jets.
+
+    \item
+    \texttt{N} for inhomogeneous flows from its second letter.
+
+    \item
+    \texttt{U} for flows from ``unclassified'' flows.
+
+    \end{itemize}
+
+
+\item
+Individual studies MUST belong to a single class.
+
+For example, suppose that there are two classes for boundary layers: attached
+boundary layers and separated boundary layers.  It is possible that a single
+study contains a series of boundary layer profiles that separate and then
+reattach.  Should the entire series of profiles be classified as separated even
+though only some are?  Should each profile be classified individually instead?
+No, the simplest solution is to create only one class for boundary layers.
+This choice makes classifying a given study much easier.
+
+
+\item
+Each flow class MUST work for all coordinate systems.
+
+This principle prevents additional classes being created for each coordinate
+system.  For example, both round jets and plane jets are jets first and
+foremost, so there is no need for an additional class for each.  Similarly,
+both pipe flows and rectangular duct flows are classified as duct flows since
+they are duct flows first and foremost.  Additional fields should specify the
+coordinate system and geometry of the boundaries, to keep track of this
+information outside of the taxonomy itself.
+
+
+\item
+The differences between classes SHOULD be intrinsically discrete and
+unquantifiable.
+
+For example, there should be a single class for boundary layers, and not
+multiple classes (incompressible laminar boundary layers, incompressible
+turbulent boundary layers, compressible laminar boundary layers, and
+compressible turbulent boundary layers).  In each case, the difference between
+those classes can be largely quantified with the Reynolds and Mach numbers, so
+there is no need to create additional classes when the effect can be quantified
+continuously using an additional variable rather than discretely with a
+different class.
+
+By this principle, a plume (buoyant jet) is classified under class \texttt{J}
+(free jets).  Buoyancy is quantifiable and therefore a plume, as a type of jet,
+does not receive a separate class.
+
+Note that internal flows violate this principle since the amount of relative
+motion can in fact be quantified, but I split internal flows into two classes
+(\texttt{D} and \texttt{R}) anyway.  In this case, most internal flow studies
+do not have both a pressure gradient and relative motion of the boundaries, so
+it is more practical to divide internal flows this way.
+
+
+\item
+The taxonomy SHOULD emphasize differences in flow pattern and geometry over
+differences in flow mechanism and physics.
+
+This principle guides the large-scale structure of the taxonomy more than
+small-scale structure.  The point is that the taxonomy divides flows up more by
+their flow pattern (homogeneity, kinematics, and presence of boundaries) than
+by the specific physics driving the flow (the flow mechanism) or especially the
+types of additional physics in the flow (shock waves, separation, cavitation,
+free-stream turbulence, \ldots).
+
+The overall structure of the tree diagram emphasizes this principle by
+immediately considering homogeneity (geometry), then shear (kinematics), and
+then the influence of boundaries (geometry again).  Indeed, no class is defined
+exclusively by the presence of additional physics.
+
+
+\end{enumerate}
