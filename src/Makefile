@@ -19,15 +19,15 @@ bib_compiler=biber
 
 database=$(project).db
 
-study_targets := $(filter-out create_tables.tmp sheardata.tmp,$(patsubst %.py,%.tmp,$(wildcard *.py)))
+preprocessing_targets := $(filter-out ,$(patsubst %.py,%.tmp,$(wildcard pre_*.py)))
 
-$(database): $(project).tmp $(study_targets)
+$(database): $(project).tmp $(preprocessing_targets)
 
 $(project).tmp: create_tables.py
 	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B $^ $(database)
 	@touch $@
 
-%.tmp:: %.py $(project).tmp
+pre_%.tmp:: pre_%.py $(project).tmp
 	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B $< $(database)
 	@touch $@
 
