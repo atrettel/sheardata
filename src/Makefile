@@ -20,6 +20,7 @@ bib_compiler=biber
 database=$(project).db
 
 preprocessing_targets := $(filter-out ,$(patsubst %.py,%.tmp,$(wildcard pre_*.py)))
+postprocessing_targets := $(filter-out ,$(patsubst %.py,%.tmp,$(wildcard post_*.py)))
 
 $(database): $(project).tmp $(preprocessing_targets)
 
@@ -31,7 +32,16 @@ pre_%.tmp:: pre_%.py $(project).tmp
 	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B $< $(database)
 	@touch $@
 
-$(project).pdf: $(project).tex $(database)
+post_%.tmp:: post_%.py $(database)
+	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B $< $(database)
+	@touch $@
+
+figure-taxonomy.tex.tmp: $(postprocessing_targets)
+	dot2tex figure-taxonomy.gv --output $@ --usepdflatex --figonly
+	sed -i "s/article/standalone/g" $@
+	sed -i "/enlarge/d" $@
+
+$(project).pdf: $(project).tex $(postprocessing_targets) figure-taxonomy.tex.tmp
 	$(latex_compiler) $<
 	$(latex_compiler) $<
 
@@ -45,6 +55,7 @@ clean:
 	-rm -fv *.bcf
 	-rm -fv *.blg
 	-rm -fv *.end
+	-rm -fv *.gv
 	-rm -fv *.lof
 	-rm -fv *.log
 	-rm -fv *.lot
