@@ -21,7 +21,7 @@ conn = sqlite3.connect( sys.argv[1] )
 cursor =  conn.cursor()
 cursor.execute( "PRAGMA foreign_keys = ON;" )
 
-with open( "figure-taxonomy.gv", "w" ) as f:
+with open( "figure-tree-diagram.gv", "w" ) as f:
     f.write( 'digraph taxonomy {\n' )
     f.write( 'concentrate=true\n' )
     f.write( 'rankdir=LR\n' )

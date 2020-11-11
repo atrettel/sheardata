@@ -10,8 +10,9 @@
 
 \begin{figure}
     \centering
-    \input{figure-taxonomy.tex.tmp}
-    \caption{Hierarchical flow taxonomy using codes for the flow classes}
+    \input{figure-tree-diagram.tex.tmp}
+    \caption{Tree diagram of flow classification system using codes for the
+    flow classes}
 \end{figure}
 
 \section{Principles}
@@ -35,14 +36,15 @@ name.
 This principle limits the maximum number of classes to 26\footnote{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Strictly speaking, only 25 classes are available.  To reduce ambiguity, the
-taxonomy MUST not use letter \texttt{O}, since it is easily confused with the
+classification MUST not use letter \texttt{O}, since it is easily confused with the
 number \texttt{0}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 } and creates a simple and obvious code to identify a study's class.  Moreover,
-using letters for the code allows changes to the taxonomy much more readily
-than using hierarchical information for the code (the location of the class in
-the taxonomy).  The choice of letters means that if the taxonomy needs to be
-changed, it can be changed without having to update the codes.
+using letters for the code allows changes to the classification much more
+readily than using hierarchical information for the code (the location of the
+class in the classification).  The choice of letters means that if the
+classification needs to be changed, it can be changed without having to update
+the codes.
 
 A brief explanation of unexpected codes:
 
@@ -88,7 +90,7 @@ foremost, so there is no need for an additional class for each.  Similarly,
 both pipe flows and rectangular duct flows are classified as duct flows since
 they are duct flows first and foremost.  Additional fields should specify the
 coordinate system and geometry of the boundaries, to keep track of this
-information outside of the taxonomy itself.
+information outside of the classification itself.
 
 
 \item
@@ -116,15 +118,15 @@ it is more practical to divide internal flows this way.
 
 
 \item
-The taxonomy SHOULD emphasize differences in flow pattern and geometry over
-differences in flow mechanism and physics.
+The classification system SHOULD emphasize differences in flow pattern and
+geometry over differences in flow mechanism and physics.
 
-This principle guides the large-scale structure of the taxonomy more than
-small-scale structure.  The point is that the taxonomy divides flows up more by
-their flow pattern (homogeneity, kinematics, and presence of boundaries) than
-by the specific physics driving the flow (the flow mechanism) or especially the
-types of additional physics in the flow (shock waves, separation, cavitation,
-free-stream turbulence, \ldots).
+This principle guides the large-scale structure of the classification more than
+small-scale structure.  The point is that the classification divides flows up
+more by their flow pattern (homogeneity, kinematics, and presence of
+boundaries) than by the specific physics driving the flow (the flow mechanism)
+or especially the types of additional physics in the flow (shock waves,
+separation, cavitation, free-stream turbulence, \ldots).
 
 The overall structure of the tree diagram emphasizes this principle by
 immediately considering homogeneity (geometry), then shear (kinematics), and
