@@ -36,12 +36,12 @@ post_%.tmp:: post_%.py $(database)
 	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B $< $(database)
 	@touch $@
 
-figure-taxonomy.tex.tmp: $(postprocessing_targets)
-	dot2tex figure-taxonomy.gv --output $@ --usepdflatex --figonly
+figure-tree-diagram.tex.tmp: $(postprocessing_targets)
+	dot2tex figure-tree-diagram.gv --output $@ --usepdflatex --figonly
 	sed -i "s/article/standalone/g" $@
 	sed -i "/enlarge/d" $@
 
-$(project).pdf: $(project).tex $(postprocessing_targets) figure-taxonomy.tex.tmp
+$(project).pdf: $(project).tex $(postprocessing_targets) figure-tree-diagram.tex.tmp
 	$(latex_compiler) $<
 	$(latex_compiler) $<
 
