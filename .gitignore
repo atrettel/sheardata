@@ -1,4 +1,10 @@
-*.pyc
-__pycache__
+*.aux
 *.db
+*.gv
+*.log
+*.out
+*.pdf
+*.pyc
 *.tmp
+*.toc
+__pycache__
