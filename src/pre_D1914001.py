@@ -493,6 +493,18 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             point_label=sd.WALL_POINT_LABEL,
         )
 
+        for quantity in [ sd.ROUGHNESS_HEIGHT_QUANTITY,
+                          sd.INNER_LAYER_ROUGHNESS_HEIGHT_QUANTITY,
+                          sd.OUTER_LAYER_ROUGHNESS_HEIGHT_QUANTITY, ]:
+            sd.set_labeled_value(
+                cursor,
+                station_identifier,
+                quantity,
+                sd.WALL_POINT_LABEL,
+                0.0,
+                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+            )
+
         sd.set_labeled_value(
             cursor,
             station_identifier,
