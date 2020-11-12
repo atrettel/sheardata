@@ -141,6 +141,14 @@ with open( ratio_filename, "r" ) as ratio_file:
 
         volumetric_flow_rate = 0.25 * math.pi * diameter**2.0 * bulk_velocity
 
+        # TODO: These assumptions are generally poor and could be improved.
+        speed_of_sound = float("inf")
+        if ( working_fluid == "Air" ):
+            speed_of_sound = ( 1.4 * 287.058 * temperature )**0.5
+        elif ( working_fluid == "Water" ):
+            speed_of_sound = 0.5 * ( 1447.0 + 1481.0 )
+        Ma_bulk = bulk_velocity / speed_of_sound
+
         series_identifier = sd.add_series(
             cursor,
             flow_class=flow_class,
@@ -222,6 +230,16 @@ with open( ratio_filename, "r" ) as ratio_file:
         sd.set_station_value(
             cursor,
             station_identifier,
+            sd.BULK_MACH_NUMBER_QUANTITY,
+            Ma_bulk,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
+            outlier=outlier,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
             sd.VOLUMETRIC_FLOW_RATE_QUANTITY,
             volumetric_flow_rate,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -290,6 +308,16 @@ with open( ratio_filename, "r" ) as ratio_file:
                 sd.TEMPERATURE_QUANTITY,
                 label,
                 temperature,
+                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE
+            )
+
+            sd.set_labeled_value(
+                cursor,
+                station_identifier,
+                sd.SPEED_OF_SOUND_QUANTITY,
+                label,
+                speed_of_sound,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
                 measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE
             )
@@ -434,6 +462,16 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
                 "Stanton and Pannell thick oil",
             )
 
+        # TODO: These assumptions are generally poor, but then again without
+        # knowing precisely what "thick oil" is it is difficult to assume
+        # anything else.
+        speed_of_sound = float("inf")
+        if ( working_fluid == "Air" ):
+            speed_of_sound = ( 1.4 * 287.058 * temperature )**0.5
+        elif ( working_fluid == "Water" ):
+            speed_of_sound = 0.5 * ( 1447.0 + 1481.0 )
+        Ma_bulk = bulk_velocity / speed_of_sound
+
         sd.update_series_geometry(
             cursor,
             series_identifier,
@@ -477,6 +515,15 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             station_identifier,
             sd.BULK_REYNOLDS_NUMBER_QUANTITY,
             Re_bulk,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.BULK_MACH_NUMBER_QUANTITY,
+            Ma_bulk,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE
         )
@@ -539,6 +586,16 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.WALL_POINT_LABEL,
             temperature,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.SPEED_OF_SOUND_QUANTITY,
+            sd.WALL_POINT_LABEL,
+            speed_of_sound,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
         )
 
         sd.set_labeled_value(
