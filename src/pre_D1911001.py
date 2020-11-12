@@ -327,9 +327,9 @@ with open( globals_filename, "r" ) as globals_file:
 
         volumetric_flow_rate = -2.0 * math.pi * sd.integrate_using_trapezoid_rule( r_prof, u_prof * r_prof )
         mass_flow_rate       = mass_density * volumetric_flow_rate
-        u_bulk               = 4.0 * volumetric_flow_rate / ( math.pi * diameter**2.0 )
-        Re_bulk              = u_bulk * diameter / kinematic_viscosity
-        Ma_bulk              = u_bulk / speed_of_sound
+        bulk_velocity        = 4.0 * volumetric_flow_rate / ( math.pi * diameter**2.0 )
+        Re_bulk              = bulk_velocity * diameter / kinematic_viscosity
+        Ma_bulk              = bulk_velocity / speed_of_sound
 
         sd.set_station_value(
             cursor,
@@ -353,7 +353,7 @@ with open( globals_filename, "r" ) as globals_file:
             cursor,
             station_identifier,
             sd.BULK_VELOCITY_QUANTITY,
-            u_bulk,
+            bulk_velocity,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
         )
@@ -372,6 +372,23 @@ with open( globals_filename, "r" ) as globals_file:
             station_identifier,
             sd.BULK_MACH_NUMBER_QUANTITY,
             Ma_bulk,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
+        )
+
+        maximum_velocity = sd.get_labeled_value(
+            cursor,
+            station_identifier,
+            sd.STREAMWISE_VELOCITY_QUANTITY,
+            sd.CENTER_LINE_POINT_LABEL,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY,
+            bulk_velocity / maximum_velocity,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
         )
