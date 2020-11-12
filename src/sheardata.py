@@ -276,6 +276,18 @@ def identify_point( flow_class, year, study_number, series_number, \
 def sanitize_identifier( identifier ):
     return identifier.replace("-","")
 
+def truncate_to_study( identifier ):
+    sanitized_identifier = sanitize_identifier( identifier )
+    return sanitized_identifier[0:8]
+
+def truncate_to_series( identifier ):
+    sanitized_identifier = sanitize_identifier( identifier )
+    return sanitized_identifier[0:11]
+
+def truncate_to_station( identifier ):
+    sanitized_identifier = sanitize_identifier( identifier )
+    return sanitized_identifier[0:14]
+
 def add_study( cursor, flow_class, year, study_number, study_type ):
     identifier = identify_study( flow_class, year, study_number )
     cursor.execute(
@@ -426,11 +438,13 @@ def add_series( cursor, flow_class, year, study_number, series_number, \
     )
     cursor.execute(
     """
-    INSERT INTO series( identifier, series_number, number_of_dimensions,
-    coordinate_system ) VALUES( ?, ?, ?, ? );
+    INSERT INTO series( identifier, study, series_number, number_of_dimensions,
+    coordinate_system )
+    VALUES( ?, ?, ?, ?, ? );
     """,
     (
         identifier,
+        truncate_to_study( identifier ),
         int(series_number),
         int(number_of_dimensions),
         str(coordinate_system),
@@ -570,10 +584,13 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
     )
     cursor.execute(
     """
-    INSERT INTO stations( identifier, station_number ) VALUES( ?, ? );
+    INSERT INTO stations( identifier, series, study, station_number )
+    VALUES( ?, ?, ?, ? );
     """,
     (
         identifier,
+        truncate_to_series( identifier ),
+        truncate_to_study( identifier ),
         int(station_number),
     )
     )
@@ -668,11 +685,15 @@ def add_point( cursor, flow_class, year, study_number, series_number, \
     )
     cursor.execute(
     """
-    INSERT INTO points( identifier, point_number, point_label ) VALUES( ?, ?,
-    ?);
+    INSERT INTO points( identifier, station, series, study, point_number,
+    point_label )
+    VALUES( ?, ?, ?, ?, ?, ?);
     """,
     (
         identifier,
+        truncate_to_station( identifier ),
+        truncate_to_series( identifier ),
+        truncate_to_study( identifier ),
         int(point_number),
         point_label,
     )

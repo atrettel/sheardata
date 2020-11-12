@@ -542,6 +542,7 @@ cursor.execute(
 """
 CREATE TABLE series (
     identifier           TEXT PRIMARY KEY UNIQUE,
+    study                TEXT NOT NULL,
     series_number        INTEGER NOT NULL CHECK ( series_number > 0 AND series_number <= 999 ),
     number_of_dimensions INTEGER NOT NULL DEFAULT 2 CHECK ( number_of_dimensions > 0 AND number_of_dimensions <= 3 ),
     coordinate_system    TEXT NOT NULL DEFAULT 'XYZ',
@@ -560,6 +561,8 @@ cursor.execute(
 """
 CREATE TABLE stations (
     identifier                   TEXT PRIMARY KEY UNIQUE,
+    series                       TEXT NOT NULL,
+    study                        TEXT NOT NULL,
     station_number               INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <= 999 ),
     originators_identifier       TEXT DEFAULT NULL,
     flow_regime                  TEXT DEFAULT NULL,
@@ -584,6 +587,9 @@ cursor.execute(
 """
 CREATE TABLE points (
     identifier           TEXT PRIMARY KEY UNIQUE,
+    station              TEXT NOT NULL,
+    series               TEXT NOT NULL,
+    study                TEXT NOT NULL,
     point_number         INTEGER NOT NULL CHECK ( point_number > 0 AND point_number <= 9999 ),
     point_label          TEXT DEFAULT NULL,
     outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
