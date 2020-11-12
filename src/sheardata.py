@@ -1039,3 +1039,13 @@ def mark_station_as_periodic( cursor, station, \
             sanitize_identifier( station ),
         )
         )
+
+def count_studies( identifiers ):
+    studies = {}
+    for identifier in identifiers:
+        study = truncate_to_study( identifier )
+        if ( study not in studies ):
+            studies[study] = 1
+        else:
+            studies[study] += 1
+    return studies
