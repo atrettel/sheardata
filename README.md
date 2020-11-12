@@ -12,7 +12,10 @@ Goals
 
 - Python module to load and use SQLite database.
 
-- CSV files as input files and output files.
+- Documentation also serves as a data and literature review for different flow
+  classes (a meta-analysis).
+
+- CSV files as input files.
 
 - Uncertainty quantification and data validation for as many cases as possible.
 
