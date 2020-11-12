@@ -34,6 +34,8 @@ pre_%.tmp:: pre_%.py $(project).tmp
 
 post_%.tmp:: post_%.py $(database)
 	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B $< $(database)
+	-sed -i "s/\\\\sffamily\\\\fontsize{.*}{.*}\\\\selectfont //g" *.pgf
+	-sed -i "s/use as bounding box, clip/use as bounding box/g" *.pgf
 	@touch $@
 
 figure-tree-diagram.tex.tmp: $(postprocessing_targets)
