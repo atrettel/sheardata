@@ -53,6 +53,33 @@ class Pipe:
             self.length   = float(length)
         self.material = str(material)
 
+# Pipe 12A
+#
+# p. 202
+#
+# \begin{quote}
+# For very accurate comparison the surfaces of the tubes should have been
+# precisely geometrically similar, as regards roughness, but as this condition
+# could not be fulfilled, the experiments were all made on commercially
+# smooth-drawn brass pipes.
+# \end{quote}
+#
+# However, this only appears to be the case for most of the experiments.  Some
+# were conducted using steel pipes.  One experiment using air and all of the
+# experiments with thick oil are using steel pipes.
+#
+# p. 209
+#
+# \begin{quote}
+# As a matter of interest the results of a series of observations of the
+# surface fraction of this oil, when flowing through a steel pipe 10.1 cm.
+# diameter at speeds varying from 5 to 60 cm. per second, are given in Table
+# IV. and are also plotted in fig. 3.
+# \end{quote}
+#
+# Pipe 12A on p. 224 is not in the table on p. 207.  It is possible that this
+# pipe is a brass pipe, but unfortunately the test length is not specified.
+
 pipes = {}
 pipes_filename = "../data/{:s}/pipes.csv".format( study_identifier )
 with open( pipes_filename, "r" ) as pipes_file:
@@ -158,6 +185,40 @@ with open( ratio_filename, "r" ) as ratio_file:
             1.0,
         )
 
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.BULK_VELOCITY_QUANTITY,
+            bulk_velocity,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY,
+            bulk_velocity / maximum_velocity,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.BULK_REYNOLDS_NUMBER_QUANTITY,
+            Re_bulk,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.VOLUMETRIC_FLOW_RATE_QUANTITY,
+            volumetric_flow_rate,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
         n_points = 2
         for point_number in [1, n_points]:
             point_label = None
@@ -177,41 +238,31 @@ with open( ratio_filename, "r" ) as ratio_file:
                 point_label=point_label,
             )
 
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.BULK_VELOCITY_QUANTITY,
-            bulk_velocity,
-            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.IMPACT_TUBE_MEASUREMENT_TECHNIQUE,
-        )
-
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY,
-            bulk_velocity / maximum_velocity,
-            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.IMPACT_TUBE_MEASUREMENT_TECHNIQUE,
-        )
-
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.BULK_REYNOLDS_NUMBER_QUANTITY,
-            Re_bulk,
-            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE
-        )
-
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.VOLUMETRIC_FLOW_RATE_QUANTITY,
-            volumetric_flow_rate,
-            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE
-        )
+        # Measurement techniques for flow rate and center-line velocities
+        #
+        # p. 203
+        #
+        # \begin{quote}
+        # To measure the velocity of the current, one of two methods was used
+        # according to convenience.  By one method the total quantity of fluid
+        # passing through the pipe in a given time was either weighed directly,
+        # or passed through a water-meter or a gas-holder, which had been
+        # designed for the purpose of the experiments and carefully calibrated.
+        # By the other method the velocity at the axis of the pipe was
+        # estimated by measuring the difference of pressure between that in a
+        # small Pitot tube facing the current and placed in the axis of the
+        # pipe and that in a small hole in the wall of the pipe.
+        # \end{quote}
+        #
+        # Page 207 contains a table of global parameters listing the
+        # measurement techniques for different series of measurements.
+        # However, the flow rate measurement technique varies for different
+        # pipes and often 2 or more measurement techniques were used in an
+        # unclear manner for a given pipe.
+        #
+        # In addition to that, the paper contains no information on the
+        # uncertainty of the flow rate measuremnt.
+        velocity_measurement_technique = sd.IMPACT_TUBE_MEASUREMENT_TECHNIQUE
 
         for label in [ sd.WALL_POINT_LABEL, sd.CENTER_LINE_POINT_LABEL ]:
             sd.set_labeled_value(
@@ -262,63 +313,273 @@ with open( ratio_filename, "r" ) as ratio_file:
             sd.CENTER_LINE_POINT_LABEL,
             maximum_velocity,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.IMPACT_TUBE_MEASUREMENT_TECHNIQUE,
+            measurement_technique=velocity_measurement_technique,
+        )
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.TRANSVERSE_COORDINATE_QUANTITY,
+            sd.WALL_POINT_LABEL,
+            ufloat( 0.5*diameter, 0.0 ),
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.TRANSVERSE_COORDINATE_QUANTITY,
+            sd.CENTER_LINE_POINT_LABEL,
+            0.0,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.DISTANCE_FROM_WALL_QUANTITY,
+            sd.WALL_POINT_LABEL,
+            ufloat( 0.0, 0.0 ),
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.DISTANCE_FROM_WALL_QUANTITY,
+            sd.CENTER_LINE_POINT_LABEL,
+            0.5*diameter,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.OUTER_LAYER_COORDINATE_QUANTITY,
+            sd.WALL_POINT_LABEL,
+            ufloat( 0.0, 0.0 ),
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.OUTER_LAYER_COORDINATE_QUANTITY,
+            sd.CENTER_LINE_POINT_LABEL,
+            1.0,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
+shear_stress_filename = "../data/{:s}/wall_shear_stress_measurements.csv".format( study_identifier )
+with open( shear_stress_filename, "r" ) as shear_stress_file:
+    shear_stress_reader = csv.reader(
+        shear_stress_file,
+        delimiter=",",
+        quotechar='"', \
+        skipinitialspace=True,
+    )
+    next(shear_stress_reader)
+    for shear_stress_row in shear_stress_reader:
+        series_number += 1
+
+        bulk_velocity           = float(shear_stress_row[0]) * 1.0e-2
+        wall_shear_stress       = float(shear_stress_row[1]) * 1.0e-1
+        fanning_friction_factor = float(shear_stress_row[2]) * 2.0
+        Re_bulk                 = float(shear_stress_row[3])
+        temperature             = float(shear_stress_row[4]) + 273.15
+        working_fluid           =   str(shear_stress_row[5])
+        pipe                    =   str(shear_stress_row[6])
+
+        diameter = pipes[pipe].diameter
+        length   = pipes[pipe].length
+
+        kinematic_viscosity = bulk_velocity * diameter / Re_bulk
+
+        volumetric_flow_rate = 0.25 * math.pi * diameter**2.0 * bulk_velocity
+
+        series_identifier = sd.add_series(
+            cursor,
+            flow_class=flow_class,
+            year=year,
+            study_number=study_number,
+            series_number=series_number,
+            number_of_dimensions=2,
+            coordinate_system=sd.CYLINDRICAL_COORDINATE_SYSTEM,
+        )
+
+        if ( working_fluid == "Air" ):
+            sd.add_air_components( cursor, series_identifier )
+        elif ( working_fluid == "Water" ):
+            sd.add_working_fluid_component(
+                cursor,
+                series_identifier,
+                sd.WATER_LIQUID,
+            )
+        elif ( working_fluid == "Thick oil" ):
+            sd.set_working_fluid_name(
+                cursor,
+                series_identifier,
+                "Stanton and Pannell thick oil",
+            )
+
+        sd.update_series_geometry(
+            cursor,
+            series_identifier,
+            sd.ELLIPTICAL_GEOMETRY
+        )
+
+        station_number = 1
+        station_identifier = sd.add_station(
+            cursor,
+            flow_class=flow_class,
+            year=year,
+            study_number=study_number,
+            series_number=series_number,
+            station_number=station_number,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.HYDRAULIC_DIAMETER_QUANTITY,
+            diameter,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.ASPECT_RATIO_QUANTITY,
+            1.0,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.BULK_VELOCITY_QUANTITY,
+            bulk_velocity,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.BULK_REYNOLDS_NUMBER_QUANTITY,
+            Re_bulk,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.VOLUMETRIC_FLOW_RATE_QUANTITY,
+            volumetric_flow_rate,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
+        # This set of data only considers wall quantities.
+        point_number = 1
+        point_identifier = sd.add_point(
+            cursor,
+            flow_class=flow_class,
+            year=year,
+            study_number=study_number,
+            series_number=series_number,
+            station_number=station_number,
+            point_number=point_number,
+            point_label=sd.WALL_POINT_LABEL,
+        )
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.KINEMATIC_VISCOSITY_QUANTITY,
+            sd.WALL_POINT_LABEL,
+            kinematic_viscosity,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.TEMPERATURE_QUANTITY,
+            sd.WALL_POINT_LABEL,
+            temperature,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.STREAMWISE_VELOCITY_QUANTITY,
+            sd.WALL_POINT_LABEL,
+            ufloat( 0.0, 0.0 ),
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.TRANSVERSE_COORDINATE_QUANTITY,
+            sd.WALL_POINT_LABEL,
+            ufloat( 0.5*diameter, 0.0 ),
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.DISTANCE_FROM_WALL_QUANTITY,
+            sd.WALL_POINT_LABEL,
+            ufloat( 0.0, 0.0 ),
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.OUTER_LAYER_COORDINATE_QUANTITY,
+            sd.WALL_POINT_LABEL,
+            ufloat( 0.0, 0.0 ),
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
+        # Wall shear stress measurement technique
+        #
+        # p. 203
+        #
+        # \begin{quote}
+        # To determine the amount of the surface friction two small holes were
+        # made in the walls of the experimental portion of the pipe, one at
+        # each extremity, at a known distance apart, and connected to a tilting
+        # manometer.  \ldots  In this way the fall of pressure along a given
+        # length of the pipe was determined, and from the known diameter of the
+        # pipe the surface friction per unit area was calculated.
+        # \end{quote}
+        wall_shear_stress_measurement_technique = sd.PRESSURE_DROP_MEASUREMENT_TECHNIQUE
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.SHEAR_STRESS_QUANTITY,
+            sd.WALL_POINT_LABEL,
+            wall_shear_stress,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=wall_shear_stress_measurement_technique,
+        )
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.FANNING_FRICTION_FACTOR_QUANTITY,
+            sd.WALL_POINT_LABEL,
+            fanning_friction_factor,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=wall_shear_stress_measurement_technique,
         )
 
 conn.commit()
 conn.close()
-
-
-# p. 202
-#
-# \begin{quote}
-# For very accurate comparison the surfaces of the tubes should have been
-# precisely geometrically similar, as regards roughness, but as this condition
-# could not be fulfilled, the experiments were all made on commercially
-# smooth-drawn brass pipes.
-# \end{quote}
-#
-# However, this only appears to be the case for most of the experiments.  Some
-# were conducted using steel pipes.  One experiment using air and all of the
-# experiments with thick oil are using steel pipes.
-#
-# p. 209
-#
-# \begin{quote}
-# As a matter of interest the results of a series of observations of the
-# surface fraction of this oil, when flowing through a steel pipe 10.1 cm.
-# diameter at speeds varying from 5 to 60 cm. per second, are given in Table
-# IV. and are also plotted in fig. 3.
-# \end{quote}
-#
-# Pipe 12A on p. 224 is not in the table on p. 207.  It is possible that this
-# pipe is a brass pipe, but unfortunately the test length is not specified.
-
-# p. 203
-#
-# \begin{quote}
-# To measure the velocity of the current, one of two methods was used according
-# to convenience.  By one method the total quantity of fluid passing through
-# the pipe in a given time was either weighed directly, or passed through a
-# water-meter or a gas-holder, which had been designed for the purpose of the
-# experiments and carefully calibrated.  By the other method the velocity at
-# the axis of the pipe was estimated by measuring the difference of pressure
-# between that in a small Pitot tube facing the current and placed in the axis
-# of the pipe and that in a small hole in the wall of the pipe.
-# \end{quote}
-velocity_measurement_technique = sd.IMPACT_TUBE_MEASUREMENT_TECHNIQUE
-
-# p. 203
-#
-# \begin{quote}
-# To determine the amount of the surface friction two small holes were made
-# in the walls of the experimental portion of the pipe, one at each extremity,
-# at a known distance apart, and connected to a tilting manometer.  \ldots  In
-# this way the fall of pressure along a given length of the pipe was
-# determined, and from the known diameter of the pipe the surface friction per
-# unit area was calculated.
-# \end{quote}
-wall_shear_stress_measurement_technique = "PD"
 
 # p. 203
 #
@@ -337,23 +598,8 @@ wall_shear_stress_measurement_technique = "PD"
 #
 # The footnote lists two papers that should contain more information about the
 # manometers used.
-
-# p. 207
 #
-# This contains a table of global parameters listing the measurement techniques
-# for different series of measurements.
-#
-# However, even knowing how the flow rate was measured does not provide enough
-# information to quantify the uncertainty on that measurement, since the paper
-# does not appear to give any information on that subject.
-
-# p. 209
-#
-# \begin{quote}
-# The particular oil on which these observations were made had a value of the
-# kinematical viscosity at 15.5° C. of 36.2, or 3230 times that of water at the
-# same temperature.  By heating this to 50° C. the kinematical viscosity could
-# be reduced to 2.1, but even at this temperature the critical velocity in the
-# 10 cm. pipe used for the experiments would have been 525 cm. per second.
-# \end{quote}
-
+# This appears to be the only information given about the uncertainty of the
+# experiments.  It is less useful than it appears, since according to the table
+# on page 207, different manometers and gauges were used seemingly at random,
+# making it unclear where the cutoff for "higher pressures" really is.
