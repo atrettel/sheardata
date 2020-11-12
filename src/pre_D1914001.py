@@ -111,6 +111,10 @@ with open( ratio_filename, "r" ) as ratio_file:
     for ratio_row in ratio_reader:
         series_number += 1
 
+        # Series 49, the one with the bulk velocity of 115.5 cm/s, appears to
+        # be a turbulent value at a laminar Reynolds number.
+        outlier = True if series_number == 49 else False
+
         bulk_velocity    = float(ratio_row[0]) * 1.0e-2
         maximum_velocity = float(ratio_row[1]) * 1.0e-2
         working_fluid    =   str(ratio_row[2])
@@ -192,6 +196,7 @@ with open( ratio_filename, "r" ) as ratio_file:
             sd.BULK_VELOCITY_QUANTITY,
             bulk_velocity,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            outlier=outlier,
         )
 
         sd.set_station_value(
@@ -201,6 +206,7 @@ with open( ratio_filename, "r" ) as ratio_file:
             bulk_velocity / maximum_velocity,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
+            outlier=outlier,
         )
 
         sd.set_station_value(
@@ -209,7 +215,8 @@ with open( ratio_filename, "r" ) as ratio_file:
             sd.BULK_REYNOLDS_NUMBER_QUANTITY,
             Re_bulk,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE
+            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
+            outlier=outlier,
         )
 
         sd.set_station_value(
@@ -218,6 +225,7 @@ with open( ratio_filename, "r" ) as ratio_file:
             sd.VOLUMETRIC_FLOW_RATE_QUANTITY,
             volumetric_flow_rate,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            outlier=outlier,
         )
 
         n_points = 2
@@ -315,6 +323,7 @@ with open( ratio_filename, "r" ) as ratio_file:
             maximum_velocity,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=velocity_measurement_technique,
+            outlier=outlier,
         )
 
         sd.set_labeled_value(
