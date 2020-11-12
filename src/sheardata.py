@@ -289,22 +289,21 @@ def truncate_to_station( identifier ):
     return sanitized_identifier[0:14]
 
 def add_study( cursor, flow_class, year, study_number, study_type ):
-    identifier = identify_study( flow_class, year, study_number )
+    study = identify_study( flow_class, year, study_number )
     cursor.execute(
     """
     INSERT INTO studies( identifier, flow_class, year, study_number,
     study_type) VALUES( ?, ?, ?, ?, ? );
     """,
     (
-        identifier,
+        study,
         str(flow_class),
         int(year),
         int(study_number),
         str(study_type),
     )
     )
-
-    return identifier
+    return study
 
 def update_study_description( cursor, identifier, description ):
     cursor.execute(
@@ -430,11 +429,16 @@ def add_source( cursor, study, source, classification ):
 
 def add_series( cursor, flow_class, year, study_number, series_number, \
                 number_of_dimensions, coordinate_system ):
-    identifier = identify_series(
+    series = identify_series(
         flow_class,
         year,
         study_number,
         series_number,
+    )
+    study = identify_study(
+        flow_class,
+        year,
+        study_number,
     )
     cursor.execute(
     """
@@ -443,14 +447,14 @@ def add_series( cursor, flow_class, year, study_number, series_number, \
     VALUES( ?, ?, ?, ?, ? );
     """,
     (
-        identifier,
-        truncate_to_study( identifier ),
+        series,
+        study,
         int(series_number),
         int(number_of_dimensions),
         str(coordinate_system),
     )
     )
-    return identifier
+    return series
 
 def update_series_geometry( cursor, identifier, geometry ):
     cursor.execute(
@@ -575,12 +579,23 @@ def get_series_value( cursor, series, quantity,              \
 
 def add_station( cursor, flow_class, year, study_number, series_number, \
                 station_number ):
-    identifier = identify_station(
+    station = identify_station(
         flow_class,
         year,
         study_number,
         series_number,
         station_number,
+    )
+    series = identify_series(
+        flow_class,
+        year,
+        study_number,
+        series_number,
+    )
+    study = identify_study(
+        flow_class,
+        year,
+        study_number,
     )
     cursor.execute(
     """
@@ -588,13 +603,13 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
     VALUES( ?, ?, ?, ? );
     """,
     (
-        identifier,
-        truncate_to_series( identifier ),
-        truncate_to_study( identifier ),
+        station,
+        series,
+        study,
         int(station_number),
     )
     )
-    return identifier
+    return station
 
 def set_station_value( cursor, station, quantity, value, averaging_system=None, \
                      measurement_technique=None, outlier=False, notes=None ):
@@ -675,13 +690,31 @@ def get_station_value( cursor, station, quantity,             \
 
 def add_point( cursor, flow_class, year, study_number, series_number, \
                 station_number, point_number, point_label=None ):
-    identifier = identify_point(
+    point = identify_point(
         flow_class,
         year,
         study_number,
         series_number,
         station_number,
         point_number,
+    )
+    station = identify_station(
+        flow_class,
+        year,
+        study_number,
+        series_number,
+        station_number,
+    )
+    series = identify_series(
+        flow_class,
+        year,
+        study_number,
+        series_number,
+    )
+    study = identify_study(
+        flow_class,
+        year,
+        study_number,
     )
     cursor.execute(
     """
@@ -690,15 +723,15 @@ def add_point( cursor, flow_class, year, study_number, series_number, \
     VALUES( ?, ?, ?, ?, ?, ?);
     """,
     (
-        identifier,
-        truncate_to_station( identifier ),
-        truncate_to_series( identifier ),
-        truncate_to_study( identifier ),
+        point,
+        station,
+        series,
+        study,
         int(point_number),
         point_label,
     )
     )
-    return identifier
+    return point
 
 def set_point_value( cursor, point, quantity, value, averaging_system=None, \
                      measurement_technique=None, outlier=False, notes=None ):
