@@ -72,6 +72,10 @@ WHERE quantity=? AND station_value=? AND outlier=0
 INTERSECT
 SELECT station
 FROM station_values
+WHERE quantity=? AND station_value>=? AND station_value<? AND outlier=0
+INTERSECT
+SELECT station
+FROM station_values
 WHERE quantity=? AND outlier=0
 INTERSECT
 SELECT station
@@ -88,6 +92,9 @@ ORDER BY identifier;
     float(1.0),
     sd.ASPECT_RATIO_QUANTITY,
     float(1.0),
+    sd.BULK_MACH_NUMBER_QUANTITY,
+    float(0.0),
+    float(0.3),
     sd.BULK_REYNOLDS_NUMBER_QUANTITY,
     sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY,
 )
