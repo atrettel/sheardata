@@ -392,6 +392,9 @@ quantities[ sd.VOLUMETRIC_FLOW_RATE_QUANTITY           ] = quantity( "volumetric
 
 # Quantities, station
 quantities[ sd.ASPECT_RATIO_QUANTITY                  ] = quantity( "aspect ratio",                                                                                           )
+quantities[ sd.BULK_MACH_NUMBER_QUANTITY              ] = quantity( "bulk Mach number",                                                                                       )
+quantities[ sd.BULK_REYNOLDS_NUMBER_QUANTITY          ] = quantity( "bulk Reynolds number",                                                                                   )
+quantities[ sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO     ] = quantity( "bulk-to-center-line velocity ratio",                                                                     )
 quantities[ sd.BULK_VELOCITY_QUANTITY                 ] = quantity( "bulk velocity",                          length_exponent=+1.0,   time_exponent=-1.0,                     )
 quantities[ sd.CLAUSER_THICKNESS_QUANTITY             ] = quantity( "Clauser thickness",                      length_exponent=+1.0,                                           )
 quantities[ sd.CROSS_SECTIONAL_AREA_QUANTITY          ] = quantity( "cross-sectional area",                   length_exponent=+2.0,                                           )
