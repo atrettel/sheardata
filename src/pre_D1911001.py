@@ -109,6 +109,8 @@ with open( globals_filename, "r" ) as globals_file:
             station_number=station_number,
         )
 
+        sd.mark_station_as_periodic( cursor, station_identifier )
+
         station_filename = "../data/{:s}/series_{:d}.csv".format(
             study_identifier,
             series_number,

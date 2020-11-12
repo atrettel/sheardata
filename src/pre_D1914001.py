@@ -184,6 +184,8 @@ with open( ratio_filename, "r" ) as ratio_file:
             station_number=station_number,
         )
 
+        sd.mark_station_as_periodic( cursor, station_identifier )
+
         sd.set_station_value(
             cursor,
             station_identifier,
@@ -487,6 +489,8 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             series_number=series_number,
             station_number=station_number,
         )
+
+        sd.mark_station_as_periodic( cursor, station_identifier )
 
         sd.set_station_value(
             cursor,
