@@ -1,4 +1,4 @@
-"Mean velocity", "Temperature", "Density", "Inertial pressure scale", "Kinematic viscosity", "Surface friction", "Friction coefficient", "Reynolds number",
+"Bulk velocity", "Temperature", "Density", "Inertial pressure scale", "Kinematic viscosity", "Wall shear stress", "Friction coefficient", "Reynolds number",
           45.90,          39.5,     0.928,                    1955.0,                  3.79,              122.6,                   6.27,             123.0,
           10.25,          37.7,     0.929,                     975.0,                  4.29,               30.9,                  31.70,              24.0,
           35.90,          37.2,     0.929,                    1195.0,                  4.41,              109.8,                   9.18,              82.5,

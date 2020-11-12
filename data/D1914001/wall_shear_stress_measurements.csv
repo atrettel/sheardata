@@ -1,4 +1,4 @@
-"Mean velocity", "Surface friction", "Friction coefficient", "Reynolds number", "Temperature", "Working fluid", "Pipe",
+"Bulk velocity", "Wall shear stress", "Friction coefficient", "Reynolds number", "Temperature", "Working fluid", "Pipe",
          116.30,             41.800,              0.3090E-2,         25.320E+3,          10.2,         "Water",    "1",
          125.60,             47.800,              0.3030E-2,         27.360E+3,          10.2,         "Water",    "1",
          138.20,             56.200,              0.2940E-2,         30.100E+3,          10.2,         "Water",    "1",
