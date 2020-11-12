@@ -1010,3 +1010,32 @@ def calculate_molar_mass_of_molecular_formula( cursor, formula ):
         atomic_weight = float(result[0])
         molar_mass += count * 1.0e-3 * atomic_weight
     return molar_mass
+
+def mark_station_as_periodic( cursor, station, \
+                              streamwise=True, spanwise=False ):
+    if ( streamwise ):
+        cursor.execute(
+        """
+        UPDATE stations
+        SET previous_streamwise_station=?, next_streamwise_station=?
+        WHERE identifier=?;
+        """,
+        (
+            sanitize_identifier( station ),
+            sanitize_identifier( station ),
+            sanitize_identifier( station ),
+        )
+        )
+    if ( spanwise ):
+        cursor.execute(
+        """
+        UPDATE stations
+        SET previous_spanwise_station=?, next_spanwise_station=?
+        WHERE identifier=?;
+        """,
+        (
+            sanitize_identifier( station ),
+            sanitize_identifier( station ),
+            sanitize_identifier( station ),
+        )
+        )
