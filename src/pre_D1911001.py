@@ -22,8 +22,8 @@ import sys
 from uncertainties import ufloat
 from uncertainties import unumpy as unp
 
-conn = sqlite3.connect( sys.argv[1] )
-cursor =  conn.cursor()
+conn   = sqlite3.connect( sys.argv[1] )
+cursor = conn.cursor()
 cursor.execute( "PRAGMA foreign_keys = ON;" )
 
 flow_class   = sd.DUCT_FLOW_CLASS

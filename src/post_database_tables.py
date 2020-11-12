@@ -17,8 +17,8 @@
 import sqlite3
 import sys
 
-conn = sqlite3.connect( sys.argv[1] )
-cursor =  conn.cursor()
+conn   = sqlite3.connect( sys.argv[1] )
+cursor = conn.cursor()
 cursor.execute( "PRAGMA foreign_keys = ON;" )
 
 with open( "text-quantities-table.tex.tmp", "w" ) as f:

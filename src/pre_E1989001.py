@@ -18,8 +18,8 @@ import sqlite3
 import sheardata as sd
 import sys
 
-conn = sqlite3.connect( sys.argv[1] )
-cursor =  conn.cursor()
+conn   = sqlite3.connect( sys.argv[1] )
+cursor = conn.cursor()
 cursor.execute( "PRAGMA foreign_keys = ON;" )
 
 flow_class   = sd.EXTERNAL_FLOW_CLASS
