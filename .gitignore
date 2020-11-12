@@ -4,6 +4,7 @@
 *.log
 *.out
 *.pdf
+*.pgf
 *.pyc
 *.tmp
 *.toc
