@@ -97,6 +97,7 @@ with open( pipes_filename, "r" ) as pipes_file:
             str(pipes_row[3]),
         )
 
+# Set 1: velocity ratio data
 series_number = 0
 ratio_filename = "../data/{:s}/bulk_and_maximum_velocities.csv".format( study_identifier )
 with open( ratio_filename, "r" ) as ratio_file:
@@ -370,6 +371,7 @@ with open( ratio_filename, "r" ) as ratio_file:
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
         )
 
+# Set 2: wall shear stress data
 shear_stress_filename = "../data/{:s}/wall_shear_stress_measurements.csv".format( study_identifier )
 with open( shear_stress_filename, "r" ) as shear_stress_file:
     shear_stress_reader = csv.reader(
@@ -393,6 +395,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
         diameter = pipes[pipe].diameter
         length   = pipes[pipe].length
 
+        mass_density        = 2.0 * wall_shear_stress / ( fanning_friction_factor * bulk_velocity**2.0 )
         kinematic_viscosity = bulk_velocity * diameter / Re_bulk
 
         volumetric_flow_rate = 0.25 * math.pi * diameter**2.0 * bulk_velocity
@@ -488,6 +491,15 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             station_number=station_number,
             point_number=point_number,
             point_label=sd.WALL_POINT_LABEL,
+        )
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.MASS_DENSITY_QUANTITY,
+            sd.WALL_POINT_LABEL,
+            mass_density,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
         )
 
         sd.set_labeled_value(
