@@ -32,13 +32,15 @@ cursor = conn.cursor()
 cursor.execute( "PRAGMA foreign_keys = ON;" )
 
 # Intersection of
-# - Stations in duct flow studies
+# - Stations in duct flow experimental studies
 # - Stations in 2D series in cylindrical coordinates with elliptical
 #   geometries
+# - Stations that are fully-developed (next station is the previous station)
 # - Stations that have points with smooth walls
 # - Stations that have an aspect ratio of 1.0
+# - Stations that have bulk Mach numbers between 0.0 and 0.3
 # - Stations that have the bulk Reynolds number
-# - Stations that have the bulk-t-center-line velocity ratio
+# - Stations that have the bulk-to-center-line velocity ratio
 
 cursor.execute(
 """
@@ -47,7 +49,7 @@ FROM stations
 WHERE study IN (
     SELECT identifier
     FROM studies
-    WHERE flow_class=?
+    WHERE flow_class=? AND study_type=?
 )
 INTERSECT
 SELECT identifier
@@ -57,6 +59,10 @@ WHERE series IN (
     FROM series
     WHERE number_of_dimensions=? AND coordinate_system=? AND geometry=?
 )
+INTERSECT
+SELECT identifier
+FROM stations
+WHERE previous_streamwise_station=next_streamwise_station
 INTERSECT
 SELECT station
 FROM points
@@ -85,6 +91,7 @@ ORDER BY identifier;
 """,
 (
     sd.DUCT_FLOW_CLASS,
+    sd.EXPERIMENTAL_STUDY_TYPE,
     int(2),
     sd.CYLINDRICAL_COORDINATE_SYSTEM,
     sd.ELLIPTICAL_GEOMETRY,
@@ -150,3 +157,34 @@ gfx.label_axes(
 )
 
 fig.savefig( "figure-pipe-flow-velocity-ratios.pgf" )
+
+with open( "caption-pipe-flow-velocity-ratios.tex.tmp", "w" ) as f:
+    short_caption = "Bulk-to-center-line velocity ratios for fully-developed, \
+                     incompressible pipe flow as a function of the bulk \
+                     Reynolds number."
+
+    f.write( r"\caption[" )
+    f.write( short_caption )
+    f.write( r"]{" )
+    f.write( short_caption+"  " )
+
+    f.write( "{:d} points in total: ".format(
+        len(stations),
+    ) )
+
+    studies = sd.count_studies( stations )
+    i_study = 0
+    for study in studies:
+        f.write( r"\texttt{" )
+        f.write( "{:s}".format(
+            sd.make_readable_identifier( study ),
+        ) )
+        f.write( r"}" )
+        f.write( ", {:d} points".format(
+            studies[study],
+        ) )
+        i_study += 1
+        if ( i_study != len(studies) ):
+            f.write( "; " )
+
+    f.write( r".}" )
