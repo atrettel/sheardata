@@ -179,6 +179,14 @@ with open( globals_filename, "r" ) as globals_file:
 
         n_points = len(r_reversed)
 
+        # Assumed constant profiles
+        # TODO: Calculate these rather than assume them.
+        temperature         = 15.0 + 273.15
+        mass_density        = 1.225
+        kinematic_viscosity = 1.461e-5
+        dynamic_viscosity   = mass_density * kinematic_viscosity
+        speed_of_sound      = ( 1.4 * 287.058 * temperature )**0.5
+
         i = 0
         for point_number in range( n_points, 0, -1 ):
             point_label = None
@@ -249,11 +257,48 @@ with open( globals_filename, "r" ) as globals_file:
                     measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
                 )
 
+            # Assumed constant profiles
             sd.set_point_value(
                 cursor,
                 point_identifier,
                 sd.TEMPERATURE_QUANTITY,
-                15.0+273.15,
+                temperature,
+                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+            )
+
+            sd.set_point_value(
+                cursor,
+                point_identifier,
+                sd.MASS_DENSITY_QUANTITY,
+                mass_density,
+                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+            )
+
+            sd.set_point_value(
+                cursor,
+                point_identifier,
+                sd.KINEMATIC_VISCOSITY_QUANTITY,
+                kinematic_viscosity,
+                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+            )
+
+            sd.set_point_value(
+                cursor,
+                point_identifier,
+                sd.DYNAMIC_VISCOSITY_QUANTITY,
+                dynamic_viscosity,
+                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+            )
+
+            sd.set_point_value(
+                cursor,
+                point_identifier,
+                sd.SPEED_OF_SOUND_QUANTITY,
+                speed_of_sound,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
                 measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
             )
@@ -280,15 +325,26 @@ with open( globals_filename, "r" ) as globals_file:
             sd.STREAMWISE_VELOCITY_QUANTITY,
         )
 
-        Q = -2.0 * math.pi * sd.integrate_using_trapezoid_rule( r_prof, u_prof * r_prof )
-
-        u_bulk = 4.0 * Q / ( math.pi * diameter**2.0 )
+        volumetric_flow_rate = -2.0 * math.pi * sd.integrate_using_trapezoid_rule( r_prof, u_prof * r_prof )
+        mass_flow_rate       = mass_density * volumetric_flow_rate
+        u_bulk               = 4.0 * volumetric_flow_rate / ( math.pi * diameter**2.0 )
+        Re_bulk              = u_bulk * diameter / kinematic_viscosity
+        Ma_bulk              = u_bulk / speed_of_sound
 
         sd.set_station_value(
             cursor,
             station_identifier,
             sd.VOLUMETRIC_FLOW_RATE_QUANTITY,
-            Q,
+            volumetric_flow_rate,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.MASS_FLOW_RATE_QUANTITY,
+            mass_flow_rate,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
         )
@@ -298,6 +354,24 @@ with open( globals_filename, "r" ) as globals_file:
             station_identifier,
             sd.BULK_VELOCITY_QUANTITY,
             u_bulk,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.BULK_REYNOLDS_NUMBER_QUANTITY,
+            Re_bulk,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.BULK_MACH_NUMBER_QUANTITY,
+            Ma_bulk,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
         )
