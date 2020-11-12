@@ -14,17 +14,21 @@
 # You should have received a copy of the GNU General Public License along with
 # this file.  If not, see <https://www.gnu.org/licenses/>.
 
+import csv
+import math
 import sqlite3
 import sheardata as sd
 import sys
+from uncertainties import ufloat
+from uncertainties import unumpy as unp
 
 conn = sqlite3.connect( sys.argv[1] )
 cursor =  conn.cursor()
 cursor.execute( "PRAGMA foreign_keys = ON;" )
 
-flow_class   = sd.DUCT_FLOW_CLASS
-year         = 1914
-study_number = 1
+flow_class    = sd.DUCT_FLOW_CLASS
+year          = 1914
+study_number  = 1
 
 study_identifier = sd.add_study(
     cursor,
@@ -35,6 +39,231 @@ study_identifier = sd.add_study(
 )
 
 sd.add_source( cursor, study_identifier, "StantonTE+1914+eng+JOUR", 1 )
+
+class Pipe:
+    diameter = None
+    length   = None
+    material = None
+
+    def __init__( self, diameter, length, material ):
+        self.diameter = float(diameter)
+        if ( length == 0.0 ):
+            self.length = None
+        else:
+            self.length   = float(length)
+        self.material = str(material)
+
+pipes = {}
+pipes_filename = "../data/{:s}/pipes.csv".format( study_identifier )
+with open( pipes_filename, "r" ) as pipes_file:
+    pipes_reader = csv.reader(
+        pipes_file,
+        delimiter=",",
+        quotechar='"', \
+        skipinitialspace=True,
+    )
+    next(pipes_reader)
+    for pipes_row in pipes_reader:
+        pipes[str(pipes_row[0])] = Pipe(
+            float(pipes_row[1]) * 1.0e-2,
+            float(pipes_row[2]) * 1.0e-2,
+            str(pipes_row[3]),
+        )
+
+series_number = 0
+ratio_filename = "../data/{:s}/bulk_and_maximum_velocities.csv".format( study_identifier )
+with open( ratio_filename, "r" ) as ratio_file:
+    ratio_reader = csv.reader(
+        ratio_file,
+        delimiter=",",
+        quotechar='"', \
+        skipinitialspace=True,
+    )
+    next(ratio_reader)
+    for ratio_row in ratio_reader:
+        series_number += 1
+
+        bulk_velocity    = float(ratio_row[0]) * 1.0e-2
+        maximum_velocity = float(ratio_row[1]) * 1.0e-2
+        working_fluid    =   str(ratio_row[2])
+        pipe             =   str(ratio_row[3])
+
+        diameter = pipes[pipe].diameter
+        length   = pipes[pipe].length
+
+        # The velocity ratio experiments do not give the test conditions like
+        # the temperature.  Graphical extraction from figure 1 reveals that the
+        # kinematic viscosity used there is consistent with the value around
+        # 15°C.
+        #
+        # These values were extracted graphically from figure 1 and averaged to
+        # a single value.
+        kinematic_viscosity = 0.0
+        if ( working_fluid == "Water" ):
+            kinematic_viscosity = 9.186e-7
+        elif ( working_fluid == "Air" ):
+            kinematic_viscosity = 1.468e-5
+        temperature = 15.0 + 273.15
+
+        Re_bulk = bulk_velocity * diameter / kinematic_viscosity
+
+        volumetric_flow_rate = 0.25 * math.pi * diameter**2.0 * bulk_velocity
+
+        series_identifier = sd.add_series(
+            cursor,
+            flow_class=flow_class,
+            year=year,
+            study_number=study_number,
+            series_number=series_number,
+            number_of_dimensions=2,
+            coordinate_system=sd.CYLINDRICAL_COORDINATE_SYSTEM,
+        )
+
+        if ( working_fluid == "Air" ):
+            sd.add_air_components( cursor, series_identifier )
+        elif ( working_fluid == "Water" ):
+            sd.add_working_fluid_component(
+                cursor,
+                series_identifier,
+                sd.WATER_LIQUID,
+            )
+
+        sd.update_series_geometry(
+            cursor,
+            series_identifier,
+            sd.ELLIPTICAL_GEOMETRY
+        )
+
+        station_number = 1
+        station_identifier = sd.add_station(
+            cursor,
+            flow_class=flow_class,
+            year=year,
+            study_number=study_number,
+            series_number=series_number,
+            station_number=station_number,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.HYDRAULIC_DIAMETER_QUANTITY,
+            diameter,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.ASPECT_RATIO_QUANTITY,
+            1.0,
+        )
+
+        n_points = 2
+        for point_number in [1, n_points]:
+            point_label = None
+            if ( point_number == 1 ):
+                point_label = sd.WALL_POINT_LABEL
+            elif ( point_number == n_points ):
+                point_label = sd.CENTER_LINE_POINT_LABEL
+
+            point_identifier = sd.add_point(
+                cursor,
+                flow_class=flow_class,
+                year=year,
+                study_number=study_number,
+                series_number=series_number,
+                station_number=station_number,
+                point_number=point_number,
+                point_label=point_label,
+            )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.BULK_VELOCITY_QUANTITY,
+            bulk_velocity,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=sd.IMPACT_TUBE_MEASUREMENT_TECHNIQUE,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY,
+            bulk_velocity / maximum_velocity,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=sd.IMPACT_TUBE_MEASUREMENT_TECHNIQUE,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.BULK_REYNOLDS_NUMBER_QUANTITY,
+            Re_bulk,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.VOLUMETRIC_FLOW_RATE_QUANTITY,
+            volumetric_flow_rate,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE
+        )
+
+        for label in [ sd.WALL_POINT_LABEL, sd.CENTER_LINE_POINT_LABEL ]:
+            sd.set_labeled_value(
+                cursor,
+                station_identifier,
+                sd.KINEMATIC_VISCOSITY_QUANTITY,
+                label,
+                kinematic_viscosity,
+                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE
+            )
+
+            sd.set_labeled_value(
+                cursor,
+                station_identifier,
+                sd.TEMPERATURE_QUANTITY,
+                label,
+                temperature,
+                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE
+            )
+
+        for quantity in [ sd.ROUGHNESS_HEIGHT_QUANTITY,
+                          sd.INNER_LAYER_ROUGHNESS_HEIGHT_QUANTITY,
+                          sd.OUTER_LAYER_ROUGHNESS_HEIGHT_QUANTITY, ]:
+            sd.set_labeled_value(
+                cursor,
+                station_identifier,
+                quantity,
+                sd.WALL_POINT_LABEL,
+                0.0,
+                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+            )
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.STREAMWISE_VELOCITY_QUANTITY,
+            sd.WALL_POINT_LABEL,
+            ufloat( 0.0, 0.0 ),
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+        )
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.STREAMWISE_VELOCITY_QUANTITY,
+            sd.CENTER_LINE_POINT_LABEL,
+            maximum_velocity,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            measurement_technique=sd.IMPACT_TUBE_MEASUREMENT_TECHNIQUE,
+        )
 
 conn.commit()
 conn.close()
@@ -77,7 +306,7 @@ conn.close()
 # between that in a small Pitot tube facing the current and placed in the axis
 # of the pipe and that in a small hole in the wall of the pipe.
 # \end{quote}
-velocity_measurement_technique = "PT"
+velocity_measurement_technique = sd.IMPACT_TUBE_MEASUREMENT_TECHNIQUE
 
 # p. 203
 #
@@ -128,8 +357,3 @@ wall_shear_stress_measurement_technique = "PD"
 # 10 cm. pipe used for the experiments would have been 525 cm. per second.
 # \end{quote}
 
-# The velocity ratio experiments do not give the test conditions like the
-# temperature.  Graphical extraction from figure 1 reveals that the kinematic
-# viscosity used there is consistent with the value around 15°C.
-nu_water = 9.186e-7
-nu_air   = 1.468e-5
