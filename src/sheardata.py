@@ -276,6 +276,21 @@ def identify_point( flow_class, year, study_number, series_number, \
 def sanitize_identifier( identifier ):
     return identifier.replace("-","")
 
+def make_readable_identifier( identifier ):
+    sanitized_identifier = sanitize_identifier( identifier )
+    readable_identifier = sanitized_identifier[0:1] \
+                        + "-"                       \
+                        + sanitized_identifier[1:5] \
+                        + "-"                       \
+                        + sanitized_identifier[5:8]
+    if ( len(sanitized_identifier) > 8 ):
+        readable_identifier += "-" + sanitized_identifier[8:11]
+    if ( len(sanitized_identifier) > 11 ):
+        readable_identifier += "-" + sanitized_identifier[11:14]
+    if ( len(sanitized_identifier) > 14 ):
+        readable_identifier += "-" + sanitized_identifier[14:18]
+    return readable_identifier
+
 def truncate_to_study( identifier ):
     sanitized_identifier = sanitize_identifier( identifier )
     return sanitized_identifier[0:8]
