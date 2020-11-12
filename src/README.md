@@ -1,7 +1,8 @@
 Source directory for the shear layer data compilation
 =====================================================
 
-This directory contains the scripts that create the database file itself.
+This directory contains the scripts that create the database and documentation
+files.
 
 
 ## Compilation instructions
@@ -9,6 +10,42 @@ This directory contains the scripts that create the database file itself.
 To create the database, type
 
     make
+
+Requirements to make the database:
+
+- SQLite
+
+- Python 3
+
+- Numpy Python module
+
+- SQLite 3 Python module
+
+- Uncertainties Python module
+
+To create the documentation, type
+
+    make sheardata.pdf
+
+Additional requirements to make the documentation:
+
+- Matplotlib Python module
+
+- `grfstyl` Python module (see <https://github.com/atrettel/grfstyl>)
+
+- LaTeX distribution
+
+    - `pdflatex`
+
+    - `biber`
+
+    - `hyperref` LaTeX package
+
+    - `siunitx` LaTeX package
+
+    - TikZ LaTeX package
+
+- Graphviz (for classification tree diagram)
 
 
 ## Files
@@ -18,8 +55,12 @@ To create the database, type
 
 - `create_tables.py` creates an empty database.
 
-- Python scripts that use a study identifier as their filename process the data
-  from the `data` directory for that study and insert it into the database.
+- Python scripts that start with `pre` preprocess the data to insert it to the
+  database itself.  They also perform some additional calculations.
+
+- Python scripts that start with `post` postprocess the data.  These scripts
+  are needed for the documentation and do not run when making only the
+  database.
 
 
 -------------------------------------------------------------------------------
