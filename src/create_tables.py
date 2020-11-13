@@ -499,7 +499,7 @@ for identifier in quantities:
 cursor.execute(
 """
 CREATE TABLE study_types (
-    identifier TEXT PRIMARY KEY UNIQUE CHECK ( length(identifier) = 1 ),
+    identifier TEXT PRIMARY KEY UNIQUE,
     type_name  TEXT NOT NULL,
     notes      TEXT DEFAULT NULL
 );
@@ -507,8 +507,9 @@ CREATE TABLE study_types (
 )
 
 study_types = {}
-study_types[ sd.EXPERIMENTAL_STUDY_TYPE ] = "experimental study"
-study_types[    sd.NUMERICAL_STUDY_TYPE ] =    "numerical study"
+study_types[ sd.DIRECT_NUMERICAL_SIMULATION_STUDY_TYPE ] = "direct numerical simulation"
+study_types[                sd.EXPERIMENTAL_STUDY_TYPE ] = "experiment"
+study_types[       sd.LARGE_EDDY_SIMULATION_STUDY_TYPE ] = "large eddy simulation"
 
 for identifier in study_types:
     cursor.execute(

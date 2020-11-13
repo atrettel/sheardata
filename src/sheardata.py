@@ -193,8 +193,9 @@ AMOUNT_FRACTION_PREFIX      = "X_"
 MASS_FRACTION_PREFIX        = "Y_"
 
 # Study types
-EXPERIMENTAL_STUDY_TYPE = "E"
-NUMERICAL_STUDY_TYPE    = "N"
+DIRECT_NUMERICAL_SIMULATION_STUDY_TYPE = "DNS"
+EXPERIMENTAL_STUDY_TYPE                = "EXP"
+LARGE_EDDY_SIMULATION_STUDY_TYPE       = "LES"
 
 def split_float( value ):
     if ( isinstance( value, float ) ):
