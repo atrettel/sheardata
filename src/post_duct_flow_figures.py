@@ -40,7 +40,7 @@ cursor.execute( "PRAGMA foreign_keys = ON;" )
 # - Stations that have an aspect ratio of 1.0
 # - Stations that have bulk Mach numbers between 0.0 and 0.3
 # - Stations that have the bulk Reynolds number
-# - Stations that have the bulk-to-center-line velocity ratio
+# - Stations that have the quantity of interest
 
 for quantity in [ sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY,
                              sd.FANNING_FRICTION_FACTOR_QUANTITY ]:
@@ -291,7 +291,7 @@ for quantity in [ sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY,
         f.write( r"]{" )
         f.write( short_caption+"  " )
 
-        f.write( "{:d} points in total: ".format(
+        f.write( "{:d} stations in total: ".format(
             len(stations),
         ) )
 
@@ -303,7 +303,7 @@ for quantity in [ sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY,
                 sd.make_readable_identifier( study ),
             ) )
             f.write( r"}" )
-            f.write( ", {:d} points".format(
+            f.write( ", {:d} stations".format(
                 studies[study],
             ) )
             i_study += 1
