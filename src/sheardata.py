@@ -594,7 +594,7 @@ def get_series_value( cursor, series, quantity,              \
     return fetch_float( cursor )
 
 def add_station( cursor, flow_class, year, study_number, series_number, \
-                station_number ):
+                station_number, originators_identifier=None, ):
     station = identify_station(
         flow_class,
         year,
@@ -615,14 +615,16 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
     )
     cursor.execute(
     """
-    INSERT INTO stations( identifier, series, study, station_number )
-    VALUES( ?, ?, ?, ? );
+    INSERT INTO stations( identifier, series, study, station_number,
+    originators_identifier )
+    VALUES( ?, ?, ?, ?, ? );
     """,
     (
         station,
         series,
         study,
         int(station_number),
+        originators_identifier,
     )
     )
     return station
