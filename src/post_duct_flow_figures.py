@@ -291,7 +291,7 @@ for quantity in [ sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY,
         f.write( r"]{" )
         f.write( short_caption+"  " )
 
-        f.write( "{:d} stations in total: ".format(
+        f.write( "{:d} series in total: ".format(
             len(stations),
         ) )
 
@@ -303,7 +303,7 @@ for quantity in [ sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY,
                 sd.make_readable_identifier( study ),
             ) )
             f.write( r"}" )
-            f.write( ", {:d} stations".format(
+            f.write( ", {:d} series".format(
                 studies[study],
             ) )
             i_study += 1
