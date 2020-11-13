@@ -14,9 +14,13 @@
 # You should have received a copy of the GNU General Public License along with
 # this file.  If not, see <https://www.gnu.org/licenses/>.
 
+import csv
+import math
 import sqlite3
 import sheardata as sd
 import sys
+from uncertainties import ufloat
+from uncertainties import unumpy as unp
 
 conn   = sqlite3.connect( sys.argv[1] )
 cursor = conn.cursor()

@@ -26,8 +26,8 @@ conn   = sqlite3.connect( sys.argv[1] )
 cursor = conn.cursor()
 cursor.execute( "PRAGMA foreign_keys = ON;" )
 
-flow_class   = sd.EXTERNAL_FLOW_CLASS
-year         = 1929
+flow_class   = sd.BOUNDARY_LAYER_FLOW_CLASS
+year         = 1940
 study_number = 1
 
 study_identifier = sd.add_study(
@@ -38,7 +38,7 @@ study_identifier = sd.add_study(
     study_type=sd.EXPERIMENTAL_STUDY_TYPE,
 )
 
-sd.add_source( cursor, study_identifier, "StantonTE+1929+eng+RPRT", 1 )
+sd.add_source( cursor, study_identifier, "SchultzGrunowF+1940+deu+JOUR", 1 )
 
 conn.commit()
 conn.close()
