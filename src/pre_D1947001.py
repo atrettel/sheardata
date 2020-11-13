@@ -76,6 +76,12 @@ with open( globals_filename, "r" ) as globals_file:
             float(globals_row[2]),
         )
 
+mass_density_note = \
+"""
+The air density of test 17 of the square duct results appears to have a
+typographic error.  The number given is 6.0697; the database uses 0.0697.
+"""
+
 series_number = 0
 for duct in ducts:
     duct_globals_filename = "../data/{:s}/{:s}_duct_globals.csv".format(
@@ -93,9 +99,10 @@ for duct in ducts:
         for duct_globals_row in duct_globals_reader:
             series_number += 1
 
+            test_number = int(duct_globals_row[0])
             originators_identifier = "{:s} duct {:d}".format(
                 duct,
-                int(duct_globals_row[0]),
+                test_number
             )
             temperature                   = ( float(duct_globals_row[2]) - 32.0 ) / 1.8 + 273.15
             mass_density                  = float(duct_globals_row[4]) * 0.45359237 / 0.3048**3.0
@@ -283,6 +290,7 @@ for duct in ducts:
                 sd.WALL_POINT_LABEL,
                 mass_density,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                notes=( mass_density_note if ( test_number == 17 and duct == "Square" ) else None ),
             )
 
             sd.set_labeled_value(
