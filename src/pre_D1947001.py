@@ -93,7 +93,7 @@ for duct in ducts:
         for duct_globals_row in duct_globals_reader:
             series_number += 1
 
-            originators_identifier = "{:s} {:d}".format(
+            originators_identifier = "{:s} duct {:d}".format(
                 duct,
                 int(duct_globals_row[0]),
             )
@@ -175,6 +175,7 @@ for duct in ducts:
                 study_number=study_number,
                 series_number=series_number,
                 station_number=station_number,
+                originators_identifier=originators_identifier,
             )
 
             sd.mark_station_as_periodic( cursor, station_identifier )
