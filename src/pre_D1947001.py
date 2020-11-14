@@ -73,7 +73,7 @@ with open( globals_filename, "r" ) as globals_file:
     for globals_row in globals_reader:
         ducts[str(globals_row[0])] = Duct(
             float(globals_row[1]),
-            float(globals_row[2]),
+            float(globals_row[2]) * 12.0 * 0.0254,
         )
 
 mass_density_note = \
@@ -122,8 +122,16 @@ for duct in ducts:
             #
             # Assume a uniform distribution.
             wall_shear_stress_value = 0.5 * mass_density * bulk_velocity_value**2.0 * fanning_friction_factor_value
-            wall_shear_stress_uncertainty = 1000.0 * 9.81 * ( 0.02 * 0.0254 )
-            wall_shear_stress = ufloat( wall_shear_stress_value, wall_shear_stress_uncertainty )
+
+            pressure_drop_value = 4.0 * wall_shear_stress_value * ducts[duct].length / hydraulic_diameter
+            pressure_drop_uncertainty = 1000.0 * 9.81 * ( 0.02 * 0.0254 ) / 3.0**0.5
+
+            pressure_drop = ufloat(
+                pressure_drop_value,
+                pressure_drop_uncertainty,
+            )
+
+            wall_shear_stress = 0.25 * hydraulic_diameter * pressure_drop / ducts[duct].length
 
             # Uncertainty of flow rate measurements
             #
