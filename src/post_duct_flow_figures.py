@@ -43,21 +43,23 @@ cursor.execute( "PRAGMA foreign_keys = ON;" )
 # - Stations that have the quantity of interest
 
 class DuctType:
-    geometry         = None
-    min_aspect_ratio = None
-    max_aspect_ratio = None
-    laminar_constant = None
+    geometry          = None
+    coordinate_system = None
+    min_aspect_ratio  = None
+    max_aspect_ratio  = None
+    laminar_constant  = None
 
-    def __init__( self, geometry, min_aspect_ratio, max_aspect_ratio, \
-                  laminar_constant ):
-        self.geometry         = str(geometry)
-        self.min_aspect_ratio = float(min_aspect_ratio)
-        self.max_aspect_ratio = float(max_aspect_ratio)
-        self.laminar_constant = float(laminar_constant)
+    def __init__( self, geometry, coordinate_system, min_aspect_ratio, \
+                  max_aspect_ratio, laminar_constant ):
+        self.geometry          =   str(geometry)
+        self.coordinate_system =   str(coordinate_system)
+        self.min_aspect_ratio  = float(min_aspect_ratio)
+        self.max_aspect_ratio  = float(max_aspect_ratio)
+        self.laminar_constant  = float(laminar_constant)
 
 duct_types = {}
-duct_types["channel"] = DuctType( sd.RECTANGULAR_GEOMETRY, 7.0, float("inf"), 24.0 )
-duct_types["pipe"]    = DuctType(  sd.ELLIPTICAL_GEOMETRY, 1.0,          1.0, 16.0 )
+duct_types["channel"] = DuctType( sd.RECTANGULAR_GEOMETRY, sd.RECTANGULAR_COORDINATE_SYSTEM, 7.0, float("inf"), 24.0 )
+duct_types["pipe"]    = DuctType(  sd.ELLIPTICAL_GEOMETRY, sd.CYLINDRICAL_COORDINATE_SYSTEM, 1.0,          1.0, 16.0 )
 
 max_inner_layer_roughness_height = 1.0
 min_bulk_mach_number = 0.0
@@ -118,7 +120,7 @@ for duct_type in duct_types:
                 sd.DUCT_FLOW_CLASS,
                 sd.EXPERIMENTAL_STUDY_TYPE,
                 int(2),
-                sd.CYLINDRICAL_COORDINATE_SYSTEM,
+                duct_types[duct_type].coordinate_system,
                 duct_types[duct_type].geometry,
                 sd.INNER_LAYER_ROUGHNESS_HEIGHT_QUANTITY,
                 max_inner_layer_roughness_height,
@@ -188,7 +190,7 @@ for duct_type in duct_types:
                 sd.DUCT_FLOW_CLASS,
                 sd.EXPERIMENTAL_STUDY_TYPE,
                 int(2),
-                sd.CYLINDRICAL_COORDINATE_SYSTEM,
+                duct_types[duct_type].coordinate_system,
                 duct_types[duct_type].geometry,
                 sd.INNER_LAYER_ROUGHNESS_HEIGHT_QUANTITY,
                 max_inner_layer_roughness_height,
