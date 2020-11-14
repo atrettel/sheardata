@@ -150,8 +150,8 @@ with open( globals_filename, "r" ) as globals_file:
         # repeated with 0.3 per cent. of the previous value.
         # \end{quote}
         #
-        # Assume a uniform distribution.  Use this uncertainty for everything
-        # but the temperature and kinematic viscosity.
+        # Assume a uniform distribution.  Use this larger uncertainty for
+        # everything but the temperature and kinematic viscosity.
         temperature_uncertainty         = 0.5 / 3.0**0.5
         kinematic_viscosity_uncertainty = kinematic_viscosity_value * 0.015 / 3.0**0.5
         mass_flow_rate_uncertainty      = mass_flow_rate_value * 0.03 / 3.0**0.5
