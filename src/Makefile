@@ -22,6 +22,8 @@ database=$(project).db
 preprocessing_targets := $(filter-out ,$(patsubst %.py,%.tmp,$(wildcard pre_*.py)))
 postprocessing_targets := $(filter-out ,$(patsubst %.py,%.tmp,$(wildcard post_*.py)))
 
+tex_dependencies = $(project).tex $(wildcard ../data/*.tex) $(postprocessing_targets) figure-tree-diagram.tex.tmp $(project).bcf
+
 $(database): $(project).tmp $(preprocessing_targets)
 
 $(project).tmp: create_tables.py
@@ -43,9 +45,19 @@ figure-tree-diagram.tex.tmp: $(postprocessing_targets)
 	sed -i "s/article/standalone/g" $@
 	sed -i "/enlarge/d" $@
 
-$(project).pdf: $(project).tex $(postprocessing_targets) figure-tree-diagram.tex.tmp
+$(project).pdf: $(tex_dependencies)
 	$(latex_compiler) $<
 	$(latex_compiler) $<
+
+$(project).bcf: $(project).bib
+	$(latex_compiler) $(project).tex
+	$(bib_compiler) $(project)
+	$(latex_compiler) $(project).tex
+	$(bib_compiler) $(project)
+	$(latex_compiler) $(project).tex
+
+$(project).bib: ../data/references.bib
+	cp -v $^ $@
 
 .PHONY: clean
 clean:
@@ -55,6 +67,7 @@ clean:
 	-rm -fv *.bak
 	-rm -fv *.bbl
 	-rm -fv *.bcf
+	-rm -fv *.bib
 	-rm -fv *.blg
 	-rm -fv *.end
 	-rm -fv *.gv
@@ -68,4 +81,3 @@ clean:
 	-rm -fv *.tmp
 	-rm -fv *.toc
 	-rm -fv *.xwm
-	-rm -fv *Notes.bib
