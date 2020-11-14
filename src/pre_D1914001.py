@@ -39,6 +39,7 @@ study_identifier = sd.add_study(
 )
 
 sd.add_source( cursor, study_identifier, "StantonTE+1914+eng+JOUR", 1 )
+sd.add_source( cursor, study_identifier, "ObotNT+1988+eng+JOUR",    2 )
 
 class Pipe:
     diameter = None
@@ -650,7 +651,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
         # length of the pipe was determined, and from the known diameter of the
         # pipe the surface friction per unit area was calculated.
         # \end{quote}
-        wall_shear_stress_measurement_technique = sd.PRESSURE_DROP_MEASUREMENT_TECHNIQUE
+        wall_shear_stress_measurement_technique = sd.MOMENTUM_BALANCE_MEASUREMENT_TECHNIQUE
 
         sd.set_labeled_value(
             cursor,

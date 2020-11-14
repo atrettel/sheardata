@@ -39,6 +39,8 @@ study_identifier = sd.add_study(
 )
 
 sd.add_source( cursor, study_identifier, "CornishRJ+1928+eng+JOUR", 1 )
+sd.add_source( cursor, study_identifier, "JonesOC+1976+eng+JOUR",   2 )
+sd.add_source( cursor, study_identifier, "ObotNT+1988+eng+JOUR",    2 )
 
 conn.commit()
 conn.close()
