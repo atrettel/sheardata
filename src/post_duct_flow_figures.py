@@ -46,21 +46,24 @@ class DuctType:
     geometry         = None
     min_aspect_ratio = None
     max_aspect_ratio = None
+    laminar_constant = None
 
-    def __init__( self, geometry, min_aspect_ratio, max_aspect_ratio ):
+    def __init__( self, geometry, min_aspect_ratio, max_aspect_ratio, \
+                  laminar_constant ):
         self.geometry         = str(geometry)
         self.min_aspect_ratio = float(min_aspect_ratio)
         self.max_aspect_ratio = float(max_aspect_ratio)
+        self.laminar_constant = float(laminar_constant)
 
 duct_types = {}
-duct_types["channel"] = DuctType( sd.RECTANGULAR_GEOMETRY, 7.0, float("inf"), )
-duct_types["pipe"]    = DuctType(  sd.ELLIPTICAL_GEOMETRY, 1.0,          1.0, )
+duct_types["channel"] = DuctType( sd.RECTANGULAR_GEOMETRY, 7.0, float("inf"), 24.0 )
+duct_types["pipe"]    = DuctType(  sd.ELLIPTICAL_GEOMETRY, 1.0,          1.0, 16.0 )
 
 max_inner_layer_roughness_height = 1.0
 min_bulk_mach_number = 0.0
 max_bulk_mach_number = 0.3
 
-for duct_type in ["pipe"]:
+for duct_type in duct_types:
     for quantity in [ sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY,
                                  sd.FANNING_FRICTION_FACTOR_QUANTITY, ]:
         if ( quantity == sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY ):
@@ -279,7 +282,7 @@ for duct_type in ["pipe"]:
                 2.0e+3,
                 gfx.page_size.max_elements(),
             )
-            laminar_fanning_friction_factor = 16.0 / laminar_bulk_reynolds_number
+            laminar_fanning_friction_factor = duct_types[duct_type].laminar_constant / laminar_bulk_reynolds_number
 
             ax.loglog(
                 laminar_bulk_reynolds_number,
