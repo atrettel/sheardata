@@ -42,275 +42,302 @@ cursor.execute( "PRAGMA foreign_keys = ON;" )
 # - Stations that have the bulk Reynolds number
 # - Stations that have the quantity of interest
 
-for quantity in [ sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY,
-                             sd.FANNING_FRICTION_FACTOR_QUANTITY ]:
-    if ( quantity == sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY ):
-        cursor.execute(
-        """
-        SELECT identifier
-        FROM stations
-        WHERE study IN (
-            SELECT identifier
-            FROM studies
-            WHERE flow_class=? AND study_type=?
-        )
-        INTERSECT
-        SELECT identifier
-        FROM stations
-        WHERE series IN (
-            SELECT identifier
-            FROM series
-            WHERE number_of_dimensions=? AND coordinate_system=? AND geometry=?
-        )
-        INTERSECT
-        SELECT identifier
-        FROM stations
-        WHERE previous_streamwise_station=next_streamwise_station
-        INTERSECT
-        SELECT station
-        FROM points
-        WHERE identifier IN (
-            SELECT point
-            FROM point_values
-            WHERE quantity=? AND point_value<? AND outlier=0
-        )
-        INTERSECT
-        SELECT station
-        FROM station_values
-        WHERE quantity=? AND station_value=? AND outlier=0
-        INTERSECT
-        SELECT station
-        FROM station_values
-        WHERE quantity=? AND station_value>=? AND station_value<? AND outlier=0
-        INTERSECT
-        SELECT station
-        FROM station_values
-        WHERE quantity=? AND outlier=0
-        INTERSECT
-        SELECT station
-        FROM station_values
-        WHERE quantity=? AND outlier=0
-        ORDER BY identifier;
-        """,
-        (
-            sd.DUCT_FLOW_CLASS,
-            sd.EXPERIMENTAL_STUDY_TYPE,
-            int(2),
-            sd.CYLINDRICAL_COORDINATE_SYSTEM,
-            sd.ELLIPTICAL_GEOMETRY,
-            sd.INNER_LAYER_ROUGHNESS_HEIGHT_QUANTITY,
-            float(1.0),
-            sd.ASPECT_RATIO_QUANTITY,
-            float(1.0),
-            sd.BULK_MACH_NUMBER_QUANTITY,
-            float(0.0),
-            float(0.3),
-            sd.BULK_REYNOLDS_NUMBER_QUANTITY,
-            quantity,
-        )
-        )
-    elif ( quantity == sd.FANNING_FRICTION_FACTOR_QUANTITY ):
-        cursor.execute(
-        """
-        SELECT identifier
-        FROM stations
-        WHERE study IN (
-            SELECT identifier
-            FROM studies
-            WHERE flow_class=? AND study_type=?
-        )
-        INTERSECT
-        SELECT identifier
-        FROM stations
-        WHERE series IN (
-            SELECT identifier
-            FROM series
-            WHERE number_of_dimensions=? AND coordinate_system=? AND geometry=?
-        )
-        INTERSECT
-        SELECT identifier
-        FROM stations
-        WHERE previous_streamwise_station=next_streamwise_station
-        INTERSECT
-        SELECT station
-        FROM points
-        WHERE identifier IN (
-            SELECT point
-            FROM point_values
-            WHERE quantity=? AND point_value<? AND outlier=0
-        )
-        INTERSECT
-        SELECT station
-        FROM station_values
-        WHERE quantity=? AND station_value=? AND outlier=0
-        INTERSECT
-        SELECT station
-        FROM station_values
-        WHERE quantity=? AND station_value>=? AND station_value<? AND outlier=0
-        INTERSECT
-        SELECT station
-        FROM station_values
-        WHERE quantity=? AND outlier=0
-        INTERSECT
-        SELECT station
-        FROM points
-        WHERE identifier IN (
-            SELECT point
-            FROM point_values
-            WHERE quantity=? AND outlier=0
-        )
-        ORDER BY identifier;
-        """,
-        (
-            sd.DUCT_FLOW_CLASS,
-            sd.EXPERIMENTAL_STUDY_TYPE,
-            int(2),
-            sd.CYLINDRICAL_COORDINATE_SYSTEM,
-            sd.ELLIPTICAL_GEOMETRY,
-            sd.INNER_LAYER_ROUGHNESS_HEIGHT_QUANTITY,
-            float(1.0),
-            sd.ASPECT_RATIO_QUANTITY,
-            float(1.0),
-            sd.BULK_MACH_NUMBER_QUANTITY,
-            float(0.0),
-            float(0.3),
-            sd.BULK_REYNOLDS_NUMBER_QUANTITY,
-            quantity,
-        )
-        )
+class DuctType:
+    geometry         = None
+    min_aspect_ratio = None
+    max_aspect_ratio = None
 
-    stations = []
-    for result in cursor.fetchall():
-        stations.append( str(result[0]) )
+    def __init__( self, geometry, min_aspect_ratio, max_aspect_ratio ):
+        self.geometry         = str(geometry)
+        self.min_aspect_ratio = float(min_aspect_ratio)
+        self.max_aspect_ratio = float(max_aspect_ratio)
 
-    bulk_reynolds_number_array = []
-    quantity_values_array      = []
-    for station in stations:
-        bulk_reynolds_number_array.append( sd.get_station_value(
-            cursor,
-            station,
-            sd.BULK_REYNOLDS_NUMBER_QUANTITY,
-            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-        ) )
+duct_types = {}
+duct_types["channel"] = DuctType( sd.RECTANGULAR_GEOMETRY, 7.0, float("inf"), )
+duct_types["pipe"]    = DuctType(  sd.ELLIPTICAL_GEOMETRY, 1.0,          1.0, )
 
+max_inner_layer_roughness_height = 1.0
+min_bulk_mach_number = 0.0
+max_bulk_mach_number = 0.3
+
+for duct_type in ["pipe"]:
+    for quantity in [ sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY,
+                                 sd.FANNING_FRICTION_FACTOR_QUANTITY, ]:
         if ( quantity == sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY ):
-            quantity_values_array.append( sd.get_station_value(
-                cursor,
-                station,
+            cursor.execute(
+            """
+            SELECT identifier
+            FROM stations
+            WHERE study IN (
+                SELECT identifier
+                FROM studies
+                WHERE flow_class=? AND study_type=?
+            )
+            INTERSECT
+            SELECT identifier
+            FROM stations
+            WHERE series IN (
+                SELECT identifier
+                FROM series
+                WHERE number_of_dimensions=? AND coordinate_system=? AND geometry=?
+            )
+            INTERSECT
+            SELECT identifier
+            FROM stations
+            WHERE previous_streamwise_station=next_streamwise_station
+            INTERSECT
+            SELECT station
+            FROM points
+            WHERE identifier IN (
+                SELECT point
+                FROM point_values
+                WHERE quantity=? AND point_value<? AND outlier=0
+            )
+            INTERSECT
+            SELECT station
+            FROM station_values
+            WHERE quantity=? AND station_value>=? AND station_value<=? AND outlier=0
+            INTERSECT
+            SELECT station
+            FROM station_values
+            WHERE quantity=? AND station_value>=? AND station_value<? AND outlier=0
+            INTERSECT
+            SELECT station
+            FROM station_values
+            WHERE quantity=? AND outlier=0
+            INTERSECT
+            SELECT station
+            FROM station_values
+            WHERE quantity=? AND outlier=0
+            ORDER BY identifier;
+            """,
+            (
+                sd.DUCT_FLOW_CLASS,
+                sd.EXPERIMENTAL_STUDY_TYPE,
+                int(2),
+                sd.CYLINDRICAL_COORDINATE_SYSTEM,
+                duct_types[duct_type].geometry,
+                sd.INNER_LAYER_ROUGHNESS_HEIGHT_QUANTITY,
+                max_inner_layer_roughness_height,
+                sd.ASPECT_RATIO_QUANTITY,
+                duct_types[duct_type].min_aspect_ratio,
+                duct_types[duct_type].max_aspect_ratio,
+                sd.BULK_MACH_NUMBER_QUANTITY,
+                min_bulk_mach_number,
+                max_bulk_mach_number,
+                sd.BULK_REYNOLDS_NUMBER_QUANTITY,
                 quantity,
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            ) )
+            )
+            )
         elif ( quantity == sd.FANNING_FRICTION_FACTOR_QUANTITY ):
-            quantity_values_array.append( sd.get_labeled_value(
+            cursor.execute(
+            """
+            SELECT identifier
+            FROM stations
+            WHERE study IN (
+                SELECT identifier
+                FROM studies
+                WHERE flow_class=? AND study_type=?
+            )
+            INTERSECT
+            SELECT identifier
+            FROM stations
+            WHERE series IN (
+                SELECT identifier
+                FROM series
+                WHERE number_of_dimensions=? AND coordinate_system=? AND geometry=?
+            )
+            INTERSECT
+            SELECT identifier
+            FROM stations
+            WHERE previous_streamwise_station=next_streamwise_station
+            INTERSECT
+            SELECT station
+            FROM points
+            WHERE identifier IN (
+                SELECT point
+                FROM point_values
+                WHERE quantity=? AND point_value<? AND outlier=0
+            )
+            INTERSECT
+            SELECT station
+            FROM station_values
+            WHERE quantity=? AND station_value>=? AND station_value<=? AND outlier=0
+            INTERSECT
+            SELECT station
+            FROM station_values
+            WHERE quantity=? AND station_value>=? AND station_value<? AND outlier=0
+            INTERSECT
+            SELECT station
+            FROM station_values
+            WHERE quantity=? AND outlier=0
+            INTERSECT
+            SELECT station
+            FROM points
+            WHERE identifier IN (
+                SELECT point
+                FROM point_values
+                WHERE quantity=? AND outlier=0
+            )
+            ORDER BY identifier;
+            """,
+            (
+                sd.DUCT_FLOW_CLASS,
+                sd.EXPERIMENTAL_STUDY_TYPE,
+                int(2),
+                sd.CYLINDRICAL_COORDINATE_SYSTEM,
+                duct_types[duct_type].geometry,
+                sd.INNER_LAYER_ROUGHNESS_HEIGHT_QUANTITY,
+                max_inner_layer_roughness_height,
+                sd.ASPECT_RATIO_QUANTITY,
+                duct_types[duct_type].min_aspect_ratio,
+                duct_types[duct_type].max_aspect_ratio,
+                sd.BULK_MACH_NUMBER_QUANTITY,
+                min_bulk_mach_number,
+                max_bulk_mach_number,
+                sd.BULK_REYNOLDS_NUMBER_QUANTITY,
+                quantity,
+            )
+            )
+
+        stations = []
+        for result in cursor.fetchall():
+            stations.append( str(result[0]) )
+
+        bulk_reynolds_number_array = []
+        quantity_values_array      = []
+        for station in stations:
+            bulk_reynolds_number_array.append( sd.get_station_value(
                 cursor,
                 station,
-                quantity,
-                sd.WALL_POINT_LABEL,
+                sd.BULK_REYNOLDS_NUMBER_QUANTITY,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             ) )
 
-    fig = plt.figure()
-    ax  = fig.add_subplot( 1, 1, 1 )
+            if ( quantity == sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY ):
+                quantity_values_array.append( sd.get_station_value(
+                    cursor,
+                    station,
+                    quantity,
+                    averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                ) )
+            elif ( quantity == sd.FANNING_FRICTION_FACTOR_QUANTITY ):
+                quantity_values_array.append( sd.get_labeled_value(
+                    cursor,
+                    station,
+                    quantity,
+                    sd.WALL_POINT_LABEL,
+                    averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                ) )
 
-    bulk_reynolds_number = np.array( bulk_reynolds_number_array )
-    quantity_values      = np.array(      quantity_values_array )
+        fig = plt.figure()
+        ax  = fig.add_subplot( 1, 1, 1 )
 
-    bulk_reynolds_number_bounds = None
-    quantity_values_bounds      = None
-    y_label        = None
-    filename_label = None
-    quantity_label = None
-    if ( quantity == sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY ):
-        bulk_reynolds_number_bounds = ( 1.00e+3, 1.00e+5, )
-        quantity_values_bounds      = ( 0.50e+0, 0.85e+0, )
+        bulk_reynolds_number = np.array( bulk_reynolds_number_array )
+        quantity_values      = np.array(      quantity_values_array )
 
-        y_label        = r"$\frac{U_b}{U_c}$"
-        filename_label = "velocity-ratios"
-        quantity_label = "Bulk-to-center-line velocity ratio"
+        bulk_reynolds_number_bounds = None
+        quantity_values_bounds      = None
+        y_label        = None
+        filename_label = None
+        quantity_label = None
+        if ( quantity == sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY ):
+            bulk_reynolds_number_bounds = ( 1.00e+3, 1.00e+5, )
+            quantity_values_bounds      = ( 0.50e+0, 0.85e+0, )
 
-        ax.semilogx(
-            unp.nominal_values( bulk_reynolds_number  ),
-            unp.nominal_values( quantity_values ),
-            marker="o",
-            linestyle="",
-            clip_on=False,
-            zorder=1,
+            y_label        = r"$\frac{U_b}{U_c}$"
+            filename_label = "velocity-ratios"
+            quantity_label = "Bulk-to-center-line velocity ratio"
+
+            ax.semilogx(
+                unp.nominal_values( bulk_reynolds_number  ),
+                unp.nominal_values( quantity_values ),
+                marker="o",
+                linestyle="",
+                clip_on=False,
+                zorder=1,
+            )
+        elif ( quantity == sd.FANNING_FRICTION_FACTOR_QUANTITY ):
+            bulk_reynolds_number_bounds = ( 1.00e+1, 1.00e+6, )
+            quantity_values_bounds      = ( 1.00e-3, 1.00e-1, )
+
+            y_label        = r"$f = \frac{2 \tau_w}{\rho U_b^2}$"
+            filename_label = "fanning-friction-factor"
+            quantity_label = "Fanning friction factor"
+
+            ax.loglog(
+                unp.nominal_values( bulk_reynolds_number  ),
+                unp.nominal_values( quantity_values ),
+                marker="o",
+                linestyle="",
+                clip_on=True,
+                zorder=2,
+            )
+
+            laminar_bulk_reynolds_number = np.linspace(
+                bulk_reynolds_number_bounds[0],
+                2.0e+3,
+                gfx.page_size.max_elements(),
+            )
+            laminar_fanning_friction_factor = 16.0 / laminar_bulk_reynolds_number
+
+            ax.loglog(
+                laminar_bulk_reynolds_number,
+                laminar_fanning_friction_factor,
+                clip_on=True,
+                zorder=1,
+            )
+
+        ax.set_xlim( bulk_reynolds_number_bounds )
+        ax.set_ylim(      quantity_values_bounds )
+
+        gfx.label_axes(
+            ax,
+            r"$\mathrm{Re}_b = U_b D_H / \nu$",
+            y_label
         )
-    elif ( quantity == sd.FANNING_FRICTION_FACTOR_QUANTITY ):
-        bulk_reynolds_number_bounds = ( 1.00e+1, 1.00e+6, )
-        quantity_values_bounds      = ( 1.00e-3, 1.00e-1, )
 
-        y_label        = r"$f = \frac{2 \tau_w}{\rho U_b^2}$"
-        filename_label = "fanning-friction-factor"
-        quantity_label = "Fanning friction factor"
-
-        ax.loglog(
-            unp.nominal_values( bulk_reynolds_number  ),
-            unp.nominal_values( quantity_values ),
-            marker="o",
-            linestyle="",
-            clip_on=True,
-            zorder=2,
-        )
-
-        laminar_bulk_reynolds_number = np.linspace(
-            bulk_reynolds_number_bounds[0],
-            2.0e+3,
-            gfx.page_size.max_elements(),
-        )
-        laminar_fanning_friction_factor = 16.0 / laminar_bulk_reynolds_number
-
-        ax.loglog(
-            laminar_bulk_reynolds_number,
-            laminar_fanning_friction_factor,
-            clip_on=True,
-            zorder=1,
-        )
-
-    ax.set_xlim( bulk_reynolds_number_bounds )
-    ax.set_ylim(      quantity_values_bounds )
-
-    gfx.label_axes(
-        ax,
-        r"$\mathrm{Re}_b = U_b D_H / \nu$",
-        y_label
-    )
-
-    fig.savefig( "figure-pipe-flow-{:s}.pgf".format( filename_label ) )
-    fig.clear()
-    plt.close( fig )
-
-    with open( "caption-pipe-flow-{:s}.tex.tmp".format( filename_label ), "w" ) as f:
-        short_caption = "{:s} for fully-developed, incompressible pipe flow \
-                         as a function of the bulk Reynolds number.".format(
-            quantity_label,
-        )
-
-        f.write( r"\caption[" )
-        f.write( short_caption )
-        f.write( r"]{" )
-        f.write( short_caption+"  " )
-
-        f.write( "{:d} series in total: ".format(
-            len(stations),
+        fig.savefig( "figure-{:s}-flow-{:s}.pgf".format(
+            duct_type,
+            filename_label,
         ) )
+        fig.clear()
+        plt.close( fig )
 
-        studies = sd.count_studies( stations )
-        i_study = 0
-        for study in studies:
-            f.write( r"\texttt{" )
-            f.write( "{:s}".format(
-                sd.make_readable_identifier( study ),
-            ) )
-            f.write( r"}" )
-            f.write( ", {:d} series".format(
-                studies[study],
-            ) )
-            i_study += 1
-            if ( i_study != len(studies) ):
-                f.write( "; " )
+        with open( "caption-{:s}-flow-{:s}.tex.tmp".format( \
+                   duct_type, filename_label ), "w" ) as f:
+            short_caption = "{:s} for fully-developed, incompressible {:s} \
+                             flow as a function of the bulk Reynolds \
+                             number.".format(
+                quantity_label,
+                duct_type,
+            )
 
-        f.write( r".}" )
+            f.write( r"\caption[" )
+            f.write( short_caption )
+            f.write( r"]{" )
+            f.write( short_caption+"  " )
+
+            f.write( "{:d} series in total: ".format(
+                len(stations),
+            ) )
+
+            studies = sd.count_studies( stations )
+            i_study = 0
+            for study in studies:
+                f.write( r"\texttt{" )
+                f.write( "{:s}".format(
+                    sd.make_readable_identifier( study ),
+                ) )
+                f.write( r"}" )
+                f.write( ", {:d} series".format(
+                    studies[study],
+                ) )
+                i_study += 1
+                if ( i_study != len(studies) ):
+                    f.write( "; " )
+
+            f.write( r".}" )
 
 conn.commit()
 conn.close()
