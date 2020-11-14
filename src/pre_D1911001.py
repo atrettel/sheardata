@@ -156,7 +156,9 @@ with open( globals_filename, "r" ) as globals_file:
         # tilting gauge, whose indications could be relied upon within an
         # accuracy of 0.005 mm of water.
         # \end{quote}
-        pressure_difference_accuracy = 1000.0 * 9.81 * 0.005e-3
+        #
+        # Assume a uniform distribution.
+        pressure_difference_uncertainty = 1000.0 * 9.81 * 0.005e-3 / 3.0**0.5
 
         # Note that the profiles lack the wall point and are presented in order
         # from the center-line to wall.  The profiles need to be assembled
@@ -172,8 +174,17 @@ with open( globals_filename, "r" ) as globals_file:
                     ufloat( float(station_row[0]) * 1.0e-2, r_uncertainty )
                 )
 
+                u_value = float(station_row[1]) * 1.0e-2
+
+                pressure_difference_value = 0.5 * 1000.0 * u_value**2.0
+
+                pressure_difference = ufloat(
+                    pressure_difference_value,
+                    pressure_difference_uncertainty,
+                )
+
                 u_reversed.append( 
-                    float(station_row[1]) * 1.0e-2
+                    ( 2.0 * pressure_difference / 1000.0 )**0.5
                 )
 
         r_reversed.append( ufloat( 0.5*diameter, 0.0 ) )
