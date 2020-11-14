@@ -149,30 +149,41 @@ for duct in ducts:
             speed_of_sound = ( 1.4 * 287.058 * temperature )**0.5
             Ma_bulk        = bulk_velocity / speed_of_sound
 
-            series_identifier = sd.add_series(
-                cursor,
-                flow_class=flow_class,
-                year=year,
-                study_number=study_number,
-                series_number=series_number,
-                number_of_dimensions=2,
-                coordinate_system=sd.CYLINDRICAL_COORDINATE_SYSTEM,
-            )
-
-            sd.add_air_components( cursor, series_identifier )
-
+            series_identifier = None
             if ( duct == "Round" ):
+                series_identifier = sd.add_series(
+                    cursor,
+                    flow_class=flow_class,
+                    year=year,
+                    study_number=study_number,
+                    series_number=series_number,
+                    number_of_dimensions=2,
+                    coordinate_system=sd.CYLINDRICAL_COORDINATE_SYSTEM,
+                )
+
                 sd.update_series_geometry(
                     cursor,
                     series_identifier,
                     sd.ELLIPTICAL_GEOMETRY
                 )
             else:
+                series_identifier = sd.add_series(
+                    cursor,
+                    flow_class=flow_class,
+                    year=year,
+                    study_number=study_number,
+                    series_number=series_number,
+                    number_of_dimensions=2,
+                    coordinate_system=sd.RECTANGULAR_COORDINATE_SYSTEM,
+                )
+
                 sd.update_series_geometry(
                     cursor,
                     series_identifier,
                     sd.RECTANGULAR_GEOMETRY
                 )
+
+            sd.add_air_components( cursor, series_identifier )
 
             station_number = 1
             station_identifier = sd.add_station(
@@ -358,7 +369,7 @@ for duct in ducts:
             )
 
             # p. 129
-            wall_shear_stress_measurement_technique = sd.PRESSURE_DROP_MEASUREMENT_TECHNIQUE
+            wall_shear_stress_measurement_technique = sd.MOMENTUM_BALANCE_MEASUREMENT_TECHNIQUE
 
             sd.set_labeled_value(
                 cursor,
