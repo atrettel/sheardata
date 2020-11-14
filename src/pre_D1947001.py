@@ -126,10 +126,16 @@ for duct in ducts:
             pressure_drop_value = 4.0 * wall_shear_stress_value * ducts[duct].length / hydraulic_diameter
             pressure_drop_uncertainty = 1000.0 * 9.81 * ( 0.02 * 0.0254 ) / 3.0**0.5
 
-            pressure_drop = ufloat(
-                pressure_drop_value,
-                pressure_drop_uncertainty,
-            )
+            # TODO: The uncertainties calculated here appear to large at times,
+            # so large that it is impossible to plot them without causing
+            # "dimension too large" errors.  Go back later and investigate
+            # this.
+
+            #pressure_drop = ufloat(
+            #    pressure_drop_value,
+            #    pressure_drop_uncertainty,
+            #)
+            pressure_drop = pressure_drop_value
 
             wall_shear_stress = 0.25 * hydraulic_diameter * pressure_drop / ducts[duct].length
 
