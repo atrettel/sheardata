@@ -1,4 +1,7 @@
 *.aux
+*.bbl
+*.bcf
+*.blg
 *.db
 *.gv
 *.log
@@ -6,6 +9,8 @@
 *.pdf
 *.pgf
 *.pyc
+*.run.xml
 *.tmp
 *.toc
 __pycache__
+src/*.bib
