@@ -294,13 +294,14 @@ CREATE TABLE measurement_techniques (
 
 measurement_techniques = {}
 
-measurement_techniques[ sd.ASSUMPTION_MEASUREMENT_TECHNIQUE ]               = "assumption"
-measurement_techniques[ sd.CALCULATION_MEASUREMENT_TECHNIQUE ]              = "calculation"
+measurement_techniques[ sd.ASSUMPTION_MEASUREMENT_TECHNIQUE               ] = "assumption"
+measurement_techniques[ sd.CALCULATION_MEASUREMENT_TECHNIQUE              ] = "calculation"
 measurement_techniques[ sd.FLOATING_ELEMENT_BALANCE_MEASUREMENT_TECHNIQUE ] = "floating element balance"
-measurement_techniques[ sd.IMPACT_TUBE_MEASUREMENT_TECHNIQUE ]              = "impact tube"
-measurement_techniques[ sd.PITOT_STATIC_TUBE_MEASUREMENT_TECHNIQUE ]        = "Pitot-static tube"
-measurement_techniques[ sd.STATIC_PRESSURE_TAP_MEASUREMENT_TECHNIQUE ]      = "static pressure tap"
-measurement_techniques[ sd.PRESSURE_DROP_MEASUREMENT_TECHNIQUE ]            = "pressure drop"
+measurement_techniques[ sd.IMPACT_TUBE_MEASUREMENT_TECHNIQUE              ] = "impact tube"
+measurement_techniques[ sd.MOMENTUM_BALANCE_MEASUREMENT_TECHNIQUE         ] = "momentum balance"
+measurement_techniques[ sd.PITOT_STATIC_TUBE_MEASUREMENT_TECHNIQUE        ] = "Pitot-static tube"
+measurement_techniques[ sd.STATIC_PRESSURE_TAP_MEASUREMENT_TECHNIQUE      ] = "static pressure tap"
+measurement_techniques[ sd.WEIGHING_METHOD_MEASUREMENT_TECHNIQUE          ] = "weighing method"
 
 for identifier in measurement_techniques:
     cursor.execute(
