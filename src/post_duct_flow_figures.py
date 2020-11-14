@@ -238,6 +238,10 @@ for duct_type in duct_types:
         fig = plt.figure()
         ax  = fig.add_subplot( 1, 1, 1 )
 
+        ax.set_xscale( "log", nonposx="clip" )
+        if ( quantity == sd.FANNING_FRICTION_FACTOR_QUANTITY ):
+            ax.set_yscale( "log", nonposy="clip" )
+
         bulk_reynolds_number = np.array( bulk_reynolds_number_array )
         quantity_values      = np.array(      quantity_values_array )
 
@@ -253,15 +257,6 @@ for duct_type in duct_types:
             y_label        = r"$\frac{U_b}{U_c}$"
             filename_label = "velocity-ratios"
             quantity_label = "Bulk-to-center-line velocity ratio"
-
-            ax.semilogx(
-                unp.nominal_values( bulk_reynolds_number  ),
-                unp.nominal_values( quantity_values ),
-                marker="o",
-                linestyle="",
-                clip_on=False,
-                zorder=1,
-            )
         elif ( quantity == sd.FANNING_FRICTION_FACTOR_QUANTITY ):
             bulk_reynolds_number_bounds = ( 1.00e+1, 1.00e+6, )
             quantity_values_bounds      = ( 1.00e-3, 1.00e-1, )
@@ -270,15 +265,6 @@ for duct_type in duct_types:
             filename_label = "fanning-friction-factor"
             quantity_label = "Fanning friction factor"
 
-            ax.loglog(
-                unp.nominal_values( bulk_reynolds_number  ),
-                unp.nominal_values( quantity_values ),
-                marker="o",
-                linestyle="",
-                clip_on=True,
-                zorder=2,
-            )
-
             laminar_bulk_reynolds_number = np.linspace(
                 bulk_reynolds_number_bounds[0],
                 2.0e+3,
@@ -286,12 +272,21 @@ for duct_type in duct_types:
             )
             laminar_fanning_friction_factor = duct_types[duct_type].laminar_constant / laminar_bulk_reynolds_number
 
-            ax.loglog(
+            ax.plot(
                 laminar_bulk_reynolds_number,
                 laminar_fanning_friction_factor,
                 clip_on=True,
                 zorder=1,
             )
+
+        ax.plot(
+            unp.nominal_values( bulk_reynolds_number  ),
+            unp.nominal_values( quantity_values ),
+            marker="o",
+            linestyle="",
+            clip_on=True,
+            zorder=2,
+        )
 
         ax.set_xlim( bulk_reynolds_number_bounds )
         ax.set_ylim(      quantity_values_bounds )
