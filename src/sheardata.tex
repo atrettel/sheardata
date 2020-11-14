@@ -39,6 +39,19 @@
     \usepackage[utf8]{inputenc}
 \fi
 
+\usepackage[
+    natbib=true,
+    bibstyle=authoryear,
+    citestyle=authoryear,
+    doi=true,
+    url=true,
+    maxbibnames=99,
+    maxcitenames=2,
+    mincitenames=1,
+    backend=biber
+]{biblatex}
+\addbibresource{sheardata.bib}
+
 \pagenumbering{arabic}
 
 \title{Shear layer data compilation}
@@ -57,10 +70,10 @@ Copyright~\textcopyright~2020~Andrew~Trettel
 \end{center}
 
 \tableofcontents
-
 \mainmatter
+\input{../data/studies.tex}
 \input{../data/duct-flows.tex}
-
+\printbibliography
 \appendix
 \input{../data/classification-system.tex}
 \input{../data/database-tables.tex}
