@@ -98,6 +98,32 @@ with open( pipes_filename, "r" ) as pipes_file:
             str(pipes_row[3]),
         )
 
+# p. 203
+#
+# \begin{quote}
+# The form of the tilting manometer used for the estimation of both the surface
+# friction and the axial velocity, is that devised by Dr. A. P.  Chattock and
+# has been previously described.†  For the purpose of the present paper it is
+# sufficient to state that in this manometer a pressure difference of the order
+# of 0.003 mm. of water can be detected, which is well within the limits of
+# sensitivity required in these experiments.  As the fall of pressure in these
+# pipes varied from 0.5 to 150,000 mm. of water, other manometers were required
+# for the higher pressures, and for this purpose water or mercury U-tubes were
+# used for the intermediate pressures, and the Bourdon pressure gauges for the
+# highest pressures.
+# \end{quote}
+#
+# The footnote lists two papers that should contain more information about the
+# manometers used.
+#
+# This appears to be the only information given about the uncertainty of the
+# experiments.  It is less useful than it appears, since according to the table
+# on page 207, different manometers and gauges were used seemingly at random,
+# making it unclear where the cutoff for "higher pressures" really is.
+#
+# Nonetheless, use this value and assume a uniform distribution.
+pressure_difference_uncertainty = 1000.0 * 9.81 * 0.003e-3 / 3.0**0.5
+
 # Set 1: velocity ratio data
 series_number = 0
 ratio_filename = "../data/{:s}/bulk_and_maximum_velocities.csv".format( study_identifier )
@@ -116,10 +142,10 @@ with open( ratio_filename, "r" ) as ratio_file:
         # be a turbulent value at a laminar Reynolds number.
         outlier = True if series_number == 49 else False
 
-        bulk_velocity    = float(ratio_row[0]) * 1.0e-2
-        maximum_velocity = float(ratio_row[1]) * 1.0e-2
-        working_fluid    =   str(ratio_row[2])
-        pipe             =   str(ratio_row[3])
+        bulk_velocity          = float(ratio_row[0]) * 1.0e-2
+        maximum_velocity_value = float(ratio_row[1]) * 1.0e-2
+        working_fluid          =   str(ratio_row[2])
+        pipe                   =   str(ratio_row[3])
 
         diameter = pipes[pipe].diameter
         length   = pipes[pipe].length
@@ -131,12 +157,25 @@ with open( ratio_filename, "r" ) as ratio_file:
         #
         # These values were extracted graphically from figure 1 and averaged to
         # a single value.
-        kinematic_viscosity = 0.0
+        #
+        # TODO: Calculate the density values rather than just assuming them.
+        kinematic_viscosity = None
+        mass_density        = None
         if ( working_fluid == "Water" ):
+            mass_density        = 1000.0
             kinematic_viscosity = 9.186e-7
         elif ( working_fluid == "Air" ):
+            mass_density        = 1.225
             kinematic_viscosity = 1.468e-5
         temperature = 15.0 + 273.15
+
+        pressure_difference_value = 0.5 * mass_density * maximum_velocity_value**2.0
+        pressure_difference = ufloat(
+            pressure_difference_value,
+            pressure_difference_uncertainty,
+        )
+
+        maximum_velocity = ( 2.0 * pressure_difference / mass_density )**0.5
 
         Re_bulk = bulk_velocity * diameter / kinematic_viscosity
 
@@ -424,21 +463,33 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
     for shear_stress_row in shear_stress_reader:
         series_number += 1
 
-        bulk_velocity           = float(shear_stress_row[0]) * 1.0e-2
-        wall_shear_stress       = float(shear_stress_row[1]) * 1.0e-1
-        fanning_friction_factor = float(shear_stress_row[2]) * 2.0
-        Re_bulk                 = float(shear_stress_row[3])
-        temperature             = float(shear_stress_row[4]) + 273.15
-        working_fluid           =   str(shear_stress_row[5])
-        pipe                    =   str(shear_stress_row[6])
+        bulk_velocity                 = float(shear_stress_row[0]) * 1.0e-2
+        wall_shear_stress_value       = float(shear_stress_row[1]) * 1.0e-1
+        fanning_friction_factor_value = float(shear_stress_row[2]) * 2.0
+        Re_bulk                       = float(shear_stress_row[3])
+        temperature                   = float(shear_stress_row[4]) + 273.15
+        working_fluid                 =   str(shear_stress_row[5])
+        pipe                          =   str(shear_stress_row[6])
 
         diameter = pipes[pipe].diameter
         length   = pipes[pipe].length
 
-        mass_density        = 2.0 * wall_shear_stress / ( fanning_friction_factor * bulk_velocity**2.0 )
+        mass_density        = 2.0 * wall_shear_stress_value / ( fanning_friction_factor_value * bulk_velocity**2.0 )
         kinematic_viscosity = bulk_velocity * diameter / Re_bulk
 
         volumetric_flow_rate = 0.25 * math.pi * diameter**2.0 * bulk_velocity
+
+        wall_shear_stress = None
+        if ( length == None ):
+            wall_shear_stress = wall_shear_stress_value
+        else:
+            pressure_difference_value = 4.0 * wall_shear_stress_value * length / diameter
+            pressure_difference = ufloat(
+                pressure_difference_value,
+                pressure_difference_uncertainty,
+            )
+            wall_shear_stress = 0.25 * diameter * pressure_difference / length
+        fanning_friction_factor = 2.0 * wall_shear_stress / ( mass_density * bulk_velocity**2.0 )
 
         series_identifier = sd.add_series(
             cursor,
@@ -675,26 +726,3 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
 
 conn.commit()
 conn.close()
-
-# p. 203
-#
-# \begin{quote}
-# The form of the tilting manometer used for the estimation of both the surface
-# friction and the axial velocity, is that devised by Dr. A. P. Chattock and
-# has been previously described.†  For the purpose of the present paper it is
-# sufficient to state that in this manometer a pressure difference of the order
-# of 0.003 mm. of water can be detected, which is well within the limits of
-# sensitivity required in these experiments.  As the fall of pressure in these
-# pipes varied from 0.5 to 150,000 mm. of water, other manometers were required
-# for the higher pressures, and for this purpose water or mercury U-tubes were
-# used for the intermediate pressures, and the Bourdon pressure gauges for the
-# highest pressures.
-# \end{quote}
-#
-# The footnote lists two papers that should contain more information about the
-# manometers used.
-#
-# This appears to be the only information given about the uncertainty of the
-# experiments.  It is less useful than it appears, since according to the table
-# on page 207, different manometers and gauges were used seemingly at random,
-# making it unclear where the cutoff for "higher pressures" really is.
