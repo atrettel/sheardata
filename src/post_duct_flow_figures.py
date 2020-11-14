@@ -283,14 +283,15 @@ for duct_type in duct_types:
             uncertainty_threshold = 1.0e-3
 
         quantity_uncertainties = unp.std_devs( quantity_values )
+        #np.where( quantity_uncertainties > uncertainty_threshold, 0.0, quantity_uncertainties ),
         ax.errorbar(
             unp.nominal_values( bulk_reynolds_number  ),
             unp.nominal_values( quantity_values ),
-            np.where( quantity_uncertainties > uncertainty_threshold, 0.0, quantity_uncertainties ),
+            quantity_uncertainties,
             marker="o",
             linestyle="",
             elinewidth=gfx.error_bar_width,
-            clip_on=True,
+            clip_on=( quantity == sd.FANNING_FRICTION_FACTOR_QUANTITY ),
             zorder=2,
         )
 
