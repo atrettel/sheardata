@@ -31,8 +31,6 @@ Additional requirements to make the documentation:
 
 - Matplotlib Python module
 
-- `grfstyl` Python module (see <https://github.com/atrettel/grfstyl>)
-
 - LaTeX distribution
 
     - `pdflatex`
