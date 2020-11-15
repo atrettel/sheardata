@@ -169,16 +169,17 @@ with open( ratio_filename, "r" ) as ratio_file:
         elif ( working_fluid == "Air" ):
             mass_density        = 1.225
             kinematic_viscosity = 1.468e-5
-        temperature = 15.0 + 273.15
+        temperature = 15.0 + sd.ABSOLUTE_ZERO
 
         Re_bulk = bulk_velocity * diameter / kinematic_viscosity
 
         volumetric_flow_rate = 0.25 * math.pi * diameter**2.0 * bulk_velocity
 
-        # TODO: These assumptions are generally poor and could be improved.
+        # TODO: Some of these assumptions are generally poor and could be
+        # improved upon.
         speed_of_sound = float("inf")
         if ( working_fluid == "Air" ):
-            speed_of_sound = ( 1.4 * 287.058 * temperature )**0.5
+            speed_of_sound = sd.ideal_gas_speed_of_sound( temperature )
         elif ( working_fluid == "Water" ):
             speed_of_sound = 0.5 * ( 1447.0 + 1481.0 )
         Ma_bulk = bulk_velocity / speed_of_sound
@@ -461,7 +462,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
         wall_shear_stress             = float(shear_stress_row[1]) * 1.0e-1
         fanning_friction_factor       = float(shear_stress_row[2]) * 2.0
         Re_bulk                       = float(shear_stress_row[3])
-        temperature                   = float(shear_stress_row[4]) + 273.15
+        temperature                   = float(shear_stress_row[4]) + sd.ABSOLUTE_ZERO
         working_fluid                 =   str(shear_stress_row[5])
         pipe                          =   str(shear_stress_row[6])
 
@@ -503,7 +504,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
         # anything else.
         speed_of_sound = float("inf")
         if ( working_fluid == "Air" ):
-            speed_of_sound = ( 1.4 * 287.058 * temperature )**0.5
+            speed_of_sound = sd.ideal_gas_speed_of_sound( temperature )
         elif ( working_fluid == "Water" ):
             speed_of_sound = 0.5 * ( 1447.0 + 1481.0 )
         Ma_bulk = bulk_velocity / speed_of_sound

@@ -124,10 +124,10 @@ with open( globals_filename, "r" ) as globals_file:
             test_number,
         )
 
-        temperature_value         = float(globals_row[2]) + 273.15
+        temperature_value         = float(globals_row[2]) + sd.ABSOLUTE_ZERO
         kinematic_viscosity_value = float(globals_row[3]) * 1.0e-4
         mass_flow_rate_value      = float(globals_row[4]) * 1.0e-3
-        pressure_difference_value = float(globals_row[5]) * 1.0e-2 * 1000.0 * 9.81
+        pressure_difference_value = float(globals_row[5]) * 1.0e-2 * 1000.0 * sd.STANDARD_GRAVITATIONAL_ACCELERATION
 
         # p. 94
         #

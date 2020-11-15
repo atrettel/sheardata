@@ -73,7 +73,7 @@ with open( globals_filename, "r" ) as globals_file:
     for globals_row in globals_reader:
         ducts[str(globals_row[0])] = Duct(
             float(globals_row[1]),
-            float(globals_row[2]) * 12.0 * 0.0254,
+            float(globals_row[2]) * sd.METERS_PER_FOOT
         )
 
 mass_density_note = \
@@ -104,11 +104,11 @@ for duct in ducts:
                 duct,
                 test_number
             )
-            temperature        = ( float(duct_globals_row[2]) - 32.0 ) / 1.8 + 273.15
-            mass_density       = float(duct_globals_row[4]) * 0.45359237 / 0.3048**3.0
-            bulk_velocity      = float(duct_globals_row[5]) * 0.3048 / 60.0
-            hydraulic_diameter = float(duct_globals_row[6]) * 0.0254
-            pressure_gradient  = float(duct_globals_row[7]) * 0.0254 * 1000.0 * 9.81 / 0.3048
+            temperature        = sd.fahrenheit_to_kelvin( float(duct_globals_row[2]) )
+            mass_density       = float(duct_globals_row[4]) * sd.KILOGRAM_PER_POUND_MASS / sd.METERS_PER_FOOT**3.0
+            bulk_velocity      = float(duct_globals_row[5]) * sd.METERS_PER_FOOT / sd.SECONDS_PER_MINUTE
+            hydraulic_diameter = float(duct_globals_row[6]) * sd.METERS_PER_INCH
+            pressure_gradient  = float(duct_globals_row[7]) * sd.METERS_PER_INCH * 1000.0 * sd.STANDARD_GRAVITATIONAL_ACCELERATION / sd.METERS_PER_FOOT
             Re_bulk_value      = float(duct_globals_row[10])
 
             # Uncertainty of wall shear stress measurements
@@ -141,8 +141,7 @@ for duct in ducts:
             dynamic_viscosity   = mass_density * kinematic_viscosity
             Re_bulk             = bulk_velocity * hydraulic_diameter / kinematic_viscosity
 
-            # TODO: Correct these assumptions later.
-            speed_of_sound = ( 1.4 * 287.058 * temperature )**0.5
+            speed_of_sound = sd.ideal_gas_speed_of_sound( temperature )
             Ma_bulk        = bulk_velocity / speed_of_sound
 
             series_identifier = None

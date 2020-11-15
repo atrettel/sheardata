@@ -188,11 +188,12 @@ with open( globals_filename, "r" ) as globals_file:
 
         # Assumed constant profiles
         # TODO: Calculate these rather than assume them.
-        temperature         = 15.0 + 273.15
+        temperature         = 15.0 + sd.ABSOLUTE_ZERO
         mass_density        = 1.225
         kinematic_viscosity = 1.461e-5
+
         dynamic_viscosity   = mass_density * kinematic_viscosity
-        speed_of_sound      = ( 1.4 * 287.058 * temperature )**0.5
+        speed_of_sound      = sd.ideal_gas_speed_of_sound( temperature )
 
         i = 0
         for point_number in range( n_points, 0, -1 ):
@@ -307,7 +308,7 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.Q_SPEED_OF_SOUND,
                 speed_of_sound,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-                measurement_technique=sd.MT_ASSUMPTION,
+                measurement_technique=sd.MT_CALCULATION,
             )
 
             i += 1
