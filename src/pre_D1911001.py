@@ -189,7 +189,7 @@ with open( globals_filename, "r" ) as globals_file:
         # Assumed constant profiles
         # TODO: Calculate these rather than assume them.
         temperature         = 15.0 + sd.ABSOLUTE_ZERO
-        mass_density        = 1.225
+        mass_density        = sd.ideal_gas_mass_density( temperature )
         kinematic_viscosity = 1.461e-5
 
         dynamic_viscosity   = mass_density * kinematic_viscosity

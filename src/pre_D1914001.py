@@ -161,15 +161,15 @@ with open( ratio_filename, "r" ) as ratio_file:
         # a single value.
         #
         # TODO: Calculate the density values rather than just assuming them.
+        temperature = 15.0 + sd.ABSOLUTE_ZERO
         kinematic_viscosity = None
         mass_density        = None
         if ( working_fluid == "Water" ):
             mass_density        = 1000.0
             kinematic_viscosity = 9.186e-7
         elif ( working_fluid == "Air" ):
-            mass_density        = 1.225
+            mass_density        = sd.ideal_gas_mass_density( temperature )
             kinematic_viscosity = 1.468e-5
-        temperature = 15.0 + sd.ABSOLUTE_ZERO
 
         Re_bulk = bulk_velocity * diameter / kinematic_viscosity
 

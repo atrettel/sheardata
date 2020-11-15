@@ -19,22 +19,20 @@ import numpy as np
 import sqlite3
 from uncertainties import ufloat
 
-# Physical and mathematical constants
-ABSOLUTE_ZERO = 273.15
-
-STANDARD_GRAVITATIONAL_ACCELERATION = 9.80665
-
-DRY_AIR_SPECIFIC_GAS_CONSTANT = 287.058
-DRY_AIR_HEAT_CAPACITY_RATIO   =   1.4
+# Physical constants
+ABSOLUTE_ZERO                       =    273.15
+DRY_AIR_HEAT_CAPACITY_RATIO         =      1.4
+DRY_AIR_SPECIFIC_GAS_CONSTANT       =    287.058
+STANDARD_ATMOSPHERIC_PRESSURE       = 101325.0
+STANDARD_GRAVITATIONAL_ACCELERATION =      9.80665
 
 # Unit conversion factors
-METERS_PER_INCH =  2.54e-2
-INCHES_PER_FOOT = 12.0
+INCHES_PER_FOOT         = 12.0
+KILOGRAM_PER_POUND_MASS =  0.45359237
+METERS_PER_INCH         =  2.54e-2
+SECONDS_PER_MINUTE      = 60.0
+
 METERS_PER_FOOT = METERS_PER_INCH * INCHES_PER_FOOT
-
-KILOGRAM_PER_POUND_MASS = 0.45359237
-
-SECONDS_PER_MINUTE = 60.0
 
 # Averaging systems
 ANY_AVERAGING_SYSTEM              = "ANY"
@@ -1114,6 +1112,11 @@ def count_studies( identifiers ):
         else:
             studies[study] += 1
     return studies
+
+def ideal_gas_mass_density( temperature,                            \
+                            pressure=STANDARD_ATMOSPHERIC_PRESSURE, \
+                            specific_gas_constant=DRY_AIR_SPECIFIC_GAS_CONSTANT, ):
+    return pressure / ( specific_gas_constant * temperature )
 
 def ideal_gas_speed_of_sound( temperature, \
         heat_capacity_ratio=DRY_AIR_HEAT_CAPACITY_RATIO, \
