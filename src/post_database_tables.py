@@ -21,7 +21,47 @@ conn   = sqlite3.connect( sys.argv[1] )
 cursor = conn.cursor()
 cursor.execute( "PRAGMA foreign_keys = ON;" )
 
-with open( "text-quantities-table.tex.tmp", "w" ) as f:
+with open( "list-flow-classes.tex.tmp", "w" ) as f:
+    f.write( r"\begin{itemize}"+"\n" )
+
+    cursor.execute(
+    """
+    SELECT identifier, class_name
+    FROM flow_classes
+    ORDER BY identifier;
+    """
+    )
+    for result in cursor.fetchall():
+        f.write(
+            r"\item "+"Class {:s} --- {:s}\n".format(
+                r"\texttt{"+result[0]+r"}",
+                result[1]+"s"
+            )
+        )
+
+    f.write( r"\end{itemize}"+"\n" )
+
+with open( "list-measurement-techniques.tex.tmp", "w" ) as f:
+    f.write( r"\begin{itemize}"+"\n" )
+
+    cursor.execute(
+    """
+    SELECT identifier, technique_name
+    FROM measurement_techniques
+    ORDER BY technique_name COLLATE NOCASE;
+    """
+    )
+    for result in cursor.fetchall():
+        f.write(
+            r"\item "+"{:s} ({:s})\n".format(
+                result[1],
+                r"\texttt{"+result[0]+r"}",
+            )
+        )
+
+    f.write( r"\end{itemize}"+"\n" )
+
+with open( "list-quantities.tex.tmp", "w" ) as f:
     f.write( r"\begin{itemize}"+"\n" )
 
     cursor.execute(

@@ -21,7 +21,7 @@ conn   = sqlite3.connect( sys.argv[1] )
 cursor = conn.cursor()
 cursor.execute( "PRAGMA foreign_keys = ON;" )
 
-with open( "figure-tree-diagram.gv", "w" ) as f:
+with open( "figure-flow-classification-tree-diagram.gv", "w" ) as f:
     f.write( 'digraph taxonomy {\n' )
     f.write( 'concentrate=true\n' )
     f.write( 'rankdir=LR\n' )
@@ -56,26 +56,6 @@ with open( "figure-tree-diagram.gv", "w" ) as f:
         )+"\n" )
 
     f.write( '}\n' )
-
-with open( "text-flow-classes.tex.tmp", "w" ) as f:
-    f.write( r"\begin{itemize}"+"\n" )
-
-    cursor.execute(
-    """
-    SELECT identifier, class_name
-    FROM flow_classes
-    ORDER BY identifier;
-    """
-    )
-    for result in cursor.fetchall():
-        f.write(
-            r"\item "+"Class {:s} --- {:s}\n".format(
-                r"\texttt{"+result[0]+r"}",
-                result[1]+"s"
-            )
-        )
-
-    f.write( r"\end{itemize}"+"\n" )
 
 conn.commit()
 conn.close()
