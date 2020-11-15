@@ -104,42 +104,14 @@ for duct in ducts:
                 duct,
                 test_number
             )
-            temperature                   = ( float(duct_globals_row[2]) - 32.0 ) / 1.8 + 273.15
-            mass_density                  = float(duct_globals_row[4]) * 0.45359237 / 0.3048**3.0
-            bulk_velocity_value           = float(duct_globals_row[5]) * 0.3048 / 60.0
-            hydraulic_diameter            = float(duct_globals_row[6]) * 0.0254
-            Re_bulk_value                 = float(duct_globals_row[10])
-            fanning_friction_factor_value = float(duct_globals_row[11]) / 4.0
+            temperature        = ( float(duct_globals_row[2]) - 32.0 ) / 1.8 + 273.15
+            mass_density       = float(duct_globals_row[4]) * 0.45359237 / 0.3048**3.0
+            bulk_velocity      = float(duct_globals_row[5]) * 0.3048 / 60.0
+            hydraulic_diameter = float(duct_globals_row[6]) * 0.0254
+            pressure_gradient  = float(duct_globals_row[7]) * 0.0254 * 1000.0 * 9.81 / 0.3048
+            Re_bulk_value      = float(duct_globals_row[10])
 
             # Uncertainty of wall shear stress measurements
-            #
-            # p. 129
-            #
-            # \begin{quote}
-            # The maximum sensitivity of the five gages was $\pm 0.02$ in. of
-            # water, with an accuracy within this value over the entire range.
-            # \end{quote}
-            #
-            # Assume a uniform distribution.
-            wall_shear_stress_value = 0.5 * mass_density * bulk_velocity_value**2.0 * fanning_friction_factor_value
-
-            pressure_drop_value = 4.0 * wall_shear_stress_value * ducts[duct].length / hydraulic_diameter
-            pressure_drop_uncertainty = 1000.0 * 9.81 * ( 0.02 * 0.0254 ) / 3.0**0.5
-
-            # TODO: The uncertainties calculated here appear to large at times,
-            # so large that it is impossible to plot them without causing
-            # "dimension too large" errors.  Go back later and investigate
-            # this.
-
-            #pressure_drop = ufloat(
-            #    pressure_drop_value,
-            #    pressure_drop_uncertainty,
-            #)
-            pressure_drop = pressure_drop_value
-
-            wall_shear_stress = 0.25 * hydraulic_diameter * pressure_drop / ducts[duct].length
-
-            # Uncertainty of flow rate measurements
             #
             # p. 128
             #
@@ -149,9 +121,19 @@ for duct in ducts:
             # exceed $\pm 2$ percent.
             # \end{quote}
             #
-            # Assume a uniform distribution.
-            bulk_velocity_uncertainty = 0.02 * bulk_velocity_value / 3.0**2.0
-            bulk_velocity = ufloat( bulk_velocity_value, bulk_velocity_uncertainty )
+            # p. 129
+            #
+            # \begin{quote}
+            # The maximum sensitivity of the five gages was $\pm 0.02$ in. of
+            # water, with an accuracy within this value over the entire range.
+            # \end{quote}
+            #
+            # The first number about the flow rate measurements appears
+            # reasonable, but the second number about the pressure drop
+            # measurements creates extremely large uncertainties for the lower
+            # bulk Reynolds number cases.  It appears that this "maximum" is
+            # perhaps far too high.
+            wall_shear_stress = 0.25 * hydraulic_diameter * pressure_gradient
 
             fanning_friction_factor = 2.0 * wall_shear_stress / ( mass_density * bulk_velocity**2.0 )
 
