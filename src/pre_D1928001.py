@@ -52,8 +52,8 @@ sd.add_source( cursor, study_identifier, "DeanRB+1978+eng+JOUR",   2 )
 # employing either mercury or water as a fluid according to the range of
 # pressure.
 # \end{quote}
-flow_rate_measurement_technique         = sd.WEIGHING_METHOD_MEASUREMENT_TECHNIQUE
-wall_shear_stress_measurement_technique = sd.MOMENTUM_BALANCE_MEASUREMENT_TECHNIQUE
+flow_rate_measurement_technique         = sd.MT_WEIGHING_METHOD
+wall_shear_stress_measurement_technique = sd.MT_MOMENTUM_BALANCE
 
 n   = 0
 SSE = 0.0
@@ -267,7 +267,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.BULK_REYNOLDS_NUMBER_QUANTITY,
             bulk_reynolds_number,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE
+            measurement_technique=sd.MT_CALCULATION
         )
 
         sd.set_station_value(
@@ -276,7 +276,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.BULK_MACH_NUMBER_QUANTITY,
             bulk_mach_number,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE
+            measurement_technique=sd.MT_CALCULATION
         )
 
         # This set of data only considers wall quantities.
@@ -303,7 +303,7 @@ with open( globals_filename, "r" ) as globals_file:
                 quantity,
                 sd.WALL_POINT_LABEL,
                 0.0,
-                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+                measurement_technique=sd.MT_ASSUMPTION,
             )
 
         sd.set_labeled_value(
@@ -313,7 +313,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.WALL_POINT_LABEL,
             mass_density,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+            measurement_technique=sd.MT_ASSUMPTION,
         )
 
         sd.set_labeled_value(
@@ -350,7 +350,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.WALL_POINT_LABEL,
             speed_of_sound,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+            measurement_technique=sd.MT_ASSUMPTION,
         )
 
         sd.set_labeled_value(

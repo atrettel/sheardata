@@ -249,7 +249,7 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.STREAMWISE_VELOCITY_QUANTITY,
                 u_reversed[i],
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-                measurement_technique=sd.PITOT_STATIC_TUBE_MEASUREMENT_TECHNIQUE,
+                measurement_technique=sd.MT_PITOT_STATIC_TUBE,
                 notes=( series_1_center_line_note if ( series_number == 1 and point_number == n_points ) else None ),
             )
 
@@ -261,7 +261,7 @@ with open( globals_filename, "r" ) as globals_file:
                     quantity,
                     ufloat( 0.0, 0.0 ),
                     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-                    measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+                    measurement_technique=sd.MT_ASSUMPTION,
                 )
 
             # Assumed constant profiles
@@ -271,7 +271,7 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.TEMPERATURE_QUANTITY,
                 temperature,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+                measurement_technique=sd.MT_ASSUMPTION,
             )
 
             sd.set_point_value(
@@ -280,7 +280,7 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.MASS_DENSITY_QUANTITY,
                 mass_density,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+                measurement_technique=sd.MT_ASSUMPTION,
             )
 
             sd.set_point_value(
@@ -289,7 +289,7 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.KINEMATIC_VISCOSITY_QUANTITY,
                 kinematic_viscosity,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+                measurement_technique=sd.MT_ASSUMPTION,
             )
 
             sd.set_point_value(
@@ -298,7 +298,7 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.DYNAMIC_VISCOSITY_QUANTITY,
                 dynamic_viscosity,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+                measurement_technique=sd.MT_ASSUMPTION,
             )
 
             sd.set_point_value(
@@ -307,7 +307,7 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.SPEED_OF_SOUND_QUANTITY,
                 speed_of_sound,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+                measurement_technique=sd.MT_ASSUMPTION,
             )
 
             i += 1
@@ -322,7 +322,7 @@ with open( globals_filename, "r" ) as globals_file:
                     quantity,
                     sd.WALL_POINT_LABEL,
                     0.0,
-                    measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+                    measurement_technique=sd.MT_ASSUMPTION,
                 )
 
         r_prof, u_prof = sd.get_twin_profiles(
@@ -344,7 +344,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.VOLUMETRIC_FLOW_RATE_QUANTITY,
             volumetric_flow_rate,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
+            measurement_technique=sd.MT_CALCULATION,
         )
 
         sd.set_station_value(
@@ -353,7 +353,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.MASS_FLOW_RATE_QUANTITY,
             mass_flow_rate,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
+            measurement_technique=sd.MT_CALCULATION,
         )
 
         sd.set_station_value(
@@ -362,7 +362,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.BULK_VELOCITY_QUANTITY,
             bulk_velocity,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
+            measurement_technique=sd.MT_CALCULATION,
         )
 
         sd.set_station_value(
@@ -371,7 +371,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.BULK_REYNOLDS_NUMBER_QUANTITY,
             Re_bulk,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
+            measurement_technique=sd.MT_CALCULATION,
         )
 
         sd.set_station_value(
@@ -380,7 +380,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.BULK_MACH_NUMBER_QUANTITY,
             Ma_bulk,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
+            measurement_technique=sd.MT_CALCULATION,
         )
 
         maximum_velocity = sd.get_labeled_value(
@@ -397,7 +397,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY,
             bulk_velocity / maximum_velocity,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
+            measurement_technique=sd.MT_CALCULATION,
         )
 
         # Wall shear stress measurements

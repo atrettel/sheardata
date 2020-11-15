@@ -249,7 +249,7 @@ with open( ratio_filename, "r" ) as ratio_file:
             sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY,
             bulk_velocity / maximum_velocity,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
+            measurement_technique=sd.MT_CALCULATION,
             outlier=outlier,
         )
 
@@ -259,7 +259,7 @@ with open( ratio_filename, "r" ) as ratio_file:
             sd.BULK_REYNOLDS_NUMBER_QUANTITY,
             Re_bulk,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
+            measurement_technique=sd.MT_CALCULATION,
             outlier=outlier,
         )
 
@@ -269,7 +269,7 @@ with open( ratio_filename, "r" ) as ratio_file:
             sd.BULK_MACH_NUMBER_QUANTITY,
             Ma_bulk,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE,
+            measurement_technique=sd.MT_CALCULATION,
             outlier=outlier,
         )
 
@@ -325,7 +325,7 @@ with open( ratio_filename, "r" ) as ratio_file:
         #
         # In addition to that, the paper contains no information on the
         # uncertainty of the flow rate measuremnt.
-        velocity_measurement_technique = sd.IMPACT_TUBE_MEASUREMENT_TECHNIQUE
+        velocity_measurement_technique = sd.MT_IMPACT_TUBE
 
         for label in [ sd.WALL_POINT_LABEL, sd.CENTER_LINE_POINT_LABEL ]:
             sd.set_labeled_value(
@@ -335,7 +335,7 @@ with open( ratio_filename, "r" ) as ratio_file:
                 label,
                 kinematic_viscosity,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE
+                measurement_technique=sd.MT_ASSUMPTION
             )
 
             sd.set_labeled_value(
@@ -345,7 +345,7 @@ with open( ratio_filename, "r" ) as ratio_file:
                 label,
                 temperature,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE
+                measurement_technique=sd.MT_ASSUMPTION
             )
 
             sd.set_labeled_value(
@@ -355,7 +355,7 @@ with open( ratio_filename, "r" ) as ratio_file:
                 label,
                 speed_of_sound,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE
+                measurement_technique=sd.MT_ASSUMPTION
             )
 
         for quantity in [ sd.ROUGHNESS_HEIGHT_QUANTITY,
@@ -367,7 +367,7 @@ with open( ratio_filename, "r" ) as ratio_file:
                 quantity,
                 sd.WALL_POINT_LABEL,
                 0.0,
-                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+                measurement_technique=sd.MT_ASSUMPTION,
             )
 
         sd.set_labeled_value(
@@ -554,7 +554,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.BULK_REYNOLDS_NUMBER_QUANTITY,
             Re_bulk,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE
+            measurement_technique=sd.MT_CALCULATION
         )
 
         sd.set_station_value(
@@ -563,7 +563,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.BULK_MACH_NUMBER_QUANTITY,
             Ma_bulk,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.CALCULATION_MEASUREMENT_TECHNIQUE
+            measurement_technique=sd.MT_CALCULATION
         )
 
         sd.set_station_value(
@@ -596,7 +596,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
                 quantity,
                 sd.WALL_POINT_LABEL,
                 0.0,
-                measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+                measurement_technique=sd.MT_ASSUMPTION,
             )
 
         sd.set_labeled_value(
@@ -633,7 +633,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.WALL_POINT_LABEL,
             speed_of_sound,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.ASSUMPTION_MEASUREMENT_TECHNIQUE,
+            measurement_technique=sd.MT_ASSUMPTION,
         )
 
         sd.set_labeled_value(
@@ -684,7 +684,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
         # length of the pipe was determined, and from the known diameter of the
         # pipe the surface friction per unit area was calculated.
         # \end{quote}
-        wall_shear_stress_measurement_technique = sd.MOMENTUM_BALANCE_MEASUREMENT_TECHNIQUE
+        wall_shear_stress_measurement_technique = sd.MT_MOMENTUM_BALANCE
 
         sd.set_labeled_value(
             cursor,
