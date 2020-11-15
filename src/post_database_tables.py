@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this file.  If not, see <https://www.gnu.org/licenses/>.
 
+import sheardata as sd
 import sqlite3
 import sys
 
@@ -41,25 +42,34 @@ with open( "list-flow-classes.tex.tmp", "w" ) as f:
 
     f.write( r"\end{itemize}"+"\n" )
 
-with open( "list-measurement-techniques.tex.tmp", "w" ) as f:
-    f.write( r"\begin{itemize}"+"\n" )
-
+def create_measurement_techniques_tree( parent ):
     cursor.execute(
     """
     SELECT identifier, technique_name
     FROM measurement_techniques
+    WHERE parent=?
     ORDER BY technique_name COLLATE NOCASE;
-    """
+    """,
+    ( parent, )
     )
-    for result in cursor.fetchall():
-        f.write(
-            r"\item "+"{:s} ({:s})\n".format(
-                result[1],
-                r"\texttt{"+result[0]+r"}",
-            )
+    tree = ""
+    results = cursor.fetchall()
+    if ( len(results) != 0 ):
+        tree += r"\begin{itemize}"+"\n"
+    for result in results:
+        child = str(result[0])
+        name  = str(result[1])
+        tree += r"\item[$\bullet$] "+"{:s} ({:s})\n".format(
+            result[1],
+            r"\texttt{"+result[0]+r"}",
         )
+        tree += create_measurement_techniques_tree( child )
+    if ( len(results) != 0 ):
+        tree += r"\end{itemize}"+"\n"
+    return tree
 
-    f.write( r"\end{itemize}"+"\n" )
+with open( "list-measurement-techniques.tex.tmp", "w" ) as f:
+    f.write( create_measurement_techniques_tree( sd.MT_ROOT ) )
 
 with open( "list-quantities.tex.tmp", "w" ) as f:
     f.write( r"\begin{itemize}"+"\n" )
