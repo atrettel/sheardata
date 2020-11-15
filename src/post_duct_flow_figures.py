@@ -24,7 +24,7 @@ from uncertainties import unumpy as unp
 import matplotlib as mpl
 mpl.use("pgf")
 import matplotlib.pylab as plt
-import grfstyl as gfx
+import gfx
 mpl.rcParams.update( gfx.rc_custom_preamble() )
 
 conn   = sqlite3.connect( sys.argv[1] )
