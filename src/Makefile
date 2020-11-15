@@ -22,7 +22,8 @@ database=$(project).db
 preprocessing_targets := $(filter-out ,$(patsubst %.py,%.tmp,$(wildcard pre_*.py)))
 postprocessing_targets := $(filter-out ,$(patsubst %.py,%.tmp,$(wildcard post_*.py)))
 
-tex_dependencies = $(project).tex $(wildcard ../data/*.tex) $(postprocessing_targets) figure-tree-diagram.tex.tmp $(project).bcf
+dot_targets = figure-flow-classification-tree-diagram.tex.tmp
+tex_dependencies = $(project).tex $(wildcard ../data/*.tex) $(postprocessing_targets) $(dot_targets) $(project).bcf
 
 $(database): $(project).tmp $(preprocessing_targets)
 
@@ -40,8 +41,8 @@ post_%.tmp:: post_%.py $(database)
 	-sed -i "s/use as bounding box, clip/use as bounding box/g" *.pgf
 	@touch $@
 
-figure-tree-diagram.tex.tmp: $(postprocessing_targets)
-	dot2tex figure-tree-diagram.gv --output $@ --usepdflatex --figonly
+figure-%.tex.tmp: figure-%.gv $(postprocessing_targets)
+	dot2tex $< --output $@ --usepdflatex --figonly
 	sed -i "s/article/standalone/g" $@
 	sed -i "/enlarge/d" $@
 
