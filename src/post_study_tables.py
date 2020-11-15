@@ -22,6 +22,10 @@ conn   = sqlite3.connect( sys.argv[1] )
 cursor = conn.cursor()
 cursor.execute( "PRAGMA foreign_keys = ON;" )
 
+total_number_of_series   = 0
+total_number_of_stations = 0
+total_number_of_points   = 0
+
 with open( "table-all-studies.tex.tmp", "w" ) as f:
     f.write( r"\begin{tabular}{ r | l l r r r }"+"\n" )
     f.write( r"Study & Type & Primary sources & \# series & " )
@@ -111,6 +115,20 @@ with open( "table-all-studies.tex.tmp", "w" ) as f:
         )+r"\\"+"\n"
 
         f.write( line )
+
+        total_number_of_series   += number_of_series
+        total_number_of_stations += number_of_stations
+        total_number_of_points   += number_of_points
+
+    f.write( r"\hline"+"\n" )
+
+    f.write( r"Totals & & & "+"{:d}".format(
+        total_number_of_series,
+    )+r" & "+"{:d}".format(
+        total_number_of_stations,
+    )+r" & "+"{:d}".format(
+        total_number_of_points,
+    )+r"\\"+"\n" )
 
     f.write( r"\end{tabular}"+"\n" )
 
