@@ -1113,11 +1113,11 @@ def count_studies( identifiers ):
             studies[study] += 1
     return studies
 
+# TODO: Later, make the pressure a required argument.
 def ideal_gas_mass_density( temperature,                            \
                             pressure=STANDARD_ATMOSPHERIC_PRESSURE, \
                             specific_gas_constant=DRY_AIR_SPECIFIC_GAS_CONSTANT, ):
     return pressure / ( specific_gas_constant * temperature )
-
 def ideal_gas_speed_of_sound( temperature, \
         heat_capacity_ratio=DRY_AIR_HEAT_CAPACITY_RATIO, \
         specific_gas_constant=DRY_AIR_SPECIFIC_GAS_CONSTANT, ):
@@ -1125,3 +1125,8 @@ def ideal_gas_speed_of_sound( temperature, \
 
 def fahrenheit_to_kelvin( fahrenheit ):
     return ( fahrenheit - 32.0 ) / 1.8 + ABSOLUTE_ZERO
+
+# Air is the default.
+def sutherlands_law_dynamic_viscosity( temperature, T_0=273.0, mu_0=1.716e-5, \
+                                       S=111.0 ):
+    return mu_0 * ( temperature / T_0 )**1.5 * ( T_0 + S ) / ( temperature + S )

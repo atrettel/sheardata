@@ -186,14 +186,12 @@ with open( globals_filename, "r" ) as globals_file:
 
         n_points = len(r_reversed)
 
-        # Assumed constant profiles
-        # TODO: Calculate these rather than assume them.
+        # This temperature is an assumption.  It is not stated in the paper.
         temperature         = 15.0 + sd.ABSOLUTE_ZERO
         mass_density        = sd.ideal_gas_mass_density( temperature )
-        kinematic_viscosity = 1.461e-5
-
-        dynamic_viscosity   = mass_density * kinematic_viscosity
         speed_of_sound      = sd.ideal_gas_speed_of_sound( temperature )
+        dynamic_viscosity   = sd.sutherlands_law_dynamic_viscosity( temperature )
+        kinematic_viscosity = dynamic_viscosity / mass_density
 
         i = 0
         for point_number in range( n_points, 0, -1 ):

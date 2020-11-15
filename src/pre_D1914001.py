@@ -162,14 +162,17 @@ with open( ratio_filename, "r" ) as ratio_file:
         #
         # TODO: Calculate the density values rather than just assuming them.
         temperature = 15.0 + sd.ABSOLUTE_ZERO
+        dynamic_viscosity   = None
         kinematic_viscosity = None
         mass_density        = None
         if ( working_fluid == "Water" ):
             mass_density        = 1000.0
             kinematic_viscosity = 9.186e-7
+            dynamic_viscosity   = mass_density * kinematic_viscosity
         elif ( working_fluid == "Air" ):
             mass_density        = sd.ideal_gas_mass_density( temperature )
-            kinematic_viscosity = 1.468e-5
+            dynamic_viscosity   = sd.sutherlands_law_dynamic_viscosity( temperature )
+            kinematic_viscosity = dynamic_viscosity / mass_density
 
         Re_bulk = bulk_velocity * diameter / kinematic_viscosity
 
@@ -332,11 +335,31 @@ with open( ratio_filename, "r" ) as ratio_file:
             sd.set_labeled_value(
                 cursor,
                 station_identifier,
+                sd.Q_MASS_DENSITY,
+                label,
+                mass_density,
+                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                measurement_technique=sd.MT_CALCULATION
+            )
+
+            sd.set_labeled_value(
+                cursor,
+                station_identifier,
+                sd.Q_DYNAMIC_VISCOSITY,
+                label,
+                dynamic_viscosity,
+                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                measurement_technique=sd.MT_CALCULATION
+            )
+
+            sd.set_labeled_value(
+                cursor,
+                station_identifier,
                 sd.Q_KINEMATIC_VISCOSITY,
                 label,
                 kinematic_viscosity,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-                measurement_technique=sd.MT_ASSUMPTION
+                measurement_technique=sd.MT_CALCULATION
             )
 
             sd.set_labeled_value(
