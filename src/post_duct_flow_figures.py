@@ -66,9 +66,9 @@ min_bulk_mach_number = 0.0
 max_bulk_mach_number = 0.3
 
 for duct_type in duct_types:
-    for quantity in [ sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY,
-                                 sd.FANNING_FRICTION_FACTOR_QUANTITY, ]:
-        if ( quantity == sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY ):
+    for quantity in [ sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO,
+                                 sd.Q_FANNING_FRICTION_FACTOR, ]:
+        if ( quantity == sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO ):
             cursor.execute(
             """
             SELECT identifier
@@ -122,19 +122,19 @@ for duct_type in duct_types:
                 int(2),
                 duct_types[duct_type].coordinate_system,
                 duct_types[duct_type].geometry,
-                sd.INNER_LAYER_ROUGHNESS_HEIGHT_QUANTITY,
+                sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
                 max_inner_layer_roughness_height,
-                sd.ASPECT_RATIO_QUANTITY,
+                sd.Q_ASPECT_RATIO,
                 duct_types[duct_type].min_aspect_ratio,
                 duct_types[duct_type].max_aspect_ratio,
-                sd.BULK_MACH_NUMBER_QUANTITY,
+                sd.Q_BULK_MACH_NUMBER,
                 min_bulk_mach_number,
                 max_bulk_mach_number,
-                sd.BULK_REYNOLDS_NUMBER_QUANTITY,
+                sd.Q_BULK_REYNOLDS_NUMBER,
                 quantity,
             )
             )
-        elif ( quantity == sd.FANNING_FRICTION_FACTOR_QUANTITY ):
+        elif ( quantity == sd.Q_FANNING_FRICTION_FACTOR ):
             cursor.execute(
             """
             SELECT identifier
@@ -192,15 +192,15 @@ for duct_type in duct_types:
                 int(2),
                 duct_types[duct_type].coordinate_system,
                 duct_types[duct_type].geometry,
-                sd.INNER_LAYER_ROUGHNESS_HEIGHT_QUANTITY,
+                sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
                 max_inner_layer_roughness_height,
-                sd.ASPECT_RATIO_QUANTITY,
+                sd.Q_ASPECT_RATIO,
                 duct_types[duct_type].min_aspect_ratio,
                 duct_types[duct_type].max_aspect_ratio,
-                sd.BULK_MACH_NUMBER_QUANTITY,
+                sd.Q_BULK_MACH_NUMBER,
                 min_bulk_mach_number,
                 max_bulk_mach_number,
-                sd.BULK_REYNOLDS_NUMBER_QUANTITY,
+                sd.Q_BULK_REYNOLDS_NUMBER,
                 quantity,
             )
             )
@@ -215,18 +215,18 @@ for duct_type in duct_types:
             bulk_reynolds_number_array.append( sd.get_station_value(
                 cursor,
                 station,
-                sd.BULK_REYNOLDS_NUMBER_QUANTITY,
+                sd.Q_BULK_REYNOLDS_NUMBER,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             ) )
 
-            if ( quantity == sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY ):
+            if ( quantity == sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO ):
                 quantity_values_array.append( sd.get_station_value(
                     cursor,
                     station,
                     quantity,
                     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
                 ) )
-            elif ( quantity == sd.FANNING_FRICTION_FACTOR_QUANTITY ):
+            elif ( quantity == sd.Q_FANNING_FRICTION_FACTOR ):
                 quantity_values_array.append( sd.get_labeled_value(
                     cursor,
                     station,
@@ -239,7 +239,7 @@ for duct_type in duct_types:
         ax  = fig.add_subplot( 1, 1, 1 )
 
         ax.set_xscale( "log", nonposx="clip" )
-        if ( quantity == sd.FANNING_FRICTION_FACTOR_QUANTITY ):
+        if ( quantity == sd.Q_FANNING_FRICTION_FACTOR ):
             ax.set_yscale( "log", nonposy="clip" )
 
         bulk_reynolds_number = np.array( bulk_reynolds_number_array )
@@ -251,14 +251,14 @@ for duct_type in duct_types:
         filename_label = None
         quantity_label = None
         uncertainty_threshold = float("inf")
-        if ( quantity == sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY ):
+        if ( quantity == sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO ):
             bulk_reynolds_number_bounds = ( 1.00e+3, 1.00e+5, )
             quantity_values_bounds      = ( 0.50e+0, 0.85e+0, )
 
             y_label        = r"$\frac{U_b}{U_c}$"
             filename_label = "velocity-ratios"
             quantity_label = "Bulk-to-center-line velocity ratio"
-        elif ( quantity == sd.FANNING_FRICTION_FACTOR_QUANTITY ):
+        elif ( quantity == sd.Q_FANNING_FRICTION_FACTOR ):
             bulk_reynolds_number_bounds = ( 1.00e+1, 1.00e+6, )
             quantity_values_bounds      = ( 1.00e-3, 1.00e-1, )
 
@@ -291,7 +291,7 @@ for duct_type in duct_types:
             marker="o",
             linestyle="",
             elinewidth=gfx.error_bar_width,
-            clip_on=( quantity == sd.FANNING_FRICTION_FACTOR_QUANTITY ),
+            clip_on=( quantity == sd.Q_FANNING_FRICTION_FACTOR ),
             zorder=2,
         )
 

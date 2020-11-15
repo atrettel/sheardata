@@ -197,14 +197,14 @@ for duct in ducts:
             sd.set_station_value(
                 cursor,
                 station_identifier,
-                sd.HYDRAULIC_DIAMETER_QUANTITY,
+                sd.Q_HYDRAULIC_DIAMETER,
                 hydraulic_diameter,
             )
 
             sd.set_station_value(
                 cursor,
                 station_identifier,
-                sd.ASPECT_RATIO_QUANTITY,
+                sd.Q_ASPECT_RATIO,
                 ducts[duct].aspect_ratio,
             )
 
@@ -222,7 +222,7 @@ for duct in ducts:
             sd.set_station_value(
                 cursor,
                 station_identifier,
-                sd.BULK_VELOCITY_QUANTITY,
+                sd.Q_BULK_VELOCITY,
                 bulk_velocity,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
                 measurement_technique=sd.MT_IMPACT_TUBE,
@@ -231,7 +231,7 @@ for duct in ducts:
             sd.set_station_value(
                 cursor,
                 station_identifier,
-                sd.BULK_REYNOLDS_NUMBER_QUANTITY,
+                sd.Q_BULK_REYNOLDS_NUMBER,
                 Re_bulk,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
                 measurement_technique=sd.MT_CALCULATION
@@ -240,7 +240,7 @@ for duct in ducts:
             sd.set_station_value(
                 cursor,
                 station_identifier,
-                sd.BULK_MACH_NUMBER_QUANTITY,
+                sd.Q_BULK_MACH_NUMBER,
                 Ma_bulk,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
                 measurement_technique=sd.MT_CALCULATION
@@ -278,9 +278,9 @@ for duct in ducts:
             # joints.  The hydraulic roughness magnitude cannot be measured
             # geometrically but can be deduced from the test results.
             # \end{quote}
-            for quantity in [ sd.ROUGHNESS_HEIGHT_QUANTITY,
-                              sd.INNER_LAYER_ROUGHNESS_HEIGHT_QUANTITY,
-                              sd.OUTER_LAYER_ROUGHNESS_HEIGHT_QUANTITY, ]:
+            for quantity in [ sd.Q_ROUGHNESS_HEIGHT,
+                              sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
+                              sd.Q_OUTER_LAYER_ROUGHNESS_HEIGHT, ]:
                 sd.set_labeled_value(
                     cursor,
                     station_identifier,
@@ -293,7 +293,7 @@ for duct in ducts:
             sd.set_labeled_value(
                 cursor,
                 station_identifier,
-                sd.MASS_DENSITY_QUANTITY,
+                sd.Q_MASS_DENSITY,
                 sd.WALL_POINT_LABEL,
                 mass_density,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -303,7 +303,7 @@ for duct in ducts:
             sd.set_labeled_value(
                 cursor,
                 station_identifier,
-                sd.KINEMATIC_VISCOSITY_QUANTITY,
+                sd.Q_KINEMATIC_VISCOSITY,
                 sd.WALL_POINT_LABEL,
                 kinematic_viscosity,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -312,7 +312,7 @@ for duct in ducts:
             sd.set_labeled_value(
                 cursor,
                 station_identifier,
-                sd.DYNAMIC_VISCOSITY_QUANTITY,
+                sd.Q_DYNAMIC_VISCOSITY,
                 sd.WALL_POINT_LABEL,
                 dynamic_viscosity,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -321,7 +321,7 @@ for duct in ducts:
             sd.set_labeled_value(
                 cursor,
                 station_identifier,
-                sd.TEMPERATURE_QUANTITY,
+                sd.Q_TEMPERATURE,
                 sd.WALL_POINT_LABEL,
                 temperature,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -330,7 +330,7 @@ for duct in ducts:
             sd.set_labeled_value(
                 cursor,
                 station_identifier,
-                sd.SPEED_OF_SOUND_QUANTITY,
+                sd.Q_SPEED_OF_SOUND,
                 sd.WALL_POINT_LABEL,
                 speed_of_sound,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -340,7 +340,7 @@ for duct in ducts:
             sd.set_labeled_value(
                 cursor,
                 station_identifier,
-                sd.STREAMWISE_VELOCITY_QUANTITY,
+                sd.Q_STREAMWISE_VELOCITY,
                 sd.WALL_POINT_LABEL,
                 ufloat( 0.0, 0.0 ),
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -349,7 +349,7 @@ for duct in ducts:
             sd.set_labeled_value(
                 cursor,
                 station_identifier,
-                sd.DISTANCE_FROM_WALL_QUANTITY,
+                sd.Q_DISTANCE_FROM_WALL,
                 sd.WALL_POINT_LABEL,
                 ufloat( 0.0, 0.0 ),
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -358,7 +358,7 @@ for duct in ducts:
             sd.set_labeled_value(
                 cursor,
                 station_identifier,
-                sd.OUTER_LAYER_COORDINATE_QUANTITY,
+                sd.Q_OUTER_LAYER_COORDINATE,
                 sd.WALL_POINT_LABEL,
                 ufloat( 0.0, 0.0 ),
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -370,7 +370,7 @@ for duct in ducts:
             sd.set_labeled_value(
                 cursor,
                 station_identifier,
-                sd.SHEAR_STRESS_QUANTITY,
+                sd.Q_SHEAR_STRESS,
                 sd.WALL_POINT_LABEL,
                 wall_shear_stress,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -380,7 +380,7 @@ for duct in ducts:
             sd.set_labeled_value(
                 cursor,
                 station_identifier,
-                sd.FANNING_FRICTION_FACTOR_QUANTITY,
+                sd.Q_FANNING_FRICTION_FACTOR,
                 sd.WALL_POINT_LABEL,
                 fanning_friction_factor,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,

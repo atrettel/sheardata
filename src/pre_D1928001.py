@@ -223,21 +223,21 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value(
             cursor,
             station_identifier,
-            sd.HYDRAULIC_DIAMETER_QUANTITY,
+            sd.Q_HYDRAULIC_DIAMETER,
             hydraulic_diameter,
         )
 
         sd.set_station_value(
             cursor,
             station_identifier,
-            sd.ASPECT_RATIO_QUANTITY,
+            sd.Q_ASPECT_RATIO,
             aspect_ratio,
         )
 
         sd.set_station_value(
             cursor,
             station_identifier,
-            sd.MASS_FLOW_RATE_QUANTITY,
+            sd.Q_MASS_FLOW_RATE,
             mass_flow_rate,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=flow_rate_measurement_technique,
@@ -246,7 +246,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value(
             cursor,
             station_identifier,
-            sd.VOLUMETRIC_FLOW_RATE_QUANTITY,
+            sd.Q_VOLUMETRIC_FLOW_RATE,
             volumetric_flow_rate,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=flow_rate_measurement_technique,
@@ -255,7 +255,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value(
             cursor,
             station_identifier,
-            sd.BULK_VELOCITY_QUANTITY,
+            sd.Q_BULK_VELOCITY,
             bulk_velocity,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=flow_rate_measurement_technique,
@@ -264,7 +264,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value(
             cursor,
             station_identifier,
-            sd.BULK_REYNOLDS_NUMBER_QUANTITY,
+            sd.Q_BULK_REYNOLDS_NUMBER,
             bulk_reynolds_number,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=sd.MT_CALCULATION
@@ -273,7 +273,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value(
             cursor,
             station_identifier,
-            sd.BULK_MACH_NUMBER_QUANTITY,
+            sd.Q_BULK_MACH_NUMBER,
             bulk_mach_number,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=sd.MT_CALCULATION
@@ -294,9 +294,9 @@ with open( globals_filename, "r" ) as globals_file:
 
         # In general, the surface is not well-described in this study at all.
         # The data is consistent with a smooth surface, though.
-        for quantity in [ sd.ROUGHNESS_HEIGHT_QUANTITY,
-                          sd.INNER_LAYER_ROUGHNESS_HEIGHT_QUANTITY,
-                          sd.OUTER_LAYER_ROUGHNESS_HEIGHT_QUANTITY, ]:
+        for quantity in [ sd.Q_ROUGHNESS_HEIGHT,
+                          sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
+                          sd.Q_OUTER_LAYER_ROUGHNESS_HEIGHT, ]:
             sd.set_labeled_value(
                 cursor,
                 station_identifier,
@@ -309,7 +309,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_labeled_value(
             cursor,
             station_identifier,
-            sd.MASS_DENSITY_QUANTITY,
+            sd.Q_MASS_DENSITY,
             sd.WALL_POINT_LABEL,
             mass_density,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -319,7 +319,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_labeled_value(
             cursor,
             station_identifier,
-            sd.KINEMATIC_VISCOSITY_QUANTITY,
+            sd.Q_KINEMATIC_VISCOSITY,
             sd.WALL_POINT_LABEL,
             kinematic_viscosity,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -328,7 +328,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_labeled_value(
             cursor,
             station_identifier,
-            sd.DYNAMIC_VISCOSITY_QUANTITY,
+            sd.Q_DYNAMIC_VISCOSITY,
             sd.WALL_POINT_LABEL,
             dynamic_viscosity,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -337,7 +337,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_labeled_value(
             cursor,
             station_identifier,
-            sd.TEMPERATURE_QUANTITY,
+            sd.Q_TEMPERATURE,
             sd.WALL_POINT_LABEL,
             temperature,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -346,7 +346,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_labeled_value(
             cursor,
             station_identifier,
-            sd.SPEED_OF_SOUND_QUANTITY,
+            sd.Q_SPEED_OF_SOUND,
             sd.WALL_POINT_LABEL,
             speed_of_sound,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -356,7 +356,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_labeled_value(
             cursor,
             station_identifier,
-            sd.STREAMWISE_VELOCITY_QUANTITY,
+            sd.Q_STREAMWISE_VELOCITY,
             sd.WALL_POINT_LABEL,
             ufloat( 0.0, 0.0 ),
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -365,7 +365,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_labeled_value(
             cursor,
             station_identifier,
-            sd.DISTANCE_FROM_WALL_QUANTITY,
+            sd.Q_DISTANCE_FROM_WALL,
             sd.WALL_POINT_LABEL,
             ufloat( 0.0, 0.0 ),
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -374,7 +374,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_labeled_value(
             cursor,
             station_identifier,
-            sd.OUTER_LAYER_COORDINATE_QUANTITY,
+            sd.Q_OUTER_LAYER_COORDINATE,
             sd.WALL_POINT_LABEL,
             ufloat( 0.0, 0.0 ),
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -383,7 +383,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_labeled_value(
             cursor,
             station_identifier,
-            sd.SHEAR_STRESS_QUANTITY,
+            sd.Q_SHEAR_STRESS,
             sd.WALL_POINT_LABEL,
             wall_shear_stress,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
@@ -393,7 +393,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_labeled_value(
             cursor,
             station_identifier,
-            sd.FANNING_FRICTION_FACTOR_QUANTITY,
+            sd.Q_FANNING_FRICTION_FACTOR,
             sd.WALL_POINT_LABEL,
             fanning_friction_factor,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,

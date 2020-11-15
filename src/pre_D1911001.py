@@ -119,14 +119,14 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value(
             cursor,
             station_identifier,
-            sd.HYDRAULIC_DIAMETER_QUANTITY,
+            sd.Q_HYDRAULIC_DIAMETER,
             diameter,
         )
 
         sd.set_station_value(
             cursor,
             station_identifier,
-            sd.ASPECT_RATIO_QUANTITY,
+            sd.Q_ASPECT_RATIO,
             1.0,
         )
         
@@ -216,21 +216,21 @@ with open( globals_filename, "r" ) as globals_file:
             sd.set_point_value(
                 cursor,
                 point_identifier,
-                sd.DISTANCE_FROM_WALL_QUANTITY,
+                sd.Q_DISTANCE_FROM_WALL,
                 0.5*diameter - r_reversed[i],
             )
 
             sd.set_point_value(
                 cursor,
                 point_identifier,
-                sd.OUTER_LAYER_COORDINATE_QUANTITY,
+                sd.Q_OUTER_LAYER_COORDINATE,
                 ( 0.5*diameter - r_reversed[i] ) / ( 0.5*diameter ),
             )
 
             sd.set_point_value(
                 cursor,
                 point_identifier,
-                sd.TRANSVERSE_COORDINATE_QUANTITY,
+                sd.Q_TRANSVERSE_COORDINATE,
                 r_reversed[i],
             )
 
@@ -246,15 +246,15 @@ with open( globals_filename, "r" ) as globals_file:
             sd.set_point_value(
                 cursor,
                 point_identifier,
-                sd.STREAMWISE_VELOCITY_QUANTITY,
+                sd.Q_STREAMWISE_VELOCITY,
                 u_reversed[i],
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
                 measurement_technique=sd.MT_PITOT_STATIC_TUBE,
                 notes=( series_1_center_line_note if ( series_number == 1 and point_number == n_points ) else None ),
             )
 
-            for quantity in [ sd.TRANSVERSE_VELOCITY_QUANTITY,
-                              sd.SPANWISE_VELOCITY_QUANTITY, ]:
+            for quantity in [ sd.Q_TRANSVERSE_VELOCITY,
+                              sd.Q_SPANWISE_VELOCITY, ]:
                 sd.set_point_value(
                     cursor,
                     point_identifier,
@@ -268,7 +268,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.set_point_value(
                 cursor,
                 point_identifier,
-                sd.TEMPERATURE_QUANTITY,
+                sd.Q_TEMPERATURE,
                 temperature,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
                 measurement_technique=sd.MT_ASSUMPTION,
@@ -277,7 +277,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.set_point_value(
                 cursor,
                 point_identifier,
-                sd.MASS_DENSITY_QUANTITY,
+                sd.Q_MASS_DENSITY,
                 mass_density,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
                 measurement_technique=sd.MT_ASSUMPTION,
@@ -286,7 +286,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.set_point_value(
                 cursor,
                 point_identifier,
-                sd.KINEMATIC_VISCOSITY_QUANTITY,
+                sd.Q_KINEMATIC_VISCOSITY,
                 kinematic_viscosity,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
                 measurement_technique=sd.MT_ASSUMPTION,
@@ -295,7 +295,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.set_point_value(
                 cursor,
                 point_identifier,
-                sd.DYNAMIC_VISCOSITY_QUANTITY,
+                sd.Q_DYNAMIC_VISCOSITY,
                 dynamic_viscosity,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
                 measurement_technique=sd.MT_ASSUMPTION,
@@ -304,7 +304,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.set_point_value(
                 cursor,
                 point_identifier,
-                sd.SPEED_OF_SOUND_QUANTITY,
+                sd.Q_SPEED_OF_SOUND,
                 speed_of_sound,
                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
                 measurement_technique=sd.MT_ASSUMPTION,
@@ -313,9 +313,9 @@ with open( globals_filename, "r" ) as globals_file:
             i += 1
 
         if ( is_rough_wall == False ):
-            for quantity in [ sd.ROUGHNESS_HEIGHT_QUANTITY,
-                              sd.INNER_LAYER_ROUGHNESS_HEIGHT_QUANTITY,
-                              sd.OUTER_LAYER_ROUGHNESS_HEIGHT_QUANTITY, ]:
+            for quantity in [ sd.Q_ROUGHNESS_HEIGHT,
+                              sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
+                              sd.Q_OUTER_LAYER_ROUGHNESS_HEIGHT, ]:
                 sd.set_labeled_value(
                     cursor,
                     station_identifier,
@@ -328,8 +328,8 @@ with open( globals_filename, "r" ) as globals_file:
         r_prof, u_prof = sd.get_twin_profiles(
             cursor,
             station_identifier,
-            sd.TRANSVERSE_COORDINATE_QUANTITY,
-            sd.STREAMWISE_VELOCITY_QUANTITY,
+            sd.Q_TRANSVERSE_COORDINATE,
+            sd.Q_STREAMWISE_VELOCITY,
         )
 
         volumetric_flow_rate = -2.0 * math.pi * sd.integrate_using_trapezoid_rule( r_prof, u_prof * r_prof )
@@ -341,7 +341,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value(
             cursor,
             station_identifier,
-            sd.VOLUMETRIC_FLOW_RATE_QUANTITY,
+            sd.Q_VOLUMETRIC_FLOW_RATE,
             volumetric_flow_rate,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=sd.MT_CALCULATION,
@@ -350,7 +350,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value(
             cursor,
             station_identifier,
-            sd.MASS_FLOW_RATE_QUANTITY,
+            sd.Q_MASS_FLOW_RATE,
             mass_flow_rate,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=sd.MT_CALCULATION,
@@ -359,7 +359,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value(
             cursor,
             station_identifier,
-            sd.BULK_VELOCITY_QUANTITY,
+            sd.Q_BULK_VELOCITY,
             bulk_velocity,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=sd.MT_CALCULATION,
@@ -368,7 +368,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value(
             cursor,
             station_identifier,
-            sd.BULK_REYNOLDS_NUMBER_QUANTITY,
+            sd.Q_BULK_REYNOLDS_NUMBER,
             Re_bulk,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=sd.MT_CALCULATION,
@@ -377,7 +377,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value(
             cursor,
             station_identifier,
-            sd.BULK_MACH_NUMBER_QUANTITY,
+            sd.Q_BULK_MACH_NUMBER,
             Ma_bulk,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=sd.MT_CALCULATION,
@@ -386,7 +386,7 @@ with open( globals_filename, "r" ) as globals_file:
         maximum_velocity = sd.get_labeled_value(
             cursor,
             station_identifier,
-            sd.STREAMWISE_VELOCITY_QUANTITY,
+            sd.Q_STREAMWISE_VELOCITY,
             sd.CENTER_LINE_POINT_LABEL,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
         )
@@ -394,7 +394,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value(
             cursor,
             station_identifier,
-            sd.BULK_TO_CENTER_LINE_VELOCITY_RATIO_QUANTITY,
+            sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO,
             bulk_velocity / maximum_velocity,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=sd.MT_CALCULATION,
