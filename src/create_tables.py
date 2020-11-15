@@ -287,30 +287,82 @@ cursor.execute(
 CREATE TABLE measurement_techniques (
     identifier     TEXT PRIMARY KEY UNIQUE,
     technique_name TEXT NOT NULL,
-    notes          TEXT DEFAULT NULL
+    intrusive      INTEGER NOT NULL DEFAULT 0 CHECK ( intrusive = 0 OR intrusive = 1 ),
+    parent         TEXT DEFAULT NULL,
+    notes          TEXT DEFAULT NULL,
+    FOREIGN KEY(parent) REFERENCES measurement_techniques(identifier)
 );
 """
 )
 
-measurement_techniques = {}
+class MeasTech:
+    name      = None
+    intrusive = None
+    parent    = None
 
-measurement_techniques[ sd.ASSUMPTION_MEASUREMENT_TECHNIQUE               ] = "assumption"
-measurement_techniques[ sd.CALCULATION_MEASUREMENT_TECHNIQUE              ] = "calculation"
-measurement_techniques[ sd.FLOATING_ELEMENT_BALANCE_MEASUREMENT_TECHNIQUE ] = "floating element balance"
-measurement_techniques[ sd.IMPACT_TUBE_MEASUREMENT_TECHNIQUE              ] = "impact tube"
-measurement_techniques[ sd.MOMENTUM_BALANCE_MEASUREMENT_TECHNIQUE         ] = "momentum balance"
-measurement_techniques[ sd.PITOT_STATIC_TUBE_MEASUREMENT_TECHNIQUE        ] = "Pitot-static tube"
-measurement_techniques[ sd.STATIC_PRESSURE_TAP_MEASUREMENT_TECHNIQUE      ] = "static pressure tap"
-measurement_techniques[ sd.WEIGHING_METHOD_MEASUREMENT_TECHNIQUE          ] = "weighing method"
+    def is_child( self ):
+        return self.parent != None
+
+    def __init__( self, name, parent, intrusive=False, ):
+        self.name      = str(name)
+        self.intrusive = 1 if intrusive else 0
+        self.parent    = parent
+
+measurement_techniques = {}
+measurement_techniques[ sd.MT_ROOT                                     ] = MeasTech( "knowledge source",                         None,                                               )
+measurement_techniques[ sd.MT_REASONING                                ] = MeasTech( "reasoning",                                sd.MT_ROOT,                                         )
+measurement_techniques[ sd.MT_APPROXIMATION                            ] = MeasTech( "approximation",                            sd.MT_REASONING,                                    )
+measurement_techniques[ sd.MT_ASSUMPTION                               ] = MeasTech( "assumption",                               sd.MT_REASONING,                                    )
+measurement_techniques[ sd.MT_CALCULATION                              ] = MeasTech( "calculation",                              sd.MT_REASONING,                                    )
+measurement_techniques[ sd.MT_EMPIRICISM                               ] = MeasTech( "empiricism",                               sd.MT_ROOT,                                         )
+measurement_techniques[ sd.MT_DIFFERENTIAL_PRESSURE_METHOD             ] = MeasTech( "differential pressure method",             sd.MT_EMPIRICISM,                                   )
+measurement_techniques[ sd.MT_IMPACT_TUBE                              ] = MeasTech( "impact tube",                              sd.MT_DIFFERENTIAL_PRESSURE_METHOD, intrusive=True, )
+measurement_techniques[ sd.MT_PITOT_STATIC_TUBE                        ] = MeasTech( "Pitot-static tube",                        sd.MT_DIFFERENTIAL_PRESSURE_METHOD, intrusive=True, )
+measurement_techniques[ sd.MT_FLOW_RATE_MEASUREMENT                    ] = MeasTech( "flow rate measurement",                    sd.MT_EMPIRICISM,                                   )
+measurement_techniques[ sd.MT_WEIGHING_METHOD                          ] = MeasTech( "weighing method",                          sd.MT_FLOW_RATE_MEASUREMENT,                        )
+measurement_techniques[ sd.MT_OPTICAL_METHOD                           ] = MeasTech( "optical method",                           sd.MT_EMPIRICISM,                                   )
+measurement_techniques[ sd.MT_DIRECT_INJECTION_METHOD                  ] = MeasTech( "direct injection method",                  sd.MT_OPTICAL_METHOD,                               )
+measurement_techniques[ sd.MT_INDEX_OF_REFRACTION_METHOD               ] = MeasTech( "index-of-refraction method",               sd.MT_OPTICAL_METHOD,                               )
+measurement_techniques[ sd.MT_MACH_ZEHNDER_INTERFEROMETRY              ] = MeasTech( "Mach-Zehnder interferometry",              sd.MT_INDEX_OF_REFRACTION_METHOD,                   )
+measurement_techniques[ sd.MT_SCHLIEREN_PHOTOGRAPHY                    ] = MeasTech( "schlieren photography",                    sd.MT_INDEX_OF_REFRACTION_METHOD,                   )
+measurement_techniques[ sd.MT_SHADOWGRAPH_PHOTOGRAPHY                  ] = MeasTech( "shadowgraph photography",                  sd.MT_INDEX_OF_REFRACTION_METHOD,                   )
+measurement_techniques[ sd.MT_LASER_DOPPLER_ANEMOMETRY                 ] = MeasTech( "laser Doppler anemometry",                 sd.MT_OPTICAL_METHOD,                               )
+measurement_techniques[ sd.MT_PARTICLE_IMAGE_VELOCIMETRY               ] = MeasTech( "particle image velocimetry",               sd.MT_OPTICAL_METHOD,                               )
+measurement_techniques[ sd.MT_THERMAL_ANEMOMETRY                       ] = MeasTech( "thermal anemometry",                       sd.MT_EMPIRICISM,                                   )
+measurement_techniques[ sd.MT_HOT_WIRE_ANEMOMETRY                      ] = MeasTech( "hot-wire anemometry",                      sd.MT_THERMAL_ANEMOMETRY,           intrusive=True, )
+measurement_techniques[ sd.MT_CONSTANT_CURRENT_HOT_WIRE_ANEMOMETRY     ] = MeasTech( "constant-current hot-wire anemometry",     sd.MT_HOT_WIRE_ANEMOMETRY,          intrusive=True, )
+measurement_techniques[ sd.MT_CONSTANT_TEMPERATURE_HOT_WIRE_ANEMOMETRY ] = MeasTech( "constant-temperature hot-wire anemometry", sd.MT_HOT_WIRE_ANEMOMETRY,          intrusive=True, )
+measurement_techniques[ sd.MT_WALL_SHEAR_STRESS_METHOD                 ] = MeasTech( "wall shear stress method",                 sd.MT_EMPIRICISM,                                   )
+measurement_techniques[ sd.MT_FLOATING_ELEMENT_BALANCE                 ] = MeasTech( "floating element balance",                 sd.MT_WALL_SHEAR_STRESS_METHOD,                     )
+measurement_techniques[ sd.MT_MOMENTUM_BALANCE                         ] = MeasTech( "momentum balance",                         sd.MT_WALL_SHEAR_STRESS_METHOD,                     )
+measurement_techniques[ sd.MT_STANTON_TUBE                             ] = MeasTech( "Stanton tube",                             sd.MT_WALL_SHEAR_STRESS_METHOD,     intrusive=True, )
+measurement_techniques[ sd.MT_PRESTON_TUBE                             ] = MeasTech( "Preston tube",                             sd.MT_WALL_SHEAR_STRESS_METHOD,     intrusive=True, )
+measurement_techniques[ sd.MT_VELOCITY_PROFILE_METHOD                  ] = MeasTech( "velocity profile method",                  sd.MT_WALL_SHEAR_STRESS_METHOD,                     )
+measurement_techniques[ sd.MT_CLAUSER_METHOD                           ] = MeasTech( "Clauser method",                           sd.MT_VELOCITY_PROFILE_METHOD,                      )
+measurement_techniques[ sd.MT_VISCOUS_SUBLAYER_SLOPE_METHOD            ] = MeasTech( "viscous sublayer slope method",            sd.MT_VELOCITY_PROFILE_METHOD,                      )
 
 for identifier in measurement_techniques:
     cursor.execute(
     """
-    INSERT INTO measurement_techniques( identifier, technique_name )
-    VALUES( ?, ? );
+    INSERT INTO measurement_techniques( identifier, technique_name, intrusive )
+    VALUES( ?, ?, ? );
     """,
-    ( identifier, measurement_techniques[identifier], )
+    (
+        identifier,
+        measurement_techniques[identifier].name,
+        measurement_techniques[identifier].intrusive,
     )
+    )
+
+# Two separate loops MUST occur due to foreign key constraints.
+for identifier in measurement_techniques:
+    if ( measurement_techniques[identifier].is_child() ):
+        cursor.execute(
+        """
+        UPDATE measurement_techniques SET parent=? WHERE identifier=?;
+        """,
+        ( measurement_techniques[identifier].parent, identifier, )
+        )
 
 # Point labels
 cursor.execute(
