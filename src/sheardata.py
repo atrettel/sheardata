@@ -77,8 +77,6 @@ ELLIPTICAL_GEOMETRY  = "E"
 RECTANGULAR_GEOMETRY = "R"
 
 # Measurement techniques (and other sources of information)
-ANY_MEASUREMENT_TECHNIQUE = "ANY"
-
 MT_APPROXIMATION                            = "APPR"
 MT_ASSUMPTION                               = "A"
 MT_CALCULATION                              = "C"
@@ -401,9 +399,9 @@ def set_study_value( cursor, study, quantity, value, averaging_system=None, \
 
 def get_study_value( cursor, study, quantity,               \
                      averaging_system=ANY_AVERAGING_SYSTEM, \
-                     measurement_technique=ANY_MEASUREMENT_TECHNIQUE, ):
+                     measurement_technique=MT_ROOT, ):
     if ( averaging_system == ANY_AVERAGING_SYSTEM ):
-        if ( measurement_technique == ANY_MEASUREMENT_TECHNIQUE ):
+        if ( measurement_technique == MT_ROOT ):
             cursor.execute(
             """
             SELECT study_value, study_uncertainty FROM study_values WHERE
@@ -427,7 +425,7 @@ def get_study_value( cursor, study, quantity,               \
             )
             )
     else:
-        if ( measurement_technique == ANY_MEASUREMENT_TECHNIQUE ):
+        if ( measurement_technique == MT_ROOT ):
             cursor.execute(
             """
             SELECT study_value, study_uncertainty FROM study_values WHERE
@@ -563,9 +561,9 @@ def set_series_value( cursor, series, quantity, value, averaging_system=None, \
 
 def get_series_value( cursor, series, quantity,              \
                       averaging_system=ANY_AVERAGING_SYSTEM, \
-                      measurement_technique=ANY_MEASUREMENT_TECHNIQUE, ):
+                      measurement_technique=MT_ROOT, ):
     if ( averaging_system == ANY_AVERAGING_SYSTEM ):
-        if ( measurement_technique == ANY_MEASUREMENT_TECHNIQUE ):
+        if ( measurement_technique == MT_ROOT ):
             cursor.execute(
             """
             SELECT series_value, series_uncertainty FROM series_values WHERE
@@ -589,7 +587,7 @@ def get_series_value( cursor, series, quantity,              \
             )
             )
     else:
-        if ( measurement_technique == ANY_MEASUREMENT_TECHNIQUE ):
+        if ( measurement_technique == MT_ROOT ):
             cursor.execute(
             """
             SELECT series_value, series_uncertainty FROM series_values WHERE
@@ -676,9 +674,9 @@ def set_station_value( cursor, station, quantity, value, averaging_system=None, 
 
 def get_station_value( cursor, station, quantity,             \
                        averaging_system=ANY_AVERAGING_SYSTEM, \
-                       measurement_technique=ANY_MEASUREMENT_TECHNIQUE, ):
+                       measurement_technique=MT_ROOT, ):
     if ( averaging_system == ANY_AVERAGING_SYSTEM ):
-        if ( measurement_technique == ANY_MEASUREMENT_TECHNIQUE ):
+        if ( measurement_technique == MT_ROOT ):
             cursor.execute(
             """
             SELECT station_value, station_uncertainty FROM station_values WHERE
@@ -702,7 +700,7 @@ def get_station_value( cursor, station, quantity,             \
             )
             )
     else:
-        if ( measurement_technique == ANY_MEASUREMENT_TECHNIQUE ):
+        if ( measurement_technique == MT_ROOT ):
             cursor.execute(
             """
             SELECT station_value, station_uncertainty FROM station_values WHERE
@@ -798,9 +796,9 @@ def set_point_value( cursor, point, quantity, value, averaging_system=None, \
 
 def get_point_value( cursor, point, quantity,               \
                      averaging_system=ANY_AVERAGING_SYSTEM, \
-                     measurement_technique=ANY_MEASUREMENT_TECHNIQUE, ):
+                     measurement_technique=MT_ROOT, ):
     if ( averaging_system == ANY_AVERAGING_SYSTEM ):
-        if ( measurement_technique == ANY_MEASUREMENT_TECHNIQUE ):
+        if ( measurement_technique == MT_ROOT ):
             cursor.execute(
             """
             SELECT point_value, point_uncertainty FROM point_values WHERE
@@ -824,7 +822,7 @@ def get_point_value( cursor, point, quantity,               \
             )
             )
     else:
-        if ( measurement_technique == ANY_MEASUREMENT_TECHNIQUE ):
+        if ( measurement_technique == MT_ROOT ):
             cursor.execute(
             """
             SELECT point_value, point_uncertainty FROM point_values WHERE
@@ -919,7 +917,7 @@ def set_labeled_value( cursor, station, quantity, label, value,           \
 
 def get_labeled_value( cursor, station, quantity, label,    \
                      averaging_system=ANY_AVERAGING_SYSTEM, \
-                     measurement_technique=ANY_MEASUREMENT_TECHNIQUE, ):
+                     measurement_technique=MT_ROOT, ):
     return get_point_value(
         cursor,
         locate_labeled_point( cursor, station, label ),
