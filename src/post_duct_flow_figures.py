@@ -325,12 +325,14 @@ for duct_type in duct_types:
             f.write( r"]{" )
             f.write( short_caption+"  " )
 
-            f.write( "{:d} series in total: ".format(
+            f.write( "{:d} series in total".format(
                 len(stations),
             ) )
 
             studies = sd.count_studies( stations )
             i_study = 0
+            if ( len(studies) != 0 ):
+                f.write( ": " )
             for study in studies:
                 f.write( r"\texttt{" )
                 f.write( "{:s}".format(
