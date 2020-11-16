@@ -166,9 +166,9 @@ with open( ratio_filename, "r" ) as ratio_file:
         kinematic_viscosity = None
         mass_density        = None
         if ( working_fluid == "Water" ):
-            mass_density        = 1000.0
-            kinematic_viscosity = 9.186e-7
-            dynamic_viscosity   = mass_density * kinematic_viscosity
+            mass_density        = sd.liquid_water_mass_density( temperature )
+            dynamic_viscosity   = sd.liquid_water_dynamic_viscosity( temperature )
+            kinematic_viscosity = dynamic_viscosity / mass_density
         elif ( working_fluid == "Air" ):
             mass_density        = sd.ideal_gas_mass_density( temperature )
             dynamic_viscosity   = sd.sutherlands_law_dynamic_viscosity( temperature )
@@ -492,6 +492,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
 
         mass_density        = 2.0 * wall_shear_stress / ( fanning_friction_factor * bulk_velocity**2.0 )
         kinematic_viscosity = bulk_velocity * diameter / Re_bulk
+        dynamic_viscosity   = mass_density * kinematic_viscosity
 
         volumetric_flow_rate = 0.25 * math.pi * diameter**2.0 * bulk_velocity
 
@@ -651,6 +652,16 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             outlier=outlier,
             notes=mass_density_note,
+        )
+
+        sd.set_labeled_value(
+            cursor,
+            station_identifier,
+            sd.Q_DYNAMIC_VISCOSITY,
+            sd.WALL_POINT_LABEL,
+            dynamic_viscosity,
+            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            outlier=outlier,
         )
 
         sd.set_labeled_value(

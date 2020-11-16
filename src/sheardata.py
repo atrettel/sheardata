@@ -32,7 +32,9 @@ KILOGRAM_PER_POUND_MASS =  0.45359237
 METERS_PER_INCH         =  2.54e-2
 SECONDS_PER_MINUTE      = 60.0
 
-METERS_PER_FOOT = METERS_PER_INCH * INCHES_PER_FOOT
+METERS_PER_FOOT            = METERS_PER_INCH * INCHES_PER_FOOT
+PASCALS_PER_METER_OF_WATER = 1000.0 * STANDARD_GRAVITATIONAL_ACCELERATION
+PASCALS_PER_INCH_OF_WATER  = PASCALS_PER_METER_OF_WATER * METERS_PER_INCH
 
 # Averaging systems
 ANY_AVERAGING_SYSTEM              = "ANY"
@@ -1134,3 +1136,12 @@ def sutherlands_law_dynamic_viscosity( temperature, T_0=273.0, mu_0=1.716e-5, \
 # TODO: Find a better method.
 def liquid_water_speed_of_sound( temperature ):
     return ( 1481.0 - 1447.0 ) * ( temperature - 263.15 ) / 10.0 + 1447.0
+
+# TODO: Change this.
+def liquid_water_mass_density( temperature ):
+    return 1000.0
+
+# TODO: Change this.
+def liquid_water_dynamic_viscosity( temperature ):
+    return 9.186e-7 * 1000.0
+

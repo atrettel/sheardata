@@ -91,13 +91,6 @@ with open( globals_filename, "r" ) as globals_file:
         series_number += 1
 
         # p. 107
-        #
-        # \begin{quote}
-        # Throughout the calculations the density has been taken as 1 gm./c.c.
-        # \end{quote}
-        mass_density = 1000.0
-
-        # p. 107
         width                          = 2.540e-2
         development_length             = 0.100e-2
         distance_between_pressure_taps = 0.780e-2
@@ -127,7 +120,7 @@ with open( globals_filename, "r" ) as globals_file:
         temperature_value         = float(globals_row[2]) + sd.ABSOLUTE_ZERO
         kinematic_viscosity_value = float(globals_row[3]) * 1.0e-4
         mass_flow_rate_value      = float(globals_row[4]) * 1.0e-3
-        pressure_difference_value = float(globals_row[5]) * 1.0e-2 * 1000.0 * sd.STANDARD_GRAVITATIONAL_ACCELERATION
+        pressure_difference_value = float(globals_row[5]) * 1.0e-2 * sd.PASCALS_PER_METER_OF_WATER
 
         # p. 94
         #
@@ -174,6 +167,7 @@ with open( globals_filename, "r" ) as globals_file:
             pressure_difference_uncertainty,
         )
 
+        mass_density            = sd.liquid_water_mass_density( temperature )
         dynamic_viscosity       = mass_density * kinematic_viscosity
         volumetric_flow_rate    = mass_flow_rate / mass_density
         bulk_velocity           = volumetric_flow_rate / cross_sectional_area
@@ -312,7 +306,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.WALL_POINT_LABEL,
             mass_density,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.MT_ASSUMPTION,
+            measurement_technique=sd.MT_CALCULATION,
         )
 
         sd.set_labeled_value(

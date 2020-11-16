@@ -108,7 +108,7 @@ for duct in ducts:
             mass_density       = float(duct_globals_row[4]) * sd.KILOGRAM_PER_POUND_MASS / sd.METERS_PER_FOOT**3.0
             bulk_velocity      = float(duct_globals_row[5]) * sd.METERS_PER_FOOT / sd.SECONDS_PER_MINUTE
             hydraulic_diameter = float(duct_globals_row[6]) * sd.METERS_PER_INCH
-            pressure_gradient  = float(duct_globals_row[7]) * sd.METERS_PER_INCH * 1000.0 * sd.STANDARD_GRAVITATIONAL_ACCELERATION / sd.METERS_PER_FOOT
+            pressure_gradient  = float(duct_globals_row[7]) * sd.PASCALS_PER_INCH_OF_WATER / sd.METERS_PER_FOOT
             Re_bulk_value      = float(duct_globals_row[10])
 
             # Uncertainty of wall shear stress measurements
