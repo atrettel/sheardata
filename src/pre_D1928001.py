@@ -181,8 +181,7 @@ with open( globals_filename, "r" ) as globals_file:
         fanning_friction_factor = 2.0 * wall_shear_stress / ( mass_density * bulk_velocity**2.0 )
         bulk_reynolds_number    = bulk_velocity * hydraulic_diameter / kinematic_viscosity
 
-        # TODO: Correct this approximation later.
-        speed_of_sound = ( 1481.0 - 1447.0 ) * ( temperature - 263.15 ) / 10.0 + 1447.0
+        speed_of_sound = sd.liquid_water_speed_of_sound( temperature )
         bulk_mach_number = bulk_velocity / speed_of_sound
 
         series_identifier = sd.add_series(

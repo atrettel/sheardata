@@ -178,13 +178,11 @@ with open( ratio_filename, "r" ) as ratio_file:
 
         volumetric_flow_rate = 0.25 * math.pi * diameter**2.0 * bulk_velocity
 
-        # TODO: Some of these assumptions are generally poor and could be
-        # improved upon.
         speed_of_sound = float("inf")
         if ( working_fluid == "Air" ):
             speed_of_sound = sd.ideal_gas_speed_of_sound( temperature )
         elif ( working_fluid == "Water" ):
-            speed_of_sound = 0.5 * ( 1447.0 + 1481.0 )
+            speed_of_sound = sd.liquid_water_speed_of_sound( temperature )
         Ma_bulk = bulk_velocity / speed_of_sound
 
         series_identifier = sd.add_series(
@@ -535,14 +533,16 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
                 "Stanton and Pannell thick oil",
             )
 
-        # TODO: These assumptions are generally poor, but then again without
-        # knowing precisely what "thick oil" is it is difficult to assume
-        # anything else.
+        # Without knowing precisely what "thick oil" is it is difficult to
+        # assume anything else.
+        speed_of_sound_measurement_technique = sd.MT_ASSUMPTION
         speed_of_sound = float("inf")
         if ( working_fluid == "Air" ):
             speed_of_sound = sd.ideal_gas_speed_of_sound( temperature )
+            speed_of_sound_measurement_technique = sd.MT_CALCULATION
         elif ( working_fluid == "Water" ):
-            speed_of_sound = 0.5 * ( 1447.0 + 1481.0 )
+            speed_of_sound = sd.liquid_water_speed_of_sound( temperature )
+            speed_of_sound_measurement_technique = sd.MT_CALCULATION
         Ma_bulk = bulk_velocity / speed_of_sound
 
         sd.update_series_geometry(
@@ -680,7 +680,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.WALL_POINT_LABEL,
             speed_of_sound,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.MT_ASSUMPTION,
+            measurement_technique=speed_of_sound_measurement_technique,
             outlier=outlier,
         )
 
