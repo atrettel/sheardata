@@ -1139,9 +1139,9 @@ def liquid_water_speed_of_sound( temperature ):
 
 # TODO: Change this.
 def liquid_water_mass_density( temperature ):
-    return 1000.0
+    return ( 998.0 - 1000.0 ) * ( temperature - ABSOLUTE_ZERO ) / 20.0 + 1000.0
 
 # TODO: Change this.
 def liquid_water_dynamic_viscosity( temperature ):
-    return 9.186e-7 * 1000.0
+    return ( 1.002e-3 - 1.792e-3 ) * ( temperature - ABSOLUTE_ZERO ) / 20.0 + 1.792e-3
 
