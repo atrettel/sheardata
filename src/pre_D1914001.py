@@ -497,6 +497,19 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
 
         volumetric_flow_rate = 0.25 * math.pi * diameter**2.0 * bulk_velocity
 
+        outlier = False
+        mass_density_note = None
+        if ( working_fluid == "Air" and pipe == "S" ):
+            outlier = True
+            mass_density_note = \
+            """
+            The mass density of this series, as calculated from the bulk
+            Reynolds number, is \SI{1226}{\kg\m^{-3}}, which is far too high
+            for air.  Despite the fact that this series fits the bulk Reynolds
+            number versus friction factor trend well, there appears to be some
+            kind of miscalculation in this series that is difficult to locate.
+            """.strip()
+
         series_identifier = sd.add_series(
             cursor,
             flow_class=flow_class,
@@ -555,6 +568,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             station_identifier,
             sd.Q_HYDRAULIC_DIAMETER,
             diameter,
+            outlier=outlier,
         )
 
         sd.set_station_value(
@@ -562,6 +576,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             station_identifier,
             sd.Q_ASPECT_RATIO,
             1.0,
+            outlier=outlier,
         )
 
         sd.set_station_value(
@@ -570,6 +585,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.Q_BULK_VELOCITY,
             bulk_velocity,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            outlier=outlier,
         )
 
         sd.set_station_value(
@@ -587,7 +603,8 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.Q_BULK_MACH_NUMBER,
             Ma_bulk,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-            measurement_technique=sd.MT_CALCULATION
+            measurement_technique=sd.MT_CALCULATION,
+            outlier=outlier,
         )
 
         sd.set_station_value(
@@ -596,6 +613,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.Q_VOLUMETRIC_FLOW_RATE,
             volumetric_flow_rate,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            outlier=outlier,
         )
 
         # This set of data only considers wall quantities.
@@ -621,6 +639,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
                 sd.WALL_POINT_LABEL,
                 0.0,
                 measurement_technique=sd.MT_ASSUMPTION,
+                outlier=outlier,
             )
 
         sd.set_labeled_value(
@@ -630,6 +649,8 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.WALL_POINT_LABEL,
             mass_density,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            outlier=outlier,
+            notes=mass_density_note,
         )
 
         sd.set_labeled_value(
@@ -639,6 +660,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.WALL_POINT_LABEL,
             kinematic_viscosity,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            outlier=outlier,
         )
 
         sd.set_labeled_value(
@@ -648,6 +670,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.WALL_POINT_LABEL,
             temperature,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            outlier=outlier,
         )
 
         sd.set_labeled_value(
@@ -658,6 +681,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             speed_of_sound,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=sd.MT_ASSUMPTION,
+            outlier=outlier,
         )
 
         sd.set_labeled_value(
@@ -667,6 +691,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.WALL_POINT_LABEL,
             ufloat( 0.0, 0.0 ),
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            outlier=outlier,
         )
 
         sd.set_labeled_value(
@@ -676,6 +701,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.WALL_POINT_LABEL,
             ufloat( 0.5*diameter, 0.0 ),
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            outlier=outlier,
         )
 
         sd.set_labeled_value(
@@ -685,6 +711,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.WALL_POINT_LABEL,
             ufloat( 0.0, 0.0 ),
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            outlier=outlier,
         )
 
         sd.set_labeled_value(
@@ -694,6 +721,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.WALL_POINT_LABEL,
             ufloat( 0.0, 0.0 ),
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            outlier=outlier,
         )
 
         # Wall shear stress measurement technique
@@ -718,6 +746,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             wall_shear_stress,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=wall_shear_stress_measurement_technique,
+            outlier=outlier,
         )
 
         sd.set_labeled_value(
@@ -728,6 +757,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             fanning_friction_factor,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
             measurement_technique=wall_shear_stress_measurement_technique,
+            outlier=outlier,
         )
 
 conn.commit()
