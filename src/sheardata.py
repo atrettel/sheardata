@@ -40,6 +40,7 @@ PASCALS_PER_INCH_OF_WATER  = PASCALS_PER_METER_OF_WATER * METERS_PER_INCH
 ANY_AVERAGING_SYSTEM              = "ANY"
 DENSITY_WEIGHTED_AVERAGING_SYSTEM = "DW"
 UNWEIGHTED_AVERAGING_SYSTEM       = "UW"
+BOTH_AVERAGING_SYSTEMS            = "BOTH"
 
 # Coordinate systems
 CYLINDRICAL_COORDINATE_SYSTEM = "XRT"
@@ -401,26 +402,35 @@ def update_study_notes( cursor, identifier, notes ):
     )
     )
 
+def create_averaging_systems_list( averaging_system ):
+    if ( averaging_system == BOTH_AVERAGING_SYSTEMS ):
+        return [ DENSITY_WEIGHTED_AVERAGING_SYSTEM,
+                       UNWEIGHTED_AVERAGING_SYSTEM, ]
+    else:
+        return [ averaging_system ]
+
 def set_study_value( cursor, study, quantity, value, averaging_system=None, \
                      measurement_technique=None, outlier=False, notes=None ):
     study_value, study_uncertainty = split_float( value )
-    cursor.execute(
-    """
-    INSERT INTO study_values( study, quantity, study_value, study_uncertainty,
-    averaging_system, measurement_technique, outlier, notes ) VALUES( ?, ?, ?,
-    ?, ?, ?, ?, ? );
-    """,
-    (
-        sanitize_identifier(study),
-        str(quantity),
-        study_value,
-        study_uncertainty,
-        averaging_system,
-        measurement_technique,
-        int(outlier),
-        notes,
-    )
-    )
+    for avg_sys in create_averaging_systems_list( averaging_system ):
+        cursor.execute(
+        """
+        INSERT INTO study_values( study, quantity, study_value,
+        study_uncertainty, averaging_system, measurement_technique, outlier,
+        notes )
+        VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
+        """,
+        (
+            sanitize_identifier(study),
+            str(quantity),
+            study_value,
+            study_uncertainty,
+            avg_sys,
+            measurement_technique,
+            int(outlier),
+            notes,
+        )
+        )
 
 def get_study_value( cursor, study, quantity,               \
                      averaging_system=ANY_AVERAGING_SYSTEM, \
@@ -566,23 +576,25 @@ def update_series_notes( cursor, identifier, notes ):
 def set_series_value( cursor, series, quantity, value, averaging_system=None, \
                      measurement_technique=None, outlier=False, notes=None ):
     series_value, series_uncertainty = split_float( value )
-    cursor.execute(
-    """
-    INSERT INTO series_values( series, quantity, series_value,
-    series_uncertainty, averaging_system, measurement_technique, outlier, notes
-    ) VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
-    """,
-    (
-        sanitize_identifier(series),
-        str(quantity),
-        series_value,
-        series_uncertainty,
-        averaging_system,
-        measurement_technique,
-        int(outlier),
-        notes,
-    )
-    )
+    for avg_sys in create_averaging_systems_list( averaging_system ):
+        cursor.execute(
+        """
+        INSERT INTO series_values( series, quantity, series_value,
+        series_uncertainty, averaging_system, measurement_technique, outlier,
+        notes)
+        VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
+        """,
+        (
+            sanitize_identifier(series),
+            str(quantity),
+            series_value,
+            series_uncertainty,
+            avg_sys,
+            measurement_technique,
+            int(outlier),
+            notes,
+        )
+        )
 
 def get_series_value( cursor, series, quantity,              \
                       averaging_system=ANY_AVERAGING_SYSTEM, \
@@ -679,23 +691,25 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
 def set_station_value( cursor, station, quantity, value, averaging_system=None, \
                      measurement_technique=None, outlier=False, notes=None ):
     station_value, station_uncertainty = split_float( value )
-    cursor.execute(
-    """
-    INSERT INTO station_values( station, quantity, station_value,
-    station_uncertainty, averaging_system, measurement_technique, outlier,
-    notes ) VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
-    """,
-    (
-        sanitize_identifier(station),
-        str(quantity),
-        station_value,
-        station_uncertainty,
-        averaging_system,
-        measurement_technique,
-        int(outlier),
-        notes,
-    )
-    )
+    for avg_sys in create_averaging_systems_list( averaging_system ):
+        cursor.execute(
+        """
+        INSERT INTO station_values( station, quantity, station_value,
+        station_uncertainty, averaging_system, measurement_technique, outlier,
+        notes )
+        VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
+        """,
+        (
+            sanitize_identifier(station),
+            str(quantity),
+            station_value,
+            station_uncertainty,
+            avg_sys,
+            measurement_technique,
+            int(outlier),
+            notes,
+        )
+        )
 
 def get_station_value( cursor, station, quantity,             \
                        averaging_system=ANY_AVERAGING_SYSTEM, \
@@ -801,23 +815,25 @@ def add_point( cursor, flow_class, year, study_number, series_number, \
 def set_point_value( cursor, point, quantity, value, averaging_system=None, \
                      measurement_technique=None, outlier=False, notes=None ):
     point_value, point_uncertainty = split_float( value )
-    cursor.execute(
-    """
-    INSERT INTO point_values( point, quantity, point_value,
-    point_uncertainty, averaging_system, measurement_technique, outlier,
-    notes ) VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
-    """,
-    (
-        sanitize_identifier(point),
-        str(quantity),
-        point_value,
-        point_uncertainty,
-        averaging_system,
-        measurement_technique,
-        int(outlier),
-        notes,
-    )
-    )
+    for avg_sys in create_averaging_systems_list( averaging_system ):
+        cursor.execute(
+        """
+        INSERT INTO point_values( point, quantity, point_value,
+        point_uncertainty, averaging_system, measurement_technique, outlier,
+        notes )
+        VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
+        """,
+        (
+            sanitize_identifier(point),
+            str(quantity),
+            point_value,
+            point_uncertainty,
+            avg_sys,
+            measurement_technique,
+            int(outlier),
+            notes,
+        )
+        )
 
 def get_point_value( cursor, point, quantity,               \
                      averaging_system=ANY_AVERAGING_SYSTEM, \
