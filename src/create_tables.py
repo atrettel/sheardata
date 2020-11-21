@@ -136,7 +136,7 @@ for identifier in flow_classes:
 cursor.execute(
 """
 CREATE TABLE flow_regimes (
-    identifier  TEXT PRIMARY KEY UNIQUE CHECK ( length(identifier) = 2 ),
+    identifier  TEXT PRIMARY KEY UNIQUE,
     regime_name TEXT NOT NULL,
     notes       TEXT DEFAULT NULL
 );
