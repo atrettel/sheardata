@@ -247,7 +247,7 @@ with open( globals_filename, "r" ) as globals_file:
                 point_identifier,
                 sd.Q_STREAMWISE_VELOCITY,
                 u_reversed[i],
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
                 measurement_technique=sd.MT_PITOT_STATIC_TUBE,
                 notes=( series_1_center_line_note if ( series_number == 1 and point_number == n_points ) else None ),
             )
@@ -259,7 +259,7 @@ with open( globals_filename, "r" ) as globals_file:
                     point_identifier,
                     quantity,
                     ufloat( 0.0, 0.0 ),
-                    averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                    averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
                     measurement_technique=sd.MT_ASSUMPTION,
                 )
 
@@ -269,7 +269,7 @@ with open( globals_filename, "r" ) as globals_file:
                 point_identifier,
                 sd.Q_TEMPERATURE,
                 temperature,
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
                 measurement_technique=sd.MT_ASSUMPTION,
             )
 
@@ -278,7 +278,7 @@ with open( globals_filename, "r" ) as globals_file:
                 point_identifier,
                 sd.Q_MASS_DENSITY,
                 mass_density,
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
                 measurement_technique=sd.MT_ASSUMPTION,
             )
 
@@ -287,7 +287,7 @@ with open( globals_filename, "r" ) as globals_file:
                 point_identifier,
                 sd.Q_KINEMATIC_VISCOSITY,
                 kinematic_viscosity,
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
                 measurement_technique=sd.MT_ASSUMPTION,
             )
 
@@ -296,7 +296,7 @@ with open( globals_filename, "r" ) as globals_file:
                 point_identifier,
                 sd.Q_DYNAMIC_VISCOSITY,
                 dynamic_viscosity,
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
                 measurement_technique=sd.MT_ASSUMPTION,
             )
 
@@ -305,7 +305,7 @@ with open( globals_filename, "r" ) as globals_file:
                 point_identifier,
                 sd.Q_SPEED_OF_SOUND,
                 speed_of_sound,
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
                 measurement_technique=sd.MT_CALCULATION,
             )
 
@@ -342,7 +342,7 @@ with open( globals_filename, "r" ) as globals_file:
             station_identifier,
             sd.Q_VOLUMETRIC_FLOW_RATE,
             volumetric_flow_rate,
-            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
             measurement_technique=sd.MT_CALCULATION,
         )
 
@@ -351,7 +351,7 @@ with open( globals_filename, "r" ) as globals_file:
             station_identifier,
             sd.Q_MASS_FLOW_RATE,
             mass_flow_rate,
-            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
             measurement_technique=sd.MT_CALCULATION,
         )
 
@@ -360,7 +360,7 @@ with open( globals_filename, "r" ) as globals_file:
             station_identifier,
             sd.Q_BULK_VELOCITY,
             bulk_velocity,
-            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
             measurement_technique=sd.MT_CALCULATION,
         )
 
@@ -369,7 +369,7 @@ with open( globals_filename, "r" ) as globals_file:
             station_identifier,
             sd.Q_BULK_REYNOLDS_NUMBER,
             Re_bulk,
-            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
             measurement_technique=sd.MT_CALCULATION,
         )
 
@@ -378,7 +378,7 @@ with open( globals_filename, "r" ) as globals_file:
             station_identifier,
             sd.Q_BULK_MACH_NUMBER,
             Ma_bulk,
-            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
             measurement_technique=sd.MT_CALCULATION,
         )
 
@@ -395,7 +395,7 @@ with open( globals_filename, "r" ) as globals_file:
             station_identifier,
             sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO,
             bulk_velocity / maximum_velocity,
-            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
             measurement_technique=sd.MT_CALCULATION,
         )
 

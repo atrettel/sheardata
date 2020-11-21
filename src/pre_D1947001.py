@@ -223,7 +223,7 @@ for duct in ducts:
                 station_identifier,
                 sd.Q_BULK_VELOCITY,
                 bulk_velocity,
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
                 measurement_technique=sd.MT_IMPACT_TUBE,
             )
 
@@ -232,7 +232,7 @@ for duct in ducts:
                 station_identifier,
                 sd.Q_BULK_REYNOLDS_NUMBER,
                 Re_bulk,
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
                 measurement_technique=sd.MT_CALCULATION
             )
 
@@ -241,7 +241,7 @@ for duct in ducts:
                 station_identifier,
                 sd.Q_BULK_MACH_NUMBER,
                 Ma_bulk,
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
                 measurement_technique=sd.MT_CALCULATION
             )
 
@@ -295,7 +295,7 @@ for duct in ducts:
                 sd.Q_MASS_DENSITY,
                 sd.WALL_POINT_LABEL,
                 mass_density,
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
                 notes=( mass_density_note if ( test_number == 17 and duct == "Square" ) else None ),
             )
 
@@ -305,7 +305,7 @@ for duct in ducts:
                 sd.Q_KINEMATIC_VISCOSITY,
                 sd.WALL_POINT_LABEL,
                 kinematic_viscosity,
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
             )
 
             sd.set_labeled_value(
@@ -314,7 +314,7 @@ for duct in ducts:
                 sd.Q_DYNAMIC_VISCOSITY,
                 sd.WALL_POINT_LABEL,
                 dynamic_viscosity,
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
             )
 
             sd.set_labeled_value(
@@ -323,7 +323,7 @@ for duct in ducts:
                 sd.Q_TEMPERATURE,
                 sd.WALL_POINT_LABEL,
                 temperature,
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
             )
 
             sd.set_labeled_value(
@@ -332,7 +332,7 @@ for duct in ducts:
                 sd.Q_SPEED_OF_SOUND,
                 sd.WALL_POINT_LABEL,
                 speed_of_sound,
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
                 measurement_technique=sd.MT_ASSUMPTION,
             )
 
@@ -342,7 +342,7 @@ for duct in ducts:
                 sd.Q_STREAMWISE_VELOCITY,
                 sd.WALL_POINT_LABEL,
                 ufloat( 0.0, 0.0 ),
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
             )
 
             sd.set_labeled_value(
@@ -351,7 +351,7 @@ for duct in ducts:
                 sd.Q_DISTANCE_FROM_WALL,
                 sd.WALL_POINT_LABEL,
                 ufloat( 0.0, 0.0 ),
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
             )
 
             sd.set_labeled_value(
@@ -360,7 +360,7 @@ for duct in ducts:
                 sd.Q_OUTER_LAYER_COORDINATE,
                 sd.WALL_POINT_LABEL,
                 ufloat( 0.0, 0.0 ),
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
             )
 
             # p. 129
@@ -372,7 +372,7 @@ for duct in ducts:
                 sd.Q_SHEAR_STRESS,
                 sd.WALL_POINT_LABEL,
                 wall_shear_stress,
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
                 measurement_technique=wall_shear_stress_measurement_technique,
             )
 
@@ -382,7 +382,7 @@ for duct in ducts:
                 sd.Q_FANNING_FRICTION_FACTOR,
                 sd.WALL_POINT_LABEL,
                 fanning_friction_factor,
-                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
                 measurement_technique=wall_shear_stress_measurement_technique,
             )
 
