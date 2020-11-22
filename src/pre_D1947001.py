@@ -98,10 +98,6 @@ with open( globals_filename, "r" ) as globals_file:
         )
 
 
-mass_density_note = None
-with open( "../data/{:s}/note_mass_density.tex".format( study_identifier ), "r" ) as f:
-    mass_density_note = f.read()
-
 series_number = 0
 for duct in ducts:
     duct_globals_filename = "../data/{:s}/{:s}_duct_globals.csv".format(
@@ -213,34 +209,6 @@ for duct in ducts:
 
             sd.mark_station_as_periodic( cursor, station_identifier )
 
-            sd.set_station_value(
-                cursor,
-                station_identifier,
-                sd.Q_HYDRAULIC_DIAMETER,
-                hydraulic_diameter,
-            )
-
-            sd.set_station_value(
-                cursor,
-                station_identifier,
-                sd.Q_DEVELOPMENT_LENGTH,
-                ducts[duct].length,
-            )
-
-            sd.set_station_value(
-                cursor,
-                station_identifier,
-                sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,
-                ducts[duct].length / hydraulic_diameter,
-            )
-
-            sd.set_station_value(
-                cursor,
-                station_identifier,
-                sd.Q_ASPECT_RATIO,
-                ducts[duct].aspect_ratio,
-            )
-
             # p. 128
             #
             # \begin{quote}
@@ -252,32 +220,15 @@ for duct in ducts:
             # calibrated in place by impact tube traverses at the throat over
             # the full flow range.
             # \end{quote}
-            sd.set_station_value(
-                cursor,
-                station_identifier,
-                sd.Q_BULK_VELOCITY,
-                bulk_velocity,
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-                measurement_technique=sd.MT_IMPACT_TUBE,
-            )
+            mt_bulk_velocity = sd.MT_IMPACT_TUBE
 
-            sd.set_station_value(
-                cursor,
-                station_identifier,
-                sd.Q_BULK_REYNOLDS_NUMBER,
-                Re_bulk,
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-                measurement_technique=sd.MT_CALCULATION
-            )
-
-            sd.set_station_value(
-                cursor,
-                station_identifier,
-                sd.Q_BULK_MACH_NUMBER,
-                Ma_bulk,
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-                measurement_technique=sd.MT_CALCULATION
-            )
+            sd.set_station_value( cursor, station_identifier, sd.Q_HYDRAULIC_DIAMETER,             hydraulic_diameter,                      )
+            sd.set_station_value( cursor, station_identifier, sd.Q_DEVELOPMENT_LENGTH,             ducts[duct].length,                      )
+            sd.set_station_value( cursor, station_identifier, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH, ducts[duct].length / hydraulic_diameter, )
+            sd.set_station_value( cursor, station_identifier, sd.Q_ASPECT_RATIO,                   ducts[duct].aspect_ratio,                )
+            sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                  bulk_velocity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_bulk_velocity,  )
+            sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER,           Re_bulk,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
+            sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,               Ma_bulk,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
 
             # This set of data only considers wall quantities.
             point_number = 1
@@ -323,111 +274,24 @@ for duct in ducts:
                     measurement_technique=sd.MT_ASSUMPTION,
                 )
 
-            sd.set_labeled_value(
-                cursor,
-                station_identifier,
-                sd.Q_MASS_DENSITY,
-                sd.WALL_POINT_LABEL,
-                mass_density,
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-                notes=( mass_density_note if ( test_number == 17 and duct == "Square" ) else None ),
-            )
-
-            sd.set_labeled_value(
-                cursor,
-                station_identifier,
-                sd.Q_KINEMATIC_VISCOSITY,
-                sd.WALL_POINT_LABEL,
-                kinematic_viscosity,
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            )
-
-            sd.set_labeled_value(
-                cursor,
-                station_identifier,
-                sd.Q_DYNAMIC_VISCOSITY,
-                sd.WALL_POINT_LABEL,
-                dynamic_viscosity,
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            )
-
-            sd.set_labeled_value(
-                cursor,
-                station_identifier,
-                sd.Q_TEMPERATURE,
-                sd.WALL_POINT_LABEL,
-                temperature,
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            )
-
-            sd.set_labeled_value(
-                cursor,
-                station_identifier,
-                sd.Q_SPEED_OF_SOUND,
-                sd.WALL_POINT_LABEL,
-                speed_of_sound,
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-                measurement_technique=sd.MT_ASSUMPTION,
-            )
-
-            sd.set_labeled_value(
-                cursor,
-                station_identifier,
-                sd.Q_STREAMWISE_VELOCITY,
-                sd.WALL_POINT_LABEL,
-                ufloat( 0.0, 0.0 ),
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            )
-
-            sd.set_labeled_value(
-                cursor,
-                station_identifier,
-                sd.Q_DISTANCE_FROM_WALL,
-                sd.WALL_POINT_LABEL,
-                ufloat( 0.0, 0.0 ),
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            )
-
-            sd.set_labeled_value(
-                cursor,
-                station_identifier,
-                sd.Q_OUTER_LAYER_COORDINATE,
-                sd.WALL_POINT_LABEL,
-                ufloat( 0.0, 0.0 ),
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            )
+            mass_density_note = None
+            if ( test_number == 17 and duct == "Square" ):
+                with open( "../data/{:s}/note_mass_density.tex".format( study_identifier ), "r" ) as f:
+                    mass_density_note = f.read()
 
             # p. 129
-            wall_shear_stress_measurement_technique = sd.MT_MOMENTUM_BALANCE
+            mt_wall_shear_stress = sd.MT_MOMENTUM_BALANCE
 
-            sd.set_labeled_value(
-                cursor,
-                station_identifier,
-                sd.Q_SHEAR_STRESS,
-                sd.WALL_POINT_LABEL,
-                wall_shear_stress,
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-                measurement_technique=wall_shear_stress_measurement_technique,
-            )
-
-            sd.set_labeled_value(
-                cursor,
-                station_identifier,
-                sd.Q_FANNING_FRICTION_FACTOR,
-                sd.WALL_POINT_LABEL,
-                fanning_friction_factor,
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-                measurement_technique=wall_shear_stress_measurement_technique,
-            )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_MASS_DENSITY,            sd.WALL_POINT_LABEL, mass_density,            averaging_system=sd.BOTH_AVERAGING_SYSTEMS, notes=mass_density_note,                    )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_KINEMATIC_VISCOSITY,     sd.WALL_POINT_LABEL, kinematic_viscosity,     averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_DYNAMIC_VISCOSITY,       sd.WALL_POINT_LABEL, dynamic_viscosity,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,             sd.WALL_POINT_LABEL, temperature,             averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_STREAMWISE_VELOCITY,     sd.WALL_POINT_LABEL, ufloat( 0.0, 0.0 ),      averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_DISTANCE_FROM_WALL,      sd.WALL_POINT_LABEL, ufloat( 0.0, 0.0 ),      averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_OUTER_LAYER_COORDINATE,  sd.WALL_POINT_LABEL, ufloat( 0.0, 0.0 ),      averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_SPEED_OF_SOUND,          sd.WALL_POINT_LABEL, speed_of_sound,          averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION,     )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_SHEAR_STRESS,            sd.WALL_POINT_LABEL, wall_shear_stress,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_wall_shear_stress, )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_FANNING_FRICTION_FACTOR, sd.WALL_POINT_LABEL, fanning_friction_factor, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_wall_shear_stress, )
 
 conn.commit()
 conn.close()
-
-# p. 132
-#
-# \begin{quote}
-# Two traverses at opposite ends of the round duct indicated
-# different velocity profiles, the centerline velocity at the
-# downstream end was 6.6 percent higher than at the upstream end
-# for a mean velocity of 9310 fpm.
-# \end{quote}
