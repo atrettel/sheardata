@@ -258,7 +258,7 @@ def split_float( value ):
             sql_uncertainty = None
     return sql_value, sql_uncertainty
 
-def join_float( sql_value, sql_uncertainty=None ):
+def sdfloat( sql_value, sql_uncertainty=None ):
     uncertainty = float(0.0)
     if ( sql_uncertainty == None ):
         uncertainty = float("nan")
@@ -268,7 +268,7 @@ def join_float( sql_value, sql_uncertainty=None ):
 
 def fetch_float( cursor ):
     result = cursor.fetchone()
-    return join_float( result[0], result[1] )
+    return sdfloat( result[0], result[1] )
 
 def identify_study( flow_class, year, study_number, readable=False ):
     separator = ""
@@ -1058,7 +1058,7 @@ def get_working_fluid_name( cursor, series ):
                     name += " and "
             return name
 
-def integrate_using_trapezoid_rule( x, f, F0=ufloat(0.0,0.0) ):
+def integrate_using_trapezoid_rule( x, f, F0=sdfloat(0.0,0.0) ):
     F = F0
     for i in range(len(x)-1):
         F += 0.5 * ( x[i+1] - x[i] ) * ( f[i+1] + f[i] )
