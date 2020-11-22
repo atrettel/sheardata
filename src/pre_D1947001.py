@@ -40,18 +40,6 @@ study_identifier = sd.add_study(
 
 sd.add_source( cursor, study_identifier, "HuebscherRG+1947+eng+JOUR", 1 )
 
-# Duct dimensions
-#
-# p. 128
-#
-# \begin{quote}
-# The first part of the paper gives the results of an experimental
-# investigation using three ducts of different forms but each of 8 in.
-# equivalent diameter.  The duct sizes were 8 in. ID round, 8 in. square and
-# 4.5 in. by 36 in. rectangular (8:1 aspect ratio).  Air velocities used ranged
-# from 300 to 9310 fpm.
-# \end{quote}
-
 # Distance between pressure taps
 #
 # p. 129
@@ -127,6 +115,37 @@ for duct in ducts:
             pressure_gradient  = float(duct_globals_row[7]) * sd.PASCALS_PER_INCH_OF_WATER / sd.METERS_PER_FOOT
             Re_bulk_value      = float(duct_globals_row[10])
 
+            # Duct dimensions
+            #
+            # p. 128
+            #
+            # \begin{quote}
+            # The first part of the paper gives the results of an experimental
+            # investigation using three ducts of different forms but each of 8
+            # in.  equivalent diameter.  The duct sizes were 8 in. ID round, 8
+            # in. square and 4.5 in. by 36 in. rectangular (8:1 aspect ratio).
+            # Air velocities used ranged from 300 to 9310 fpm.
+            # \end{quote}
+            #
+            # However, the hydraulic diameter column in tables 2 to 4 makes it
+            # clear that these dimensions are only approximate.  Indeed, the
+            # rectangular duct appears to vary in cross section between tests,
+            # while the round and square ducts have the same cross section.
+            #
+            # For the rectangular case, assume that the aspect ratio is
+            # constant.
+            height      = None
+            width       = None
+            half_height = None
+            if ( duct == "Square" ):
+                height      = hydraulic_diameter
+                width       = hydraulic_diameter
+                half_height = 0.5 * height
+            elif ( duct == "Rectangular" ):
+                height      = 0.5 * ( 1.0 + ducts[duct].aspect_ratio ) * hydraulic_diameter / ducts[duct].aspect_ratio
+                width       = ducts[duct].aspect_ratio * height
+                half_height = 0.5 * height
+
             # Uncertainty of wall shear stress measurements
             #
             # p. 128
@@ -160,9 +179,11 @@ for duct in ducts:
             friction_velocity    = ( wall_shear_stress / mass_density )**0.5
             viscous_length_scale = kinematic_viscosity / friction_velocity
 
-            Re_tau = 0.5 * hydraulic_diameter / viscous_length_scale
-            if ( duct == "Rectangular" ):
-                Re_tau = 0.5 * 4.5 * sd.METERS_PER_INCH / viscous_length_scale
+            Re_tau = None
+            if ( duct == "Round" ):
+                Re_tau = 0.5 * hydraulic_diameter / viscous_length_scale
+            else:
+                Re_tau = half_height / viscous_length_scale
 
             speed_of_sound = sd.ideal_gas_speed_of_sound( temperature )
             Ma_bulk        = bulk_velocity     / speed_of_sound
@@ -237,6 +258,11 @@ for duct in ducts:
             sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                  bulk_velocity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_bulk_velocity,  )
             sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER,           Re_bulk,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
             sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,               Ma_bulk,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
+
+            if ( duct != "Round" ):
+                sd.set_station_value( cursor, station_identifier, sd.Q_HEIGHT,      height,      measurement_technique=sd.MT_CALCULATION, )
+                sd.set_station_value( cursor, station_identifier, sd.Q_WIDTH,       width,       measurement_technique=sd.MT_CALCULATION, )
+                sd.set_station_value( cursor, station_identifier, sd.Q_HALF_HEIGHT, half_height, measurement_technique=sd.MT_CALCULATION, )
 
             # This set of data only considers wall quantities.
             point_number = 1
