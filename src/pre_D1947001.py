@@ -76,11 +76,10 @@ with open( globals_filename, "r" ) as globals_file:
             float(globals_row[2]) * sd.METERS_PER_FOOT
         )
 
-mass_density_note = \
-"""
-The air density of test 17 of the square duct results appears to have a
-typographic error.  The number given is 6.0697; the database uses 0.0697.
-"""
+
+mass_density_note = None
+with open( "../data/{:s}/note_mass_density.tex".format( study_identifier ), "r" ) as f:
+    mass_density_note = f.read()
 
 series_number = 0
 for duct in ducts:
