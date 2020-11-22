@@ -352,12 +352,13 @@ def truncate_to_station( identifier ):
     sanitized_identifier = sanitize_identifier( identifier )
     return sanitized_identifier[0:14]
 
-def add_study( cursor, flow_class, year, study_number, study_type ):
+def add_study( cursor, flow_class, year, study_number, study_type, \
+               outlier=False, notes=None, ):
     study = identify_study( flow_class, year, study_number )
     cursor.execute(
     """
     INSERT INTO studies( identifier, flow_class, year, study_number,
-    study_type) VALUES( ?, ?, ?, ?, ? );
+    study_type, outlier, notes ) VALUES( ?, ?, ?, ?, ?, ?, ? );
     """,
     (
         study,
@@ -365,6 +366,8 @@ def add_study( cursor, flow_class, year, study_number, study_type ):
         int(year),
         int(study_number),
         str(study_type),
+        int(outlier),
+        notes,
     )
     )
     return study
@@ -500,8 +503,9 @@ def add_source( cursor, study, source, classification ):
     )
     )
 
-def add_series( cursor, flow_class, year, study_number, series_number, \
-                number_of_dimensions, coordinate_system ):
+def add_series( cursor, flow_class, year, study_number, series_number,  \
+                number_of_dimensions, coordinate_system, outlier=False, \
+                notes=None, ):
     series = identify_series(
         flow_class,
         year,
@@ -516,8 +520,8 @@ def add_series( cursor, flow_class, year, study_number, series_number, \
     cursor.execute(
     """
     INSERT INTO series( identifier, study, series_number, number_of_dimensions,
-    coordinate_system )
-    VALUES( ?, ?, ?, ?, ? );
+    coordinate_system, outlier, notes )
+    VALUES( ?, ?, ?, ?, ?, ?, ? );
     """,
     (
         series,
@@ -525,6 +529,8 @@ def add_series( cursor, flow_class, year, study_number, series_number, \
         int(series_number),
         int(number_of_dimensions),
         str(coordinate_system),
+        int(outlier),
+        notes,
     )
     )
     return series
@@ -652,8 +658,9 @@ def get_series_value( cursor, series, quantity,              \
             )
     return fetch_float( cursor )
 
-def add_station( cursor, flow_class, year, study_number, series_number, \
-                station_number, originators_identifier=None, ):
+def add_station( cursor, flow_class, year, study_number, series_number,     \
+                station_number, originators_identifier=None, outlier=False, \
+                notes=None ):
     station = identify_station(
         flow_class,
         year,
@@ -675,8 +682,8 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
     cursor.execute(
     """
     INSERT INTO stations( identifier, series, study, station_number,
-    originators_identifier )
-    VALUES( ?, ?, ?, ?, ? );
+    originators_identifier, outlier, notes )
+    VALUES( ?, ?, ?, ?, ?, ?, ? );
     """,
     (
         station,
@@ -684,6 +691,8 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
         study,
         int(station_number),
         originators_identifier,
+        int(outlier),
+        notes,
     )
     )
     return station
@@ -768,7 +777,8 @@ def get_station_value( cursor, station, quantity,             \
     return fetch_float( cursor )
 
 def add_point( cursor, flow_class, year, study_number, series_number, \
-                station_number, point_number, point_label=None ):
+                station_number, point_number, point_label=None,       \
+                outlier=False, notes=None ):
     point = identify_point(
         flow_class,
         year,
@@ -798,8 +808,8 @@ def add_point( cursor, flow_class, year, study_number, series_number, \
     cursor.execute(
     """
     INSERT INTO points( identifier, station, series, study, point_number,
-    point_label )
-    VALUES( ?, ?, ?, ?, ?, ?);
+    point_label, outlier, notes )
+    VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
     """,
     (
         point,
@@ -808,6 +818,8 @@ def add_point( cursor, flow_class, year, study_number, series_number, \
         study,
         int(point_number),
         point_label,
+        int(outlier),
+        notes,
     )
     )
     return point
