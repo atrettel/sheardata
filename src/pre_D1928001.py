@@ -112,6 +112,8 @@ with open( globals_filename, "r" ) as globals_file:
         wetted_perimeter     = 2.0 * ( width + height )
         hydraulic_diameter   = 4.0 * cross_sectional_area / wetted_perimeter
 
+        outer_layer_development_length = development_length / hydraulic_diameter
+
         test_number = int(globals_row[0])
         originators_identifier = "Series 11, test {:d}".format(
             test_number,
@@ -200,6 +202,20 @@ with open( globals_filename, "r" ) as globals_file:
             sd.RECTANGULAR_GEOMETRY
         )
 
+        sd.set_series_value(
+            cursor,
+            series_identifier,
+            sd.Q_DEVELOPMENT_LENGTH,
+            development_length,
+        )
+
+        sd.set_series_value(
+            cursor,
+            series_identifier,
+            sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS,
+            distance_between_pressure_taps,
+        )
+
         station_number = 1
         station_identifier = sd.add_station(
             cursor,
@@ -218,6 +234,13 @@ with open( globals_filename, "r" ) as globals_file:
             station_identifier,
             sd.Q_HYDRAULIC_DIAMETER,
             hydraulic_diameter,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,
+            outer_layer_development_length,
         )
 
         sd.set_station_value(
