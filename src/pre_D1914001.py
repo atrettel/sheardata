@@ -517,6 +517,8 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             series_number=series_number,
             number_of_dimensions=2,
             coordinate_system=sd.CYLINDRICAL_COORDINATE_SYSTEM,
+            outlier=outlier,
+            notes=mass_density_note,
         )
 
         if ( working_fluid == "Air" ):
@@ -560,6 +562,8 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             study_number=study_number,
             series_number=series_number,
             station_number=station_number,
+            outlier=outlier,
+            notes=mass_density_note,
         )
 
         sd.mark_station_as_periodic( cursor, station_identifier )
