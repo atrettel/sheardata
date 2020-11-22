@@ -41,14 +41,9 @@ study_identifier = sd.add_study(
 sd.add_source( cursor, study_identifier, "StantonTE+1911+eng+JOUR", 1 )
 sd.add_source( cursor, study_identifier, "KooEC+1932+eng+THES",     2 )
 
-series_1_center_line_note = \
-"""
-There is an inconsistency in the center-line mean velocities of the
-\SI{5.08}{\cm} pipe.  \citet[p.~371]{StantonTE+1911+eng+JOUR} says
-\SI{1525}{\cm\per\s} and \citet[p.~372]{StantonTE+1911+eng+JOUR} says
-\SI{1526}{\cm\per\s}.  The database uses \SI{1525}{\cm\per\s} since it is used
-twice.
-"""
+series_1_center_line_note = None
+with open( "../data/{:s}/note_series_1_center_line_velocity.tex".format( study_identifier ), "r" ) as f:
+    series_1_center_line_note = f.read()
 
 globals_filename = "../data/{:s}/globals.csv".format( study_identifier )
 with open( globals_filename, "r" ) as globals_file:
