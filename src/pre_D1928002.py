@@ -119,9 +119,9 @@ mt_flow_rate         = sd.MT_WEIGHING_METHOD
 # Use the term "set" instead of "series" to prevent confusion.  These
 # paragraphs provide detailed information about the development length and
 # distance between pressure taps.
-point_alpha =               30.20e-2
-point_beta  = point_alpha + 30.50e-2
-point_gamma = point_beta  + 36.43e-2
+point_alpha =               sd.sdfloat(30.20e-2)
+point_beta  = point_alpha + sd.sdfloat(30.50e-2)
+point_gamma = point_beta  + sd.sdfloat(36.43e-2)
 
 development_lengths = {}
 development_lengths[1] = point_alpha
@@ -132,8 +132,11 @@ distance_between_pressure_taps[1] = point_gamma - point_alpha
 distance_between_pressure_taps[2] = point_gamma - point_beta
 
 # p. 693
-mass_density = 1000.0
+mass_density = sd.sdfloat(1000.0)
 
+print( aspect_ratio )
+print( development_lengths[1] / height )
+print( development_lengths[2] / height )
 
 conn.commit()
 conn.close()
