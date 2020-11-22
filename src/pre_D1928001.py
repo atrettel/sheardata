@@ -52,8 +52,8 @@ sd.add_source( cursor, study_identifier, "DeanRB+1978+eng+JOUR",   2 )
 # employing either mercury or water as a fluid according to the range of
 # pressure.
 # \end{quote}
-flow_rate_measurement_technique         = sd.MT_WEIGHING_METHOD
-wall_shear_stress_measurement_technique = sd.MT_MOMENTUM_BALANCE
+mt_flow_rate         = sd.MT_WEIGHING_METHOD
+mt_wall_shear_stress = sd.MT_MOMENTUM_BALANCE
 
 n   = 0
 SSE = 0.0
@@ -152,22 +152,10 @@ with open( globals_filename, "r" ) as globals_file:
         mass_flow_rate_uncertainty      = mass_flow_rate_value * 0.03 / 3.0**0.5
         pressure_difference_uncertainty = pressure_difference_value * 0.03 / 3.0**0.5
 
-        temperature = ufloat(
-            temperature_value,
-            temperature_uncertainty,
-        )
-        kinematic_viscosity = ufloat(
-            kinematic_viscosity_value,
-            kinematic_viscosity_uncertainty,
-        )
-        mass_flow_rate = ufloat(
-            mass_flow_rate_value,
-            mass_flow_rate_uncertainty,
-        )
-        pressure_difference = ufloat(
-            pressure_difference_value,
-            pressure_difference_uncertainty,
-        )
+        temperature         = ufloat( temperature_value,         temperature_uncertainty,         )
+        kinematic_viscosity = ufloat( kinematic_viscosity_value, kinematic_viscosity_uncertainty, )
+        mass_flow_rate      = ufloat( mass_flow_rate_value,      mass_flow_rate_uncertainty,      )
+        pressure_difference = ufloat( pressure_difference_value, pressure_difference_uncertainty, )
 
         mass_density            = sd.liquid_water_mass_density( temperature )
         dynamic_viscosity       = mass_density * kinematic_viscosity
@@ -202,12 +190,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.RECTANGULAR_GEOMETRY
         )
 
-        sd.set_series_value(
-            cursor,
-            series_identifier,
-            sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS,
-            distance_between_pressure_taps,
-        )
+        sd.set_series_value( cursor, series_identifier, sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS, distance_between_pressure_taps, )
 
         station_number = 1
         station_identifier = sd.add_station(
@@ -222,78 +205,15 @@ with open( globals_filename, "r" ) as globals_file:
 
         sd.mark_station_as_periodic( cursor, station_identifier )
 
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_HYDRAULIC_DIAMETER,
-            hydraulic_diameter,
-        )
-
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_DEVELOPMENT_LENGTH,
-            development_length,
-        )
-
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,
-            outer_layer_development_length,
-        )
-
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_ASPECT_RATIO,
-            aspect_ratio,
-        )
-
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_MASS_FLOW_RATE,
-            mass_flow_rate,
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            measurement_technique=flow_rate_measurement_technique,
-        )
-
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_VOLUMETRIC_FLOW_RATE,
-            volumetric_flow_rate,
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            measurement_technique=flow_rate_measurement_technique,
-        )
-
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_BULK_VELOCITY,
-            bulk_velocity,
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            measurement_technique=flow_rate_measurement_technique,
-        )
-
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_BULK_REYNOLDS_NUMBER,
-            bulk_reynolds_number,
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            measurement_technique=sd.MT_CALCULATION
-        )
-
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_BULK_MACH_NUMBER,
-            bulk_mach_number,
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            measurement_technique=sd.MT_CALCULATION
-        )
+        sd.set_station_value( cursor, station_identifier, sd.Q_HYDRAULIC_DIAMETER,             hydraulic_diameter,             )
+        sd.set_station_value( cursor, station_identifier, sd.Q_DEVELOPMENT_LENGTH,             development_length,             )
+        sd.set_station_value( cursor, station_identifier, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH, outer_layer_development_length, )
+        sd.set_station_value( cursor, station_identifier, sd.Q_ASPECT_RATIO,                   aspect_ratio,                   )
+        sd.set_station_value( cursor, station_identifier, sd.Q_MASS_FLOW_RATE,                 mass_flow_rate,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_flow_rate,      )
+        sd.set_station_value( cursor, station_identifier, sd.Q_VOLUMETRIC_FLOW_RATE,           volumetric_flow_rate, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_flow_rate,      )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                  bulk_velocity,        averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_flow_rate,      )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER,           bulk_reynolds_number, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,               bulk_mach_number,     averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
 
         # This set of data only considers wall quantities.
         point_number = 1
@@ -322,99 +242,16 @@ with open( globals_filename, "r" ) as globals_file:
                 measurement_technique=sd.MT_ASSUMPTION,
             )
 
-        sd.set_labeled_value(
-            cursor,
-            station_identifier,
-            sd.Q_MASS_DENSITY,
-            sd.WALL_POINT_LABEL,
-            mass_density,
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            measurement_technique=sd.MT_CALCULATION,
-        )
-
-        sd.set_labeled_value(
-            cursor,
-            station_identifier,
-            sd.Q_KINEMATIC_VISCOSITY,
-            sd.WALL_POINT_LABEL,
-            kinematic_viscosity,
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-        )
-
-        sd.set_labeled_value(
-            cursor,
-            station_identifier,
-            sd.Q_DYNAMIC_VISCOSITY,
-            sd.WALL_POINT_LABEL,
-            dynamic_viscosity,
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-        )
-
-        sd.set_labeled_value(
-            cursor,
-            station_identifier,
-            sd.Q_TEMPERATURE,
-            sd.WALL_POINT_LABEL,
-            temperature,
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-        )
-
-        sd.set_labeled_value(
-            cursor,
-            station_identifier,
-            sd.Q_SPEED_OF_SOUND,
-            sd.WALL_POINT_LABEL,
-            speed_of_sound,
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            measurement_technique=sd.MT_ASSUMPTION,
-        )
-
-        sd.set_labeled_value(
-            cursor,
-            station_identifier,
-            sd.Q_STREAMWISE_VELOCITY,
-            sd.WALL_POINT_LABEL,
-            ufloat( 0.0, 0.0 ),
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-        )
-
-        sd.set_labeled_value(
-            cursor,
-            station_identifier,
-            sd.Q_DISTANCE_FROM_WALL,
-            sd.WALL_POINT_LABEL,
-            ufloat( 0.0, 0.0 ),
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-        )
-
-        sd.set_labeled_value(
-            cursor,
-            station_identifier,
-            sd.Q_OUTER_LAYER_COORDINATE,
-            sd.WALL_POINT_LABEL,
-            ufloat( 0.0, 0.0 ),
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-        )
-
-        sd.set_labeled_value(
-            cursor,
-            station_identifier,
-            sd.Q_SHEAR_STRESS,
-            sd.WALL_POINT_LABEL,
-            wall_shear_stress,
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            measurement_technique=wall_shear_stress_measurement_technique,
-        )
-
-        sd.set_labeled_value(
-            cursor,
-            station_identifier,
-            sd.Q_FANNING_FRICTION_FACTOR,
-            sd.WALL_POINT_LABEL,
-            fanning_friction_factor,
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            measurement_technique=wall_shear_stress_measurement_technique,
-        )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_MASS_DENSITY,            sd.WALL_POINT_LABEL, mass_density,            averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION,    )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_KINEMATIC_VISCOSITY,     sd.WALL_POINT_LABEL, kinematic_viscosity,     averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_DYNAMIC_VISCOSITY,       sd.WALL_POINT_LABEL, dynamic_viscosity,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,             sd.WALL_POINT_LABEL, temperature,             averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_SPEED_OF_SOUND,          sd.WALL_POINT_LABEL, speed_of_sound,          averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION,     )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_STREAMWISE_VELOCITY,     sd.WALL_POINT_LABEL, ufloat( 0.0, 0.0 ),      averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_DISTANCE_FROM_WALL,      sd.WALL_POINT_LABEL, ufloat( 0.0, 0.0 ),      averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_OUTER_LAYER_COORDINATE,  sd.WALL_POINT_LABEL, ufloat( 0.0, 0.0 ),      averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_SHEAR_STRESS,            sd.WALL_POINT_LABEL, wall_shear_stress,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_wall_shear_stress, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FANNING_FRICTION_FACTOR, sd.WALL_POINT_LABEL, fanning_friction_factor, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_wall_shear_stress, )
 
 conn.commit()
 conn.close()
