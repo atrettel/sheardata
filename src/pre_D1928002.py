@@ -19,8 +19,6 @@ import math
 import sqlite3
 import sheardata as sd
 import sys
-from uncertainties import ufloat
-from uncertainties import unumpy as unp
 
 conn   = sqlite3.connect( sys.argv[1] )
 cursor = conn.cursor()
@@ -63,8 +61,8 @@ height_value       = 0.404e-2
 width_uncertainty  = 0.005 * width_value / 3.0**0.5
 height_uncertainty = 0.005 * height_value / 3.0**0.5
 
-width  = ufloat( width_value, width_uncertainty )
-height = ufloat( height_value, height_uncertainty )
+width  = sd.sdfloat( width_value, width_uncertainty )
+height = sd.sdfloat( height_value, height_uncertainty )
 
 half_height        = 0.5 * height
 aspect_ratio       = width / height
@@ -133,10 +131,6 @@ distance_between_pressure_taps[2] = point_gamma - point_beta
 
 # p. 693
 mass_density = sd.sdfloat(1000.0)
-
-print( aspect_ratio )
-print( development_lengths[1] / height )
-print( development_lengths[2] / height )
 
 conn.commit()
 conn.close()

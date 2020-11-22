@@ -19,7 +19,6 @@ import math
 import sqlite3
 import sheardata as sd
 import sys
-from uncertainties import unumpy as unp
 
 conn   = sqlite3.connect( sys.argv[1] )
 cursor = conn.cursor()
