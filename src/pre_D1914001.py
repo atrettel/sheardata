@@ -500,14 +500,8 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
         mass_density_note = None
         if ( working_fluid == "Air" and pipe == "S" ):
             outlier = True
-            mass_density_note = \
-            """
-            The mass density of this series, as calculated from the bulk
-            Reynolds number, is \SI{1226}{\kg\m^{-3}}, which is far too high
-            for air.  Despite the fact that this series fits the bulk Reynolds
-            number versus friction factor trend well, there appears to be some
-            kind of miscalculation in this series that is difficult to locate.
-            """.strip()
+            with open( "../data/{:s}/note_mass_density.tex".format( study_identifier ), "r" ) as f:
+                mass_density_note = f.read()
 
         series_identifier = sd.add_series(
             cursor,
@@ -518,7 +512,6 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             number_of_dimensions=2,
             coordinate_system=sd.CYLINDRICAL_COORDINATE_SYSTEM,
             outlier=outlier,
-            notes=mass_density_note,
         )
 
         if ( working_fluid == "Air" ):
@@ -563,7 +556,6 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             series_number=series_number,
             station_number=station_number,
             outlier=outlier,
-            notes=mass_density_note,
         )
 
         sd.mark_station_as_periodic( cursor, station_identifier )
