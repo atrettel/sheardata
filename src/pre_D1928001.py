@@ -107,6 +107,7 @@ with open( globals_filename, "r" ) as globals_file:
         # of the depth measurements using the table on p. 95.
         height = ufloat( 0.025e-2, height_uncertainty )
 
+        half_height          = 0.5 * height
         aspect_ratio         = width / height
         cross_sectional_area = width * height
         wetted_perimeter     = 2.0 * ( width + height )
@@ -167,7 +168,7 @@ with open( globals_filename, "r" ) as globals_file:
 
         friction_velocity        = ( wall_shear_stress / mass_density )**0.5
         viscous_length_scale     = kinematic_viscosity / friction_velocity
-        friction_reynolds_number = 0.5 * height / viscous_length_scale
+        friction_reynolds_number = half_height / viscous_length_scale
 
         speed_of_sound       = sd.liquid_water_speed_of_sound( temperature )
         bulk_mach_number     = bulk_velocity / speed_of_sound
@@ -214,6 +215,9 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value( cursor, station_identifier, sd.Q_DEVELOPMENT_LENGTH,             development_length,             )
         sd.set_station_value( cursor, station_identifier, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH, outer_layer_development_length, )
         sd.set_station_value( cursor, station_identifier, sd.Q_ASPECT_RATIO,                   aspect_ratio,                   )
+        sd.set_station_value( cursor, station_identifier, sd.Q_HEIGHT,                         height,                         )
+        sd.set_station_value( cursor, station_identifier, sd.Q_WIDTH,                          width,                          )
+        sd.set_station_value( cursor, station_identifier, sd.Q_HALF_HEIGHT,                    half_height,                    )
         sd.set_station_value( cursor, station_identifier, sd.Q_MASS_FLOW_RATE,                 mass_flow_rate,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_flow_rate,      )
         sd.set_station_value( cursor, station_identifier, sd.Q_VOLUMETRIC_FLOW_RATE,           volumetric_flow_rate, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_flow_rate,      )
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                  bulk_velocity,        averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_flow_rate,      )
