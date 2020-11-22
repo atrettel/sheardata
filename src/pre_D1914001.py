@@ -240,15 +240,6 @@ with open( ratio_filename, "r" ) as ratio_file:
         sd.set_series_value(
             cursor,
             series_identifier,
-            sd.Q_DEVELOPMENT_LENGTH,
-            development_length,
-            measurement_technique=sd.MT_ASSUMPTION,
-            notes=development_length_note,
-        )
-
-        sd.set_series_value(
-            cursor,
-            series_identifier,
             sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS,
             distance_between_pressure_taps,
         )
@@ -270,6 +261,15 @@ with open( ratio_filename, "r" ) as ratio_file:
             station_identifier,
             sd.Q_HYDRAULIC_DIAMETER,
             diameter,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.Q_DEVELOPMENT_LENGTH,
+            development_length,
+            measurement_technique=sd.MT_ASSUMPTION,
+            notes=development_length_note,
         )
 
         sd.set_station_value(
@@ -601,15 +601,6 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.ELLIPTICAL_GEOMETRY
         )
 
-        sd.set_series_value(
-            cursor,
-            series_identifier,
-            sd.Q_DEVELOPMENT_LENGTH,
-            development_length,
-            measurement_technique=sd.MT_ASSUMPTION,
-            notes=development_length_note,
-        )
-
         if ( distance_between_pressure_taps != None ):
             sd.set_series_value(
                 cursor,
@@ -637,6 +628,15 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.Q_HYDRAULIC_DIAMETER,
             diameter,
             outlier=outlier,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.Q_DEVELOPMENT_LENGTH,
+            development_length,
+            measurement_technique=sd.MT_ASSUMPTION,
+            notes=development_length_note,
         )
 
         sd.set_station_value(

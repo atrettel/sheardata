@@ -198,13 +198,6 @@ for duct in ducts:
                     sd.RECTANGULAR_GEOMETRY
                 )
 
-            sd.set_series_value(
-                cursor,
-                series_identifier,
-                sd.Q_DEVELOPMENT_LENGTH,
-                ducts[duct].length,
-            )
-
             sd.add_air_components( cursor, series_identifier )
 
             station_number = 1
@@ -225,6 +218,13 @@ for duct in ducts:
                 station_identifier,
                 sd.Q_HYDRAULIC_DIAMETER,
                 hydraulic_diameter,
+            )
+
+            sd.set_station_value(
+                cursor,
+                station_identifier,
+                sd.Q_DEVELOPMENT_LENGTH,
+                ducts[duct].length,
             )
 
             sd.set_station_value(

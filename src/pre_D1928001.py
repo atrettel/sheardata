@@ -205,13 +205,6 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_series_value(
             cursor,
             series_identifier,
-            sd.Q_DEVELOPMENT_LENGTH,
-            development_length,
-        )
-
-        sd.set_series_value(
-            cursor,
-            series_identifier,
             sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS,
             distance_between_pressure_taps,
         )
@@ -234,6 +227,13 @@ with open( globals_filename, "r" ) as globals_file:
             station_identifier,
             sd.Q_HYDRAULIC_DIAMETER,
             hydraulic_diameter,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.Q_DEVELOPMENT_LENGTH,
+            development_length,
         )
 
         sd.set_station_value(
