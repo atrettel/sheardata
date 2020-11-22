@@ -52,6 +52,27 @@ sd.add_source( cursor, study_identifier, "HuebscherRG+1947+eng+JOUR", 1 )
 # from 300 to 9310 fpm.
 # \end{quote}
 
+# Distance between pressure taps
+#
+# p. 129
+#
+# \begin{quote}
+# Static pressure explorations made within the rectangular duct on a single
+# plane perpendicular to the long axis of the duct disclosed no measureable
+# variation over the cross-section.  A single internal static pressure taken at
+# the axis of the duct at several locations along the duct length served to
+# define the static friction pressure gradient.
+#
+# It was found that insertion of the tubes into the duct caused sufficient
+# resistance to decrease the air flow in the round and square ducts.  Since
+# this eeffect was negligible when insertion was less than 2 in. the tubes were
+# never inserted for more than 2 in.  Openings for static tube insertion were
+# located every 3 ft along the length of the duct.
+# \end{quote}
+#
+# Note that this does not give any information about the distance that was used
+# in the study, just that it was in 3 foot increments.
+
 class Duct:
     aspect_ratio = None
     length       = None
@@ -177,6 +198,13 @@ for duct in ducts:
                     sd.RECTANGULAR_GEOMETRY
                 )
 
+            sd.set_series_value(
+                cursor,
+                series_identifier,
+                sd.Q_DEVELOPMENT_LENGTH,
+                ducts[duct].length,
+            )
+
             sd.add_air_components( cursor, series_identifier )
 
             station_number = 1
@@ -197,6 +225,13 @@ for duct in ducts:
                 station_identifier,
                 sd.Q_HYDRAULIC_DIAMETER,
                 hydraulic_diameter,
+            )
+
+            sd.set_station_value(
+                cursor,
+                station_identifier,
+                sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,
+                ducts[duct].length / hydraulic_diameter,
             )
 
             sd.set_station_value(
