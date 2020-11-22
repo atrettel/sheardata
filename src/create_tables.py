@@ -461,6 +461,7 @@ quantities[ sd.Q_INNER_DIAMETER                         ] = quantity( "inner dia
 quantities[ sd.Q_MOMENTUM_THICKNESS                     ] = quantity( "momentum thickness",                     length_exponent=+1.0,                                           )
 quantities[ sd.Q_MOMENTUM_THICKNESS_REYNOLDS_NUMBER     ] = quantity( "momentum thickness Reynolds number",                                                                     )
 quantities[ sd.Q_OUTER_DIAMETER                         ] = quantity( "outer diameter",                         length_exponent=+1.0,                                           )
+quantities[ sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH         ] = quantity( "outer-layer development length",                                                                         )
 quantities[ sd.Q_RECOVERY_FACTOR                        ] = quantity( "recovery factor",                                                                                        )
 quantities[ sd.Q_SHAPE_FACTOR_1_TO_2                    ] = quantity( "shape factor 1-to-2",                                                                                    )
 quantities[ sd.Q_SHAPE_FACTOR_3_TO_2                    ] = quantity( "shape factor 3-to-2",                                                                                    )
