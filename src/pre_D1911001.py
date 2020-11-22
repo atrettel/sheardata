@@ -19,7 +19,6 @@ import math
 import sqlite3
 import sheardata as sd
 import sys
-from uncertainties import ufloat
 from uncertainties import unumpy as unp
 
 conn   = sqlite3.connect( sys.argv[1] )
@@ -47,8 +46,8 @@ with open( globals_filename, "r" ) as globals_file:
         skipinitialspace=True )
     next(globals_reader)
     for globals_row in globals_reader:
-        series_number =   int(globals_row[0])
-        diameter      = float(globals_row[2]) * 1.0e-2
+        series_number = int(globals_row[0])
+        diameter      = sd.sdfloat(globals_row[2]) * 1.0e-2
 
         # p. 367
         #
@@ -64,8 +63,8 @@ with open( globals_filename, "r" ) as globals_file:
         # in length.  Assume that the development section is the
         # difference between the quoted measurements and that the precision of
         # the value in the figure is too low.
-        distance_between_pressure_taps = 61.0e-2
-        development_length             = 5.5 - distance_between_pressure_taps
+        distance_between_pressure_taps = sd.sdfloat(61.0e-2)
+        development_length             = sd.sdfloat(5.5) - distance_between_pressure_taps
         outer_layer_development_length = development_length / diameter
 
         # The rough pipe measurements are in the fully-rough regime.
@@ -178,18 +177,18 @@ with open( globals_filename, "r" ) as globals_file:
             next(station_reader)
             for station_row in station_reader:
                 r_reversed.append(
-                    ufloat( float(station_row[0]) * 1.0e-2, r_uncertainty )
+                    sd.sdfloat( float(station_row[0]) * 1.0e-2, r_uncertainty )
                 )
 
-                u_reversed.append( float(station_row[1]) * 1.0e-2 )
+                u_reversed.append( sd.sdfloat(station_row[1]) * 1.0e-2 )
 
-        r_reversed.append( ufloat( 0.5*diameter, 0.0 ) )
-        u_reversed.append( ufloat( 0.0,          0.0 ) )
+        r_reversed.append( sd.sdfloat( 0.5*diameter.n, 0.0 ) )
+        u_reversed.append( sd.sdfloat( 0.0,            0.0 ) )
 
         n_points = len(r_reversed)
 
         # This temperature is an assumption.  It is not stated in the paper.
-        temperature         = 15.0 + sd.ABSOLUTE_ZERO
+        temperature         = sd.sdfloat( 15.0 + sd.ABSOLUTE_ZERO )
         mass_density        = sd.ideal_gas_mass_density( temperature )
         speed_of_sound      = sd.ideal_gas_speed_of_sound( temperature )
         dynamic_viscosity   = sd.sutherlands_law_dynamic_viscosity( temperature )
@@ -247,7 +246,7 @@ with open( globals_filename, "r" ) as globals_file:
                     cursor,
                     point_identifier,
                     quantity,
-                    ufloat( 0.0, 0.0 ),
+                    sd.sdfloat( 0.0, 0.0 ),
                     averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
                     measurement_technique=sd.MT_ASSUMPTION,
                 )
