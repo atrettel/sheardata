@@ -42,17 +42,42 @@ sd.add_source( cursor, study_identifier, "StantonTE+1914+eng+JOUR", 1 )
 sd.add_source( cursor, study_identifier, "ObotNT+1988+eng+JOUR",    2 )
 
 class Pipe:
-    diameter = None
-    length   = None
-    material = None
+    diameter                       = None
+    distance_between_pressure_taps = None
+    material                       = None
 
-    def __init__( self, diameter, length, material ):
+    # p. 202
+    #
+    # \begin{quote}
+    # The length of ``leading in'' pipe, of the same diameter as the
+    # experimental portion, through which the fluid passed before any
+    # observations of its velocity or pressure were made, varied from 90 to 140
+    # diameters, as it was considered that this length was sufficient both to
+    # enable any irregularities in the distribution of velocity to die away, or
+    # any stream-line motion at the inlet to break up, before the measurements
+    # were taken.
+    # \end{quote}
+    #
+    # For the sake of simplicity, assume that the development length is the
+    # minimum of these.  It is long enough that its precise value does not
+    # matter.
+    def outer_layer_development_length( self ):
+        return 90.0
+
+    def development_length( self ):
+        return diameter * self.outer_layer_development_length()
+
+    def __init__( self, diameter, distance_between_pressure_taps, material ):
         self.diameter = float(diameter)
-        if ( length == 0.0 ):
-            self.length = None
+        if ( distance_between_pressure_taps == 0.0 ):
+            self.distance_between_pressure_taps = None
         else:
-            self.length   = float(length)
+            self.distance_between_pressure_taps = float(distance_between_pressure_taps)
         self.material = str(material)
+
+development_length_note = None
+with open( "../data/{:s}/note_development_length.tex".format( study_identifier ), "r" ) as f:
+    development_length_note = f.read()
 
 # Pipe 12A
 #
@@ -149,8 +174,10 @@ with open( ratio_filename, "r" ) as ratio_file:
         working_fluid    =   str(ratio_row[2])
         pipe             =   str(ratio_row[3])
 
-        diameter = pipes[pipe].diameter
-        length   = pipes[pipe].length
+        diameter                       = pipes[pipe].diameter
+        distance_between_pressure_taps = pipes[pipe].distance_between_pressure_taps
+        development_length             = pipes[pipe].development_length()
+        outer_layer_development_length = pipes[pipe].outer_layer_development_length()
 
         # The velocity ratio experiments do not give the test conditions like
         # the temperature.  Graphical extraction from figure 1 reveals that the
@@ -210,6 +237,22 @@ with open( ratio_filename, "r" ) as ratio_file:
             sd.ELLIPTICAL_GEOMETRY
         )
 
+        sd.set_series_value(
+            cursor,
+            series_identifier,
+            sd.Q_DEVELOPMENT_LENGTH,
+            development_length,
+            measurement_technique=sd.MT_ASSUMPTION,
+            notes=development_length_note,
+        )
+
+        sd.set_series_value(
+            cursor,
+            series_identifier,
+            sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS,
+            distance_between_pressure_taps,
+        )
+
         station_number = 1
         station_identifier = sd.add_station(
             cursor,
@@ -227,6 +270,15 @@ with open( ratio_filename, "r" ) as ratio_file:
             station_identifier,
             sd.Q_HYDRAULIC_DIAMETER,
             diameter,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,
+            outer_layer_development_length,
+            measurement_technique=sd.MT_ASSUMPTION,
+            notes=development_length_note,
         )
 
         sd.set_station_value(
@@ -487,8 +539,10 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
         working_fluid                 =   str(shear_stress_row[5])
         pipe                          =   str(shear_stress_row[6])
 
-        diameter = pipes[pipe].diameter
-        length   = pipes[pipe].length
+        diameter                       = pipes[pipe].diameter
+        distance_between_pressure_taps = pipes[pipe].distance_between_pressure_taps
+        development_length             = pipes[pipe].development_length()
+        outer_layer_development_length = pipes[pipe].outer_layer_development_length()
 
         mass_density        = 2.0 * wall_shear_stress / ( fanning_friction_factor * bulk_velocity**2.0 )
         kinematic_viscosity = bulk_velocity * diameter / Re_bulk
@@ -547,6 +601,23 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.ELLIPTICAL_GEOMETRY
         )
 
+        sd.set_series_value(
+            cursor,
+            series_identifier,
+            sd.Q_DEVELOPMENT_LENGTH,
+            development_length,
+            measurement_technique=sd.MT_ASSUMPTION,
+            notes=development_length_note,
+        )
+
+        if ( distance_between_pressure_taps != None ):
+            sd.set_series_value(
+                cursor,
+                series_identifier,
+                sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS,
+                distance_between_pressure_taps,
+            )
+
         station_number = 1
         station_identifier = sd.add_station(
             cursor,
@@ -566,6 +637,15 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             sd.Q_HYDRAULIC_DIAMETER,
             diameter,
             outlier=outlier,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,
+            outer_layer_development_length,
+            measurement_technique=sd.MT_ASSUMPTION,
+            notes=development_length_note,
         )
 
         sd.set_station_value(
