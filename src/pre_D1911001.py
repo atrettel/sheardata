@@ -41,10 +41,6 @@ study_identifier = sd.add_study(
 sd.add_source( cursor, study_identifier, "StantonTE+1911+eng+JOUR", 1 )
 sd.add_source( cursor, study_identifier, "KooEC+1932+eng+THES",     2 )
 
-series_1_center_line_note = None
-with open( "../data/{:s}/note_series_1_center_line_velocity.tex".format( study_identifier ), "r" ) as f:
-    series_1_center_line_note = f.read()
-
 globals_filename = "../data/{:s}/globals.csv".format( study_identifier )
 with open( globals_filename, "r" ) as globals_file:
     globals_reader = csv.reader( globals_file, delimiter=",", quotechar='"', \
@@ -97,12 +93,7 @@ with open( globals_filename, "r" ) as globals_file:
             coordinate_system=sd.CYLINDRICAL_COORDINATE_SYSTEM,
         )
 
-        sd.set_series_value(
-            cursor,
-            series_identifier,
-            sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS,
-            distance_between_pressure_taps,
-        )
+        sd.set_series_value( cursor, series_identifier, sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS, distance_between_pressure_taps, )
 
         # Working fluid
         #
@@ -136,33 +127,10 @@ with open( globals_filename, "r" ) as globals_file:
             series_number,
         )
 
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_HYDRAULIC_DIAMETER,
-            diameter,
-        )
-
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_DEVELOPMENT_LENGTH,
-            development_length,
-        )
-
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,
-            outer_layer_development_length,
-        )
-
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_ASPECT_RATIO,
-            1.0,
-        )
+        sd.set_station_value( cursor, station_identifier, sd.Q_HYDRAULIC_DIAMETER,             diameter,                       )
+        sd.set_station_value( cursor, station_identifier, sd.Q_DEVELOPMENT_LENGTH,             development_length,             )
+        sd.set_station_value( cursor, station_identifier, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH, outer_layer_development_length, )
+        sd.set_station_value( cursor, station_identifier, sd.Q_ASPECT_RATIO,                   1.0,                            )
         
         # Pitot-static tube dimensions
         #
@@ -246,40 +214,8 @@ with open( globals_filename, "r" ) as globals_file:
                 point_label=point_label,
             )
 
-            sd.set_point_value(
-                cursor,
-                point_identifier,
-                sd.Q_DISTANCE_FROM_WALL,
-                0.5*diameter - r_reversed[i],
-            )
-
-            sd.set_point_value(
-                cursor,
-                point_identifier,
-                sd.Q_OUTER_LAYER_COORDINATE,
-                ( 0.5*diameter - r_reversed[i] ) / ( 0.5*diameter ),
-            )
-
-            sd.set_point_value(
-                cursor,
-                point_identifier,
-                sd.Q_STREAMWISE_COORDINATE,
-                0.0,
-            )
-
-            sd.set_point_value(
-                cursor,
-                point_identifier,
-                sd.Q_TRANSVERSE_COORDINATE,
-                r_reversed[i],
-            )
-
-            sd.set_point_value(
-                cursor,
-                point_identifier,
-                sd.Q_SPANWISE_COORDINATE,
-                0.0,
-            )
+            distance_from_wall = 0.5 * diameter - r_reversed[i]
+            outer_layer_coordinate = 2.0 * distance_from_wall / diameter
 
             # Velocity measurement technique
             #
@@ -290,15 +226,20 @@ with open( globals_filename, "r" ) as globals_file:
             # the pressure in a small Pitot tube facing the current and that in
             # a small orifice in the side of the pipe.
             # \end{quote}
-            sd.set_point_value(
-                cursor,
-                point_identifier,
-                sd.Q_STREAMWISE_VELOCITY,
-                u_reversed[i],
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-                measurement_technique=sd.MT_PITOT_STATIC_TUBE,
-                notes=( series_1_center_line_note if ( series_number == 1 and point_number == n_points ) else None ),
-            )
+            mt_velocity = sd.MT_PITOT_STATIC_TUBE
+
+            center_line_velocity_note = None
+            if ( series_number == 1 and point_number == n_points ):
+                with open( "../data/{:s}/note_series_1_center_line_velocity.tex".format( study_identifier ), "r" ) as f:
+                    center_line_velocity_note = f.read()
+
+            sd.set_point_value( cursor, point_identifier, sd.Q_DISTANCE_FROM_WALL,     distance_from_wall,     )
+            sd.set_point_value( cursor, point_identifier, sd.Q_OUTER_LAYER_COORDINATE, outer_layer_coordinate, )
+            sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_COORDINATE,  0.0,                    )
+            sd.set_point_value( cursor, point_identifier, sd.Q_TRANSVERSE_COORDINATE,  r_reversed[i],          )
+            sd.set_point_value( cursor, point_identifier, sd.Q_SPANWISE_COORDINATE,    0.0,                    )
+            sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    u_reversed[i],
+                                averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_velocity, notes=center_line_velocity_note,)
 
             for quantity in [ sd.Q_TRANSVERSE_VELOCITY,
                               sd.Q_SPANWISE_VELOCITY, ]:
@@ -312,50 +253,11 @@ with open( globals_filename, "r" ) as globals_file:
                 )
 
             # Assumed constant profiles
-            sd.set_point_value(
-                cursor,
-                point_identifier,
-                sd.Q_TEMPERATURE,
-                temperature,
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-                measurement_technique=sd.MT_ASSUMPTION,
-            )
-
-            sd.set_point_value(
-                cursor,
-                point_identifier,
-                sd.Q_MASS_DENSITY,
-                mass_density,
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-                measurement_technique=sd.MT_ASSUMPTION,
-            )
-
-            sd.set_point_value(
-                cursor,
-                point_identifier,
-                sd.Q_KINEMATIC_VISCOSITY,
-                kinematic_viscosity,
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-                measurement_technique=sd.MT_ASSUMPTION,
-            )
-
-            sd.set_point_value(
-                cursor,
-                point_identifier,
-                sd.Q_DYNAMIC_VISCOSITY,
-                dynamic_viscosity,
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-                measurement_technique=sd.MT_ASSUMPTION,
-            )
-
-            sd.set_point_value(
-                cursor,
-                point_identifier,
-                sd.Q_SPEED_OF_SOUND,
-                speed_of_sound,
-                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-                measurement_technique=sd.MT_CALCULATION,
-            )
+            sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE,         temperature,         averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION,  )
+            sd.set_point_value( cursor, point_identifier, sd.Q_MASS_DENSITY,        mass_density,        averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION,  )
+            sd.set_point_value( cursor, point_identifier, sd.Q_KINEMATIC_VISCOSITY, kinematic_viscosity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION,  )
+            sd.set_point_value( cursor, point_identifier, sd.Q_DYNAMIC_VISCOSITY,   dynamic_viscosity,   averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION,  )
+            sd.set_point_value( cursor, point_identifier, sd.Q_SPEED_OF_SOUND,      speed_of_sound,      averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
 
             i += 1
 
@@ -385,51 +287,6 @@ with open( globals_filename, "r" ) as globals_file:
         Re_bulk              = bulk_velocity * diameter / kinematic_viscosity
         Ma_bulk              = bulk_velocity / speed_of_sound
 
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_VOLUMETRIC_FLOW_RATE,
-            volumetric_flow_rate,
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            measurement_technique=sd.MT_CALCULATION,
-        )
-
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_MASS_FLOW_RATE,
-            mass_flow_rate,
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            measurement_technique=sd.MT_CALCULATION,
-        )
-
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_BULK_VELOCITY,
-            bulk_velocity,
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            measurement_technique=sd.MT_CALCULATION,
-        )
-
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_BULK_REYNOLDS_NUMBER,
-            Re_bulk,
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            measurement_technique=sd.MT_CALCULATION,
-        )
-
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_BULK_MACH_NUMBER,
-            Ma_bulk,
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            measurement_technique=sd.MT_CALCULATION,
-        )
-
         maximum_velocity = sd.get_labeled_value(
             cursor,
             station_identifier,
@@ -438,14 +295,12 @@ with open( globals_filename, "r" ) as globals_file:
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
         )
 
-        sd.set_station_value(
-            cursor,
-            station_identifier,
-            sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO,
-            bulk_velocity / maximum_velocity,
-            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-            measurement_technique=sd.MT_CALCULATION,
-        )
+        sd.set_station_value( cursor, station_identifier, sd.Q_VOLUMETRIC_FLOW_RATE,               volumetric_flow_rate,             averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
+        sd.set_station_value( cursor, station_identifier, sd.Q_MASS_FLOW_RATE,                     mass_flow_rate,                   averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                      bulk_velocity,                    averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER,               Re_bulk,                          averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,                   Ma_bulk,                          averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO, bulk_velocity / maximum_velocity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
 
         # Wall shear stress measurements
         #
