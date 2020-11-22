@@ -64,6 +64,7 @@ duct_types["pipe"]    = DuctType(  sd.ELLIPTICAL_GEOMETRY, sd.CYLINDRICAL_COORDI
 max_inner_layer_roughness_height = 1.0
 min_bulk_mach_number = 0.0
 max_bulk_mach_number = 0.3
+min_outer_layer_development_length = 50.0
 
 for duct_type in duct_types:
     for quantity in [ sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO,
@@ -109,6 +110,10 @@ for duct_type in duct_types:
             INTERSECT
             SELECT station
             FROM station_values
+            WHERE quantity=? AND station_value>=? AND outlier=0
+            INTERSECT
+            SELECT station
+            FROM station_values
             WHERE quantity=? AND outlier=0
             INTERSECT
             SELECT station
@@ -130,6 +135,8 @@ for duct_type in duct_types:
                 sd.Q_BULK_MACH_NUMBER,
                 min_bulk_mach_number,
                 max_bulk_mach_number,
+                sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,
+                min_outer_layer_development_length,
                 sd.Q_BULK_REYNOLDS_NUMBER,
                 quantity,
             )
@@ -175,6 +182,10 @@ for duct_type in duct_types:
             INTERSECT
             SELECT station
             FROM station_values
+            WHERE quantity=? AND station_value>=? AND outlier=0
+            INTERSECT
+            SELECT station
+            FROM station_values
             WHERE quantity=? AND outlier=0
             INTERSECT
             SELECT station
@@ -200,6 +211,8 @@ for duct_type in duct_types:
                 sd.Q_BULK_MACH_NUMBER,
                 min_bulk_mach_number,
                 max_bulk_mach_number,
+                sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,
+                min_outer_layer_development_length,
                 sd.Q_BULK_REYNOLDS_NUMBER,
                 quantity,
             )
