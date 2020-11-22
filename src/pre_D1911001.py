@@ -54,6 +54,24 @@ with open( globals_filename, "r" ) as globals_file:
         series_number =   int(globals_row[0])
         diameter      = float(globals_row[2]) * 1.0e-2
 
+        # p. 367
+        #
+        # \begin{quote}
+        # The arrangement of one of the experimental pipes and the air fan used
+        # to set up the current is shown in fig. I. The air fan discharges into
+        # a horizontal pipe 3.5 metres in length.  This pipe is connected by a
+        # bendto a vertical pipe 5.5 metres high.  The experimental portion, 61
+        # cm. long, is at the upper extremity of the vertical pipe.
+        # \end{quote}
+        #
+        # However, figure 1 remarks that the development section is 5.0 meters
+        # in length.  Assume that the development section is the
+        # difference between the quoted measurements and that the precision of
+        # the value in the figure is too low.
+        distance_between_pressure_taps = 61.0e-2
+        development_length             = 5.5 - distance_between_pressure_taps
+        outer_layer_development_length = development_length / diameter
+
         # The rough pipe measurements are in the fully-rough regime.
         #
         # p. 369
@@ -77,6 +95,20 @@ with open( globals_filename, "r" ) as globals_file:
             series_number=series_number,
             number_of_dimensions=2,
             coordinate_system=sd.CYLINDRICAL_COORDINATE_SYSTEM,
+        )
+
+        sd.set_series_value(
+            cursor,
+            series_identifier,
+            sd.Q_DEVELOPMENT_LENGTH,
+            development_length,
+        )
+
+        sd.set_series_value(
+            cursor,
+            series_identifier,
+            sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS,
+            distance_between_pressure_taps,
         )
 
         # Working fluid
@@ -116,6 +148,13 @@ with open( globals_filename, "r" ) as globals_file:
             station_identifier,
             sd.Q_HYDRAULIC_DIAMETER,
             diameter,
+        )
+
+        sd.set_station_value(
+            cursor,
+            station_identifier,
+            sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,
+            outer_layer_development_length,
         )
 
         sd.set_station_value(
@@ -224,8 +263,22 @@ with open( globals_filename, "r" ) as globals_file:
             sd.set_point_value(
                 cursor,
                 point_identifier,
+                sd.Q_STREAMWISE_COORDINATE,
+                0.0,
+            )
+
+            sd.set_point_value(
+                cursor,
+                point_identifier,
                 sd.Q_TRANSVERSE_COORDINATE,
                 r_reversed[i],
+            )
+
+            sd.set_point_value(
+                cursor,
+                point_identifier,
+                sd.Q_SPANWISE_COORDINATE,
+                0.0,
             )
 
             # Velocity measurement technique
