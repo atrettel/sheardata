@@ -366,6 +366,10 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
 
         volumetric_flow_rate = 0.25 * math.pi * diameter**2.0 * bulk_velocity
 
+        friction_velocity    = ( wall_shear_stress / mass_density )**0.5
+        viscous_length_scale = kinematic_viscosity / friction_velocity
+        Re_tau               = 0.5 * diameter / viscous_length_scale
+
         outlier = False
         mass_density_note = None
         if ( working_fluid == "Air" and pipe == "S" ):
@@ -409,7 +413,8 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
         elif ( working_fluid == "Water" ):
             speed_of_sound = sd.liquid_water_speed_of_sound( temperature )
             speed_of_sound_measurement_technique = sd.MT_CALCULATION
-        Ma_bulk = bulk_velocity / speed_of_sound
+        Ma_bulk = bulk_velocity     / speed_of_sound
+        Ma_tau  = friction_velocity / speed_of_sound
 
         sd.update_series_geometry(
             cursor,
@@ -487,17 +492,22 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
         # \end{quote}
         mt_wall_shear_stress = sd.MT_MOMENTUM_BALANCE
 
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_MASS_DENSITY,            sd.WALL_POINT_LABEL, mass_density,                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                             outlier=outlier, notes=mass_density_note, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_DYNAMIC_VISCOSITY,       sd.WALL_POINT_LABEL, dynamic_viscosity,           averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                             outlier=outlier,                          )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_KINEMATIC_VISCOSITY,     sd.WALL_POINT_LABEL, kinematic_viscosity,         averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                             outlier=outlier,                          )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,             sd.WALL_POINT_LABEL, temperature,                 averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                             outlier=outlier,                          )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_SPEED_OF_SOUND,          sd.WALL_POINT_LABEL, speed_of_sound,              averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=speed_of_sound_measurement_technique, outlier=outlier,                          )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_STREAMWISE_VELOCITY,     sd.WALL_POINT_LABEL, ufloat( 0.0, 0.0 ),          averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                             outlier=outlier,                          )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_TRANSVERSE_COORDINATE,   sd.WALL_POINT_LABEL, ufloat( 0.5*diameter, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                             outlier=outlier,                          )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_DISTANCE_FROM_WALL,      sd.WALL_POINT_LABEL, ufloat( 0.0, 0.0 ),          averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                             outlier=outlier,                          )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_OUTER_LAYER_COORDINATE,  sd.WALL_POINT_LABEL, ufloat( 0.0, 0.0 ),          averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                             outlier=outlier,                          )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_SHEAR_STRESS,            sd.WALL_POINT_LABEL, wall_shear_stress,           averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_wall_shear_stress,                 outlier=outlier,                          )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_FANNING_FRICTION_FACTOR, sd.WALL_POINT_LABEL, fanning_friction_factor,     averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_wall_shear_stress,                 outlier=outlier,                          )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_MASS_DENSITY,                        sd.WALL_POINT_LABEL, mass_density,                averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                             outlier=outlier, notes=mass_density_note, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_DYNAMIC_VISCOSITY,                   sd.WALL_POINT_LABEL, dynamic_viscosity,           averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                             outlier=outlier,                          )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_KINEMATIC_VISCOSITY,                 sd.WALL_POINT_LABEL, kinematic_viscosity,         averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                             outlier=outlier,                          )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,                         sd.WALL_POINT_LABEL, temperature,                 averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                             outlier=outlier,                          )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_SPEED_OF_SOUND,                      sd.WALL_POINT_LABEL, speed_of_sound,              averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=speed_of_sound_measurement_technique, outlier=outlier,                          )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_STREAMWISE_VELOCITY,                 sd.WALL_POINT_LABEL, ufloat( 0.0, 0.0 ),          averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                             outlier=outlier,                          )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_TRANSVERSE_COORDINATE,               sd.WALL_POINT_LABEL, ufloat( 0.5*diameter, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                             outlier=outlier,                          )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_DISTANCE_FROM_WALL,                  sd.WALL_POINT_LABEL, ufloat( 0.0, 0.0 ),          averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                             outlier=outlier,                          )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_OUTER_LAYER_COORDINATE,              sd.WALL_POINT_LABEL, ufloat( 0.0, 0.0 ),          averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                             outlier=outlier,                          )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_SHEAR_STRESS,                        sd.WALL_POINT_LABEL, wall_shear_stress,           averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_wall_shear_stress,                 outlier=outlier,                          )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FANNING_FRICTION_FACTOR,             sd.WALL_POINT_LABEL, fanning_friction_factor,     averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_wall_shear_stress,                 outlier=outlier,                          )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_VELOCITY,                   sd.WALL_POINT_LABEL, friction_velocity,           averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION,                    outlier=outlier,                          )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_VISCOUS_LENGTH_SCALE,                sd.WALL_POINT_LABEL, viscous_length_scale,        averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION,                    outlier=outlier,                          )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_REYNOLDS_NUMBER,            sd.WALL_POINT_LABEL, Re_tau,                      averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION,                    outlier=outlier,                          )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER, sd.WALL_POINT_LABEL, Re_tau,                      averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION,                    outlier=outlier,                          )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_MACH_NUMBER,                sd.WALL_POINT_LABEL, Ma_tau,                      averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION,                    outlier=outlier,                          )
 
 conn.commit()
 conn.close()
