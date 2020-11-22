@@ -455,6 +455,7 @@ quantities[ sd.Q_DISPLACEMENT_THICKNESS                 ] = quantity( "displacem
 quantities[ sd.Q_DISPLACEMENT_THICKNESS_REYNOLDS_NUMBER ] = quantity( "displacement thickness Reynolds number",                                                                 )
 quantities[ sd.Q_ENERGY_THICKNESS                       ] = quantity( "energy thickness",                       length_exponent=+1.0,                                           )
 quantities[ sd.Q_EQUILIBRIUM_PARAMETER                  ] = quantity( "equilibrium parameter",                                                                                  )
+quantities[ sd.Q_HALF_HEIGHT                            ] = quantity( "half height",                            length_exponent=+1.0,                                           )
 quantities[ sd.Q_HEIGHT                                 ] = quantity( "height",                                 length_exponent=+1.0,                                           )
 quantities[ sd.Q_HYDRAULIC_DIAMETER                     ] = quantity( "hydraulic diameter",                     length_exponent=+1.0,                                           )
 quantities[ sd.Q_INNER_DIAMETER                         ] = quantity( "inner diameter",                         length_exponent=+1.0,                                           )
