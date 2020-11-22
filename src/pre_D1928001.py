@@ -19,7 +19,6 @@ import math
 import sqlite3
 import sheardata as sd
 import sys
-from uncertainties import ufloat
 from uncertainties import unumpy as unp
 
 conn   = sqlite3.connect( sys.argv[1] )
@@ -91,9 +90,9 @@ with open( globals_filename, "r" ) as globals_file:
         series_number += 1
 
         # p. 107
-        width                          = 2.540e-2
-        development_length             = 0.100e-2
-        distance_between_pressure_taps = 0.780e-2
+        width                          = sd.sdfloat( 2.540e-2 )
+        development_length             = sd.sdfloat( 0.100e-2 )
+        distance_between_pressure_taps = sd.sdfloat( 0.780e-2 )
 
         # p. 107
         #
@@ -105,7 +104,7 @@ with open( globals_filename, "r" ) as globals_file:
         #
         # Rather than accept the correction, instead calculate the uncertainty
         # of the depth measurements using the table on p. 95.
-        height = ufloat( 0.025e-2, height_uncertainty )
+        height = sd.sdfloat( 0.025e-2, height_uncertainty )
 
         half_height          = 0.5 * height
         aspect_ratio         = width / height
@@ -153,10 +152,10 @@ with open( globals_filename, "r" ) as globals_file:
         mass_flow_rate_uncertainty      = mass_flow_rate_value * 0.03 / 3.0**0.5
         pressure_difference_uncertainty = pressure_difference_value * 0.03 / 3.0**0.5
 
-        temperature         = ufloat( temperature_value,         temperature_uncertainty,         )
-        kinematic_viscosity = ufloat( kinematic_viscosity_value, kinematic_viscosity_uncertainty, )
-        mass_flow_rate      = ufloat( mass_flow_rate_value,      mass_flow_rate_uncertainty,      )
-        pressure_difference = ufloat( pressure_difference_value, pressure_difference_uncertainty, )
+        temperature         = sd.sdfloat( temperature_value,         temperature_uncertainty,         )
+        kinematic_viscosity = sd.sdfloat( kinematic_viscosity_value, kinematic_viscosity_uncertainty, )
+        mass_flow_rate      = sd.sdfloat( mass_flow_rate_value,      mass_flow_rate_uncertainty,      )
+        pressure_difference = sd.sdfloat( pressure_difference_value, pressure_difference_uncertainty, )
 
         mass_density            = sd.liquid_water_mass_density( temperature )
         dynamic_viscosity       = mass_density * kinematic_viscosity
@@ -256,9 +255,9 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_labeled_value( cursor, station_identifier, sd.Q_DYNAMIC_VISCOSITY,                   sd.WALL_POINT_LABEL, dynamic_viscosity,        averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,                         sd.WALL_POINT_LABEL, temperature,              averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_SPEED_OF_SOUND,                      sd.WALL_POINT_LABEL, speed_of_sound,           averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION,     )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_STREAMWISE_VELOCITY,                 sd.WALL_POINT_LABEL, ufloat( 0.0, 0.0 ),       averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_DISTANCE_FROM_WALL,                  sd.WALL_POINT_LABEL, ufloat( 0.0, 0.0 ),       averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_OUTER_LAYER_COORDINATE,              sd.WALL_POINT_LABEL, ufloat( 0.0, 0.0 ),       averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_STREAMWISE_VELOCITY,                 sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ),   averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_DISTANCE_FROM_WALL,                  sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ),   averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_OUTER_LAYER_COORDINATE,              sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ),   averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_SHEAR_STRESS,                        sd.WALL_POINT_LABEL, wall_shear_stress,        averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_wall_shear_stress, )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_FANNING_FRICTION_FACTOR,             sd.WALL_POINT_LABEL, fanning_friction_factor,  averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_wall_shear_stress, )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_VELOCITY,                   sd.WALL_POINT_LABEL, friction_velocity,        averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION,    )
