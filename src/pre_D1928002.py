@@ -64,9 +64,11 @@ height_uncertainty = 0.005 * height_value / 3.0**0.5
 width  = sd.sdfloat( width_value, width_uncertainty )
 height = sd.sdfloat( height_value, height_uncertainty )
 
-half_height        = 0.5 * height
-aspect_ratio       = width / height
-hydraulic_diameter = 2.0 * width * height / ( width + height )
+half_height          = 0.5 * height
+aspect_ratio         = width / height
+hydraulic_diameter   = 2.0 * width * height / ( width + height )
+cross_sectional_area = width * height
+wetted_perimeter     = 2.0 * ( width + height )
 
 # p. 692
 #
@@ -125,12 +127,57 @@ development_lengths = {}
 development_lengths[1] = point_alpha
 development_lengths[2] = point_beta
 
-distance_between_pressure_taps = {}
-distance_between_pressure_taps[1] = point_gamma - point_alpha
-distance_between_pressure_taps[2] = point_gamma - point_beta
+distances_between_pressure_taps = {}
+distances_between_pressure_taps[1] = point_gamma - point_alpha
+distances_between_pressure_taps[2] = point_gamma - point_beta
 
-# p. 693
-mass_density = sd.sdfloat(1000.0)
+series_number = 0
+globals_filename = "../data/{:s}/globals.csv".format( study_identifier, )
+with open( globals_filename, "r" ) as globals_file:
+    globals_reader = csv.reader(
+        globals_file,
+        delimiter=",",
+        quotechar='"', \
+        skipinitialspace=True,
+    )
+    next(globals_reader)
+    for globals_row in globals_reader:
+        series_number += 1
+
+        data_set      = int(globals_row[0])
+        temperature   = sd.fahrenheit_to_kelvin( sd.sdfloat(globals_row[1]) )
+        bulk_velocity = sd.sdfloat(globals_row[2]) * 1.0e-2
+
+        pressure_drop       = None
+        pressure_drop_units = str(globals_row[4])
+        if ( pressure_drop_units == "cm water" ):
+            pressure_drop = sd.sdfloat(globals_row[3]) * 1.0e-2 * sd.PASCALS_PER_METER_OF_WATER
+        elif ( pressure_drop_units == "in water" ):
+            pressure_drop = sd.sdfloat(globals_row[3]) * sd.PASCALS_PER_INCH_OF_WATER
+        elif ( pressure_drop_units == "in mercury" ):
+            pressure_drop = sd.sdfloat(globals_row[3]) * sd.PASCALS_PER_INCH_OF_MERCURY
+
+        development_length             = development_lengths[data_set]
+        distance_between_pressure_taps = distances_between_pressure_taps[data_set]
+
+        pressure_gradient = (-1.0) * pressure_drop / distance_between_pressure_taps
+
+        wall_shear_stress = (-1.0) * ( cross_sectional_area / wetted_perimeter ) * pressure_gradient
+
+        mass_density        =      sd.liquid_water_mass_density( temperature )
+        dynamic_viscosity   = sd.liquid_water_dynamic_viscosity( temperature )
+        speed_of_sound      =    sd.liquid_water_speed_of_sound( temperature )
+        kinematic_viscosity = dynamic_viscosity / mass_density
+
+        bulk_reynolds_number = bulk_velocity * hydraulic_diameter / kinematic_viscosity
+
+        fanning_friction_factor = 2.0 * wall_shear_stress / ( mass_density * bulk_velocity**2.0 )
+
+        print( "{:d}, {:8.3f}, {:7.5f}".format(
+            data_set,
+            bulk_reynolds_number.n/4.0,
+            fanning_friction_factor.n/2.0,
+        ) )
 
 conn.commit()
 conn.close()
