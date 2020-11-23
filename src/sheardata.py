@@ -182,6 +182,7 @@ Q_WETTED_PERIMETER                       = "P"
 Q_WIDTH                                  = "w"
 
 # Quantities, wall point
+Q_CENTER_LINE_TO_WALL_TEMPERATURE_RATIO = "T_c/T_w"
 Q_DARCY_FRICTION_FACTOR                 = "f_D"
 Q_FANNING_FRICTION_FACTOR               = "f"
 Q_FRICTION_MACH_NUMBER                  = "Ma_tau"
@@ -199,7 +200,6 @@ Q_SKIN_FRICTION_COEFFICIENT             = "c_f"
 Q_SPANWISE_WALL_CURVATURE               = "kappa_z"
 Q_STREAMWISE_WALL_CURVATURE             = "kappa_x"
 Q_VISCOUS_LENGTH_SCALE                  = "l_nu"
-Q_WALL_TO_CENTER_LINE_TEMPERATURE_RATIO = "T_w/T_c"
 Q_WALL_TO_EDGE_TEMPERATURE_RATIO        = "T_w/T_e"
 Q_WALL_TO_RECOVERY_TEMPERATURE_RATIO    = "T_w/T_r"
 
