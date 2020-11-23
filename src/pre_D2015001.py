@@ -58,8 +58,6 @@ with open( globals_filename, "r" ) as globals_file:
         series_number += 1
 
         originators_identifier              = str(globals_row[0])
-        bulk_mach_number                    = sd.sdfloat(globals_row[1])
-        bulk_reynolds_number                = sd.sdfloat(globals_row[2])
         prandtl_number                      = sd.sdfloat(globals_row[3],0.0)
         heat_capacity_ratio                 = sd.sdfloat(globals_row[4],0.0)
         specific_gas_constant               = sd.sdfloat(globals_row[5],0.0)
@@ -68,13 +66,8 @@ with open( globals_filename, "r" ) as globals_file:
         ny                                  = int(globals_row[8])
         nz                                  = int(globals_row[9])
         wall_temperature                    = sd.sdfloat(globals_row[10],0.0)
-        wall_mass_density                   = sd.sdfloat(globals_row[11])
         wall_dynamic_viscosity              = sd.sdfloat(globals_row[12])
         wall_shear_stress                   = sd.sdfloat(globals_row[13])
-        center_line_velocity                = sd.sdfloat(globals_row[14])
-        center_line_temperature             = sd.sdfloat(globals_row[15])
-        center_line_mass_density            = sd.sdfloat(globals_row[16])
-        center_line_dynamic_viscosity       = sd.sdfloat(globals_row[17])
         friction_velocity                   = sd.sdfloat(globals_row[18])
         viscous_length_scale                = sd.sdfloat(globals_row[19])
         friction_temperature                = sd.sdfloat(globals_row[20])
@@ -100,9 +93,6 @@ with open( globals_filename, "r" ) as globals_file:
 
         specific_isochoric_heat_capacity = specific_gas_constant / ( heat_capacity_ratio - 1.0 )
         specific_isobaric_heat_capacity  = heat_capacity_ratio * specific_isochoric_heat_capacity
-
-        bulk_to_center_line_velocity_ratio    = bulk_velocity / center_line_velocity
-        center_line_to_wall_temperature_ratio = center_line_temperature / wall_temperature
 
         series_identifier = sd.add_series(
             cursor,
@@ -139,9 +129,6 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value( cursor, station_identifier, sd.Q_HEIGHT,                             height,                         )
         sd.set_station_value( cursor, station_identifier, sd.Q_HALF_HEIGHT,                        half_height,                    )
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                      bulk_velocity,                      averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO, bulk_to_center_line_velocity_ratio, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER,               bulk_reynolds_number,               averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,                   bulk_mach_number,                   averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
 
         point_number = 0
         series_filename = "../data/{:s}/{:s}_profiles.csv".format(
@@ -197,6 +184,8 @@ with open( globals_filename, "r" ) as globals_file:
                 kinematic_viscosity    =   dynamic_viscosity / mass_density
                 thermal_diffusivity    = kinematic_viscosity / prandtl_number
                 thermal_conductivity   = thermal_diffusivity * mass_density * specific_isobaric_heat_capacity
+                speed_of_sound_uw      = ( heat_capacity_ratio * specific_gas_constant * temperature_uw )**0.5
+                speed_of_sound_dw      = ( heat_capacity_ratio * specific_gas_constant * temperature_dw )**0.5
 
                 R_uu_plus_dw = R_uu_dw / friction_velocity**2.0
                 R_vv_plus_dw = R_vv_dw / friction_velocity**2.0
@@ -234,6 +223,8 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.set_point_value( cursor, point_identifier, sd.Q_SPECIFIC_ISOCHORIC_HEAT_CAPACITY, specific_isochoric_heat_capacity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                               )
                 sd.set_point_value( cursor, point_identifier, sd.Q_THERMAL_CONDUCTIVITY,             thermal_conductivity,             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, measurement_technique=sd.MT_APPROXIMATION,                               )
                 sd.set_point_value( cursor, point_identifier, sd.Q_THERMAL_DIFFUSIVITY,              thermal_diffusivity,              averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                                                          )
+                sd.set_point_value( cursor, point_identifier, sd.Q_SPEED_OF_SOUND,                   speed_of_sound_uw,                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                            notes=dynamic_viscosity_note, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_SPEED_OF_SOUND,                   speed_of_sound_dw,                averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM,                                      notes=dynamic_viscosity_note, )
 
                 sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY_AUTOCOVARIANCE,                 R_uu_dw,                                   averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
                 sd.set_point_value( cursor, point_identifier, sd.Q_TRANSVERSE_VELOCITY_AUTOCOVARIANCE,                 R_vv_dw,                                   averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
@@ -257,6 +248,40 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.set_point_value( cursor, point_identifier, sd.Q_NORMALIZED_PRESSURE_AUTOCOVARIANCE,                 normalized_pressure_autocovariance_uw,     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
                 sd.set_point_value( cursor, point_identifier, sd.Q_NORMALIZED_TEMPERATURE_AUTOCOVARIANCE,              normalized_temperature_autocovariance_dw,  averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
 
+        bulk_quantities = {}
+        for quantity in [ sd.Q_MASS_DENSITY,
+                          sd.Q_DYNAMIC_VISCOSITY,
+                          sd.Q_SPEED_OF_SOUND, ]:
+            outer_layer_coordinate_profile, quantity_profile = sd.get_twin_profiles(
+                cursor,
+                station_identifier,
+                sd.Q_DISTANCE_FROM_WALL,
+                quantity,
+                averaging_system2=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+            )
+            bulk_quantities[quantity] = sd.integrate_using_trapezoid_rule( outer_layer_coordinate_profile, quantity_profile )
+
+        bulk_mass_density      = bulk_quantities[sd.Q_MASS_DENSITY]
+        bulk_dynamic_viscosity = bulk_quantities[sd.Q_DYNAMIC_VISCOSITY]
+        bulk_speed_of_sound    = bulk_quantities[sd.Q_SPEED_OF_SOUND]
+
+        bulk_reynolds_number = bulk_mass_density * bulk_velocity * hydraulic_diameter / bulk_dynamic_viscosity
+        bulk_mach_number     = bulk_velocity / bulk_speed_of_sound
+
+        fanning_friction_factor = 2.0 * wall_shear_stress / ( bulk_mass_density * bulk_velocity**2.0 )
+
+        center_line_velocity       = sd.get_labeled_value( cursor, station_identifier, sd.Q_STREAMWISE_VELOCITY, sd.CENTER_LINE_POINT_LABEL, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+        center_line_temperature_uw = sd.get_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,         sd.WALL_POINT_LABEL,        averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+        center_line_temperature_dw = sd.get_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,         sd.WALL_POINT_LABEL,        averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+
+        bulk_to_center_line_velocity_ratio       = bulk_velocity / center_line_velocity
+        center_line_to_wall_temperature_ratio_uw = center_line_temperature_uw / wall_temperature
+        center_line_to_wall_temperature_ratio_dw = center_line_temperature_dw / wall_temperature
+
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER, bulk_reynolds_number, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, measurement_technique=sd.MT_CALCULATION, )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,     bulk_mach_number,     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, measurement_technique=sd.MT_CALCULATION, )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO, bulk_to_center_line_velocity_ratio, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
+
         for quantity in [ sd.Q_ROUGHNESS_HEIGHT,
                           sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
                           sd.Q_OUTER_LAYER_ROUGHNESS_HEIGHT, ]:
@@ -268,16 +293,18 @@ with open( globals_filename, "r" ) as globals_file:
                 0.0,
             )
 
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_SHEAR_STRESS,                          sd.WALL_POINT_LABEL, wall_shear_stress,                     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_VELOCITY,                     sd.WALL_POINT_LABEL, friction_velocity,                     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_VISCOUS_LENGTH_SCALE,                  sd.WALL_POINT_LABEL, viscous_length_scale,                  averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_TEMPERATURE,                  sd.WALL_POINT_LABEL, friction_temperature,                  averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_INNER_LAYER_HEAT_FLUX,                 sd.WALL_POINT_LABEL, B_q,                                   averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_HEAT_FLUX,                             sd.WALL_POINT_LABEL, wall_heat_flux,                        averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_REYNOLDS_NUMBER,              sd.WALL_POINT_LABEL, friction_reynolds_number,              averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER,   sd.WALL_POINT_LABEL, semi_local_friction_reynolds_number,   averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_MACH_NUMBER,                  sd.WALL_POINT_LABEL, friction_mach_number,                  averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_CENTER_LINE_TO_WALL_TEMPERATURE_RATIO, sd.WALL_POINT_LABEL, center_line_to_wall_temperature_ratio, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_SHEAR_STRESS,                          sd.WALL_POINT_LABEL, wall_shear_stress,                        averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_VELOCITY,                     sd.WALL_POINT_LABEL, friction_velocity,                        averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_VISCOUS_LENGTH_SCALE,                  sd.WALL_POINT_LABEL, viscous_length_scale,                     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_TEMPERATURE,                  sd.WALL_POINT_LABEL, friction_temperature,                     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_INNER_LAYER_HEAT_FLUX,                 sd.WALL_POINT_LABEL, B_q,                                      averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_HEAT_FLUX,                             sd.WALL_POINT_LABEL, wall_heat_flux,                           averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_REYNOLDS_NUMBER,              sd.WALL_POINT_LABEL, friction_reynolds_number,                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER,   sd.WALL_POINT_LABEL, semi_local_friction_reynolds_number,      averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_MACH_NUMBER,                  sd.WALL_POINT_LABEL, friction_mach_number,                     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_CENTER_LINE_TO_WALL_TEMPERATURE_RATIO, sd.WALL_POINT_LABEL, center_line_to_wall_temperature_ratio_uw, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_CENTER_LINE_TO_WALL_TEMPERATURE_RATIO, sd.WALL_POINT_LABEL, center_line_to_wall_temperature_ratio_dw, averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FANNING_FRICTION_FACTOR,               sd.WALL_POINT_LABEL, fanning_friction_factor,                  averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
 
 conn.commit()
 conn.close()
