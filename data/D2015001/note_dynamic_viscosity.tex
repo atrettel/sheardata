@@ -1,7 +1,8 @@
-The Hybrid code does not output the mean dynamic viscosity.  The mean dynamic
-viscosity was approximated by assuming that it is the viscosity evaluated at
-the unweighted average temperature.  Eventually, higher-order approximations
-using Taylor series will be used to provide a better approximation.
+The Hybrid code does not output the mean dynamic viscosity or the mean speed of
+sound.  The mean dynamic viscosity and the mean speed of sound were
+approximated by assuming that the mean values were functions of the mean
+temperature.  Eventually, higher-order approximations using Taylor series will
+be used to improve the accuracy.
 
 This same issue extends to the mean kinematic viscosity, thermal conductivity,
 and thermal diffusivity, which are calculated based on this approximate mean
