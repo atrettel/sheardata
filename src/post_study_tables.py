@@ -99,7 +99,7 @@ with open( "table-all-studies.tex.tmp", "w" ) as f:
             sd.make_readable_identifier( study ),
         )+r"} & \texttt{"+"{:s}".format(
             study_type,
-        )+r"} & \citet{"
+        )+r"} & \parbox[t]{0.4\textwidth}{\citet{"
 
         i = 0
         for primary_source in primary_sources:
@@ -108,7 +108,7 @@ with open( "table-all-studies.tex.tmp", "w" ) as f:
             i += 1
             line += primary_source
 
-        line += r"} & "+"{:d} & {:d} & {:d}".format(
+        line += r"}} & "+"{:d} & {:d} & {:d}".format(
             number_of_series,
             number_of_stations,
             number_of_points,
