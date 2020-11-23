@@ -39,6 +39,11 @@ study_identifier = sd.add_study(
 sd.add_source( cursor, study_identifier, "TrettelA+2015+eng+THES", 1 )
 sd.add_source( cursor, study_identifier, "TrettelA+2016+eng+JOUR", 1 )
 
+
+dynamic_viscosity_note = None
+with open( "../data/{:s}/note_dynamic_viscosity.tex".format( study_identifier ), "r" ) as f:
+    dynamic_viscosity_note = f.read()
+
 series_number = 0
 globals_filename = "../data/{:s}/globals.csv".format( study_identifier, )
 with open( globals_filename, "r" ) as globals_file:
@@ -135,23 +140,61 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER,               bulk_reynolds_number,               averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,                   bulk_mach_number,                   averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
 
-        for point_number in range( 1, number_of_points+1, 1 ):
-            point_label = None
-            if ( point_number == 1 ):
-                point_label = sd.WALL_POINT_LABEL
-            elif ( point_number == number_of_points ):
-                point_label = sd.CENTER_LINE_POINT_LABEL
-
-            point_identifier = sd.add_point(
-                cursor,
-                flow_class=flow_class,
-                year=year,
-                study_number=study_number,
-                series_number=series_number,
-                station_number=station_number,
-                point_number=point_number,
-                point_label=point_label,
+        point_number = 0
+        series_filename = "../data/{:s}/{:s}_profiles.csv".format(
+            study_identifier,
+            originators_identifier,
+        )
+        with open( series_filename, "r" ) as series_file:
+            series_reader = csv.reader(
+                series_file,
+                delimiter=",",
+                quotechar='"', \
+                skipinitialspace=True,
             )
+            next(series_reader)
+            for series_row in series_reader:
+                point_number += 1
+
+                point_label = None
+                if ( point_number == 1 ):
+                    point_label = sd.WALL_POINT_LABEL
+                elif ( point_number == number_of_points ):
+                    point_label = sd.CENTER_LINE_POINT_LABEL
+
+                point_identifier = sd.add_point(
+                    cursor,
+                    flow_class=flow_class,
+                    year=year,
+                    study_number=study_number,
+                    series_number=series_number,
+                    station_number=station_number,
+                    point_number=point_number,
+                    point_label=point_label,
+                )
+
+                distance_from_wall     = sd.sdfloat(series_row[0])
+                inner_layer_coordinate = sd.sdfloat(series_row[1])
+                streamwise_velocity_uw = sd.sdfloat(series_row[5])
+                streamwise_velocity_dw = sd.sdfloat(series_row[6])
+                mass_density           = sd.sdfloat(series_row[11])
+                pressure               = sd.sdfloat(series_row[12])
+                temperature_uw         = sd.sdfloat(series_row[13])
+                temperature_dw         = sd.sdfloat(series_row[14])
+                dynamic_viscosity      = sd.sdfloat(series_row[15])
+
+                outer_layer_coordinate = distance_from_wall / half_height
+
+                sd.set_point_value( cursor, point_identifier, sd.Q_DISTANCE_FROM_WALL,     distance_from_wall,                                                                                          )
+                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_COORDINATE, inner_layer_coordinate, averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                          )
+                sd.set_point_value( cursor, point_identifier, sd.Q_OUTER_LAYER_COORDINATE, outer_layer_coordinate,                                                                                      )
+                sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    streamwise_velocity_uw, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                     )
+                sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    streamwise_velocity_dw, averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM,                               )
+                sd.set_point_value( cursor, point_identifier, sd.Q_MASS_DENSITY,           mass_density,           averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                     )
+                sd.set_point_value( cursor, point_identifier, sd.Q_PRESSURE,               pressure,               averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                     )
+                sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE,            temperature_uw,         averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                     )
+                sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE,            temperature_dw,         averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM,                               )
+                sd.set_point_value( cursor, point_identifier, sd.Q_DYNAMIC_VISCOSITY,      dynamic_viscosity,      averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       notes=dynamic_viscosity_note, )
 
         for quantity in [ sd.Q_ROUGHNESS_HEIGHT,
                           sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
