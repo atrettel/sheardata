@@ -176,20 +176,45 @@ with open( globals_filename, "r" ) as globals_file:
                     point_label=point_label,
                 )
 
-                distance_from_wall     = sd.sdfloat(series_row[0])
-                inner_layer_coordinate = sd.sdfloat(series_row[1])
-                streamwise_velocity_uw = sd.sdfloat(series_row[5])
-                streamwise_velocity_dw = sd.sdfloat(series_row[6])
-                mass_density           = sd.sdfloat(series_row[11])
-                pressure               = sd.sdfloat(series_row[12])
-                temperature_uw         = sd.sdfloat(series_row[13])
-                temperature_dw         = sd.sdfloat(series_row[14])
-                dynamic_viscosity      = sd.sdfloat(series_row[15])
+                distance_from_wall             = sd.sdfloat(series_row[0])
+                inner_layer_coordinate         = sd.sdfloat(series_row[1])
+                streamwise_velocity_uw         = sd.sdfloat(series_row[5])
+                streamwise_velocity_dw         = sd.sdfloat(series_row[6])
+                mass_density                   = sd.sdfloat(series_row[11])
+                pressure                       = sd.sdfloat(series_row[12])
+                temperature_uw                 = sd.sdfloat(series_row[13])
+                temperature_dw                 = sd.sdfloat(series_row[14])
+                dynamic_viscosity              = sd.sdfloat(series_row[15])
+                R_uu_dw                        = sd.sdfloat(series_row[16])
+                R_vv_dw                        = sd.sdfloat(series_row[17])
+                R_ww_dw                        = sd.sdfloat(series_row[18])
+                R_uv_dw                        = sd.sdfloat(series_row[19])
+                mass_density_autocovariance_uw = sd.sdfloat(series_row[24])
+                pressure_autocovariance_uw     = sd.sdfloat(series_row[25])
+                temperature_autocovariance_dw  = sd.sdfloat(series_row[26])
 
                 outer_layer_coordinate =  distance_from_wall / half_height
                 kinematic_viscosity    =   dynamic_viscosity / mass_density
                 thermal_diffusivity    = kinematic_viscosity / prandtl_number
                 thermal_conductivity   = thermal_diffusivity * mass_density * specific_isobaric_heat_capacity
+
+                R_uu_plus_dw = R_uu_dw / friction_velocity**2.0
+                R_vv_plus_dw = R_vv_dw / friction_velocity**2.0
+                R_ww_plus_dw = R_ww_dw / friction_velocity**2.0
+                R_uv_plus_dw = R_uv_dw / friction_velocity**2.0
+
+                R_uu_star_dw = mass_density * R_uu_dw / wall_shear_stress
+                R_vv_star_dw = mass_density * R_vv_dw / wall_shear_stress
+                R_ww_star_dw = mass_density * R_ww_dw / wall_shear_stress
+                R_uv_star_dw = mass_density * R_uv_dw / wall_shear_stress
+
+                TKE_dw      = 0.5 * ( R_uu_dw + R_vv_dw + R_ww_dw )
+                TKE_plus_dw = TKE_dw / friction_velocity**2.0
+                TKE_star_dw = mass_density * TKE_dw / wall_shear_stress
+
+                normalized_mass_density_autocovariance_uw = mass_density_autocovariance_uw / mass_density
+                normalized_pressure_autocovariance_uw     =     pressure_autocovariance_uw / pressure
+                normalized_temperature_autocovariance_dw  =  temperature_autocovariance_dw / temperature_dw
 
                 sd.set_point_value( cursor, point_identifier, sd.Q_DISTANCE_FROM_WALL,               distance_from_wall,                                                                                                                                         )
                 sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_COORDINATE,           inner_layer_coordinate,           averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                               )
@@ -209,6 +234,28 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.set_point_value( cursor, point_identifier, sd.Q_SPECIFIC_ISOCHORIC_HEAT_CAPACITY, specific_isochoric_heat_capacity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                               )
                 sd.set_point_value( cursor, point_identifier, sd.Q_THERMAL_CONDUCTIVITY,             thermal_conductivity,             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, measurement_technique=sd.MT_APPROXIMATION,                               )
                 sd.set_point_value( cursor, point_identifier, sd.Q_THERMAL_DIFFUSIVITY,              thermal_diffusivity,              averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                                                          )
+
+                sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY_AUTOCOVARIANCE,                 R_uu_dw,                                   averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_TRANSVERSE_VELOCITY_AUTOCOVARIANCE,                 R_vv_dw,                                   averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_SPANWISE_VELOCITY_AUTOCOVARIANCE,                   R_ww_dw,                                   averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_VELOCITY_CROSS_COVARIANCE,                          R_uv_dw,                                   averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_STREAMWISE_VELOCITY_AUTOCOVARIANCE,     R_uu_plus_dw,                              averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_TRANSVERSE_VELOCITY_AUTOCOVARIANCE,     R_vv_plus_dw,                              averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_SPANWISE_VELOCITY_AUTOCOVARIANCE,       R_ww_plus_dw,                              averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_VELOCITY_CROSS_COVARIANCE,              R_uv_plus_dw,                              averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_MORKOVIN_SCALED_STREAMWISE_VELOCITY_AUTOCOVARIANCE, R_uu_star_dw,                              averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_MORKOVIN_SCALED_TRANSVERSE_VELOCITY_AUTOCOVARIANCE, R_vv_star_dw,                              averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_MORKOVIN_SCALED_SPANWISE_VELOCITY_AUTOCOVARIANCE,   R_ww_star_dw,                              averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_MORKOVIN_SCALED_VELOCITY_CROSS_COVARIANCE,          R_uv_star_dw,                              averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_TURBULENT_KINETIC_ENERGY,                           TKE_dw,                                    averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_TURBULENT_KINETIC_ENERGY,               TKE_plus_dw,                               averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_MORKOVIN_SCALED_TURBULENT_KINETIC_ENERGY,           TKE_star_dw,                               averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_MASS_DENSITY_AUTOCOVARIANCE,                        mass_density_autocovariance_uw,            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+                sd.set_point_value( cursor, point_identifier, sd.Q_PRESSURE_AUTOCOVARIANCE,                            pressure_autocovariance_uw,                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+                sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE_AUTOCOVARIANCE,                         temperature_autocovariance_dw,             averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_NORMALIZED_MASS_DENSITY_AUTOCOVARIANCE,             normalized_mass_density_autocovariance_uw, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+                sd.set_point_value( cursor, point_identifier, sd.Q_NORMALIZED_PRESSURE_AUTOCOVARIANCE,                 normalized_pressure_autocovariance_uw,     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+                sd.set_point_value( cursor, point_identifier, sd.Q_NORMALIZED_TEMPERATURE_AUTOCOVARIANCE,              normalized_temperature_autocovariance_dw,  averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
 
         for quantity in [ sd.Q_ROUGHNESS_HEIGHT,
                           sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
