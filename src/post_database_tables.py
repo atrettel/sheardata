@@ -87,7 +87,7 @@ with open( "list-quantities.tex.tmp", "w" ) as f:
         )+r"}"+" --- {:s}".format(
             str(result[1]),
         )+"\n"
-        f.write( line.replace( "_", r"\_" ) )
+        f.write( line.replace( "_", r"\_" ).replace( "^", r"\string^" ) )
 
     f.write( r"\end{itemize}"+"\n" )
 

@@ -504,7 +504,7 @@ quantities[ sd.Q_INNER_LAYER_TEMPERATURE          ] = quantity( "inner-layer tem
 quantities[ sd.Q_INNER_LAYER_VELOCITY             ] = quantity( "inner-layer velocity",                                                                                                                    )
 quantities[ sd.Q_KINEMATIC_VISCOSITY              ] = quantity( "kinematic viscosity",                   length_exponent=+2.0,   time_exponent=-1.0,                                                       )
 quantities[ sd.Q_MACH_NUMBER                      ] = quantity( "Mach number",                                                                                                                             )
-quantities[ sd.Q_MASS_DENSITY                     ] = quantity( "mass density",                            mass_exponent=+1.0, length_exponent=-1.0,                                                       )
+quantities[ sd.Q_MASS_DENSITY                     ] = quantity( "mass density",                            mass_exponent=+1.0, length_exponent=-3.0,                                                       )
 quantities[ sd.Q_OUTER_LAYER_COORDINATE           ] = quantity( "outer-layer coordinate",                                                                                                                  )
 quantities[ sd.Q_OUTER_LAYER_TEMPERATURE          ] = quantity( "outer-layer temperature",                                                                                                                 )
 quantities[ sd.Q_OUTER_LAYER_VELOCITY             ] = quantity( "outer-layer velocity",                                                                                                                    )
@@ -533,6 +533,29 @@ quantities[ sd.Q_TOTAL_PRESSURE                   ] = quantity( "total pressure"
 quantities[ sd.Q_TOTAL_TEMPERATURE                ] = quantity( "total temperature",                temperature_exponent=+1.0,                                                                             )
 quantities[ sd.Q_TRANSVERSE_COORDINATE            ] = quantity( "transverse coordinate",                 length_exponent=+1.0,                                                                             )
 quantities[ sd.Q_TRANSVERSE_VELOCITY              ] = quantity( "transverse velocity",                   length_exponent=+1.0,   time_exponent=-1.0,                                                       )
+
+# Quantities, point, turbulence
+quantities[ sd.Q_MASS_DENSITY_AUTOCOVARIANCE                        ] = quantity( "mass density autocovariance",                               mass_exponent=+2.0, length_exponent=-6.0,                     )
+quantities[ sd.Q_NORMALIZED_MASS_DENSITY_AUTOCOVARIANCE             ] = quantity( "normalized mass density autocovariance",                                                                                  )
+quantities[ sd.Q_NORMALIZED_PRESSURE_AUTOCOVARIANCE                 ] = quantity( "normalized pressure autocovariance",                                                                                      )
+quantities[ sd.Q_NORMALIZED_TEMPERATURE_AUTOCOVARIANCE              ] = quantity( "normalized temperature autocovariance",                                                                                   )
+quantities[ sd.Q_PRESSURE_AUTOCOVARIANCE                            ] = quantity( "pressure autocovariance",                                   mass_exponent=+2.0, length_exponent=-2.0, time_exponent=-4.0, )
+quantities[ sd.Q_INNER_LAYER_SPANWISE_VELOCITY_AUTOCOVARIANCE       ] = quantity( "inner-layer spanwise velocity autocovariance",                                                                            )
+quantities[ sd.Q_INNER_LAYER_STREAMWISE_VELOCITY_AUTOCOVARIANCE     ] = quantity( "inner-layer streamwise velocity autocovariance",                                                                          )
+quantities[ sd.Q_INNER_LAYER_TRANSVERSE_VELOCITY_AUTOCOVARIANCE     ] = quantity( "inner-layer transverse velocity autocovariance",                                                                          )
+quantities[ sd.Q_INNER_LAYER_TURBULENT_KINETIC_ENERGY               ] = quantity( "inner-layer turbulent kinetic energy",                                                                                    )
+quantities[ sd.Q_INNER_LAYER_VELOCITY_CROSS_COVARIANCE              ] = quantity( "inner-layer velocity cross covariance",                                                                                   )
+quantities[ sd.Q_MORKOVIN_SCALED_SPANWISE_VELOCITY_AUTOCOVARIANCE   ] = quantity( "Morkovin-scaled spanwise velocity autocovariance",                                                                        )
+quantities[ sd.Q_MORKOVIN_SCALED_STREAMWISE_VELOCITY_AUTOCOVARIANCE ] = quantity( "Morkovin-scaled streamwise velocity autocovariance",                                                                      )
+quantities[ sd.Q_MORKOVIN_SCALED_TRANSVERSE_VELOCITY_AUTOCOVARIANCE ] = quantity( "Morkovin-scaled transverse velocity autocovariance",                                                                      )
+quantities[ sd.Q_MORKOVIN_SCALED_TURBULENT_KINETIC_ENERGY           ] = quantity( "Morkovin-scaled turbulent kinetic energy",                                                                                )
+quantities[ sd.Q_MORKOVIN_SCALED_VELOCITY_CROSS_COVARIANCE          ] = quantity( "Morkovin-scaled velocity cross covariance",                                                                               )
+quantities[ sd.Q_SPANWISE_VELOCITY_AUTOCOVARIANCE                   ] = quantity( "spanwise velocity autocovariance",                        length_exponent=+2.0,   time_exponent=-2.0,                     )
+quantities[ sd.Q_STREAMWISE_VELOCITY_AUTOCOVARIANCE                 ] = quantity( "streamwise velocity autocovariance",                      length_exponent=+2.0,   time_exponent=-2.0,                     )
+quantities[ sd.Q_TRANSVERSE_VELOCITY_AUTOCOVARIANCE                 ] = quantity( "transverse velocity autocovariance",                      length_exponent=+2.0,   time_exponent=-2.0,                     )
+quantities[ sd.Q_TURBULENT_KINETIC_ENERGY                           ] = quantity( "turbulent kinetic energy",                                length_exponent=+2.0,   time_exponent=-2.0,                     )
+quantities[ sd.Q_VELOCITY_CROSS_COVARIANCE                          ] = quantity( "velocity cross covariance",                               length_exponent=+2.0,   time_exponent=-2.0,                     )
+quantities[ sd.Q_TEMPERATURE_AUTOCOVARIANCE                         ] = quantity( "temperature autocovariance",                         temperature_exponent=+2.0,                                           )
 
 # Quantities, point, component-based
 for prefix in [ sd.AMOUNT_FRACTION_PREFIX,
