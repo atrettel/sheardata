@@ -21,6 +21,9 @@ is only available in other formats.
 
 - [ERCOFTAC Classic Collection](http://cfd.mace.manchester.ac.uk/ercoftac/)
 
+- [FDY Turbulence DNS data
+  base](https://www.fdy.tu-darmstadt.de/fdyresearch/dns/direkte_numerische_simulation.en.jsp)
+
 - [Gas Dynamics Lab data sets](https://smits.princeton.edu/data-sets/)
   (Princeton University, Smits group)
 
