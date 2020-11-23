@@ -336,9 +336,11 @@ for duct_type in duct_types:
             bulk_reynolds_number = np.array( bulk_reynolds_number_array )
             quantity_values      = np.array(      quantity_values_array )
 
+            study_order = 2
             marker_type = "o"
             if ( study_type == sd.DIRECT_NUMERICAL_SIMULATION_STUDY_TYPE ):
                 marker_type = "d"
+                study_order = 3
 
             ax.errorbar(
                 unp.nominal_values( bulk_reynolds_number  ),
@@ -348,7 +350,7 @@ for duct_type in duct_types:
                 linestyle="",
                 elinewidth=gfx.error_bar_width,
                 clip_on=( quantity == sd.Q_FANNING_FRICTION_FACTOR ),
-                zorder=2,
+                zorder=study_order,
             )
 
         ########################################
