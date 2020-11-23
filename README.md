@@ -15,7 +15,8 @@ Goals
 - Documentation also serves as a data and literature review for different flow
   classes (a meta-analysis).
 
-- CSV files as input files.
+- CSV files as input files.  SQLite database file and PDF documentation file as
+  output files.
 
 - Uncertainty quantification and data validation for as many cases as possible.
 
