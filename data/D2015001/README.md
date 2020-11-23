@@ -6,6 +6,14 @@
 - When using the data, cite `TrettelA+2016+eng+JOUR`
   ([link](https://doi.org/10.1063/1.4942022)).
 
+- Eventually, this data will be re-calculated from the original files.  This
+  process will allow for more profiles to be calculated and for the
+  uncertainties to the quantified.
+
+- Note that while the simulations were run using double-precision floating
+  point numbers, the data were saved as single-precision floating point
+  numbers, resulting in some loss of precision.
+
 
 ## Description of columns in global parameter CSV file
 
