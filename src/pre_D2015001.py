@@ -60,14 +60,14 @@ with open( globals_filename, "r" ) as globals_file:
         originators_identifier              = str(globals_row[0])
         bulk_mach_number                    = sd.sdfloat(globals_row[1])
         bulk_reynolds_number                = sd.sdfloat(globals_row[2])
-        prandtl_number                      = sd.sdfloat(globals_row[3])
-        heat_capacity_ratio                 = sd.sdfloat(globals_row[4])
-        specific_gas_constant               = sd.sdfloat(globals_row[5])
-        omega                               = sd.sdfloat(globals_row[6])
+        prandtl_number                      = sd.sdfloat(globals_row[3],0.0)
+        heat_capacity_ratio                 = sd.sdfloat(globals_row[4],0.0)
+        specific_gas_constant               = sd.sdfloat(globals_row[5],0.0)
+        omega                               = sd.sdfloat(globals_row[6],0.0)
         nx                                  = int(globals_row[7])
         ny                                  = int(globals_row[8])
         nz                                  = int(globals_row[9])
-        wall_temperature                    = sd.sdfloat(globals_row[10])
+        wall_temperature                    = sd.sdfloat(globals_row[10],0.0)
         wall_mass_density                   = sd.sdfloat(globals_row[11])
         wall_dynamic_viscosity              = sd.sdfloat(globals_row[12])
         wall_shear_stress                   = sd.sdfloat(globals_row[13])
@@ -97,6 +97,9 @@ with open( globals_filename, "r" ) as globals_file:
         half_height                    = 0.5 * height
         hydraulic_diameter             = 2.0 * height
         outer_layer_development_length = development_length / hydraulic_diameter
+
+        specific_isochoric_heat_capacity = specific_gas_constant / ( heat_capacity_ratio - 1.0 )
+        specific_isobaric_heat_capacity  = heat_capacity_ratio * specific_isochoric_heat_capacity
 
         bulk_to_center_line_velocity_ratio    = bulk_velocity / center_line_velocity
         center_line_to_wall_temperature_ratio = center_line_temperature / wall_temperature
@@ -183,18 +186,29 @@ with open( globals_filename, "r" ) as globals_file:
                 temperature_dw         = sd.sdfloat(series_row[14])
                 dynamic_viscosity      = sd.sdfloat(series_row[15])
 
-                outer_layer_coordinate = distance_from_wall / half_height
+                outer_layer_coordinate =  distance_from_wall / half_height
+                kinematic_viscosity    =   dynamic_viscosity / mass_density
+                thermal_diffusivity    = kinematic_viscosity / prandtl_number
+                thermal_conductivity   = thermal_diffusivity * mass_density * specific_isobaric_heat_capacity
 
-                sd.set_point_value( cursor, point_identifier, sd.Q_DISTANCE_FROM_WALL,     distance_from_wall,                                                                                          )
-                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_COORDINATE, inner_layer_coordinate, averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                          )
-                sd.set_point_value( cursor, point_identifier, sd.Q_OUTER_LAYER_COORDINATE, outer_layer_coordinate,                                                                                      )
-                sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    streamwise_velocity_uw, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                     )
-                sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    streamwise_velocity_dw, averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM,                               )
-                sd.set_point_value( cursor, point_identifier, sd.Q_MASS_DENSITY,           mass_density,           averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                     )
-                sd.set_point_value( cursor, point_identifier, sd.Q_PRESSURE,               pressure,               averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                     )
-                sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE,            temperature_uw,         averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                     )
-                sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE,            temperature_dw,         averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM,                               )
-                sd.set_point_value( cursor, point_identifier, sd.Q_DYNAMIC_VISCOSITY,      dynamic_viscosity,      averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       notes=dynamic_viscosity_note, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_DISTANCE_FROM_WALL,               distance_from_wall,                                                                                                                                         )
+                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_COORDINATE,           inner_layer_coordinate,           averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                               )
+                sd.set_point_value( cursor, point_identifier, sd.Q_OUTER_LAYER_COORDINATE,           outer_layer_coordinate,                                                                                                                                     )
+                sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,              streamwise_velocity_uw,           averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                                                          )
+                sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,              streamwise_velocity_dw,           averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM,                                                                    )
+                sd.set_point_value( cursor, point_identifier, sd.Q_MASS_DENSITY,                     mass_density,                     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                                                          )
+                sd.set_point_value( cursor, point_identifier, sd.Q_PRESSURE,                         pressure,                         averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                                                          )
+                sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE,                      temperature_uw,                   averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                                                          )
+                sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE,                      temperature_dw,                   averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM,                                                                    )
+                sd.set_point_value( cursor, point_identifier, sd.Q_DYNAMIC_VISCOSITY,                dynamic_viscosity,                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, measurement_technique=sd.MT_APPROXIMATION, notes=dynamic_viscosity_note, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_KINEMATIC_VISCOSITY,              kinematic_viscosity,              averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, measurement_technique=sd.MT_APPROXIMATION,                               )
+                sd.set_point_value( cursor, point_identifier, sd.Q_PRANDTL_NUMBER,                   prandtl_number,                   averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                               )
+                sd.set_point_value( cursor, point_identifier, sd.Q_HEAT_CAPACITY_RATIO,              heat_capacity_ratio,              averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                               )
+                sd.set_point_value( cursor, point_identifier, sd.Q_SPECIFIC_GAS_CONSTANT,            specific_gas_constant,            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                               )
+                sd.set_point_value( cursor, point_identifier, sd.Q_SPECIFIC_ISOBARIC_HEAT_CAPACITY,  specific_isobaric_heat_capacity,  averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                               )
+                sd.set_point_value( cursor, point_identifier, sd.Q_SPECIFIC_ISOCHORIC_HEAT_CAPACITY, specific_isochoric_heat_capacity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                               )
+                sd.set_point_value( cursor, point_identifier, sd.Q_THERMAL_CONDUCTIVITY,             thermal_conductivity,             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, measurement_technique=sd.MT_APPROXIMATION,                               )
+                sd.set_point_value( cursor, point_identifier, sd.Q_THERMAL_DIFFUSIVITY,              thermal_diffusivity,              averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                                                          )
 
         for quantity in [ sd.Q_ROUGHNESS_HEIGHT,
                           sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
