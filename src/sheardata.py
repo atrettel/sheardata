@@ -884,7 +884,7 @@ def get_point_value( cursor, point, quantity,               \
             cursor.execute(
             """
             SELECT point_value, point_uncertainty FROM point_values WHERE
-            point=?  AND quantity=? LIMIT 1;
+            point=? AND quantity=? LIMIT 1;
             """,
             (
                 sanitize_identifier(point),
@@ -895,7 +895,7 @@ def get_point_value( cursor, point, quantity,               \
             cursor.execute(
             """
             SELECT point_value, point_uncertainty FROM point_values WHERE
-            point=?  AND quantity=? AND measurement_technique=? LIMIT 1;
+            point=? AND quantity=? AND measurement_technique=? LIMIT 1;
             """,
             (
                 sanitize_identifier(point),
@@ -908,7 +908,7 @@ def get_point_value( cursor, point, quantity,               \
             cursor.execute(
             """
             SELECT point_value, point_uncertainty FROM point_values WHERE
-            point=?  AND quantity=? AND averaging_system=? LIMIT 1;
+            point=? AND quantity=? AND averaging_system=? LIMIT 1;
             """,
             (
                 sanitize_identifier(point),
@@ -920,7 +920,7 @@ def get_point_value( cursor, point, quantity,               \
             cursor.execute(
             """
             SELECT point_value, point_uncertainty FROM point_values WHERE
-            point=?  AND quantity=? AND averaging_system=? AND
+            point=? AND quantity=? AND averaging_system=? AND
             measurement_technique=? LIMIT 1;
             """,
             (
@@ -932,22 +932,96 @@ def get_point_value( cursor, point, quantity,               \
             )
     return fetch_float( cursor )
 
-def get_twin_profiles( cursor, station, quantity1, quantity2 ):
-    cursor.execute(
-    """
-    SELECT point FROM point_values WHERE point LIKE ? AND quantity=? AND
-    outlier=0 INTERSECT SELECT point FROM point_values WHERE point LIKE ? AND
-    quantity=? AND outlier=0 ORDER BY point;
-    """,
-    (
-        sanitize_identifier(station)+'%',
-        str(quantity1),
-        sanitize_identifier(station)+'%',
-        str(quantity2),
-    )
-    )
-    results = cursor.fetchall()
+def get_twin_profiles( cursor, station, quantity1, quantity2, \
+                       averaging_system1=None, averaging_system2=None, ):
+    if ( averaging_system1 == None ):
+        if ( averaging_system2 == None ):
+            # Both averaging systems are unspecified.
+            cursor.execute(
+            """
+            SELECT point
+            FROM point_values
+            WHERE point LIKE ? AND quantity=? AND outlier=0
+            INTERSECT
+            SELECT point
+            FROM point_values
+            WHERE point LIKE ? AND quantity=? AND outlier=0
+            ORDER BY point;
+            """,
+            (
+                sanitize_identifier(station)+'%',
+                str(quantity1),
+                sanitize_identifier(station)+'%',
+                str(quantity2),
+            )
+            )
+        else:
+            # Only the second averaging system is specified.
+            cursor.execute(
+            """
+            SELECT point
+            FROM point_values
+            WHERE point LIKE ? AND quantity=? AND outlier=0
+            INTERSECT
+            SELECT point
+            FROM point_values
+            WHERE point LIKE ? AND quantity=? AND averaging_system=? AND outlier=0
+            ORDER BY point;
+            """,
+            (
+                sanitize_identifier(station)+'%',
+                str(quantity1),
+                sanitize_identifier(station)+'%',
+                str(quantity2),
+                str(averaging_system2),
+            )
+            )
+    else:
+        if ( averaging_system2 == None ):
+            # Only the first averaging system is specified.
+            cursor.execute(
+            """
+            SELECT point
+            FROM point_values
+            WHERE point LIKE ? AND quantity=? AND averaging_system=? AND outlier=0
+            INTERSECT
+            SELECT point
+            FROM point_values
+            WHERE point LIKE ? AND quantity=? AND outlier=0
+            ORDER BY point;
+            """,
+            (
+                sanitize_identifier(station)+'%',
+                str(quantity1),
+                str(averaging_system1),
+                sanitize_identifier(station)+'%',
+                str(quantity2),
+            )
+            )
+        else:
+            # Both averaging systems are specified.
+            cursor.execute(
+            """
+            SELECT point
+            FROM point_values
+            WHERE point LIKE ? AND quantity=? AND averaging_system=? AND outlier=0
+            INTERSECT
+            SELECT point
+            FROM point_values
+            WHERE point LIKE ? AND quantity=? AND averaging_system=? AND outlier=0
+            ORDER BY point;
+            """,
+            (
+                sanitize_identifier(station)+'%',
+                str(quantity1),
+                str(averaging_system1),
+                sanitize_identifier(station)+'%',
+                str(quantity2),
+                str(averaging_system2),
+            )
+            )
 
+    results = cursor.fetchall()
     points = []
     for result in results:
         points.append( result[0] )
