@@ -93,9 +93,8 @@ with open( globals_filename, "r" ) as globals_file:
         hydraulic_diameter             = 2.0 * height
         outer_layer_development_length = development_length / hydraulic_diameter
 
-        fanning_friction_factor = 2.0 * wall_shear_stress / ( wall_mass_density * bulk_velocity**2.0 )
-
-        bulk_to_center_line_velocity_ratio = bulk_velocity / center_line_velocity
+        bulk_to_center_line_velocity_ratio    = bulk_velocity / center_line_velocity
+        center_line_to_wall_temperature_ratio = center_line_temperature / wall_temperature
 
         series_identifier = sd.add_series(
             cursor,
@@ -165,16 +164,16 @@ with open( globals_filename, "r" ) as globals_file:
                 0.0,
             )
 
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_SHEAR_STRESS,                        sd.WALL_POINT_LABEL, wall_shear_stress,                   averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_FANNING_FRICTION_FACTOR,             sd.WALL_POINT_LABEL, fanning_friction_factor,             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_VELOCITY,                   sd.WALL_POINT_LABEL, friction_velocity,                   averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_VISCOUS_LENGTH_SCALE,                sd.WALL_POINT_LABEL, viscous_length_scale,                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_TEMPERATURE,                sd.WALL_POINT_LABEL, friction_temperature,                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_INNER_LAYER_HEAT_FLUX,               sd.WALL_POINT_LABEL, B_q,                                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_HEAT_FLUX,                           sd.WALL_POINT_LABEL, wall_heat_flux,                      averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_REYNOLDS_NUMBER,            sd.WALL_POINT_LABEL, friction_reynolds_number,            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER, sd.WALL_POINT_LABEL, semi_local_friction_reynolds_number, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_MACH_NUMBER,                sd.WALL_POINT_LABEL, friction_mach_number,                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_SHEAR_STRESS,                          sd.WALL_POINT_LABEL, wall_shear_stress,                     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_VELOCITY,                     sd.WALL_POINT_LABEL, friction_velocity,                     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_VISCOUS_LENGTH_SCALE,                  sd.WALL_POINT_LABEL, viscous_length_scale,                  averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_TEMPERATURE,                  sd.WALL_POINT_LABEL, friction_temperature,                  averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_INNER_LAYER_HEAT_FLUX,                 sd.WALL_POINT_LABEL, B_q,                                   averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_HEAT_FLUX,                             sd.WALL_POINT_LABEL, wall_heat_flux,                        averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_REYNOLDS_NUMBER,              sd.WALL_POINT_LABEL, friction_reynolds_number,              averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER,   sd.WALL_POINT_LABEL, semi_local_friction_reynolds_number,   averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_MACH_NUMBER,                  sd.WALL_POINT_LABEL, friction_mach_number,                  averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_CENTER_LINE_TO_WALL_TEMPERATURE_RATIO, sd.WALL_POINT_LABEL, center_line_to_wall_temperature_ratio, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
 
 conn.commit()
 conn.close()
