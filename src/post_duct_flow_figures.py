@@ -63,7 +63,7 @@ duct_types["pipe"]    = DuctType(  sd.ELLIPTICAL_GEOMETRY, sd.CYLINDRICAL_COORDI
 
 max_inner_layer_roughness_height = 1.0
 min_bulk_mach_number = 0.0
-max_bulk_mach_number = 0.3
+max_bulk_mach_number = 0.8
 min_outer_layer_development_length = 50.0
 min_center_line_to_wall_temperature_ratio = 0.9
 max_center_line_to_wall_temperature_ratio = 1.1
@@ -381,7 +381,8 @@ for duct_type in duct_types:
             i_study = 0
             if ( len(studies) != 0 ):
                 f.write( ": " )
-            for study in studies:
+            for key in sorted(studies.items()):
+                study = str(key[0])
                 f.write( r"\texttt{" )
                 f.write( "{:s}".format(
                     sd.make_readable_identifier( study ),
