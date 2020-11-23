@@ -65,6 +65,8 @@ max_inner_layer_roughness_height = 1.0
 min_bulk_mach_number = 0.0
 max_bulk_mach_number = 0.3
 min_outer_layer_development_length = 50.0
+min_wall_to_center_line_temperature_ratio = 0.9
+max_wall_to_center_line_temperature_ratio = 1.1
 
 for duct_type in duct_types:
     for quantity in [ sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO,
@@ -113,6 +115,14 @@ for duct_type in duct_types:
             WHERE quantity=? AND station_value>=? AND outlier=0
             INTERSECT
             SELECT station
+            FROM points
+            WHERE point_label=? AND identifier IN (
+                SELECT point
+                FROM point_values
+                WHERE quantity=? AND point_value>=? AND point_value<=? AND outlier=0
+            )
+            INTERSECT
+            SELECT station
             FROM station_values
             WHERE quantity=? AND outlier=0
             INTERSECT
@@ -137,6 +147,10 @@ for duct_type in duct_types:
                 max_bulk_mach_number,
                 sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,
                 min_outer_layer_development_length,
+                sd.WALL_POINT_LABEL,
+                sd.Q_WALL_TO_CENTER_LINE_TEMPERATURE_RATIO,
+                min_wall_to_center_line_temperature_ratio,
+                max_wall_to_center_line_temperature_ratio,
                 sd.Q_BULK_REYNOLDS_NUMBER,
                 quantity,
             )
@@ -185,6 +199,14 @@ for duct_type in duct_types:
             WHERE quantity=? AND station_value>=? AND outlier=0
             INTERSECT
             SELECT station
+            FROM points
+            WHERE point_label=? AND identifier IN (
+                SELECT point
+                FROM point_values
+                WHERE quantity=? AND point_value>=? AND point_value<=? AND outlier=0
+            )
+            INTERSECT
+            SELECT station
             FROM station_values
             WHERE quantity=? AND outlier=0
             INTERSECT
@@ -213,6 +235,10 @@ for duct_type in duct_types:
                 max_bulk_mach_number,
                 sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,
                 min_outer_layer_development_length,
+                sd.WALL_POINT_LABEL,
+                sd.Q_WALL_TO_CENTER_LINE_TEMPERATURE_RATIO,
+                min_wall_to_center_line_temperature_ratio,
+                max_wall_to_center_line_temperature_ratio,
                 sd.Q_BULK_REYNOLDS_NUMBER,
                 sd.WALL_POINT_LABEL,
                 quantity,
