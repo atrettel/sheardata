@@ -190,7 +190,7 @@ for duct_type in duct_types:
             INTERSECT
             SELECT station
             FROM points
-            WHERE identifier IN (
+            WHERE point_label=? AND identifier IN (
                 SELECT point
                 FROM point_values
                 WHERE quantity=? AND outlier=0
@@ -214,6 +214,7 @@ for duct_type in duct_types:
                 sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,
                 min_outer_layer_development_length,
                 sd.Q_BULK_REYNOLDS_NUMBER,
+                sd.WALL_POINT_LABEL,
                 quantity,
             )
             )
