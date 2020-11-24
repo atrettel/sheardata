@@ -38,5 +38,13 @@ study_identifier = sd.add_study(
 
 sd.add_source( cursor, study_identifier, "MoserRD+1999+eng+JOUR",  1 )
 
+# The primary difficulty with this data is that only the friction Reynolds
+# number is given.  The rest of the data is dimensionless profiles.  The trick
+# is to manipulate some of the basic equations to be in terms of the bulk
+# velocity.
+
+# bulk_reynolds_number    = 4.0 * bulk_velocity_plus * friction_reynolds_number
+# fanning_friction_factor = 2.0 * ( bulk_velocity_plus )**(-2.0)
+
 conn.commit()
 conn.close()
