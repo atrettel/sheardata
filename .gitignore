@@ -14,3 +14,4 @@
 *.toc
 __pycache__
 src/*.bib
+src/*.tex

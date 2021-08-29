@@ -36,6 +36,9 @@ figure-flow-classification-tree-diagram.tex.tmp: $(postprocessing_targets)
 	sed -i "s/article/standalone/g" $@
 	sed -i "/enlarge/d" $@
 
+$(project).tex: ../data/main.tex
+	cp -v $< $@
+
 $(project).pdf: $(tex_dependencies)
 	$(latex_compiler) $<
 	$(latex_compiler) $<
@@ -53,6 +56,7 @@ $(project).bib: ../data/references.bib
 .PHONY: clean
 clean:
 	-rm -fv $(database)
+	-rm -fv $(project).tex
 	-rm -fv *-blx.bib
 	-rm -fv *.aux
 	-rm -fv *.bak
