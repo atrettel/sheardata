@@ -53,6 +53,4 @@ is only available in other formats.
 
 Copyright © 2020-2021 Andrew Trettel
 
-This file is licensed under the Creative Commons Attribution 4.0 International
-license (`CC-BY-4.0`).  For more information, please visit the Creative Commons
-website at <https://creativecommons.org/licenses/by/4.0/>.
+SPDX-License-Identifier: CC-BY-4.0
