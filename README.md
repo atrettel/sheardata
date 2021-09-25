@@ -13,7 +13,7 @@ Goals
 - Python module to load and use SQLite database.
 
 - Documentation also serves as a data and literature review for different flow
-  classes (a meta-analysis).
+  classes (for use in meta-analyses and other work).
 
 - CSV files as input files.  SQLite database file and PDF documentation file as
   output files.
@@ -28,13 +28,12 @@ Goals
 Previous tabulated data compilations
 ------------------------------------
 
-I have already conducted an extensive literature search to identify relevant
-individual studies to include in the database.  However, many previous data
-compilations already exist and provide an extensive amount of data in an
-already processed format that is ready for both reference and study.  All of
-these compilations are older and presented in tabulated form, which requires
-digitization for use.  I identify several of these previous data compilations
-below.
+I have already conducted a literature search to identify relevant individual
+studies to include in the database.  However, many previous data compilations
+already exist and provide an extensive amount of data in an already processed
+format that is ready for both reference and study.  All of these compilations
+are older and presented in tabulated form, which requires digitization for use.
+I identify several of these previous data compilations below.
 
 - Koo, Eugene Chen 1932, "Mechanisms of isothermal and non-isothermal flow of
   fluids in pipes".  Massachusetts Institute of Technology Ph.D. thesis.
