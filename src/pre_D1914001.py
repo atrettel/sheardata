@@ -309,7 +309,7 @@ with open( ratio_filename, "r" ) as ratio_file:
                 station_identifier,
                 quantity,
                 sd.WALL_POINT_LABEL,
-                0.0,
+                sd.sdfloat(0.0),
                 measurement_technique=sd.MT_ASSUMPTION,
             )
 
@@ -465,7 +465,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
                 station_identifier,
                 quantity,
                 sd.WALL_POINT_LABEL,
-                0.0,
+                sd.sdfloat(0.0),
                 measurement_technique=sd.MT_ASSUMPTION,
                 outlier=outlier,
             )
