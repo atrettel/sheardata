@@ -87,6 +87,7 @@ RECTANGULAR_GEOMETRY = "R"
 
 # Measurement techniques (and other sources of information)
 MT_APPROXIMATION                            = "APPR"
+MT_ASSERTION                                = "ASRT"
 MT_ASSUMPTION                               = "A"
 MT_CALCULATION                              = "C"
 MT_CLAUSER_METHOD                           = "CC"
@@ -117,6 +118,7 @@ MT_VELOCITY_PROFILE_METHOD                  = "VP"
 MT_VISCOUS_SUBLAYER_SLOPE_METHOD            = "VS"
 MT_WALL_SHEAR_STRESS_METHOD                 = "W"
 MT_WEIGHING_METHOD                          = "WM"
+MT_ZEROTH_ORDER_APPROXIMATION               = "0"
 
 # Point labels
 CENTER_LINE_POINT_LABEL = "CL"
