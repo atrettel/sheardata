@@ -28,6 +28,11 @@ study_identifier = sd.add_study(
 
 sd.add_source( cursor, study_identifier, "HuebscherRG+1947+eng+JOUR", 1 )
 
+mass_density_note = sd.add_note(
+    cursor,
+    "../data/{:s}/note_mass_density.tex".format( study_identifier ),
+)
+
 # Distance between pressure taps
 #
 # p. 129
@@ -296,15 +301,14 @@ for duct in ducts:
                     measurement_technique=sd.MT_ASSUMPTION,
                 )
 
-            mass_density_note = None
+            current_note = None
             if ( test_number == 17 and duct == "Square" ):
-                with open( "../data/{:s}/note_mass_density.tex".format( study_identifier ), "r" ) as f:
-                    mass_density_note = f.read()
+                current_note = mass_density_note
 
             # p. 129
             mt_wall_shear_stress = sd.MT_MOMENTUM_BALANCE
 
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_MASS_DENSITY,                          sd.WALL_POINT_LABEL, mass_density,            averaging_system=sd.BOTH_AVERAGING_SYSTEMS, notes=mass_density_note,                    )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_MASS_DENSITY,                          sd.WALL_POINT_LABEL, mass_density,            averaging_system=sd.BOTH_AVERAGING_SYSTEMS, note=current_note,                          )
             sd.set_labeled_value( cursor, station_identifier, sd.Q_KINEMATIC_VISCOSITY,                   sd.WALL_POINT_LABEL, kinematic_viscosity,     averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
             sd.set_labeled_value( cursor, station_identifier, sd.Q_DYNAMIC_VISCOSITY,                     sd.WALL_POINT_LABEL, dynamic_viscosity,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
             sd.set_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,                           sd.WALL_POINT_LABEL, temperature,             averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
