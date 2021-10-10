@@ -18,8 +18,7 @@ cursor.execute(
 """
 CREATE TABLE averaging_systems (
     identifier  TEXT PRIMARY KEY UNIQUE,
-    system_name TEXT NOT NULL,
-    notes       TEXT DEFAULT NULL
+    system_name TEXT NOT NULL
 );
 """
 )
@@ -42,8 +41,7 @@ cursor.execute(
 """
 CREATE TABLE coordinate_systems (
     identifier  TEXT PRIMARY KEY UNIQUE,
-    system_name TEXT NOT NULL,
-    notes       TEXT DEFAULT NULL
+    system_name TEXT NOT NULL
 );
 """
 )
@@ -68,7 +66,6 @@ CREATE TABLE flow_classes (
     identifier TEXT PRIMARY KEY UNIQUE CHECK ( length(identifier) = 1 ),
     class_name TEXT NOT NULL,
     parent     TEXT DEFAULT NULL,
-    notes      TEXT DEFAULT NULL,
     FOREIGN KEY(parent) REFERENCES flow_classes(identifier)
 );
 """
@@ -127,8 +124,7 @@ cursor.execute(
 """
 CREATE TABLE flow_regimes (
     identifier  TEXT PRIMARY KEY UNIQUE,
-    regime_name TEXT NOT NULL,
-    notes       TEXT DEFAULT NULL
+    regime_name TEXT NOT NULL
 );
 """
 )
@@ -152,8 +148,7 @@ cursor.execute(
 """
 CREATE TABLE phases (
     identifier TEXT PRIMARY KEY UNIQUE,
-    phase_name TEXT NOT NULL,
-    notes      TEXT DEFAULT NULL
+    phase_name TEXT NOT NULL
 );
 """
 )
@@ -214,7 +209,6 @@ CREATE TABLE fluids (
     identifier TEXT PRIMARY KEY UNIQUE,
     fluid_name TEXT NOT NULL,
     phase      TEXT NOT NULL,
-    notes      TEXT DEFAULT NULL,
     FOREIGN KEY(phase) REFERENCES phases(identifier)
 );
 """
@@ -252,8 +246,7 @@ cursor.execute(
 """
 CREATE TABLE geometries (
     identifier    TEXT PRIMARY KEY UNIQUE,
-    geometry_name TEXT NOT NULL,
-    notes         TEXT DEFAULT NULL
+    geometry_name TEXT NOT NULL
 );
 """
 )
@@ -279,7 +272,6 @@ CREATE TABLE measurement_techniques (
     technique_name TEXT NOT NULL,
     intrusive      INTEGER NOT NULL DEFAULT 0 CHECK ( intrusive = 0 OR intrusive = 1 ),
     parent         TEXT DEFAULT NULL,
-    notes          TEXT DEFAULT NULL,
     FOREIGN KEY(parent) REFERENCES measurement_techniques(identifier)
 );
 """
@@ -356,13 +348,22 @@ for identifier in measurement_techniques:
         ( measurement_techniques[identifier].parent, identifier, )
         )
 
+# Notes
+cursor.execute(
+"""
+CREATE TABLE notes (
+    note_id  INTEGER PRIMARY KEY,
+    contents TEXT NOT NULL
+);
+"""
+)
+
 # Point labels
 cursor.execute(
 """
 CREATE TABLE point_labels (
     identifier TEXT PRIMARY KEY UNIQUE,
-    label_name TEXT NOT NULL,
-    notes      TEXT DEFAULT NULL
+    label_name TEXT NOT NULL
 );
 """
 )
@@ -390,8 +391,7 @@ CREATE TABLE quantities (
     length_exponent      REAL NOT NULL DEFAULT 0.0,
     mass_exponent        REAL NOT NULL DEFAULT 0.0,
     time_exponent        REAL NOT NULL DEFAULT 0.0,
-    temperature_exponent REAL NOT NULL DEFAULT 0.0,
-    notes                TEXT DEFAULT NULL
+    temperature_exponent REAL NOT NULL DEFAULT 0.0
 );
 """
 )
@@ -615,8 +615,7 @@ cursor.execute(
 """
 CREATE TABLE study_types (
     identifier TEXT PRIMARY KEY UNIQUE,
-    type_name  TEXT NOT NULL,
-    notes      TEXT DEFAULT NULL
+    type_name  TEXT NOT NULL
 );
 """
 )
@@ -647,9 +646,10 @@ CREATE TABLE studies (
     outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     description           TEXT DEFAULT NULL,
     provenance            TEXT DEFAULT NULL,
-    notes                 TEXT DEFAULT NULL,
+    note                  INTEGER DEFAULT NULL,
     FOREIGN KEY(flow_class) REFERENCES flow_classes(identifier),
-    FOREIGN KEY(study_type) REFERENCES  study_types(identifier)
+    FOREIGN KEY(study_type) REFERENCES  study_types(identifier),
+    FOREIGN KEY(note)       REFERENCES        notes(note_id)
 );
 """
 )
@@ -667,9 +667,10 @@ CREATE TABLE series (
     number_of_sides      TEXT DEFAULT NULL CHECK ( number_of_sides > 1 ),
     outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     description          TEXT DEFAULT NULL,
-    notes                TEXT DEFAULT NULL,
+    note                 INTEGER DEFAULT NULL,
     FOREIGN KEY(coordinate_system) REFERENCES coordinate_systems(identifier),
-    FOREIGN KEY(geometry)          REFERENCES         geometries(identifier)
+    FOREIGN KEY(geometry)          REFERENCES         geometries(identifier),
+    FOREIGN KEY(note)              REFERENCES              notes(note_id)
 );
 """
 )
@@ -690,12 +691,13 @@ CREATE TABLE stations (
     next_spanwise_station        TEXT DEFAULT NULL,
     outlier                      INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     description                  TEXT DEFAULT NULL,
-    notes                        TEXT DEFAULT NULL,
+    note                         INTEGER DEFAULT NULL,
     FOREIGN KEY(flow_regime)                 REFERENCES flow_regimes(identifier),
     FOREIGN KEY(previous_streamwise_station) REFERENCES     stations(identifier),
     FOREIGN KEY(next_streamwise_station)     REFERENCES     stations(identifier),
     FOREIGN KEY(previous_spanwise_station)   REFERENCES     stations(identifier),
-    FOREIGN KEY(next_spanwise_station)       REFERENCES     stations(identifier)
+    FOREIGN KEY(next_spanwise_station)       REFERENCES     stations(identifier),
+    FOREIGN KEY(note)                        REFERENCES        notes(note_id)
 );
 """
 )
@@ -712,8 +714,9 @@ CREATE TABLE points (
     point_label          TEXT DEFAULT NULL,
     outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     description          TEXT DEFAULT NULL,
-    notes                TEXT DEFAULT NULL,
-    FOREIGN KEY(point_label) REFERENCES point_labels(identifier)
+    note                 INTEGER DEFAULT NULL,
+    FOREIGN KEY(point_label) REFERENCES point_labels(identifier),
+    FOREIGN KEY(note)        REFERENCES        notes(note_id)
 );
 """
 )
@@ -766,12 +769,13 @@ CREATE TABLE study_values (
     averaging_system      TEXT DEFAULT NULL,
     measurement_technique TEXT DEFAULT NULL,
     outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    notes                 TEXT DEFAULT NULL,
+    note                  INTEGER DEFAULT NULL,
     PRIMARY KEY(study, quantity, averaging_system, measurement_technique),
     FOREIGN KEY(study)                 REFERENCES                studies(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
     FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier),
-    FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier)
+    FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier),
+    FOREIGN KEY(note)                  REFERENCES                  notes(note_id)
 );
 """
 )
@@ -787,12 +791,13 @@ CREATE TABLE series_values (
     averaging_system      TEXT DEFAULT NULL,
     measurement_technique TEXT DEFAULT NULL,
     outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    notes                 TEXT DEFAULT NULL,
+    note                  INTEGER DEFAULT NULL,
     PRIMARY KEY(series, quantity, averaging_system, measurement_technique),
     FOREIGN KEY(series)                REFERENCES                 series(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
     FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier),
-    FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier)
+    FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier),
+    FOREIGN KEY(note)                  REFERENCES                  notes(note_id)
 );
 """
 )
@@ -808,12 +813,13 @@ CREATE TABLE station_values (
     averaging_system      TEXT DEFAULT NULL,
     measurement_technique TEXT DEFAULT NULL,
     outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    notes                 TEXT DEFAULT NULL,
+    note                  INTEGER DEFAULT NULL,
     PRIMARY KEY(station, quantity, averaging_system, measurement_technique),
     FOREIGN KEY(station)               REFERENCES               stations(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
     FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier),
-    FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier)
+    FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier),
+    FOREIGN KEY(note)                  REFERENCES                  notes(note_id)
 );
 """
 )
@@ -829,12 +835,13 @@ CREATE TABLE point_values (
     averaging_system      TEXT DEFAULT NULL,
     measurement_technique TEXT DEFAULT NULL,
     outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    notes                 TEXT DEFAULT NULL,
+    note                  INTEGER DEFAULT NULL,
     PRIMARY KEY(point, quantity, averaging_system, measurement_technique),
     FOREIGN KEY(point)                 REFERENCES                 points(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
     FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier),
-    FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier)
+    FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier),
+    FOREIGN KEY(note)                  REFERENCES                  notes(note_id)
 );
 """
 )
