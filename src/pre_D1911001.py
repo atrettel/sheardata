@@ -29,6 +29,11 @@ study_identifier = sd.add_study(
 sd.add_source( cursor, study_identifier, "StantonTE+1911+eng+JOUR", 1 )
 sd.add_source( cursor, study_identifier, "KooEC+1932+eng+THES",     2 )
 
+center_line_velocity_note = sd.add_note(
+    cursor,
+    "../data/{:s}/note_series_1_center_line_velocity.tex".format( study_identifier ),
+)
+
 globals_filename = "../data/{:s}/globals.csv".format( study_identifier )
 with open( globals_filename, "r" ) as globals_file:
     globals_reader = csv.reader( globals_file, delimiter=",", quotechar='"', \
@@ -216,18 +221,16 @@ with open( globals_filename, "r" ) as globals_file:
             # \end{quote}
             mt_velocity = sd.MT_PITOT_STATIC_TUBE
 
-            center_line_velocity_note = None
+            current_note = None
             if ( series_number == 1 and point_number == n_points ):
-                with open( "../data/{:s}/note_series_1_center_line_velocity.tex".format( study_identifier ), "r" ) as f:
-                    center_line_velocity_note = f.read()
+                current_note = center_line_velocity_note
 
             sd.set_point_value( cursor, point_identifier, sd.Q_DISTANCE_FROM_WALL,     distance_from_wall,     )
             sd.set_point_value( cursor, point_identifier, sd.Q_OUTER_LAYER_COORDINATE, outer_layer_coordinate, )
             sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_COORDINATE,  0.0,                    )
             sd.set_point_value( cursor, point_identifier, sd.Q_TRANSVERSE_COORDINATE,  r_reversed[i],          )
             sd.set_point_value( cursor, point_identifier, sd.Q_SPANWISE_COORDINATE,    0.0,                    )
-            sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    u_reversed[i],
-                                averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_velocity, notes=center_line_velocity_note,)
+            sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    u_reversed[i], averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_velocity, note=current_note,)
 
             for quantity in [ sd.Q_TRANSVERSE_VELOCITY,
                               sd.Q_SPANWISE_VELOCITY, ]:
