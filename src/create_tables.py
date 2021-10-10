@@ -479,6 +479,7 @@ quantities[ sd.Q_WETTED_PERIMETER                       ] = quantity( "wetted pe
 quantities[ sd.Q_WIDTH                                  ] = quantity( "width",                                  length_exponent=+1.0,                                           )
 
 # Quantities, wall point
+quantities[ sd.Q_AVERAGE_SKIN_FRICTION_COEFFICIENT     ] = quantity( "average skin friction coefficient",                                                  )
 quantities[ sd.Q_CENTER_LINE_TO_WALL_TEMPERATURE_RATIO ] = quantity( "center-line-to-wall temperature ratio",                                              )
 quantities[ sd.Q_DARCY_FRICTION_FACTOR                 ] = quantity( "Darcy friction factor",                                                              )
 quantities[ sd.Q_FANNING_FRICTION_FACTOR               ] = quantity( "Fanning friction factor",                                                            )
@@ -489,11 +490,11 @@ quantities[ sd.Q_FRICTION_VELOCITY                     ] = quantity( "friction v
 quantities[ sd.Q_HEAT_TRANSFER_COEFFICIENT             ] = quantity( "heat transfer coefficient",                                                          )
 quantities[ sd.Q_INNER_LAYER_HEAT_FLUX                 ] = quantity( "inner-layer heat flux",                                                              )
 quantities[ sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT          ] = quantity( "inner-layer roughness height",                                                       )
+quantities[ sd.Q_LOCAL_SKIN_FRICTION_COEFFICIENT       ] = quantity( "local skin friction coefficient",                                                    )
 quantities[ sd.Q_OUTER_LAYER_ROUGHNESS_HEIGHT          ] = quantity( "outer-layer roughness height",                                                       )
 quantities[ sd.Q_PRESSURE_COEFFICIENT                  ] = quantity( "pressure coefficient",                                                               )
 quantities[ sd.Q_ROUGHNESS_HEIGHT                      ] = quantity( "roughness height",                         length_exponent=+1.0,                     )
 quantities[ sd.Q_SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER   ] = quantity( "semi-local friction Reynolds number",                                                )
-quantities[ sd.Q_SKIN_FRICTION_COEFFICIENT             ] = quantity( "skin friction coefficient",                                                          )
 quantities[ sd.Q_SPANWISE_WALL_CURVATURE               ] = quantity( "spanwise wall curvature",                  length_exponent=-1.0,                     )
 quantities[ sd.Q_STREAMWISE_WALL_CURVATURE             ] = quantity( "streamwise wall curvature",                length_exponent=-1.0,                     )
 quantities[ sd.Q_VISCOUS_LENGTH_SCALE                  ] = quantity( "viscous length scale",                     length_exponent=+1.0                      )
