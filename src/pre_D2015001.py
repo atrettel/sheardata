@@ -280,7 +280,7 @@ with open( globals_filename, "r" ) as globals_file:
                 station_identifier,
                 quantity,
                 sd.WALL_POINT_LABEL,
-                0.0,
+                sd.sdfloat( 0.0, 0.0 ),
             )
 
         sd.set_labeled_value( cursor, station_identifier, sd.Q_SHEAR_STRESS,                          sd.WALL_POINT_LABEL, wall_shear_stress,                        averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
