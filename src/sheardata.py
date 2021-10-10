@@ -145,7 +145,10 @@ Q_LIFT_COEFFICIENT               = "C_L"
 Q_LIFT_FORCE                     = "F_L"
 Q_LIFT_TO_DRAG_RATIO             = "L/D"
 Q_MASS_FLOW_RATE                 = "mdot"
+Q_SPANWISE_NUMBER_OF_POINTS      = "N_z"
+Q_STREAMWISE_NUMBER_OF_POINTS    = "N_x"
 Q_TEST_LENGTH                    = "L_t"
+Q_TRANSVERSE_NUMBER_OF_POINTS    = "N_y"
 Q_VOLUMETRIC_FLOW_RATE           = "Vdot"
 
 # Quantities, station

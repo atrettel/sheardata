@@ -436,7 +436,10 @@ quantities[ sd.Q_LIFT_COEFFICIENT               ] = quantity( "lift coefficient"
 quantities[ sd.Q_LIFT_FORCE                     ] = quantity( "lift force",                          length_exponent=+1.0, mass_exponent=+1.0, time_exponent=-2.0, )
 quantities[ sd.Q_LIFT_TO_DRAG_RATIO             ] = quantity( "lift-to-drag ratio",                                                                                )
 quantities[ sd.Q_MASS_FLOW_RATE                 ] = quantity( "mass flow rate",                        mass_exponent=+1.0, time_exponent=-1.0,                     )
+quantities[ sd.Q_SPANWISE_NUMBER_OF_POINTS      ] = quantity( "spanwise number of points",                                                                         )
+quantities[ sd.Q_STREAMWISE_NUMBER_OF_POINTS    ] = quantity( "streamwise number of points",                                                                       )
 quantities[ sd.Q_TEST_LENGTH                    ] = quantity( "test length",                         length_exponent=+1.0,                                         )
+quantities[ sd.Q_TRANSVERSE_NUMBER_OF_POINTS    ] = quantity( "transverse number of points",                                                                       )
 quantities[ sd.Q_VOLUMETRIC_FLOW_RATE           ] = quantity( "volumetric flow rate",                length_exponent=+3.0, time_exponent=-1.0,                     )
 
 # Quantities, station
