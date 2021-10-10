@@ -408,12 +408,12 @@ def truncate_to_station( identifier ):
     return sanitized_identifier[0:14]
 
 def add_study( cursor, flow_class, year, study_number, study_type, \
-               outlier=False, notes=None, ):
+               outlier=False, note=None, ):
     study = identify_study( flow_class, year, study_number )
     cursor.execute(
     """
     INSERT INTO studies( identifier, flow_class, year, study_number,
-    study_type, outlier, notes ) VALUES( ?, ?, ?, ?, ?, ?, ? );
+    study_type, outlier, note ) VALUES( ?, ?, ?, ?, ?, ?, ? );
     """,
     (
         study,
@@ -422,7 +422,7 @@ def add_study( cursor, flow_class, year, study_number, study_type, \
         int(study_number),
         str(study_type),
         int(outlier),
-        notes,
+        note,
     )
     )
     return study
@@ -449,17 +449,6 @@ def update_study_provenance( cursor, identifier, provenance ):
     )
     )
 
-def update_study_notes( cursor, identifier, notes ):
-    cursor.execute(
-    """
-    UPDATE studies SET notes=? WHERE identifier=?
-    """,
-    (
-        notes.strip(),
-        sanitize_identifier(identifier),
-    )
-    )
-
 def create_averaging_systems_list( averaging_system ):
     if ( averaging_system == BOTH_AVERAGING_SYSTEMS ):
         return [ DENSITY_WEIGHTED_AVERAGING_SYSTEM,
@@ -468,14 +457,14 @@ def create_averaging_systems_list( averaging_system ):
         return [ averaging_system ]
 
 def set_study_value( cursor, study, quantity, value, averaging_system=None, \
-                     measurement_technique=None, outlier=False, notes=None ):
+                     measurement_technique=None, outlier=False, note=None ):
     study_value, study_uncertainty = split_float( value )
     for avg_sys in create_averaging_systems_list( averaging_system ):
         cursor.execute(
         """
         INSERT INTO study_values( study, quantity, study_value,
         study_uncertainty, averaging_system, measurement_technique, outlier,
-        notes )
+        note )
         VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
         """,
         (
@@ -486,7 +475,7 @@ def set_study_value( cursor, study, quantity, value, averaging_system=None, \
             avg_sys,
             measurement_technique,
             int(outlier),
-            notes,
+            note,
         )
         )
 
@@ -560,7 +549,7 @@ def add_source( cursor, study, source, classification ):
 
 def add_series( cursor, flow_class, year, study_number, series_number,  \
                 number_of_dimensions, coordinate_system, outlier=False, \
-                notes=None, ):
+                note=None, ):
     series = identify_series(
         flow_class,
         year,
@@ -575,7 +564,7 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
     cursor.execute(
     """
     INSERT INTO series( identifier, study, series_number, number_of_dimensions,
-    coordinate_system, outlier, notes )
+    coordinate_system, outlier, note )
     VALUES( ?, ?, ?, ?, ?, ?, ? );
     """,
     (
@@ -585,7 +574,7 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
         int(number_of_dimensions),
         str(coordinate_system),
         int(outlier),
-        notes,
+        note,
     )
     )
     return series
@@ -623,26 +612,15 @@ def update_series_description( cursor, identifier, description ):
     )
     )
 
-def update_series_notes( cursor, identifier, notes ):
-    cursor.execute(
-    """
-    UPDATE series SET notes=? WHERE identifier=?
-    """,
-    (
-        notes.strip(),
-        sanitize_identifier(identifier),
-    )
-    )
-
 def set_series_value( cursor, series, quantity, value, averaging_system=None, \
-                     measurement_technique=None, outlier=False, notes=None ):
+                     measurement_technique=None, outlier=False, note=None ):
     series_value, series_uncertainty = split_float( value )
     for avg_sys in create_averaging_systems_list( averaging_system ):
         cursor.execute(
         """
         INSERT INTO series_values( series, quantity, series_value,
         series_uncertainty, averaging_system, measurement_technique, outlier,
-        notes)
+        note )
         VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
         """,
         (
@@ -653,7 +631,7 @@ def set_series_value( cursor, series, quantity, value, averaging_system=None, \
             avg_sys,
             measurement_technique,
             int(outlier),
-            notes,
+            note,
         )
         )
 
@@ -715,7 +693,7 @@ def get_series_value( cursor, series, quantity,              \
 
 def add_station( cursor, flow_class, year, study_number, series_number,     \
                 station_number, originators_identifier=None, outlier=False, \
-                notes=None ):
+                note=None ):
     station = identify_station(
         flow_class,
         year,
@@ -737,7 +715,7 @@ def add_station( cursor, flow_class, year, study_number, series_number,     \
     cursor.execute(
     """
     INSERT INTO stations( identifier, series, study, station_number,
-    originators_identifier, outlier, notes )
+    originators_identifier, outlier, note )
     VALUES( ?, ?, ?, ?, ?, ?, ? );
     """,
     (
@@ -747,20 +725,20 @@ def add_station( cursor, flow_class, year, study_number, series_number,     \
         int(station_number),
         originators_identifier,
         int(outlier),
-        notes,
+        note,
     )
     )
     return station
 
 def set_station_value( cursor, station, quantity, value, averaging_system=None, \
-                     measurement_technique=None, outlier=False, notes=None ):
+                     measurement_technique=None, outlier=False, note=None ):
     station_value, station_uncertainty = split_float( value )
     for avg_sys in create_averaging_systems_list( averaging_system ):
         cursor.execute(
         """
         INSERT INTO station_values( station, quantity, station_value,
         station_uncertainty, averaging_system, measurement_technique, outlier,
-        notes )
+        note )
         VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
         """,
         (
@@ -771,7 +749,7 @@ def set_station_value( cursor, station, quantity, value, averaging_system=None, 
             avg_sys,
             measurement_technique,
             int(outlier),
-            notes,
+            note,
         )
         )
 
@@ -833,7 +811,7 @@ def get_station_value( cursor, station, quantity,             \
 
 def add_point( cursor, flow_class, year, study_number, series_number, \
                 station_number, point_number, point_label=None,       \
-                outlier=False, notes=None ):
+                outlier=False, note=None ):
     point = identify_point(
         flow_class,
         year,
@@ -863,7 +841,7 @@ def add_point( cursor, flow_class, year, study_number, series_number, \
     cursor.execute(
     """
     INSERT INTO points( identifier, station, series, study, point_number,
-    point_label, outlier, notes )
+    point_label, outlier, note )
     VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
     """,
     (
@@ -874,20 +852,20 @@ def add_point( cursor, flow_class, year, study_number, series_number, \
         int(point_number),
         point_label,
         int(outlier),
-        notes,
+        note,
     )
     )
     return point
 
 def set_point_value( cursor, point, quantity, value, averaging_system=None, \
-                     measurement_technique=None, outlier=False, notes=None ):
+                     measurement_technique=None, outlier=False, note=None ):
     point_value, point_uncertainty = split_float( value )
     for avg_sys in create_averaging_systems_list( averaging_system ):
         cursor.execute(
         """
         INSERT INTO point_values( point, quantity, point_value,
         point_uncertainty, averaging_system, measurement_technique, outlier,
-        notes )
+        note )
         VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
         """,
         (
@@ -898,7 +876,7 @@ def set_point_value( cursor, point, quantity, value, averaging_system=None, \
             avg_sys,
             measurement_technique,
             int(outlier),
-            notes,
+            note,
         )
         )
 
@@ -1085,7 +1063,7 @@ def locate_labeled_point( cursor, station, label ):
 
 def set_labeled_value( cursor, station, quantity, label, value,           \
                        averaging_system=None, measurement_technique=None, \
-                       outlier=False, notes=None ):
+                       outlier=False, note=None ):
     set_point_value(
         cursor,
         locate_labeled_point( cursor, station, label ),
@@ -1094,7 +1072,7 @@ def set_labeled_value( cursor, station, quantity, label, value,           \
         averaging_system=averaging_system,
         measurement_technique=measurement_technique,
         outlier=outlier,
-        notes=notes,
+        note=note,
     )
 
 def get_labeled_value( cursor, station, quantity, label,    \
@@ -1302,3 +1280,30 @@ def liquid_water_mass_density( temperature ):
 def liquid_water_dynamic_viscosity( temperature ):
     return ( 1.002e-3 - 1.792e-3 ) * ( temperature - ABSOLUTE_ZERO ) / 20.0 + 1.792e-3
 
+def add_note( cursor, filename ):
+    contents = None
+    with open( filename, "r" ) as f:
+        contents = f.read().strip()
+
+    cursor.execute(
+    """
+    INSERT INTO notes( contents ) VALUES( ? );
+    """,
+    (
+        str(contents),
+    )
+    )
+
+    # Note: this implicitly assumes that the contents are unique.
+    cursor.execute(
+    """
+    SELECT note_id
+    FROM notes
+    WHERE contents=?;
+    """,
+    (
+        str(contents),
+    )
+    )
+    
+    return int(cursor.fetchone()[0])
