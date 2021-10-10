@@ -576,7 +576,7 @@ quantities[ sd.Q_MORKOVIN_SCALED_VELOCITY_CROSS_COVARIANCE_YZ       ] = quantity
 quantities[ sd.Q_SPANWISE_VELOCITY_AUTOCOVARIANCE                   ] = quantity( "spanwise velocity autocovariance",                        length_exponent=+2.0,   time_exponent=-2.0,                     )
 quantities[ sd.Q_STREAMWISE_VELOCITY_AUTOCOVARIANCE                 ] = quantity( "streamwise velocity autocovariance",                      length_exponent=+2.0,   time_exponent=-2.0,                     )
 quantities[ sd.Q_TRANSVERSE_VELOCITY_AUTOCOVARIANCE                 ] = quantity( "transverse velocity autocovariance",                      length_exponent=+2.0,   time_exponent=-2.0,                     )
-quantities[ sd.Q_TURBULENT_KINETIC_ENERGY                           ] = quantity( "turbulent kinetic energy",                                length_exponent=+2.0,   time_exponent=-2.0,                     )
+quantities[ sd.Q_SPECIFIC_TURBULENT_KINETIC_ENERGY                  ] = quantity( "specific turbulent kinetic energy",                       length_exponent=+2.0,   time_exponent=-2.0,                     )
 quantities[ sd.Q_VELOCITY_CROSS_COVARIANCE_XY                       ] = quantity( "velocity cross covariance, streamwise-transverse",        length_exponent=+2.0,   time_exponent=-2.0,                     )
 quantities[ sd.Q_VELOCITY_CROSS_COVARIANCE_XZ                       ] = quantity( "velocity cross covariance, streamwise-spanwise",          length_exponent=+2.0,   time_exponent=-2.0,                     )
 quantities[ sd.Q_VELOCITY_CROSS_COVARIANCE_YZ                       ] = quantity( "velocity cross covariance, transverse-spanwise",          length_exponent=+2.0,   time_exponent=-2.0,                     )
