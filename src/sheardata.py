@@ -1294,16 +1294,9 @@ def add_note( cursor, filename ):
     )
     )
 
-    # Note: this implicitly assumes that the contents are unique.
     cursor.execute(
     """
-    SELECT note_id
-    FROM notes
-    WHERE contents=?;
-    """,
-    (
-        str(contents),
+    SELECT last_insert_rowid();
+    """
     )
-    )
-    
     return int(cursor.fetchone()[0])
