@@ -81,5 +81,25 @@ with open( "list-quantities.tex.tmp", "w" ) as f:
 
     f.write( r"\end{itemize}"+"\n" )
 
+with open( "list-notes.tex.tmp", "w" ) as f:
+    f.write( r"\begin{itemize}"+"\n" )
+
+    cursor.execute(
+    """
+    SELECT note_id, contents
+    FROM notes
+    ORDER BY note_id;
+    """
+    )
+    for result in cursor.fetchall():
+        line = r"\item[{:d}] ".format(
+            int(result[0]),
+        )+"{:s}".format(
+            str(result[1]),
+        )+"\n"
+        f.write( line )
+
+    f.write( r"\end{itemize}"+"\n" )
+
 conn.commit()
 conn.close()
