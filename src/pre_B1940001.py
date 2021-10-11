@@ -28,5 +28,20 @@ study_identifier = sd.add_study(
 
 sd.add_source( cursor, study_identifier, "SchultzGrunowF+1940+deu+JOUR", 1 )
 
+reynolds_number_typo_note = sd.add_note(
+    cursor,
+    "../data/{:s}/note_reynolds_number_typo.tex".format( study_identifier ),
+)
+
+station_1_outlier_note = sd.add_note(
+    cursor,
+    "../data/{:s}/note_station_1_outlier.tex".format( study_identifier ),
+)
+
+velocity_measurement_technique_note = sd.add_note(
+    cursor,
+    "../data/{:s}/note_velocity_measurement_technique.tex".format( study_identifier ),
+)
+
 conn.commit()
 conn.close()
