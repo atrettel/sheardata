@@ -92,11 +92,9 @@ with open( "list-notes.tex.tmp", "w" ) as f:
     """
     )
     for result in cursor.fetchall():
-        line = r"\item[{:d}] ".format(
-            int(result[0]),
-        )+"{:s}".format(
-            str(result[1]),
-        )+"\n"
+        note_id  = int(result[0])
+        contents = str(result[1])
+        line = r"\item[{:d}] ".format(note_id)+contents+"\n"
         f.write( line )
 
     f.write( r"\end{itemize}"+"\n" )
