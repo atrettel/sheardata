@@ -457,13 +457,14 @@ def create_averaging_systems_list( averaging_system ):
         return [ averaging_system ]
 
 def set_study_value( cursor, study, quantity, value, averaging_system=None, \
-                     measurement_technique=None, outlier=False, note=None ):
+                     measurement_techniques=[], mt_set=1, outlier=False,
+                     note=None ):
     study_value, study_uncertainty = split_float( value )
     for avg_sys in create_averaging_systems_list( averaging_system ):
         cursor.execute(
         """
         INSERT INTO study_values( study, quantity, study_value,
-        study_uncertainty, averaging_system, measurement_technique, outlier,
+        study_uncertainty, averaging_system, mt_set, outlier,
         note )
         VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
         """,
@@ -473,11 +474,27 @@ def set_study_value( cursor, study, quantity, value, averaging_system=None, \
             study_value,
             study_uncertainty,
             avg_sys,
-            measurement_technique,
+            mt_set,
             int(outlier),
             note,
         )
         )
+
+        for measurement_technique in measurement_techniques:
+            cursor.execute(
+            """
+            INSERT INTO study_values_mt( study, quantity,
+            averaging_system, mt_set, measurement_technique )
+            VALUES( ?, ?, ?, ?, ? );
+            """,
+            (
+                sanitize_identifier(study),
+                str(quantity),
+                avg_sys,
+                mt_set,
+                measurement_technique,
+            )
+            )
 
 def get_study_value( cursor, study, quantity,               \
                      averaging_system=ANY_AVERAGING_SYSTEM, \
