@@ -496,60 +496,40 @@ def set_study_value( cursor, study, quantity, value, averaging_system=None, \
             )
             )
 
+# The assumption here is that the user already knows which set of measurement
+# techniques to consider rather than knowing which measurement technique.  This
+# choice allows for greater flexibility at the cost of some clarity.  Users
+# should first find out what sets of measurement techniques are available
+# before requesting the values.
 def get_study_value( cursor, study, quantity,               \
                      averaging_system=ANY_AVERAGING_SYSTEM, \
-                     measurement_technique=MT_ROOT, ):
+                     mt_set=1, ):
     if ( averaging_system == ANY_AVERAGING_SYSTEM ):
-        if ( measurement_technique == MT_ROOT ):
-            cursor.execute(
-            """
-            SELECT study_value, study_uncertainty FROM study_values WHERE
-            study=?  AND quantity=? LIMIT 1;
-            """,
-            (
-                sanitize_identifier(study),
-                str(quantity),
-            )
-            )
-        else:
-            cursor.execute(
-            """
-            SELECT study_value, study_uncertainty FROM study_values WHERE
-            study=?  AND quantity=? AND measurement_technique=? LIMIT 1;
-            """,
-            (
-                sanitize_identifier(study),
-                str(quantity),
-                measurement_technique,
-            )
-            )
+        cursor.execute(
+        """
+        SELECT study_value, study_uncertainty FROM study_values WHERE
+        study=? AND quantity=? AND mt_set=? LIMIT 1;
+        """,
+        (
+            sanitize_identifier(study),
+            str(quantity),
+            mt_set,
+        )
+        )
     else:
-        if ( measurement_technique == MT_ROOT ):
-            cursor.execute(
-            """
-            SELECT study_value, study_uncertainty FROM study_values WHERE
-            study=?  AND quantity=? AND averaging_system=? LIMIT 1;
-            """,
-            (
-                sanitize_identifier(study),
-                str(quantity),
-                averaging_system,
-            )
-            )
-        else:
-            cursor.execute(
-            """
-            SELECT study_value, study_uncertainty FROM study_values WHERE
-            study=?  AND quantity=? AND averaging_system=? AND
-            measurement_technique=? LIMIT 1;
-            """,
-            (
-                sanitize_identifier(study),
-                str(quantity),
-                averaging_system,
-                measurement_technique,
-            )
-            )
+        cursor.execute(
+        """
+        SELECT study_value, study_uncertainty FROM study_values WHERE
+        study=?  AND quantity=? AND averaging_system=? AND
+        mt_set=? LIMIT 1;
+        """,
+        (
+            sanitize_identifier(study),
+            str(quantity),
+            averaging_system,
+            mt_set,
+        )
+        )
     return fetch_float( cursor )
 
 def add_source( cursor, study, source, classification ):
