@@ -646,10 +646,8 @@ CREATE TABLE studies (
     outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     description           TEXT DEFAULT NULL,
     provenance            TEXT DEFAULT NULL,
-    note                  INTEGER DEFAULT NULL,
     FOREIGN KEY(flow_class) REFERENCES flow_classes(identifier),
-    FOREIGN KEY(study_type) REFERENCES  study_types(identifier),
-    FOREIGN KEY(note)       REFERENCES        notes(note_id)
+    FOREIGN KEY(study_type) REFERENCES  study_types(identifier)
 );
 """
 )
@@ -667,10 +665,8 @@ CREATE TABLE series (
     number_of_sides      TEXT DEFAULT NULL CHECK ( number_of_sides > 1 ),
     outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     description          TEXT DEFAULT NULL,
-    note                 INTEGER DEFAULT NULL,
     FOREIGN KEY(coordinate_system) REFERENCES coordinate_systems(identifier),
-    FOREIGN KEY(geometry)          REFERENCES         geometries(identifier),
-    FOREIGN KEY(note)              REFERENCES              notes(note_id)
+    FOREIGN KEY(geometry)          REFERENCES         geometries(identifier)
 );
 """
 )
@@ -691,13 +687,11 @@ CREATE TABLE stations (
     next_spanwise_station        TEXT DEFAULT NULL,
     outlier                      INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     description                  TEXT DEFAULT NULL,
-    note                         INTEGER DEFAULT NULL,
     FOREIGN KEY(flow_regime)                 REFERENCES flow_regimes(identifier),
     FOREIGN KEY(previous_streamwise_station) REFERENCES     stations(identifier),
     FOREIGN KEY(next_streamwise_station)     REFERENCES     stations(identifier),
     FOREIGN KEY(previous_spanwise_station)   REFERENCES     stations(identifier),
-    FOREIGN KEY(next_spanwise_station)       REFERENCES     stations(identifier),
-    FOREIGN KEY(note)                        REFERENCES        notes(note_id)
+    FOREIGN KEY(next_spanwise_station)       REFERENCES     stations(identifier)
 );
 """
 )
@@ -714,9 +708,7 @@ CREATE TABLE points (
     point_label          TEXT DEFAULT NULL,
     outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     description          TEXT DEFAULT NULL,
-    note                 INTEGER DEFAULT NULL,
-    FOREIGN KEY(point_label) REFERENCES point_labels(identifier),
-    FOREIGN KEY(note)        REFERENCES        notes(note_id)
+    FOREIGN KEY(point_label) REFERENCES point_labels(identifier)
 );
 """
 )
@@ -769,12 +761,10 @@ CREATE TABLE study_values (
     averaging_system      TEXT DEFAULT NULL,
     mt_set                INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    note                  INTEGER DEFAULT NULL,
     PRIMARY KEY(study, quantity, averaging_system, mt_set),
     FOREIGN KEY(study)                 REFERENCES                studies(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
-    FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier),
-    FOREIGN KEY(note)                  REFERENCES                  notes(note_id)
+    FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier)
 );
 """
 )
@@ -790,12 +780,10 @@ CREATE TABLE series_values (
     averaging_system      TEXT DEFAULT NULL,
     mt_set                INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    note                  INTEGER DEFAULT NULL,
     PRIMARY KEY(series, quantity, averaging_system, mt_set),
     FOREIGN KEY(series)                REFERENCES                 series(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
-    FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier),
-    FOREIGN KEY(note)                  REFERENCES                  notes(note_id)
+    FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier)
 );
 """
 )
@@ -811,12 +799,10 @@ CREATE TABLE station_values (
     averaging_system      TEXT DEFAULT NULL,
     mt_set                INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    note                  INTEGER DEFAULT NULL,
     PRIMARY KEY(station, quantity, averaging_system, mt_set),
     FOREIGN KEY(station)               REFERENCES               stations(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
-    FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier),
-    FOREIGN KEY(note)                  REFERENCES                  notes(note_id)
+    FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier)
 );
 """
 )
@@ -832,12 +818,10 @@ CREATE TABLE point_values (
     averaging_system      TEXT DEFAULT NULL,
     mt_set                INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    note                  INTEGER DEFAULT NULL,
     PRIMARY KEY(point, quantity, averaging_system, mt_set),
     FOREIGN KEY(point)                 REFERENCES                 points(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
-    FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier),
-    FOREIGN KEY(note)                  REFERENCES                  notes(note_id)
+    FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier)
 );
 """
 )
@@ -910,6 +894,122 @@ CREATE TABLE point_values_mt (
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
     FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier),
     FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier)
+);
+"""
+)
+
+# Notes for studies
+cursor.execute(
+"""
+CREATE TABLE study_notes (
+    study TEXT NOT NULL,
+    note  INTEGER NOT NULL CHECK ( note > 0 ),
+    PRIMARY KEY(study, note),
+    FOREIGN KEY(study) REFERENCES studies(identifier),
+    FOREIGN KEY(note)  REFERENCES   notes(note_id)
+);
+"""
+)
+
+# Notes for study values
+cursor.execute(
+"""
+CREATE TABLE study_value_notes (
+    study            TEXT NOT NULL,
+    averaging_system TEXT DEFAULT NULL,
+    mt_set           INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
+    note             INTEGER NOT NULL CHECK ( note > 0 ),
+    PRIMARY KEY(study, averaging_system, mt_set, note),
+    FOREIGN KEY(study)            REFERENCES           studies(identifier),
+    FOREIGN KEY(averaging_system) REFERENCES averaging_systems(identifier),
+    FOREIGN KEY(note)             REFERENCES             notes(note_id)
+);
+"""
+)
+
+# Notes for series
+cursor.execute(
+"""
+CREATE TABLE series_notes (
+    series TEXT NOT NULL,
+    note   INTEGER NOT NULL CHECK ( note > 0 ),
+    PRIMARY KEY(series, note),
+    FOREIGN KEY(series) REFERENCES series(identifier),
+    FOREIGN KEY(note)   REFERENCES  notes(note_id)
+);
+"""
+)
+
+# Notes for series values
+cursor.execute(
+"""
+CREATE TABLE series_value_notes (
+    series           TEXT NOT NULL,
+    averaging_system TEXT DEFAULT NULL,
+    mt_set           INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
+    note             INTEGER NOT NULL CHECK ( note > 0 ),
+    PRIMARY KEY(series, averaging_system, mt_set, note),
+    FOREIGN KEY(series)           REFERENCES            series(identifier),
+    FOREIGN KEY(averaging_system) REFERENCES averaging_systems(identifier),
+    FOREIGN KEY(note)             REFERENCES             notes(note_id)
+);
+"""
+)
+
+# Notes for stations
+cursor.execute(
+"""
+CREATE TABLE station_notes (
+    station TEXT NOT NULL,
+    note    INTEGER NOT NULL CHECK ( note > 0 ),
+    PRIMARY KEY(station, note),
+    FOREIGN KEY(station) REFERENCES stations(identifier),
+    FOREIGN KEY(note)    REFERENCES    notes(note_id)
+);
+"""
+)
+
+# Notes for station values
+cursor.execute(
+"""
+CREATE TABLE station_value_notes (
+    station          TEXT NOT NULL,
+    averaging_system TEXT DEFAULT NULL,
+    mt_set           INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
+    note             INTEGER NOT NULL CHECK ( note > 0 ),
+    PRIMARY KEY(station, averaging_system, mt_set, note),
+    FOREIGN KEY(station)          REFERENCES          stations(identifier),
+    FOREIGN KEY(averaging_system) REFERENCES averaging_systems(identifier),
+    FOREIGN KEY(note)             REFERENCES             notes(note_id)
+);
+"""
+)
+
+# Notes for points
+cursor.execute(
+"""
+CREATE TABLE point_notes (
+    point TEXT NOT NULL,
+    note  INTEGER NOT NULL CHECK ( note > 0 ),
+    PRIMARY KEY(point, note),
+    FOREIGN KEY(point) REFERENCES points(identifier),
+    FOREIGN KEY(note)  REFERENCES  notes(note_id)
+);
+"""
+)
+
+# Notes for point values
+cursor.execute(
+"""
+CREATE TABLE point_value_notes (
+    point            TEXT NOT NULL,
+    averaging_system TEXT DEFAULT NULL,
+    mt_set           INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
+    note             INTEGER NOT NULL CHECK ( note > 0 ),
+    PRIMARY KEY(point, averaging_system, mt_set, note),
+    FOREIGN KEY(point)            REFERENCES            points(identifier),
+    FOREIGN KEY(averaging_system) REFERENCES averaging_systems(identifier),
+    FOREIGN KEY(note)             REFERENCES             notes(note_id)
 );
 """
 )
