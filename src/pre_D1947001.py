@@ -248,14 +248,14 @@ for duct in ducts:
             sd.set_station_value( cursor, station_identifier, sd.Q_DEVELOPMENT_LENGTH,             ducts[duct].length,                      )
             sd.set_station_value( cursor, station_identifier, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH, ducts[duct].length / hydraulic_diameter, )
             sd.set_station_value( cursor, station_identifier, sd.Q_ASPECT_RATIO,                   ducts[duct].aspect_ratio,                )
-            sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                  bulk_velocity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_bulk_velocity,  )
-            sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER,           Re_bulk,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
-            sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,               Ma_bulk,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
+            sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                  bulk_velocity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[mt_bulk_velocity],  )
+            sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER,           Re_bulk,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], )
+            sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,               Ma_bulk,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], )
 
             if ( duct != "Round" ):
-                sd.set_station_value( cursor, station_identifier, sd.Q_HEIGHT,      height,      measurement_technique=sd.MT_CALCULATION, )
-                sd.set_station_value( cursor, station_identifier, sd.Q_WIDTH,       width,       measurement_technique=sd.MT_CALCULATION, )
-                sd.set_station_value( cursor, station_identifier, sd.Q_HALF_HEIGHT, half_height, measurement_technique=sd.MT_CALCULATION, )
+                sd.set_station_value( cursor, station_identifier, sd.Q_HEIGHT,      height,      measurement_techniques=[sd.MT_CALCULATION], )
+                sd.set_station_value( cursor, station_identifier, sd.Q_WIDTH,       width,       measurement_techniques=[sd.MT_CALCULATION], )
+                sd.set_station_value( cursor, station_identifier, sd.Q_HALF_HEIGHT, half_height, measurement_techniques=[sd.MT_CALCULATION], )
 
             # This set of data only considers wall quantities.
             point_number = 1
@@ -298,7 +298,7 @@ for duct in ducts:
                     quantity,
                     sd.WALL_POINT_LABEL,
                     0.0,
-                    measurement_technique=sd.MT_ASSUMPTION,
+                    measurement_techniques=[sd.MT_ASSUMPTION],
                 )
 
             current_note = None
@@ -308,26 +308,26 @@ for duct in ducts:
             # p. 129
             mt_wall_shear_stress = sd.MT_MOMENTUM_BALANCE
 
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_MASS_DENSITY,                          sd.WALL_POINT_LABEL, mass_density,            averaging_system=sd.BOTH_AVERAGING_SYSTEMS, note=current_note,                          )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_KINEMATIC_VISCOSITY,                   sd.WALL_POINT_LABEL, kinematic_viscosity,     averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_DYNAMIC_VISCOSITY,                     sd.WALL_POINT_LABEL, dynamic_viscosity,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,                           sd.WALL_POINT_LABEL, temperature,             averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_STREAMWISE_VELOCITY,                   sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ),  averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_DISTANCE_FROM_WALL,                    sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ),  averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_OUTER_LAYER_COORDINATE,                sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ),  averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_SPEED_OF_SOUND,                        sd.WALL_POINT_LABEL, speed_of_sound,          averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION,     )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_SHEAR_STRESS,                          sd.WALL_POINT_LABEL, wall_shear_stress,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_wall_shear_stress, )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_FANNING_FRICTION_FACTOR,               sd.WALL_POINT_LABEL, fanning_friction_factor, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_wall_shear_stress, )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_VELOCITY,                     sd.WALL_POINT_LABEL, friction_velocity,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION,    )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_VISCOUS_LENGTH_SCALE,                  sd.WALL_POINT_LABEL, viscous_length_scale,    averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION,    )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_REYNOLDS_NUMBER,              sd.WALL_POINT_LABEL, Re_tau,                  averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION,    )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER,   sd.WALL_POINT_LABEL, Re_tau,                  averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION,    )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_MACH_NUMBER,                  sd.WALL_POINT_LABEL, Ma_tau,                  averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION,    )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_HEAT_FLUX,                             sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ),  averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION,     )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_INNER_LAYER_HEAT_FLUX,                 sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ),  averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION,     )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_CENTER_LINE_TO_WALL_TEMPERATURE_RATIO, sd.WALL_POINT_LABEL, sd.sdfloat( 1.0, 0.0 ),  averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION,     )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_WALL_TO_RECOVERY_TEMPERATURE_RATIO,    sd.WALL_POINT_LABEL, sd.sdfloat( 1.0, 0.0 ),  averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION,     )
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_TEMPERATURE,                  sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ),  averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION,     )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_MASS_DENSITY,                          sd.WALL_POINT_LABEL, mass_density,            averaging_system=sd.BOTH_AVERAGING_SYSTEMS, note=current_note,                             )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_KINEMATIC_VISCOSITY,                   sd.WALL_POINT_LABEL, kinematic_viscosity,     averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_DYNAMIC_VISCOSITY,                     sd.WALL_POINT_LABEL, dynamic_viscosity,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,                           sd.WALL_POINT_LABEL, temperature,             averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_STREAMWISE_VELOCITY,                   sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ),  averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_DISTANCE_FROM_WALL,                    sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ),  averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_OUTER_LAYER_COORDINATE,                sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ),  averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_SPEED_OF_SOUND,                        sd.WALL_POINT_LABEL, speed_of_sound,          averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION],     )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_SHEAR_STRESS,                          sd.WALL_POINT_LABEL, wall_shear_stress,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[mt_wall_shear_stress], )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_FANNING_FRICTION_FACTOR,               sd.WALL_POINT_LABEL, fanning_friction_factor, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[mt_wall_shear_stress], )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_VELOCITY,                     sd.WALL_POINT_LABEL, friction_velocity,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION],    )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_VISCOUS_LENGTH_SCALE,                  sd.WALL_POINT_LABEL, viscous_length_scale,    averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION],    )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_REYNOLDS_NUMBER,              sd.WALL_POINT_LABEL, Re_tau,                  averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION],    )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER,   sd.WALL_POINT_LABEL, Re_tau,                  averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION],    )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_MACH_NUMBER,                  sd.WALL_POINT_LABEL, Ma_tau,                  averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION],    )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_HEAT_FLUX,                             sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ),  averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION],     )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_INNER_LAYER_HEAT_FLUX,                 sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ),  averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION],     )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_CENTER_LINE_TO_WALL_TEMPERATURE_RATIO, sd.WALL_POINT_LABEL, sd.sdfloat( 1.0, 0.0 ),  averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION],     )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_WALL_TO_RECOVERY_TEMPERATURE_RATIO,    sd.WALL_POINT_LABEL, sd.sdfloat( 1.0, 0.0 ),  averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION],     )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_TEMPERATURE,                  sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ),  averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION],     )
 
 conn.commit()
 conn.close()
