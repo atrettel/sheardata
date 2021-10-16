@@ -230,7 +230,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_COORDINATE,  0.0,                    )
             sd.set_point_value( cursor, point_identifier, sd.Q_TRANSVERSE_COORDINATE,  r_reversed[i],          )
             sd.set_point_value( cursor, point_identifier, sd.Q_SPANWISE_COORDINATE,    0.0,                    )
-            sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    u_reversed[i], averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=mt_velocity, note=current_note,)
+            sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    u_reversed[i], averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[mt_velocity], note=current_note, )
 
             for quantity in [ sd.Q_TRANSVERSE_VELOCITY,
                               sd.Q_SPANWISE_VELOCITY, ]:
@@ -240,15 +240,15 @@ with open( globals_filename, "r" ) as globals_file:
                     quantity,
                     sd.sdfloat( 0.0, 0.0 ),
                     averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
-                    measurement_technique=sd.MT_ASSUMPTION,
+                    measurement_techniques=[sd.MT_ASSUMPTION],
                 )
 
             # Assumed constant profiles
-            sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE,         temperature,         averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION,  )
-            sd.set_point_value( cursor, point_identifier, sd.Q_MASS_DENSITY,        mass_density,        averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION,  )
-            sd.set_point_value( cursor, point_identifier, sd.Q_KINEMATIC_VISCOSITY, kinematic_viscosity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION,  )
-            sd.set_point_value( cursor, point_identifier, sd.Q_DYNAMIC_VISCOSITY,   dynamic_viscosity,   averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION,  )
-            sd.set_point_value( cursor, point_identifier, sd.Q_SPEED_OF_SOUND,      speed_of_sound,      averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
+            sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE,         temperature,         averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION],  )
+            sd.set_point_value( cursor, point_identifier, sd.Q_MASS_DENSITY,        mass_density,        averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION],  )
+            sd.set_point_value( cursor, point_identifier, sd.Q_KINEMATIC_VISCOSITY, kinematic_viscosity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION],  )
+            sd.set_point_value( cursor, point_identifier, sd.Q_DYNAMIC_VISCOSITY,   dynamic_viscosity,   averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION],  )
+            sd.set_point_value( cursor, point_identifier, sd.Q_SPEED_OF_SOUND,      speed_of_sound,      averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], )
 
             i += 1
 
@@ -262,7 +262,7 @@ with open( globals_filename, "r" ) as globals_file:
                     quantity,
                     sd.WALL_POINT_LABEL,
                     0.0,
-                    measurement_technique=sd.MT_ASSUMPTION,
+                    measurement_techniques=[sd.MT_ASSUMPTION],
                 )
 
         r_prof, u_prof = sd.get_twin_profiles(
@@ -286,16 +286,16 @@ with open( globals_filename, "r" ) as globals_file:
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
         )
 
-        sd.set_station_value( cursor, station_identifier, sd.Q_VOLUMETRIC_FLOW_RATE,               volumetric_flow_rate,             averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
-        sd.set_station_value( cursor, station_identifier, sd.Q_MASS_FLOW_RATE,                     mass_flow_rate,                   averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
-        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                      bulk_velocity,                    averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
-        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER,               Re_bulk,                          averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
-        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,                   Ma_bulk,                          averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
-        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO, bulk_velocity / maximum_velocity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_CALCULATION, )
+        sd.set_station_value( cursor, station_identifier, sd.Q_VOLUMETRIC_FLOW_RATE,               volumetric_flow_rate,             averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_MASS_FLOW_RATE,                     mass_flow_rate,                   averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                      bulk_velocity,                    averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER,               Re_bulk,                          averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,                   Ma_bulk,                          averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO, bulk_velocity / maximum_velocity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], )
 
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_HEAT_FLUX,                             sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_CENTER_LINE_TO_WALL_TEMPERATURE_RATIO, sd.WALL_POINT_LABEL, sd.sdfloat( 1.0, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_WALL_TO_RECOVERY_TEMPERATURE_RATIO,    sd.WALL_POINT_LABEL, sd.sdfloat( 1.0, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_technique=sd.MT_ASSUMPTION, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_HEAT_FLUX,                             sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION], )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_CENTER_LINE_TO_WALL_TEMPERATURE_RATIO, sd.WALL_POINT_LABEL, sd.sdfloat( 1.0, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION], )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_WALL_TO_RECOVERY_TEMPERATURE_RATIO,    sd.WALL_POINT_LABEL, sd.sdfloat( 1.0, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION], )
 
         # Wall shear stress measurements
         #
