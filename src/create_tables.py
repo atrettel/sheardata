@@ -870,7 +870,7 @@ CREATE TABLE series_values_mt (
     mt_set                INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     measurement_technique TEXT DEFAULT NULL,
     PRIMARY KEY(series, quantity, averaging_system, mt_set, measurement_technique),
-    FOREIGN KEY(series)                REFERENCES                studies(identifier),
+    FOREIGN KEY(series)                REFERENCES                 series(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
     FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier),
     FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier)
@@ -888,7 +888,7 @@ CREATE TABLE station_values_mt (
     mt_set                INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     measurement_technique TEXT DEFAULT NULL,
     PRIMARY KEY(station, quantity, averaging_system, mt_set, measurement_technique),
-    FOREIGN KEY(station)               REFERENCES                studies(identifier),
+    FOREIGN KEY(station)               REFERENCES               stations(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
     FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier),
     FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier)
@@ -906,7 +906,7 @@ CREATE TABLE point_values_mt (
     mt_set                INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     measurement_technique TEXT DEFAULT NULL,
     PRIMARY KEY(point, quantity, averaging_system, mt_set, measurement_technique),
-    FOREIGN KEY(point)                 REFERENCES                studies(identifier),
+    FOREIGN KEY(point)                 REFERENCES                 points(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
     FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier),
     FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier)
