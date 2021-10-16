@@ -806,9 +806,9 @@ def get_station_value( cursor, station, quantity,             \
         )
     return fetch_float( cursor )
 
-def add_point( cursor, flow_class, year, study_number, series_number, \
-                station_number, point_number, point_label=None,       \
-                outlier=False, note=None ):
+def add_point( cursor, flow_class, year, study_number, series_number,         \
+               station_number, point_number, point_label=None, outlier=False, \
+               note=None ):
     point = identify_point(
         flow_class,
         year,
