@@ -352,7 +352,7 @@ for identifier in measurement_techniques:
 cursor.execute(
 """
 CREATE TABLE notes (
-    note_id  INTEGER PRIMARY KEY,
+    note_id  INTEGER PRIMARY KEY CHECK ( note_id > 0 ),
     contents TEXT NOT NULL
 );
 """
