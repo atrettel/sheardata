@@ -457,15 +457,14 @@ def create_averaging_systems_list( averaging_system ):
         return [ averaging_system ]
 
 def set_study_value( cursor, study, quantity, value, averaging_system=None, \
-                     measurement_techniques=[], mt_set=1, outlier=False,
+                     measurement_techniques=[], mt_set=1, outlier=False,    \
                      note=None ):
     study_value, study_uncertainty = split_float( value )
     for avg_sys in create_averaging_systems_list( averaging_system ):
         cursor.execute(
         """
         INSERT INTO study_values( study, quantity, study_value,
-        study_uncertainty, averaging_system, mt_set, outlier,
-        note )
+        study_uncertainty, averaging_system, mt_set, outlier, note )
         VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
         """,
         (
@@ -483,8 +482,8 @@ def set_study_value( cursor, study, quantity, value, averaging_system=None, \
         for measurement_technique in measurement_techniques:
             cursor.execute(
             """
-            INSERT INTO study_values_mt( study, quantity,
-            averaging_system, mt_set, measurement_technique )
+            INSERT INTO study_values_mt( study, quantity, averaging_system,
+            mt_set, measurement_technique )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
@@ -496,11 +495,6 @@ def set_study_value( cursor, study, quantity, value, averaging_system=None, \
             )
             )
 
-# The assumption here is that the user already knows which set of measurement
-# techniques to consider rather than knowing which measurement technique.  This
-# choice allows for greater flexibility at the cost of some clarity.  Users
-# should first find out what sets of measurement techniques are available
-# before requesting the values.
 def get_study_value( cursor, study, quantity,               \
                      averaging_system=ANY_AVERAGING_SYSTEM, \
                      mt_set=1, ):
@@ -520,7 +514,7 @@ def get_study_value( cursor, study, quantity,               \
         cursor.execute(
         """
         SELECT study_value, study_uncertainty FROM study_values WHERE
-        study=?  AND quantity=? AND averaging_system=? AND
+        study=? AND quantity=? AND averaging_system=? AND
         mt_set=? LIMIT 1;
         """,
         (
@@ -610,14 +604,14 @@ def update_series_description( cursor, identifier, description ):
     )
 
 def set_series_value( cursor, series, quantity, value, averaging_system=None, \
-                     measurement_technique=None, outlier=False, note=None ):
+                      measurement_techniques=[], mt_set=1, outlier=False,     \
+                      note=None ):
     series_value, series_uncertainty = split_float( value )
     for avg_sys in create_averaging_systems_list( averaging_system ):
         cursor.execute(
         """
         INSERT INTO series_values( series, quantity, series_value,
-        series_uncertainty, averaging_system, measurement_technique, outlier,
-        note )
+        series_uncertainty, averaging_system, mt_set, outlier, note )
         VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
         """,
         (
@@ -626,66 +620,56 @@ def set_series_value( cursor, series, quantity, value, averaging_system=None, \
             series_value,
             series_uncertainty,
             avg_sys,
-            measurement_technique,
+            mt_set,
             int(outlier),
             note,
         )
         )
 
+        for measurement_technique in measurement_techniques:
+            cursor.execute(
+            """
+            INSERT INTO series_values_mt( series, quantity, averaging_system,
+            mt_set, measurement_technique )
+            VALUES( ?, ?, ?, ?, ? );
+            """,
+            (
+                sanitize_identifier(series),
+                str(quantity),
+                avg_sys,
+                mt_set,
+                measurement_technique,
+            )
+            )
+
 def get_series_value( cursor, series, quantity,              \
                       averaging_system=ANY_AVERAGING_SYSTEM, \
-                      measurement_technique=MT_ROOT, ):
+                      mt_set=1, ):
     if ( averaging_system == ANY_AVERAGING_SYSTEM ):
-        if ( measurement_technique == MT_ROOT ):
-            cursor.execute(
-            """
-            SELECT series_value, series_uncertainty FROM series_values WHERE
-            series=? AND quantity=? LIMIT 1;
-            """,
-            (
-                sanitize_identifer(series),
-                str(quantity),
-            )
-            )
-        else:
-            cursor.execute(
-            """
-            SELECT series_value, series_uncertainty FROM series_values WHERE
-            series=? AND quantity=? AND measurement_technique=? LIMIT 1;
-            """,
-            (
-                sanitize_identifer(series),
-                str(quantity),
-                measurement_technique,
-            )
-            )
+        cursor.execute(
+        """
+        SELECT series_value, series_uncertainty FROM series_values WHERE
+        series=? AND quantity=? AND mt_set=? LIMIT 1;
+        """,
+        (
+            sanitize_identifier(series),
+            str(quantity),
+            mt_set,
+        )
+        )
     else:
-        if ( measurement_technique == MT_ROOT ):
-            cursor.execute(
-            """
-            SELECT series_value, series_uncertainty FROM series_values WHERE
-            series=? AND quantity=? AND averaging_system=? LIMIT 1;
-            """,
-            (
-                sanitize_identifer(series),
-                str(quantity),
-                averaging_system,
-            )
-            )
-        else:
-            cursor.execute(
-            """
-            SELECT series_value, series_uncertainty FROM series_values WHERE
-            series=? AND quantity=? AND averaging_system=? AND
-            measurement_technique=? LIMIT 1;
-            """,
-            (
-                sanitize_identifer(series),
-                str(quantity),
-                averaging_system,
-                measurement_technique,
-            )
-            )
+        cursor.execute(
+        """
+        SELECT series_value, series_uncertainty FROM series_values WHERE
+        series=? AND quantity=? AND averaging_system=? AND mt_set=? LIMIT 1;
+        """,
+        (
+            sanitize_identifier(series),
+            str(quantity),
+            averaging_system,
+            mt_set,
+        )
+        )
     return fetch_float( cursor )
 
 def add_station( cursor, flow_class, year, study_number, series_number,     \
@@ -727,15 +711,15 @@ def add_station( cursor, flow_class, year, study_number, series_number,     \
     )
     return station
 
-def set_station_value( cursor, station, quantity, value, averaging_system=None, \
-                     measurement_technique=None, outlier=False, note=None ):
+def set_station_value( cursor, station, quantity, value,                 \
+                       averaging_system=None, measurement_techniques=[], \
+                       mt_set=1, outlier=False, note=None ):
     station_value, station_uncertainty = split_float( value )
     for avg_sys in create_averaging_systems_list( averaging_system ):
         cursor.execute(
         """
         INSERT INTO station_values( station, quantity, station_value,
-        station_uncertainty, averaging_system, measurement_technique, outlier,
-        note )
+        station_uncertainty, averaging_system, mt_set, outlier, note )
         VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
         """,
         (
@@ -744,66 +728,56 @@ def set_station_value( cursor, station, quantity, value, averaging_system=None, 
             station_value,
             station_uncertainty,
             avg_sys,
-            measurement_technique,
+            mt_set,
             int(outlier),
             note,
         )
         )
 
+        for measurement_technique in measurement_techniques:
+            cursor.execute(
+            """
+            INSERT INTO station_values_mt( station, quantity, averaging_system,
+            mt_set, measurement_technique )
+            VALUES( ?, ?, ?, ?, ? );
+            """,
+            (
+                sanitize_identifier(station),
+                str(quantity),
+                avg_sys,
+                mt_set,
+                measurement_technique,
+            )
+            )
+
 def get_station_value( cursor, station, quantity,             \
                        averaging_system=ANY_AVERAGING_SYSTEM, \
-                       measurement_technique=MT_ROOT, ):
+                       mt_set=1, ):
     if ( averaging_system == ANY_AVERAGING_SYSTEM ):
-        if ( measurement_technique == MT_ROOT ):
-            cursor.execute(
-            """
-            SELECT station_value, station_uncertainty FROM station_values WHERE
-            station=? AND quantity=? LIMIT 1;
-            """,
-            (
-                sanitize_identifier(station),
-                str(quantity),
-            )
-            )
-        else:
-            cursor.execute(
-            """
-            SELECT station_value, station_uncertainty FROM station_values WHERE
-            station=? AND quantity=? AND measurement_technique=? LIMIT 1;
-            """,
-            (
-                sanitize_identifier(station),
-                str(quantity),
-                measurement_technique,
-            )
-            )
+        cursor.execute(
+        """
+        SELECT station_value, station_uncertainty FROM station_values WHERE
+        station=? AND quantity=? AND mt_set=? LIMIT 1;
+        """,
+        (
+            sanitize_identifier(station),
+            str(quantity),
+            mt_set,
+        )
+        )
     else:
-        if ( measurement_technique == MT_ROOT ):
-            cursor.execute(
-            """
-            SELECT station_value, station_uncertainty FROM station_values WHERE
-            station=? AND quantity=? AND averaging_system=? LIMIT 1;
-            """,
-            (
-                sanitize_identifier(station),
-                str(quantity),
-                averaging_system,
-            )
-            )
-        else:
-            cursor.execute(
-            """
-            SELECT station_value, station_uncertainty FROM station_values WHERE
-            station=? AND quantity=? AND averaging_system=? AND
-            measurement_technique=? LIMIT 1;
-            """,
-            (
-                sanitize_identifier(station),
-                str(quantity),
-                averaging_system,
-                measurement_technique,
-            )
-            )
+        cursor.execute(
+        """
+        SELECT station_value, station_uncertainty FROM station_values WHERE
+        station=? AND quantity=? AND averaging_system=? AND mt_set=? LIMIT 1;
+        """,
+        (
+            sanitize_identifier(station),
+            str(quantity),
+            averaging_system,
+            mt_set,
+        )
+        )
     return fetch_float( cursor )
 
 def add_point( cursor, flow_class, year, study_number, series_number, \
@@ -855,14 +829,14 @@ def add_point( cursor, flow_class, year, study_number, series_number, \
     return point
 
 def set_point_value( cursor, point, quantity, value, averaging_system=None, \
-                     measurement_technique=None, outlier=False, note=None ):
+                     measurement_techniques=[], mt_set=1, outlier=False,    \
+                     note=None ):
     point_value, point_uncertainty = split_float( value )
     for avg_sys in create_averaging_systems_list( averaging_system ):
         cursor.execute(
         """
         INSERT INTO point_values( point, quantity, point_value,
-        point_uncertainty, averaging_system, measurement_technique, outlier,
-        note )
+        point_uncertainty, averaging_system, mt_set, outlier, note )
         VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
         """,
         (
@@ -871,66 +845,57 @@ def set_point_value( cursor, point, quantity, value, averaging_system=None, \
             point_value,
             point_uncertainty,
             avg_sys,
-            measurement_technique,
+            mt_set,
             int(outlier),
             note,
         )
         )
 
+        for measurement_technique in measurement_techniques:
+            cursor.execute(
+            """
+            INSERT INTO point_values_mt( point, quantity, averaging_system,
+            mt_set, measurement_technique )
+            VALUES( ?, ?, ?, ?, ? );
+            """,
+            (
+                sanitize_identifier(point),
+                str(quantity),
+                avg_sys,
+                mt_set,
+                measurement_technique,
+            )
+            )
+
 def get_point_value( cursor, point, quantity,               \
                      averaging_system=ANY_AVERAGING_SYSTEM, \
-                     measurement_technique=MT_ROOT, ):
+                     mt_set=1, ):
     if ( averaging_system == ANY_AVERAGING_SYSTEM ):
-        if ( measurement_technique == MT_ROOT ):
-            cursor.execute(
-            """
-            SELECT point_value, point_uncertainty FROM point_values WHERE
-            point=? AND quantity=? LIMIT 1;
-            """,
-            (
-                sanitize_identifier(point),
-                str(quantity),
-            )
-            )
-        else:
-            cursor.execute(
-            """
-            SELECT point_value, point_uncertainty FROM point_values WHERE
-            point=? AND quantity=? AND measurement_technique=? LIMIT 1;
-            """,
-            (
-                sanitize_identifier(point),
-                str(quantity),
-                measurement_technique,
-            )
-            )
+        cursor.execute(
+        """
+        SELECT point_value, point_uncertainty FROM point_values WHERE
+        point=? AND quantity=? AND mt_set=? LIMIT 1;
+        """,
+        (
+            sanitize_identifier(point),
+            str(quantity),
+            mt_set,
+        )
+        )
     else:
-        if ( measurement_technique == MT_ROOT ):
-            cursor.execute(
-            """
-            SELECT point_value, point_uncertainty FROM point_values WHERE
-            point=? AND quantity=? AND averaging_system=? LIMIT 1;
-            """,
-            (
-                sanitize_identifier(point),
-                str(quantity),
-                averaging_system,
-            )
-            )
-        else:
-            cursor.execute(
-            """
-            SELECT point_value, point_uncertainty FROM point_values WHERE
-            point=? AND quantity=? AND averaging_system=? AND
-            measurement_technique=? LIMIT 1;
-            """,
-            (
-                sanitize_identifier(point),
-                str(quantity),
-                averaging_system,
-                measurement_technique,
-            )
-            )
+        cursor.execute(
+        """
+        SELECT point_value, point_uncertainty FROM point_values WHERE
+        point=? AND quantity=? AND averaging_system=? AND
+        mt_set=? LIMIT 1;
+        """,
+        (
+            sanitize_identifier(point),
+            str(quantity),
+            averaging_system,
+            mt_set,
+        )
+        )
     return fetch_float( cursor )
 
 def get_twin_profiles( cursor, station, quantity1, quantity2, \
@@ -1058,29 +1023,29 @@ def locate_labeled_point( cursor, station, label ):
     result = cursor.fetchone()
     return result[0]
 
-def set_labeled_value( cursor, station, quantity, label, value,           \
-                       averaging_system=None, measurement_technique=None, \
-                       outlier=False, note=None ):
+def set_labeled_value( cursor, station, quantity, label, value,          \
+                       averaging_system=None, measurement_techniques=[], \
+                       mt_set=1, outlier=False, note=None ):
     set_point_value(
         cursor,
         locate_labeled_point( cursor, station, label ),
         quantity,
         value,
         averaging_system=averaging_system,
-        measurement_technique=measurement_technique,
+        measurement_techniques=measurement_techniques,
+        mt_set=mt_set,
         outlier=outlier,
         note=note,
     )
 
-def get_labeled_value( cursor, station, quantity, label,    \
-                     averaging_system=ANY_AVERAGING_SYSTEM, \
-                     measurement_technique=MT_ROOT, ):
+def get_labeled_value( cursor, station, quantity, label, \
+                     averaging_system=ANY_AVERAGING_SYSTEM, mt_set=1, ):
     return get_point_value(
         cursor,
         locate_labeled_point( cursor, station, label ),
         quantity,
         averaging_system=averaging_system,
-        measurement_technique=measurement_technique,
+        mt_set=1,
     )
 
 def add_working_fluid_component( cursor, series, fluid ):
