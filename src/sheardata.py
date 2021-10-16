@@ -413,7 +413,8 @@ def add_study( cursor, flow_class, year, study_number, study_type, \
     cursor.execute(
     """
     INSERT INTO studies( identifier, flow_class, year, study_number,
-    study_type, outlier, note ) VALUES( ?, ?, ?, ?, ?, ?, ? );
+                         study_type, outlier, note )
+    VALUES( ?, ?, ?, ?, ?, ?, ? );
     """,
     (
         study,
@@ -430,7 +431,9 @@ def add_study( cursor, flow_class, year, study_number, study_type, \
 def update_study_description( cursor, identifier, description ):
     cursor.execute(
     """
-    UPDATE studies SET description=? WHERE identifier=?
+    UPDATE studies
+    SET description=?
+    WHERE identifier=?;
     """,
     (
         description.strip(),
@@ -441,7 +444,9 @@ def update_study_description( cursor, identifier, description ):
 def update_study_provenance( cursor, identifier, provenance ):
     cursor.execute(
     """
-    UPDATE studies SET provenance=? WHERE identifier=?
+    UPDATE studies
+    SET provenance=?
+    WHERE identifier=?:
     """,
     (
         provenance.strip(),
@@ -464,7 +469,8 @@ def set_study_value( cursor, study, quantity, value, averaging_system=None, \
         cursor.execute(
         """
         INSERT INTO study_values( study, quantity, study_value,
-        study_uncertainty, averaging_system, mt_set, outlier, note )
+                                  study_uncertainty, averaging_system, mt_set,
+                                  outlier, note )
         VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
         """,
         (
@@ -483,7 +489,7 @@ def set_study_value( cursor, study, quantity, value, averaging_system=None, \
             cursor.execute(
             """
             INSERT INTO study_values_mt( study, quantity, averaging_system,
-            mt_set, measurement_technique )
+                                         mt_set, measurement_technique )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
@@ -501,8 +507,10 @@ def get_study_value( cursor, study, quantity,               \
     if ( averaging_system == ANY_AVERAGING_SYSTEM ):
         cursor.execute(
         """
-        SELECT study_value, study_uncertainty FROM study_values WHERE
-        study=? AND quantity=? AND mt_set=? LIMIT 1;
+        SELECT study_value, study_uncertainty
+        FROM study_values
+        WHERE study=? AND quantity=? AND mt_set=?
+        LIMIT 1;
         """,
         (
             sanitize_identifier(study),
@@ -513,9 +521,10 @@ def get_study_value( cursor, study, quantity,               \
     else:
         cursor.execute(
         """
-        SELECT study_value, study_uncertainty FROM study_values WHERE
-        study=? AND quantity=? AND averaging_system=? AND
-        mt_set=? LIMIT 1;
+        SELECT study_value, study_uncertainty
+        FROM study_values
+        WHERE study=? AND quantity=? AND averaging_system=? AND mt_set=?
+        LIMIT 1;
         """,
         (
             sanitize_identifier(study),
@@ -529,7 +538,8 @@ def get_study_value( cursor, study, quantity,               \
 def add_source( cursor, study, source, classification ):
     cursor.execute(
     """
-    INSERT INTO sources( study, source, classification ) VALUES( ?, ?, ? );
+    INSERT INTO sources( study, source, classification )
+    VALUES( ?, ?, ? );
     """,
     (
         sanitize_identifier(study),
@@ -555,7 +565,7 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
     cursor.execute(
     """
     INSERT INTO series( identifier, study, series_number, number_of_dimensions,
-    coordinate_system, outlier, note )
+                        coordinate_system, outlier, note )
     VALUES( ?, ?, ?, ?, ?, ?, ? );
     """,
     (
@@ -573,7 +583,9 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
 def update_series_geometry( cursor, identifier, geometry ):
     cursor.execute(
     """
-    UPDATE series SET geometry=? WHERE identifier=?
+    UPDATE series
+    SET geometry=?
+    WHERE identifier=?;
     """,
     (
         str(geometry),
@@ -584,7 +596,9 @@ def update_series_geometry( cursor, identifier, geometry ):
 def update_series_number_of_sides( cursor, identifier, number_of_sides ):
     cursor.execute(
     """
-    UPDATE series SET number_of_sides=? WHERE identifier=?
+    UPDATE series
+    SET number_of_sides=?
+    WHERE identifier=?;
     """,
     (
         int(number_of_sides),
@@ -595,7 +609,9 @@ def update_series_number_of_sides( cursor, identifier, number_of_sides ):
 def update_series_description( cursor, identifier, description ):
     cursor.execute(
     """
-    UPDATE series SET description=? WHERE identifier=?
+    UPDATE series
+    SET description=?
+    WHERE identifier=?;
     """,
     (
         description.strip(),
@@ -611,7 +627,8 @@ def set_series_value( cursor, series, quantity, value, averaging_system=None, \
         cursor.execute(
         """
         INSERT INTO series_values( series, quantity, series_value,
-        series_uncertainty, averaging_system, mt_set, outlier, note )
+                                   series_uncertainty, averaging_system,
+                                   mt_set, outlier, note )
         VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
         """,
         (
@@ -630,7 +647,7 @@ def set_series_value( cursor, series, quantity, value, averaging_system=None, \
             cursor.execute(
             """
             INSERT INTO series_values_mt( series, quantity, averaging_system,
-            mt_set, measurement_technique )
+                                          mt_set, measurement_technique )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
@@ -648,8 +665,10 @@ def get_series_value( cursor, series, quantity,              \
     if ( averaging_system == ANY_AVERAGING_SYSTEM ):
         cursor.execute(
         """
-        SELECT series_value, series_uncertainty FROM series_values WHERE
-        series=? AND quantity=? AND mt_set=? LIMIT 1;
+        SELECT series_value, series_uncertainty
+        FROM series_values
+        WHERE series=? AND quantity=? AND mt_set=?
+        LIMIT 1;
         """,
         (
             sanitize_identifier(series),
@@ -660,8 +679,10 @@ def get_series_value( cursor, series, quantity,              \
     else:
         cursor.execute(
         """
-        SELECT series_value, series_uncertainty FROM series_values WHERE
-        series=? AND quantity=? AND averaging_system=? AND mt_set=? LIMIT 1;
+        SELECT series_value, series_uncertainty
+        FROM series_values
+        WHERE series=? AND quantity=? AND averaging_system=? AND mt_set=?
+        LIMIT 1;
         """,
         (
             sanitize_identifier(series),
@@ -696,7 +717,7 @@ def add_station( cursor, flow_class, year, study_number, series_number,     \
     cursor.execute(
     """
     INSERT INTO stations( identifier, series, study, station_number,
-    originators_identifier, outlier, note )
+                          originators_identifier, outlier, note )
     VALUES( ?, ?, ?, ?, ?, ?, ? );
     """,
     (
@@ -719,7 +740,8 @@ def set_station_value( cursor, station, quantity, value,                 \
         cursor.execute(
         """
         INSERT INTO station_values( station, quantity, station_value,
-        station_uncertainty, averaging_system, mt_set, outlier, note )
+                                    station_uncertainty, averaging_system,
+                                    mt_set, outlier, note )
         VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
         """,
         (
@@ -738,7 +760,7 @@ def set_station_value( cursor, station, quantity, value,                 \
             cursor.execute(
             """
             INSERT INTO station_values_mt( station, quantity, averaging_system,
-            mt_set, measurement_technique )
+                                           mt_set, measurement_technique )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
@@ -756,8 +778,10 @@ def get_station_value( cursor, station, quantity,             \
     if ( averaging_system == ANY_AVERAGING_SYSTEM ):
         cursor.execute(
         """
-        SELECT station_value, station_uncertainty FROM station_values WHERE
-        station=? AND quantity=? AND mt_set=? LIMIT 1;
+        SELECT station_value, station_uncertainty
+        FROM station_values
+        WHERE station=? AND quantity=? AND mt_set=?
+        LIMIT 1;
         """,
         (
             sanitize_identifier(station),
@@ -768,8 +792,10 @@ def get_station_value( cursor, station, quantity,             \
     else:
         cursor.execute(
         """
-        SELECT station_value, station_uncertainty FROM station_values WHERE
-        station=? AND quantity=? AND averaging_system=? AND mt_set=? LIMIT 1;
+        SELECT station_value, station_uncertainty
+        FROM station_values
+        WHERE station=? AND quantity=? AND averaging_system=? AND mt_set=?
+        LIMIT 1;
         """,
         (
             sanitize_identifier(station),
@@ -812,7 +838,7 @@ def add_point( cursor, flow_class, year, study_number, series_number, \
     cursor.execute(
     """
     INSERT INTO points( identifier, station, series, study, point_number,
-    point_label, outlier, note )
+                        point_label, outlier, note )
     VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
     """,
     (
@@ -836,7 +862,8 @@ def set_point_value( cursor, point, quantity, value, averaging_system=None, \
         cursor.execute(
         """
         INSERT INTO point_values( point, quantity, point_value,
-        point_uncertainty, averaging_system, mt_set, outlier, note )
+                                  point_uncertainty, averaging_system, mt_set,
+                                  outlier, note )
         VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
         """,
         (
@@ -855,7 +882,7 @@ def set_point_value( cursor, point, quantity, value, averaging_system=None, \
             cursor.execute(
             """
             INSERT INTO point_values_mt( point, quantity, averaging_system,
-            mt_set, measurement_technique )
+                                         mt_set, measurement_technique )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
@@ -873,8 +900,10 @@ def get_point_value( cursor, point, quantity,               \
     if ( averaging_system == ANY_AVERAGING_SYSTEM ):
         cursor.execute(
         """
-        SELECT point_value, point_uncertainty FROM point_values WHERE
-        point=? AND quantity=? AND mt_set=? LIMIT 1;
+        SELECT point_value, point_uncertainty
+        FROM point_values
+        WHERE point=? AND quantity=? AND mt_set=?
+        LIMIT 1;
         """,
         (
             sanitize_identifier(point),
@@ -885,9 +914,10 @@ def get_point_value( cursor, point, quantity,               \
     else:
         cursor.execute(
         """
-        SELECT point_value, point_uncertainty FROM point_values WHERE
-        point=? AND quantity=? AND averaging_system=? AND
-        mt_set=? LIMIT 1;
+        SELECT point_value, point_uncertainty
+        FROM point_values
+        WHERE point=? AND quantity=? AND averaging_system=? AND mt_set=?
+        LIMIT 1;
         """,
         (
             sanitize_identifier(point),
@@ -1012,8 +1042,12 @@ def get_twin_profiles( cursor, station, quantity1, quantity2, \
 def locate_labeled_point( cursor, station, label ):
     cursor.execute(
     """
-    SELECT identifier FROM points WHERE identifier LIKE ? AND point_label=?
-    ORDER BY identifier LIMIT 1;
+    SELECT identifier
+    FROM points
+    WHERE identifier
+    LIKE ? AND point_label=?
+    ORDER BY identifier
+    LIMIT 1;
     """,
     (
         sanitize_identifier(station)+'%',
@@ -1073,7 +1107,10 @@ def add_air_components( cursor, series ):
 def get_working_fluid_components( cursor, series ):
     cursor.execute(
     """
-    SELECT fluid FROM components WHERE series=? ORDER BY fluid;
+    SELECT fluid
+    FROM components
+    WHERE series=?
+    ORDER BY fluid;
     """,
     ( sanitize_identifier(series), )
     )
@@ -1089,7 +1126,10 @@ def get_working_fluid_name( cursor, series ):
     if not components:
         cursor.execute(
         """
-        SELECT name FROM components WHERE series=? LIMIT 1;
+        SELECT name
+        FROM components
+        WHERE series=?
+        LIMIT 1;
         """,
         ( sanitize_identifier(series), )
         )
@@ -1101,7 +1141,10 @@ def get_working_fluid_name( cursor, series ):
         elif ( n_components == 1 ):
             cursor.execute(
             """
-            SELECT fluid_name, phase FROM fluids WHERE identifier=? LIMIT 1;
+            SELECT fluid_name, phase
+            FROM fluids
+            WHERE identifier=?
+            LIMIT 1;
             """,
             ( str(components[0]), )
             )
@@ -1113,7 +1156,9 @@ def get_working_fluid_name( cursor, series ):
             for component in components:
                 cursor.execute(
                 """
-                SELECT fluid_name, phase FROM fluids WHERE identifier=?
+                SELECT fluid_name, phase
+                FROM fluids
+                WHERE identifier=?
                 LIMIT 1;
                 """,
                 ( str(component), )
@@ -1164,7 +1209,9 @@ def calculate_molar_mass_of_molecular_formula( cursor, formula ):
         count = element_counts[element]
         cursor.execute(
         """
-        SELECT atomic_weight FROM elements WHERE element_symbol=?
+        SELECT atomic_weight
+        FROM elements
+        WHERE element_symbol=?;
         """,
         ( element, )
         )
@@ -1249,7 +1296,8 @@ def add_note( cursor, filename ):
 
     cursor.execute(
     """
-    INSERT INTO notes( contents ) VALUES( ? );
+    INSERT INTO notes( contents )
+    VALUES( ? );
     """,
     (
         str(contents),
