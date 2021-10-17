@@ -301,14 +301,14 @@ for duct in ducts:
                     measurement_techniques=[sd.MT_ASSUMPTION],
                 )
 
-            current_note = None
+            current_notes = []
             if ( test_number == 17 and duct == "Square" ):
-                current_note = mass_density_note
+                current_notes = [mass_density_note]
 
             # p. 129
             mt_wall_shear_stress = sd.MT_MOMENTUM_BALANCE
 
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_MASS_DENSITY,                          sd.WALL_POINT_LABEL, mass_density,            averaging_system=sd.BOTH_AVERAGING_SYSTEMS, note=current_note,                             )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_MASS_DENSITY,                          sd.WALL_POINT_LABEL, mass_density,            averaging_system=sd.BOTH_AVERAGING_SYSTEMS, notes=current_notes,                             )
             sd.set_labeled_value( cursor, station_identifier, sd.Q_KINEMATIC_VISCOSITY,                   sd.WALL_POINT_LABEL, kinematic_viscosity,     averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                )
             sd.set_labeled_value( cursor, station_identifier, sd.Q_DYNAMIC_VISCOSITY,                     sd.WALL_POINT_LABEL, dynamic_viscosity,       averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                )
             sd.set_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,                           sd.WALL_POINT_LABEL, temperature,             averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                )
