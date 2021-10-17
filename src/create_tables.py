@@ -916,11 +916,13 @@ cursor.execute(
 """
 CREATE TABLE study_value_notes (
     study            TEXT NOT NULL,
+    quantity         TEXT NOT NULL,
     averaging_system TEXT DEFAULT NULL,
     mt_set           INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     note             INTEGER NOT NULL CHECK ( note > 0 ),
-    PRIMARY KEY(study, averaging_system, mt_set, note),
+    PRIMARY KEY(study, quantity, averaging_system, mt_set, note),
     FOREIGN KEY(study)            REFERENCES           studies(identifier),
+    FOREIGN KEY(quantity)         REFERENCES        quantities(identifier),
     FOREIGN KEY(averaging_system) REFERENCES averaging_systems(identifier),
     FOREIGN KEY(note)             REFERENCES             notes(note_id)
 );
@@ -945,11 +947,13 @@ cursor.execute(
 """
 CREATE TABLE series_value_notes (
     series           TEXT NOT NULL,
+    quantity         TEXT NOT NULL,
     averaging_system TEXT DEFAULT NULL,
     mt_set           INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     note             INTEGER NOT NULL CHECK ( note > 0 ),
-    PRIMARY KEY(series, averaging_system, mt_set, note),
+    PRIMARY KEY(series, quantity, averaging_system, mt_set, note),
     FOREIGN KEY(series)           REFERENCES            series(identifier),
+    FOREIGN KEY(quantity)         REFERENCES        quantities(identifier),
     FOREIGN KEY(averaging_system) REFERENCES averaging_systems(identifier),
     FOREIGN KEY(note)             REFERENCES             notes(note_id)
 );
@@ -974,11 +978,13 @@ cursor.execute(
 """
 CREATE TABLE station_value_notes (
     station          TEXT NOT NULL,
+    quantity         TEXT NOT NULL,
     averaging_system TEXT DEFAULT NULL,
     mt_set           INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     note             INTEGER NOT NULL CHECK ( note > 0 ),
-    PRIMARY KEY(station, averaging_system, mt_set, note),
+    PRIMARY KEY(station, quantity, averaging_system, mt_set, note),
     FOREIGN KEY(station)          REFERENCES          stations(identifier),
+    FOREIGN KEY(quantity)         REFERENCES        quantities(identifier),
     FOREIGN KEY(averaging_system) REFERENCES averaging_systems(identifier),
     FOREIGN KEY(note)             REFERENCES             notes(note_id)
 );
@@ -1003,11 +1009,13 @@ cursor.execute(
 """
 CREATE TABLE point_value_notes (
     point            TEXT NOT NULL,
+    quantity         TEXT NOT NULL,
     averaging_system TEXT DEFAULT NULL,
     mt_set           INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     note             INTEGER NOT NULL CHECK ( note > 0 ),
-    PRIMARY KEY(point, averaging_system, mt_set, note),
+    PRIMARY KEY(point, quantity, averaging_system, mt_set, note),
     FOREIGN KEY(point)            REFERENCES            points(identifier),
+    FOREIGN KEY(quantity)         REFERENCES        quantities(identifier),
     FOREIGN KEY(averaging_system) REFERENCES averaging_systems(identifier),
     FOREIGN KEY(note)             REFERENCES             notes(note_id)
 );
