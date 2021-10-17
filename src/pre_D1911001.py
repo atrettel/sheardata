@@ -221,16 +221,16 @@ with open( globals_filename, "r" ) as globals_file:
             # \end{quote}
             mt_velocity = sd.MT_PITOT_STATIC_TUBE
 
-            current_note = None
+            current_notes = []
             if ( series_number == 1 and point_number == n_points ):
-                current_note = center_line_velocity_note
+                current_notes = [center_line_velocity_note]
 
             sd.set_point_value( cursor, point_identifier, sd.Q_DISTANCE_FROM_WALL,     distance_from_wall,     )
             sd.set_point_value( cursor, point_identifier, sd.Q_OUTER_LAYER_COORDINATE, outer_layer_coordinate, )
             sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_COORDINATE,  0.0,                    )
             sd.set_point_value( cursor, point_identifier, sd.Q_TRANSVERSE_COORDINATE,  r_reversed[i],          )
             sd.set_point_value( cursor, point_identifier, sd.Q_SPANWISE_COORDINATE,    0.0,                    )
-            sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    u_reversed[i], averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[mt_velocity], note=current_note, )
+            sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    u_reversed[i], averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[mt_velocity], notes=current_notes, )
 
             for quantity in [ sd.Q_TRANSVERSE_VELOCITY,
                               sd.Q_SPANWISE_VELOCITY, ]:
