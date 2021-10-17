@@ -408,13 +408,13 @@ def truncate_to_station( identifier ):
     return sanitized_identifier[0:14]
 
 def add_study( cursor, flow_class, year, study_number, study_type, \
-               outlier=False, note=None, ):
+               outlier=False, notes=[], ):
     study = identify_study( flow_class, year, study_number )
     cursor.execute(
     """
     INSERT INTO studies( identifier, flow_class, year, study_number,
-                         study_type, outlier, note )
-    VALUES( ?, ?, ?, ?, ?, ?, ? );
+                         study_type, outlier )
+    VALUES( ?, ?, ?, ?, ?, ? );
     """,
     (
         study,
@@ -423,9 +423,21 @@ def add_study( cursor, flow_class, year, study_number, study_type, \
         int(study_number),
         str(study_type),
         int(outlier),
-        note,
     )
     )
+
+    for note in notes:
+        cursor.execute(
+        """
+        INSERT INTO study_notes( study, note )
+        VALUES( ?, ? );
+        """,
+        (
+            study,
+            int(note),
+        )
+        )
+
     return study
 
 def update_study_description( cursor, identifier, description ):
@@ -463,15 +475,15 @@ def create_averaging_systems_list( averaging_system ):
 
 def set_study_value( cursor, study, quantity, value, averaging_system=None, \
                      measurement_techniques=[], mt_set=1, outlier=False,    \
-                     note=None ):
+                     notes=[] ):
     study_value, study_uncertainty = split_float( value )
     for avg_sys in create_averaging_systems_list( averaging_system ):
         cursor.execute(
         """
         INSERT INTO study_values( study, quantity, study_value,
                                   study_uncertainty, averaging_system, mt_set,
-                                  outlier, note )
-        VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
+                                  outlier )
+        VALUES( ?, ?, ?, ?, ?, ?, ? );
         """,
         (
             sanitize_identifier(study),
@@ -481,7 +493,6 @@ def set_study_value( cursor, study, quantity, value, averaging_system=None, \
             avg_sys,
             mt_set,
             int(outlier),
-            note,
         )
         )
 
@@ -498,6 +509,22 @@ def set_study_value( cursor, study, quantity, value, averaging_system=None, \
                 avg_sys,
                 mt_set,
                 measurement_technique,
+            )
+            )
+
+        for note in notes:
+            cursor.execute(
+            """
+            INSERT INTO study_value_notes( study, quantity, averaging_system,
+                                           mt_set, note )
+            VALUES( ?, ?, ?, ?, ? );
+            """,
+            (
+                sanitize_identifier(study),
+                str(quantity),
+                avg_sys,
+                mt_set,
+                int(note),
             )
             )
 
@@ -550,7 +577,7 @@ def add_source( cursor, study, source, classification ):
 
 def add_series( cursor, flow_class, year, study_number, series_number,  \
                 number_of_dimensions, coordinate_system, outlier=False, \
-                note=None, ):
+                notes=[], ):
     series = identify_series(
         flow_class,
         year,
@@ -565,8 +592,8 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
     cursor.execute(
     """
     INSERT INTO series( identifier, study, series_number, number_of_dimensions,
-                        coordinate_system, outlier, note )
-    VALUES( ?, ?, ?, ?, ?, ?, ? );
+                        coordinate_system, outlier )
+    VALUES( ?, ?, ?, ?, ?, ? );
     """,
     (
         series,
@@ -575,9 +602,21 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
         int(number_of_dimensions),
         str(coordinate_system),
         int(outlier),
-        note,
     )
     )
+
+    for note in notes:
+        cursor.execute(
+        """
+        INSERT INTO series_notes( series, note )
+        VALUES( ?, ? );
+        """,
+        (
+            series,
+            int(note),
+        )
+        )
+
     return series
 
 def update_series_geometry( cursor, identifier, geometry ):
@@ -621,15 +660,15 @@ def update_series_description( cursor, identifier, description ):
 
 def set_series_value( cursor, series, quantity, value, averaging_system=None, \
                       measurement_techniques=[], mt_set=1, outlier=False,     \
-                      note=None ):
+                      notes=[] ):
     series_value, series_uncertainty = split_float( value )
     for avg_sys in create_averaging_systems_list( averaging_system ):
         cursor.execute(
         """
         INSERT INTO series_values( series, quantity, series_value,
                                    series_uncertainty, averaging_system,
-                                   mt_set, outlier, note )
-        VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
+                                   mt_set, outlier )
+        VALUES( ?, ?, ?, ?, ?, ?, ? );
         """,
         (
             sanitize_identifier(series),
@@ -639,7 +678,6 @@ def set_series_value( cursor, series, quantity, value, averaging_system=None, \
             avg_sys,
             mt_set,
             int(outlier),
-            note,
         )
         )
 
@@ -656,6 +694,23 @@ def set_series_value( cursor, series, quantity, value, averaging_system=None, \
                 avg_sys,
                 mt_set,
                 measurement_technique,
+            )
+            )
+
+        for note in notes:
+            cursor.execute(
+            """
+            INSERT INTO series_value_notes( series, quantity,
+                                            averaging_system, mt_set,
+                                            note )
+            VALUES( ?, ?, ?, ?, ? );
+            """,
+            (
+                sanitize_identifier(series),
+                str(quantity),
+                avg_sys,
+                mt_set,
+                int(note),
             )
             )
 
@@ -695,7 +750,7 @@ def get_series_value( cursor, series, quantity,              \
 
 def add_station( cursor, flow_class, year, study_number, series_number,     \
                 station_number, originators_identifier=None, outlier=False, \
-                note=None ):
+                notes=[] ):
     station = identify_station(
         flow_class,
         year,
@@ -717,8 +772,8 @@ def add_station( cursor, flow_class, year, study_number, series_number,     \
     cursor.execute(
     """
     INSERT INTO stations( identifier, series, study, station_number,
-                          originators_identifier, outlier, note )
-    VALUES( ?, ?, ?, ?, ?, ?, ? );
+                          originators_identifier, outlier )
+    VALUES( ?, ?, ?, ?, ?, ? );
     """,
     (
         station,
@@ -727,22 +782,34 @@ def add_station( cursor, flow_class, year, study_number, series_number,     \
         int(station_number),
         originators_identifier,
         int(outlier),
-        note,
     )
     )
+
+    for note in notes:
+        cursor.execute(
+        """
+        INSERT INTO station_notes( station, note )
+        VALUES( ?, ? );
+        """,
+        (
+            station,
+            int(note),
+        )
+        )
+
     return station
 
 def set_station_value( cursor, station, quantity, value,                 \
                        averaging_system=None, measurement_techniques=[], \
-                       mt_set=1, outlier=False, note=None ):
+                       mt_set=1, outlier=False, notes=[] ):
     station_value, station_uncertainty = split_float( value )
     for avg_sys in create_averaging_systems_list( averaging_system ):
         cursor.execute(
         """
         INSERT INTO station_values( station, quantity, station_value,
                                     station_uncertainty, averaging_system,
-                                    mt_set, outlier, note )
-        VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
+                                    mt_set, outlier )
+        VALUES( ?, ?, ?, ?, ?, ?, ? );
         """,
         (
             sanitize_identifier(station),
@@ -752,7 +819,6 @@ def set_station_value( cursor, station, quantity, value,                 \
             avg_sys,
             mt_set,
             int(outlier),
-            note,
         )
         )
 
@@ -769,6 +835,23 @@ def set_station_value( cursor, station, quantity, value,                 \
                 avg_sys,
                 mt_set,
                 measurement_technique,
+            )
+            )
+
+        for note in notes:
+            cursor.execute(
+            """
+            INSERT INTO station_value_notes( station, quantity,
+                                             averaging_system, mt_set,
+                                             note )
+            VALUES( ?, ?, ?, ?, ? );
+            """,
+            (
+                sanitize_identifier(station),
+                str(quantity),
+                avg_sys,
+                mt_set,
+                int(note),
             )
             )
 
@@ -808,7 +891,7 @@ def get_station_value( cursor, station, quantity,             \
 
 def add_point( cursor, flow_class, year, study_number, series_number,         \
                station_number, point_number, point_label=None, outlier=False, \
-               note=None ):
+               notes=[] ):
     point = identify_point(
         flow_class,
         year,
@@ -838,8 +921,8 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
     cursor.execute(
     """
     INSERT INTO points( identifier, station, series, study, point_number,
-                        point_label, outlier, note )
-    VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
+                        point_label, outlier )
+    VALUES( ?, ?, ?, ?, ?, ?, ? );
     """,
     (
         point,
@@ -849,22 +932,34 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
         int(point_number),
         point_label,
         int(outlier),
-        note,
     )
     )
+
+    for note in notes:
+        cursor.execute(
+        """
+        INSERT INTO point_notes( point, note )
+        VALUES( ?, ? );
+        """,
+        (
+            point,
+            int(note),
+        )
+        )
+
     return point
 
 def set_point_value( cursor, point, quantity, value, averaging_system=None, \
                      measurement_techniques=[], mt_set=1, outlier=False,    \
-                     note=None ):
+                     notes=[] ):
     point_value, point_uncertainty = split_float( value )
     for avg_sys in create_averaging_systems_list( averaging_system ):
         cursor.execute(
         """
         INSERT INTO point_values( point, quantity, point_value,
                                   point_uncertainty, averaging_system, mt_set,
-                                  outlier, note )
-        VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
+                                  outlier )
+        VALUES( ?, ?, ?, ?, ?, ?, ? );
         """,
         (
             sanitize_identifier(point),
@@ -874,7 +969,6 @@ def set_point_value( cursor, point, quantity, value, averaging_system=None, \
             avg_sys,
             mt_set,
             int(outlier),
-            note,
         )
         )
 
@@ -891,6 +985,22 @@ def set_point_value( cursor, point, quantity, value, averaging_system=None, \
                 avg_sys,
                 mt_set,
                 measurement_technique,
+            )
+            )
+
+        for note in notes:
+            cursor.execute(
+            """
+            INSERT INTO point_value_notes( point, quantity, averaging_system,
+                                           mt_set, note )
+            VALUES( ?, ?, ?, ?, ? );
+            """,
+            (
+                sanitize_identifier(point),
+                str(quantity),
+                avg_sys,
+                mt_set,
+                int(note),
             )
             )
 
@@ -1059,7 +1169,7 @@ def locate_labeled_point( cursor, station, label ):
 
 def set_labeled_value( cursor, station, quantity, label, value,          \
                        averaging_system=None, measurement_techniques=[], \
-                       mt_set=1, outlier=False, note=None ):
+                       mt_set=1, outlier=False, notes=[] ):
     set_point_value(
         cursor,
         locate_labeled_point( cursor, station, label ),
@@ -1069,7 +1179,7 @@ def set_labeled_value( cursor, station, quantity, label, value,          \
         measurement_techniques=measurement_techniques,
         mt_set=mt_set,
         outlier=outlier,
-        note=note,
+        notes=notes,
     )
 
 def get_labeled_value( cursor, station, quantity, label, \
