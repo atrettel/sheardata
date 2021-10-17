@@ -297,7 +297,7 @@ for duct in ducts:
                     station_identifier,
                     quantity,
                     sd.WALL_POINT_LABEL,
-                    0.0,
+                    sd.sdfloat(0.0),
                     measurement_techniques=[sd.MT_ASSUMPTION],
                 )
 
