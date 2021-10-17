@@ -246,8 +246,8 @@ with open( ratio_filename, "r" ) as ratio_file:
         sd.mark_station_as_periodic( cursor, station_identifier )
 
         sd.set_station_value( cursor, station_identifier, sd.Q_HYDRAULIC_DIAMETER,                 diameter,                                                                                               )
-        sd.set_station_value( cursor, station_identifier, sd.Q_DEVELOPMENT_LENGTH,                 development_length,               measurement_techniques=[sd.MT_ASSUMPTION], note=development_length_note, )
-        sd.set_station_value( cursor, station_identifier, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,     outer_layer_development_length,   measurement_techniques=[sd.MT_ASSUMPTION], note=development_length_note, )
+        sd.set_station_value( cursor, station_identifier, sd.Q_DEVELOPMENT_LENGTH,                 development_length,               measurement_techniques=[sd.MT_ASSUMPTION], notes=[development_length_note], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,     outer_layer_development_length,   measurement_techniques=[sd.MT_ASSUMPTION], notes=[development_length_note], )
         sd.set_station_value( cursor, station_identifier, sd.Q_ASPECT_RATIO,                       1.0,                                                                                                    )
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                      bulk_velocity,                    averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             outlier=outlier, )
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO, bulk_velocity / maximum_velocity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], outlier=outlier, )
@@ -369,10 +369,10 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
         Re_tau               = 0.5 * diameter / viscous_length_scale
 
         outlier = False
-        current_note = None
+        current_notes = []
         if ( working_fluid == "Air" and pipe == "S" ):
             outlier = True
-            current_note = mass_density_note
+            current_notes = [mass_density_note]
 
         series_identifier = sd.add_series(
             cursor,
@@ -440,8 +440,8 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
 
         sd.mark_station_as_periodic( cursor, station_identifier )
 
-        sd.set_station_value( cursor, station_identifier, sd.Q_DEVELOPMENT_LENGTH,             development_length,             measurement_techniques=[sd.MT_ASSUMPTION], note=development_length_note,)
-        sd.set_station_value( cursor, station_identifier, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH, outer_layer_development_length, measurement_techniques=[sd.MT_ASSUMPTION], note=development_length_note,)
+        sd.set_station_value( cursor, station_identifier, sd.Q_DEVELOPMENT_LENGTH,             development_length,             measurement_techniques=[sd.MT_ASSUMPTION], notes=[development_length_note], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH, outer_layer_development_length, measurement_techniques=[sd.MT_ASSUMPTION], notes=[development_length_note], )
         sd.set_station_value( cursor, station_identifier, sd.Q_HYDRAULIC_DIAMETER,             diameter,                                                                                                     outlier=outlier, )
         sd.set_station_value( cursor, station_identifier, sd.Q_ASPECT_RATIO,                   1.0,                                                                                                          outlier=outlier, )
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                  bulk_velocity,        averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             outlier=outlier, )
@@ -489,7 +489,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
         # \end{quote}
         mt_wall_shear_stress = sd.MT_MOMENTUM_BALANCE
 
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_MASS_DENSITY,                          sd.WALL_POINT_LABEL, mass_density,                      averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                outlier=outlier, note=current_note, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_MASS_DENSITY,                          sd.WALL_POINT_LABEL, mass_density,                      averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                outlier=outlier, notes=current_notes, )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_DYNAMIC_VISCOSITY,                     sd.WALL_POINT_LABEL, dynamic_viscosity,                 averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                outlier=outlier,                    )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_KINEMATIC_VISCOSITY,                   sd.WALL_POINT_LABEL, kinematic_viscosity,               averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                outlier=outlier,                    )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,                           sd.WALL_POINT_LABEL, temperature,                       averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                outlier=outlier,                    )
