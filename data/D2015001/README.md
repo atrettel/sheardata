@@ -6,9 +6,9 @@
 - When using the data, cite `TrettelA+2016+eng+JOUR`
   ([link](https://doi.org/10.1063/1.4942022)):
 
-    >  Andrew Trettel and Johan Larsson, "Mean velocity scaling for
-    >  compressible wall turbulence with heat transfer", Physics of Fluids 28,
-    >  026102 (2016)
+    > Trettel, Andrew and Johan Larsson (2016). “Mean velocity scaling for
+    > compressible wall turbulence with heat transfer”. English. In: *Physics
+    > of Fluids* 28.2, 026102. ISSN: `1070-6631`. DOI: `10.1063/1.4942022`.
 
 - Eventually, this data will be re-calculated from the original files.  This
   process will allow for more profiles to be calculated and for the
