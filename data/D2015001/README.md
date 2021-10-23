@@ -10,10 +10,6 @@
   process will allow for more profiles to be calculated and for the
   uncertainties to the quantified.
 
-- Note that while the simulations were run using double-precision floating
-  point numbers, the data were saved as single-precision floating point
-  numbers, resulting in some loss of precision.
-
 
 ## Description of columns in global parameter CSV file
 
