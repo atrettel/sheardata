@@ -18,12 +18,24 @@ flow_class   = sd.DUCT_FLOW_CLASS
 year         = 2015
 study_number = 1
 
+floating_point_precision_note = sd.add_note(
+    cursor,
+    "../data/{:s}/note_floating_point_precision.tex".format(
+        sd.identify_study(
+            flow_class,
+            year,
+            study_number,
+        )
+    ),
+)
+
 study_identifier = sd.add_study(
     cursor,
     flow_class=flow_class,
     year=year,
     study_number=study_number,
     study_type=sd.DIRECT_NUMERICAL_SIMULATION_STUDY_TYPE,
+    notes=[floating_point_precision_note],
 )
 
 sd.add_source( cursor, study_identifier, "TrettelA+2015+eng+THES", 1 )
