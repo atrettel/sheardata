@@ -1038,8 +1038,12 @@ def get_point_value( cursor, point, quantity,               \
         )
     return fetch_float( cursor )
 
-def get_twin_profiles( cursor, station, quantity1, quantity2, \
-                       averaging_system1=None, averaging_system2=None, ):
+# TODO: Change this to getting intersecting profiles.  Allow for an arbitrary
+# number of quantities, so that requests can be made for more than 2 profiles
+# at once.
+def get_twin_profiles( cursor, station, quantity1, quantity2,          \
+                       averaging_system1=None, averaging_system2=None, \
+                       excluded_point_labels=[], ):
     if ( averaging_system1 == None ):
         if ( averaging_system2 == None ):
             # Both averaging systems are unspecified.
@@ -1130,8 +1134,22 @@ def get_twin_profiles( cursor, station, quantity1, quantity2, \
     results = cursor.fetchall()
     points = []
     for result in results:
-        points.append( result[0] )
-    n_points = len(points)
+        point = str(result[0])
+
+        cursor.execute(
+        """
+        SELECT point_label
+        FROM points
+        WHERE identifier=?;
+        """,
+        (
+            point,
+        )
+        )
+        point_label = cursor.fetchone()[0]
+
+        if ( point_label not in excluded_point_labels ):
+            points.append( result[0] )
 
     profile1 = []
     profile2 = []
