@@ -1,7 +1,12 @@
 # 1911, Thomas E. Stanton of the National Physical Laboratory, pipe flow experiment
 
 - When using the data, cite `StantonTE+1911+eng+JOUR+ProcRSocA`
-  ([link](https://doi.org/10.1098/rspa.1911.0050)).
+  ([link](https://doi.org/10.1098/rspa.1911.0050)):
+
+    > Stanton, Thomas Edward (1911). “The mechanical viscosity of fluids”.
+    > English. In: *Proceedings of the Royal Society of London. Series A,
+    > Containing Papers of a Mathematical and Physical Character* 85.579, pp.
+    > 366–376. ISSN: `1364-5021`. DOI: `10.1098/rspa.1911.0050`.
 
 - Units in profile CSV files are cm for the radii and cm/s for the velocities,
   respectively.
