@@ -300,6 +300,12 @@ DIRECT_NUMERICAL_SIMULATION_STUDY_TYPE = "DNS"
 EXPERIMENTAL_STUDY_TYPE                = "EXP"
 LARGE_EDDY_SIMULATION_STUDY_TYPE       = "LES"
 
+# Compilations
+C_SELF    = 0 # Originator
+C_CH_1969 = 1 # Coles and Hirst
+C_BE_1973 = 2 # Birch and Eggers
+C_FF_1977 = 3 # Fernholz and Finley
+
 def split_float( value ):
     if ( isinstance( value, float ) ):
         sql_value       = value
@@ -748,9 +754,8 @@ def get_series_value( cursor, series, quantity,              \
         )
     return fetch_float( cursor )
 
-def add_station( cursor, flow_class, year, study_number, series_number,     \
-                station_number, originators_identifier=None, outlier=False, \
-                notes=[] ):
+def add_station( cursor, flow_class, year, study_number, series_number, \
+                station_number, outlier=False, notes=[] ):
     station = identify_station(
         flow_class,
         year,
@@ -771,16 +776,14 @@ def add_station( cursor, flow_class, year, study_number, series_number,     \
     )
     cursor.execute(
     """
-    INSERT INTO stations( identifier, series, study, station_number,
-                          originators_identifier, outlier )
-    VALUES( ?, ?, ?, ?, ?, ? );
+    INSERT INTO stations( identifier, series, study, station_number, outlier )
+    VALUES( ?, ?, ?, ?, ? );
     """,
     (
         station,
         series,
         study,
         int(station_number),
-        originators_identifier,
         int(outlier),
     )
     )

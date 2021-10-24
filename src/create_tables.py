@@ -1058,6 +1058,24 @@ CREATE TABLE compilation_sources (
 """
 )
 
+compilation_sources = {}
+compilation_sources[ sd.C_CH_1969 ] = [ "ColesDE+1969+eng+BOOK" ]
+compilation_sources[ sd.C_BE_1973 ] = [ "BirchSF+1973+eng+BOOK" ]
+compilation_sources[ sd.C_FF_1977 ] = [ "FernholzFF+1977+eng+RPRT",
+                                        "FernholzFF+1980+eng+RPRT",
+                                        "FernholzFF+1981+eng+RPRT",
+                                        "FernholzFF+1989+eng+RPRT" ]
+
+for compilation_id in compilation_sources:
+    for source in compilation_sources[compilation_id]:
+        cursor.execute(
+        """
+        INSERT INTO compilation_sources( compilation, source )
+        VALUES( ?, ? );
+        """,
+        ( compilation_id, source, )
+        )
+
 # Study identifiers
 cursor.execute(
 """
