@@ -679,7 +679,6 @@ CREATE TABLE stations (
     series                       TEXT NOT NULL,
     study                        TEXT NOT NULL,
     station_number               INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <= 999 ),
-    originators_identifier       TEXT DEFAULT NULL,
     flow_regime                  TEXT DEFAULT NULL,
     previous_streamwise_station  TEXT DEFAULT NULL,
     next_streamwise_station      TEXT DEFAULT NULL,
@@ -1018,6 +1017,99 @@ CREATE TABLE point_value_notes (
     FOREIGN KEY(quantity)         REFERENCES        quantities(identifier),
     FOREIGN KEY(averaging_system) REFERENCES averaging_systems(identifier),
     FOREIGN KEY(note)             REFERENCES             notes(note_id)
+);
+"""
+)
+
+# Compilations
+cursor.execute(
+"""
+CREATE TABLE compilations (
+    compilation_id   INTEGER PRIMARY KEY CHECK ( compilation_id >= 0 ),
+    compilation_name TEXT NOT NULL
+);
+"""
+)
+
+compilations = {}
+compilations[ sd.C_SELF    ] = "Originator"
+compilations[ sd.C_CH_1969 ] = "Coles and Hirst"
+compilations[ sd.C_BE_1973 ] = "Birch and Eggers"
+compilations[ sd.C_FF_1977 ] = "Fernholz and Finley"
+
+for compilation_id in compilations:
+    cursor.execute(
+    """
+    INSERT INTO compilations( compilation_id, compilation_name )
+    VALUES( ?, ? );
+    """,
+    ( compilation_id, compilations[compilation_id], )
+    )
+
+# Compilation sources
+cursor.execute(
+"""
+CREATE TABLE compilation_sources (
+    compilation INTEGER NOT NULL CHECK ( compilation >= 0 ),
+    source      TEXT NOT NULL,
+    PRIMARY KEY(compilation, source),
+    FOREIGN KEY(compilation) REFERENCES compilations(compilation_id)
+);
+"""
+)
+
+# Study identifiers
+cursor.execute(
+"""
+CREATE TABLE study_identifiers (
+    study       TEXT NOT NULL,
+    compilation INTEGER NOT NULL CHECK ( compilation >= 0 ),
+    identifier  TEXT NOT NULL,
+    PRIMARY KEY(study, compilation),
+    FOREIGN KEY(study)       REFERENCES      studies(identifier),
+    FOREIGN KEY(compilation) REFERENCES compilations(compilation_id)
+);
+"""
+)
+
+# Series identifiers
+cursor.execute(
+"""
+CREATE TABLE series_identifiers (
+    series      TEXT NOT NULL,
+    compilation INTEGER NOT NULL CHECK ( compilation >= 0 ),
+    identifier  TEXT NOT NULL,
+    PRIMARY KEY(series, compilation),
+    FOREIGN KEY(series)      REFERENCES       series(identifier),
+    FOREIGN KEY(compilation) REFERENCES compilations(compilation_id)
+);
+"""
+)
+
+# Station identifiers
+cursor.execute(
+"""
+CREATE TABLE station_identifiers (
+    station     TEXT NOT NULL,
+    compilation INTEGER NOT NULL CHECK ( compilation >= 0 ),
+    identifier  TEXT NOT NULL,
+    PRIMARY KEY(station, compilation),
+    FOREIGN KEY(station)     REFERENCES     stations(identifier),
+    FOREIGN KEY(compilation) REFERENCES compilations(compilation_id)
+);
+"""
+)
+
+# Point identifiers
+cursor.execute(
+"""
+CREATE TABLE point_identifiers (
+    point       TEXT NOT NULL,
+    compilation INTEGER NOT NULL CHECK ( compilation >= 0 ),
+    identifier  TEXT NOT NULL,
+    PRIMARY KEY(point, compilation),
+    FOREIGN KEY(point)       REFERENCES       points(identifier),
+    FOREIGN KEY(compilation) REFERENCES compilations(compilation_id)
 );
 """
 )
