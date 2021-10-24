@@ -192,6 +192,7 @@ for duct in ducts:
                     series_number=series_number,
                     number_of_dimensions=2,
                     coordinate_system=sd.CYLINDRICAL_COORDINATE_SYSTEM,
+                    identifiers={ sd.C_SELF : originators_identifier },
                 )
 
                 sd.update_series_geometry(
@@ -208,6 +209,7 @@ for duct in ducts:
                     series_number=series_number,
                     number_of_dimensions=2,
                     coordinate_system=sd.RECTANGULAR_COORDINATE_SYSTEM,
+                    identifiers={ sd.C_SELF : originators_identifier },
                 )
 
                 sd.update_series_geometry(
@@ -226,7 +228,7 @@ for duct in ducts:
                 study_number=study_number,
                 series_number=series_number,
                 station_number=station_number,
-                originators_identifier=originators_identifier,
+                identifiers={ sd.C_SELF : originators_identifier },
             )
 
             sd.mark_station_as_periodic( cursor, station_identifier )
