@@ -414,7 +414,7 @@ def truncate_to_station( identifier ):
     return sanitized_identifier[0:14]
 
 def add_study( cursor, flow_class, year, study_number, study_type, \
-               outlier=False, notes=[], ):
+               outlier=False, notes=[], identifiers={}, ):
     study = identify_study( flow_class, year, study_number )
     cursor.execute(
     """
@@ -441,6 +441,19 @@ def add_study( cursor, flow_class, year, study_number, study_type, \
         (
             study,
             int(note),
+        )
+        )
+
+    for compilation in identifiers:
+        cursor.execute(
+        """
+        INSERT INTO study_identifiers( study, compilation, identifier )
+        VALUES( ?, ?, ? );
+        """,
+        (
+            study,
+            int(compilation),
+            identifiers[compilation],
         )
         )
 
@@ -583,7 +596,7 @@ def add_source( cursor, study, source, classification ):
 
 def add_series( cursor, flow_class, year, study_number, series_number,  \
                 number_of_dimensions, coordinate_system, outlier=False, \
-                notes=[], ):
+                notes=[], identifiers={}, ):
     series = identify_series(
         flow_class,
         year,
@@ -620,6 +633,19 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
         (
             series,
             int(note),
+        )
+        )
+
+    for compilation in identifiers:
+        cursor.execute(
+        """
+        INSERT INTO series_identifiers( series, compilation, identifier )
+        VALUES( ?, ?, ? );
+        """,
+        (
+            series,
+            int(compilation),
+            identifiers[compilation],
         )
         )
 
@@ -755,7 +781,7 @@ def get_series_value( cursor, series, quantity,              \
     return fetch_float( cursor )
 
 def add_station( cursor, flow_class, year, study_number, series_number, \
-                station_number, outlier=False, notes=[] ):
+                station_number, outlier=False, notes=[], identifiers={}, ):
     station = identify_station(
         flow_class,
         year,
@@ -797,6 +823,19 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
         (
             station,
             int(note),
+        )
+        )
+
+    for compilation in identifiers:
+        cursor.execute(
+        """
+        INSERT INTO station_identifiers( station, compilation, identifier )
+        VALUES( ?, ?, ? );
+        """,
+        (
+            station,
+            int(compilation),
+            identifiers[compilation],
         )
         )
 
@@ -894,7 +933,7 @@ def get_station_value( cursor, station, quantity,             \
 
 def add_point( cursor, flow_class, year, study_number, series_number,         \
                station_number, point_number, point_label=None, outlier=False, \
-               notes=[] ):
+               notes=[], identifiers={}, ):
     point = identify_point(
         flow_class,
         year,
@@ -947,6 +986,19 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
         (
             point,
             int(note),
+        )
+        )
+
+    for compilation in identifiers:
+        cursor.execute(
+        """
+        INSERT INTO point_identifiers( point, compilation, identifier )
+        VALUES( ?, ?, ? );
+        """,
+        (
+            point,
+            int(compilation),
+            identifiers[compilation],
         )
         )
 
