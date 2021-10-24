@@ -104,6 +104,7 @@ with open( globals_filename, "r" ) as globals_file:
             series_number=series_number,
             number_of_dimensions=2,
             coordinate_system=sd.RECTANGULAR_COORDINATE_SYSTEM,
+            identifiers={ sd.C_SELF : originators_identifier },
         )
 
         sd.update_series_geometry(
@@ -120,6 +121,7 @@ with open( globals_filename, "r" ) as globals_file:
             study_number=study_number,
             series_number=series_number,
             station_number=station_number,
+            identifiers={ sd.C_SELF : originators_identifier },
         )
 
         sd.mark_station_as_periodic( cursor, station_identifier )
