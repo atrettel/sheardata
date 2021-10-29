@@ -21,7 +21,15 @@
 
 2. `Ma_bulk`: bulk Mach number
 
+    - `Ma_bulk = ubar / ( gamma * R * T_w )**0.5`
+
+    - `ubar ≈ 1.0` and `Tw = 1.0`
+
 3. `Re_bulk`: bulk Reynolds number
+
+    - `Re_bulk = ( rhobar * ubar * h ) / mu_w`
+
+    - `ubar ≈ 1.0` and `rhobar = 1.0` and `h = 1.0`
 
 4. `Pr`: Prandtl number
 
