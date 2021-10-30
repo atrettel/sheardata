@@ -87,9 +87,9 @@ RECTANGULAR_GEOMETRY = "R"
 
 # Measurement techniques (and other sources of information)
 MT_APPROXIMATION                            = "APPR"
-MT_ASSERTION                                = "ASRT"
 MT_ASSUMPTION                               = "A"
 MT_CALCULATION                              = "C"
+MT_CLAIM                                    = "CLM"
 MT_CLAUSER_METHOD                           = "CC"
 MT_CONSTANT_CURRENT_HOT_WIRE_ANEMOMETRY     = "CCHWA"
 MT_CONSTANT_TEMPERATURE_HOT_WIRE_ANEMOMETRY = "CTHWA"
