@@ -24,6 +24,7 @@ study_identifier = sd.add_study(
     year=year,
     study_number=study_number,
     study_type=sd.EXPERIMENTAL_STUDY_TYPE,
+    identifiers={sd.C_CH_1969 : "1600"},
 )
 
 sd.add_source( cursor, study_identifier, "RiabouchinskyD+1914+fra+JOUR", 1 )
