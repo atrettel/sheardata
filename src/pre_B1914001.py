@@ -29,5 +29,11 @@ study_identifier = sd.add_study(
 
 sd.add_source( cursor, study_identifier, "RiabouchinskyD+1914+fra+JOUR", 1 )
 
+station_4_velocity_note = sd.add_note(
+    cursor,
+    "../data/{:s}/note_station_4_velocity.tex".format( study_identifier ),
+)
+
+
 conn.commit()
 conn.close()
