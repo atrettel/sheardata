@@ -36,10 +36,13 @@ with open( "table-all-studies.tex.tmp", "w" ) as f:
         """
         SELECT source
         FROM sources
-        WHERE study=? AND classification=1
+        WHERE study=? AND classification=?
         ORDER BY source COLLATE NOCASE;
         """,
-        ( study, )
+        (
+            study,
+            sd.PRIMARY_SOURCE,
+        )
         )
         primary_sources = []
         for result in cursor.fetchall():

@@ -306,6 +306,10 @@ C_CH_1969 = 1 # Coles and Hirst
 C_BE_1973 = 2 # Birch and Eggers
 C_FF_1977 = 3 # Fernholz and Finley
 
+# Source classifications
+PRIMARY_SOURCE   = 1
+SECONDARY_SOURCE = 2
+
 def split_float( value ):
     if ( isinstance( value, float ) ):
         sql_value       = value
