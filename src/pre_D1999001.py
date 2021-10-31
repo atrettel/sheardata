@@ -26,7 +26,7 @@ study_identifier = sd.add_study(
     study_type=sd.DIRECT_NUMERICAL_SIMULATION_STUDY_TYPE,
 )
 
-sd.add_source( cursor, study_identifier, "MoserRD+1999+eng+JOUR",  1 )
+sd.add_source( cursor, study_identifier, "MoserRD+1999+eng+JOUR", sd.PRIMARY_SOURCE )
 
 # The primary difficulty with this data is that only the friction Reynolds
 # number is given.  The rest of the data is dimensionless profiles.  The trick

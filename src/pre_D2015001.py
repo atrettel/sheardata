@@ -38,8 +38,8 @@ study_identifier = sd.add_study(
     notes=[floating_point_precision_note],
 )
 
-sd.add_source( cursor, study_identifier, "TrettelA+2015+eng+THES", 1 )
-sd.add_source( cursor, study_identifier, "TrettelA+2016+eng+JOUR", 1 )
+sd.add_source( cursor, study_identifier, "TrettelA+2015+eng+THES", sd.PRIMARY_SOURCE )
+sd.add_source( cursor, study_identifier, "TrettelA+2016+eng+JOUR", sd.PRIMARY_SOURCE )
 
 dynamic_viscosity_note = sd.add_note(
     cursor,

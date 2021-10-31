@@ -26,7 +26,7 @@ study_identifier = sd.add_study(
     study_type=sd.EXPERIMENTAL_STUDY_TYPE,
 )
 
-sd.add_source( cursor, study_identifier, "SchultzGrunowF+1940+deu+JOUR", 1 )
+sd.add_source( cursor, study_identifier, "SchultzGrunowF+1940+deu+JOUR", sd.PRIMARY_SOURCE )
 
 reynolds_number_typo_note = sd.add_note(
     cursor,

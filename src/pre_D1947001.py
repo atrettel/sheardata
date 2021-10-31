@@ -26,7 +26,7 @@ study_identifier = sd.add_study(
     study_type=sd.EXPERIMENTAL_STUDY_TYPE,
 )
 
-sd.add_source( cursor, study_identifier, "HuebscherRG+1947+eng+JOUR", 1 )
+sd.add_source( cursor, study_identifier, "HuebscherRG+1947+eng+JOUR", sd.PRIMARY_SOURCE )
 
 mass_density_note = sd.add_note(
     cursor,

@@ -26,9 +26,9 @@ study_identifier = sd.add_study(
     study_type=sd.DIRECT_NUMERICAL_SIMULATION_STUDY_TYPE,
 )
 
-sd.add_source( cursor, study_identifier, "JimenezJ+2010+eng+JOUR",  1 )
-sd.add_source( cursor, study_identifier, "SilleroJA+2013+eng+JOUR", 1 )
-sd.add_source( cursor, study_identifier, "SilleroJA+2014+eng+JOUR", 1 )
+sd.add_source( cursor, study_identifier, "JimenezJ+2010+eng+JOUR",  sd.PRIMARY_SOURCE )
+sd.add_source( cursor, study_identifier, "SilleroJA+2013+eng+JOUR", sd.PRIMARY_SOURCE )
+sd.add_source( cursor, study_identifier, "SilleroJA+2014+eng+JOUR", sd.PRIMARY_SOURCE )
 
 conn.commit()
 conn.close()
