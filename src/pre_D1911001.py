@@ -227,9 +227,9 @@ with open( globals_filename, "r" ) as globals_file:
 
             sd.set_point_value( cursor, point_identifier, sd.Q_DISTANCE_FROM_WALL,     distance_from_wall,     )
             sd.set_point_value( cursor, point_identifier, sd.Q_OUTER_LAYER_COORDINATE, outer_layer_coordinate, )
-            sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_COORDINATE,  0.0,                    )
+            sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_COORDINATE,  sd.sdfloat(0.0),        )
             sd.set_point_value( cursor, point_identifier, sd.Q_TRANSVERSE_COORDINATE,  r_reversed[i],          )
-            sd.set_point_value( cursor, point_identifier, sd.Q_SPANWISE_COORDINATE,    0.0,                    )
+            sd.set_point_value( cursor, point_identifier, sd.Q_SPANWISE_COORDINATE,    sd.sdfloat(0.0),        )
             sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    u_reversed[i], averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[mt_velocity], notes=current_notes, )
 
             for quantity in [ sd.Q_TRANSVERSE_VELOCITY,
@@ -238,7 +238,7 @@ with open( globals_filename, "r" ) as globals_file:
                     cursor,
                     point_identifier,
                     quantity,
-                    sd.sdfloat( 0.0, 0.0 ),
+                    sd.sdfloat(0.0),
                     averaging_system=sd.BOTH_AVERAGING_SYSTEMS,
                     measurement_techniques=[sd.MT_ASSUMPTION],
                 )
