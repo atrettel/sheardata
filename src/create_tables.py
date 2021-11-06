@@ -582,14 +582,14 @@ quantities[ sd.Q_TEMPERATURE_AUTOCOVARIANCE                         ] = quantity
 
 # Quantities, point, ratios
 quantities[ sd.Q_LOCAL_TO_CENTER_LINE_DYNAMIC_VISCOSITY_RATIO ] = quantity( "local-to-center-line dynamic viscosity ratio", )
-quantities[ sd.Q_LOCAL_TO_EDGE_DYNAMIC_VISCOSITY_RATIO        ] = quantity( "local-to-edge dynamic viscosity ratio",        )
-quantities[ sd.Q_LOCAL_TO_WALL_DYNAMIC_VISCOSITY_RATIO        ] = quantity( "local-to-wall dynamic viscosity ratio",        )
 quantities[ sd.Q_LOCAL_TO_CENTER_LINE_MASS_DENSITY_RATIO      ] = quantity( "local-to-center-line density ratio",           )
-quantities[ sd.Q_LOCAL_TO_EDGE_MASS_DENSITY_RATIO             ] = quantity( "local-to-edge density ratio",                  )
-quantities[ sd.Q_LOCAL_TO_WALL_MASS_DENSITY_RATIO             ] = quantity( "local-to-wall density ratio",                  )
 quantities[ sd.Q_LOCAL_TO_CENTER_LINE_TEMPERATURE_RATIO       ] = quantity( "local-to-center-line temperature ratio",       )
+quantities[ sd.Q_LOCAL_TO_EDGE_DYNAMIC_VISCOSITY_RATIO        ] = quantity( "local-to-edge dynamic viscosity ratio",        )
+quantities[ sd.Q_LOCAL_TO_EDGE_MASS_DENSITY_RATIO             ] = quantity( "local-to-edge density ratio",                  )
 quantities[ sd.Q_LOCAL_TO_EDGE_TEMPERATURE_RATIO              ] = quantity( "local-to-edge temperature ratio",              )
 quantities[ sd.Q_LOCAL_TO_RECOVERY_TEMPERATURE_RATIO          ] = quantity( "local-to-recovery temperature ratio",          )
+quantities[ sd.Q_LOCAL_TO_WALL_DYNAMIC_VISCOSITY_RATIO        ] = quantity( "local-to-wall dynamic viscosity ratio",        )
+quantities[ sd.Q_LOCAL_TO_WALL_MASS_DENSITY_RATIO             ] = quantity( "local-to-wall density ratio",                  )
 quantities[ sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO              ] = quantity( "local-to-wall temperature ratio",              )
 
 # Quantities, point, component-based
