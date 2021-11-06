@@ -6,29 +6,33 @@ Data files for the shear layer data compilation
 
 The data directory has a flat directory structure.
 
+- `data/elements.csv`
+
+- `data/LICENSE.txt`
+
+    - `CC-BY-4.0` license for data files.
+
 - `data/README.md`
 
 - `data/references.bib`
 
-    - This file should contain all references for the entire project.
+    - This file should contain all BibTeX references for the entire project.
 
-- `data/taxonomy.md`
+- `data/*.tex`
 
-    - A draft taxonomy of flows.  This taxonomy is used as the first letter of
-      the case identifiers.
+    - LaTeX files for documentation.
 
 - `data/$(case_identifier)`
 
     - `README.md`
 
-        - This file should serve as the initial documentation for the case,
-          though I am considering migrating to LaTeX files instead.
+        - This file serves as the initial documentation for the case.
 
     - CSV files with tabulated data from the originator or other source.
 
         - All CSV files MUST contain only data.  Any documentation or
           commentary on the data MUST be in separate files like the directory's
-          `README.md` file.
+          `README.md` file or additional LaTeX files.
         
         - The first row MUST be a left-aligned header line labeling the
           columns.
@@ -39,8 +43,6 @@ The data directory has a flat directory structure.
 ## Structure of identifiers
 
 - (REQUIRED) Flow class (1 letter)
-
-    - See `data/taxonomy.md` for more information.
 
 - (REQUIRED) Year of first publication (4 digits)
 
