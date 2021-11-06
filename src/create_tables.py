@@ -480,7 +480,6 @@ quantities[ sd.Q_WIDTH                                  ] = quantity( "width",  
 
 # Quantities, wall point
 quantities[ sd.Q_AVERAGE_SKIN_FRICTION_COEFFICIENT     ] = quantity( "average skin friction coefficient",                                                  )
-quantities[ sd.Q_CENTER_LINE_TO_WALL_TEMPERATURE_RATIO ] = quantity( "center-line-to-wall temperature ratio",                                              )
 quantities[ sd.Q_DARCY_FRICTION_FACTOR                 ] = quantity( "Darcy friction factor",                                                              )
 quantities[ sd.Q_FANNING_FRICTION_FACTOR               ] = quantity( "Fanning friction factor",                                                            )
 quantities[ sd.Q_FRICTION_MACH_NUMBER                  ] = quantity( "friction Mach number",                                                               )
@@ -498,8 +497,6 @@ quantities[ sd.Q_SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER   ] = quantity( "semi-local
 quantities[ sd.Q_SPANWISE_WALL_CURVATURE               ] = quantity( "spanwise wall curvature",                  length_exponent=-1.0,                     )
 quantities[ sd.Q_STREAMWISE_WALL_CURVATURE             ] = quantity( "streamwise wall curvature",                length_exponent=-1.0,                     )
 quantities[ sd.Q_VISCOUS_LENGTH_SCALE                  ] = quantity( "viscous length scale",                     length_exponent=+1.0                      )
-quantities[ sd.Q_WALL_TO_EDGE_TEMPERATURE_RATIO        ] = quantity( "wall-to-edge temperature ratio",                                                     )
-quantities[ sd.Q_WALL_TO_RECOVERY_TEMPERATURE_RATIO    ] = quantity( "wall-to-recovery temperature ratio",                                                 )
 
 # Quantities, point
 quantities[ sd.Q_DILATATION_RATE                  ] = quantity( "dilatation rate",                         time_exponent=-1.0,                                                                             )
@@ -582,6 +579,18 @@ quantities[ sd.Q_VELOCITY_CROSS_COVARIANCE_XY                       ] = quantity
 quantities[ sd.Q_VELOCITY_CROSS_COVARIANCE_XZ                       ] = quantity( "velocity cross covariance, streamwise-spanwise",          length_exponent=+2.0,   time_exponent=-2.0,                     )
 quantities[ sd.Q_VELOCITY_CROSS_COVARIANCE_YZ                       ] = quantity( "velocity cross covariance, transverse-spanwise",          length_exponent=+2.0,   time_exponent=-2.0,                     )
 quantities[ sd.Q_TEMPERATURE_AUTOCOVARIANCE                         ] = quantity( "temperature autocovariance",                         temperature_exponent=+2.0,                                           )
+
+# Quantities, point, ratios
+quantities[ sd.Q_LOCAL_TO_CENTER_LINE_DYNAMIC_VISCOSITY_RATIO ] = quantity( "local-to-center-line dynamic viscosity ratio", )
+quantities[ sd.Q_LOCAL_TO_EDGE_DYNAMIC_VISCOSITY_RATIO        ] = quantity( "local-to-edge dynamic viscosity ratio",        )
+quantities[ sd.Q_LOCAL_TO_WALL_DYNAMIC_VISCOSITY_RATIO        ] = quantity( "local-to-wall dynamic viscosity ratio",        )
+quantities[ sd.Q_LOCAL_TO_CENTER_LINE_MASS_DENSITY_RATIO      ] = quantity( "local-to-center-line density ratio",           )
+quantities[ sd.Q_LOCAL_TO_EDGE_MASS_DENSITY_RATIO             ] = quantity( "local-to-edge density ratio",                  )
+quantities[ sd.Q_LOCAL_TO_WALL_MASS_DENSITY_RATIO             ] = quantity( "local-to-wall density ratio",                  )
+quantities[ sd.Q_LOCAL_TO_CENTER_LINE_TEMPERATURE_RATIO       ] = quantity( "local-to-center-line temperature ratio",       )
+quantities[ sd.Q_LOCAL_TO_EDGE_TEMPERATURE_RATIO              ] = quantity( "local-to-edge temperature ratio",              )
+quantities[ sd.Q_LOCAL_TO_RECOVERY_TEMPERATURE_RATIO          ] = quantity( "local-to-recovery temperature ratio",          )
+quantities[ sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO              ] = quantity( "local-to-wall temperature ratio",              )
 
 # Quantities, point, component-based
 for prefix in [ sd.AMOUNT_FRACTION_PREFIX,

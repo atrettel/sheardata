@@ -189,7 +189,6 @@ Q_WIDTH                                  = "w"
 
 # Quantities, wall point
 Q_AVERAGE_SKIN_FRICTION_COEFFICIENT     = "C_tau"
-Q_CENTER_LINE_TO_WALL_TEMPERATURE_RATIO = "T_c/T_w"
 Q_DARCY_FRICTION_FACTOR                 = "f_D"
 Q_FANNING_FRICTION_FACTOR               = "f"
 Q_FRICTION_MACH_NUMBER                  = "Ma_tau"
@@ -207,8 +206,6 @@ Q_SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER   = "Re_tau*"
 Q_SPANWISE_WALL_CURVATURE               = "kappa_z"
 Q_STREAMWISE_WALL_CURVATURE             = "kappa_x"
 Q_VISCOUS_LENGTH_SCALE                  = "l_nu"
-Q_WALL_TO_EDGE_TEMPERATURE_RATIO        = "T_w/T_e"
-Q_WALL_TO_RECOVERY_TEMPERATURE_RATIO    = "T_w/T_r"
 
 # Quantities, point
 Q_DILATATION_RATE                  = "Thetadot"
@@ -291,6 +288,18 @@ Q_SPECIFIC_TURBULENT_KINETIC_ENERGY                  = "k"
 Q_VELOCITY_CROSS_COVARIANCE_XY                       = "u'v'"
 Q_VELOCITY_CROSS_COVARIANCE_XZ                       = "u'w'"
 Q_VELOCITY_CROSS_COVARIANCE_YZ                       = "v'w'"
+
+# Quantities, point, ratios
+Q_LOCAL_TO_CENTER_LINE_DYNAMIC_VISCOSITY_RATIO = "mu/mu_c"
+Q_LOCAL_TO_CENTER_LINE_MASS_DENSITY_RATIO      = "rho/rho_c"
+Q_LOCAL_TO_CENTER_LINE_TEMPERATURE_RATIO       = "T/T_c"
+Q_LOCAL_TO_EDGE_DYNAMIC_VISCOSITY_RATIO        = "mu/mu_e"
+Q_LOCAL_TO_EDGE_MASS_DENSITY_RATIO             = "rho/rho_e"
+Q_LOCAL_TO_EDGE_TEMPERATURE_RATIO              = "T/T_e"
+Q_LOCAL_TO_RECOVERY_TEMPERATURE_RATIO          = "T/T_r"
+Q_LOCAL_TO_WALL_DYNAMIC_VISCOSITY_RATIO        = "mu/mu_w"
+Q_LOCAL_TO_WALL_MASS_DENSITY_RATIO             = "rho/rho_w"
+Q_LOCAL_TO_WALL_TEMPERATURE_RATIO              = "T/T_w"
 
 AMOUNT_FRACTION_PREFIX      = "X_"
 MASS_FRACTION_PREFIX        = "Y_"
