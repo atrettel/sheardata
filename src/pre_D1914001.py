@@ -328,9 +328,10 @@ with open( ratio_filename, "r" ) as ratio_file:
         sd.set_labeled_value( cursor, station_identifier, sd.Q_OUTER_LAYER_COORDINATE, sd.WALL_POINT_LABEL,        sd.sdfloat( 0.0, 0.0 ),            averaging_system=sd.BOTH_AVERAGING_SYSTEMS, )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_OUTER_LAYER_COORDINATE, sd.CENTER_LINE_POINT_LABEL, 1.0,                               averaging_system=sd.BOTH_AVERAGING_SYSTEMS, )
 
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_HEAT_FLUX,                             sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION], )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_CENTER_LINE_TO_WALL_TEMPERATURE_RATIO, sd.WALL_POINT_LABEL, sd.sdfloat( 1.0, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION], )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_WALL_TO_RECOVERY_TEMPERATURE_RATIO,    sd.WALL_POINT_LABEL, sd.sdfloat( 1.0, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION], )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_HEAT_FLUX, sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION], )
+
+        for quantity in sd.INCOMPRESSIBLE_RATIO_PROFILES:
+            sd.set_constant_profile( cursor, station_identifier, quantity, sd.sdfloat( 1.0, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION], )
 
 # Set 2: wall shear stress data
 shear_stress_filename = "../data/{:s}/wall_shear_stress_measurements.csv".format( study_identifier )
@@ -507,9 +508,10 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
         sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_MACH_NUMBER,                  sd.WALL_POINT_LABEL, Ma_tau,                            averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION],                    outlier=outlier,                    )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_HEAT_FLUX,                             sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ),            averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION],                                                         )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_INNER_LAYER_HEAT_FLUX,                 sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ),            averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION],                                                         )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_CENTER_LINE_TO_WALL_TEMPERATURE_RATIO, sd.WALL_POINT_LABEL, sd.sdfloat( 1.0, 0.0 ),            averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION],                                                         )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_WALL_TO_RECOVERY_TEMPERATURE_RATIO,    sd.WALL_POINT_LABEL, sd.sdfloat( 1.0, 0.0 ),            averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION],                                                         )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_TEMPERATURE,                  sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ),            averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION],                                                         )
+
+        for quantity in sd.INCOMPRESSIBLE_RATIO_PROFILES:
+            sd.set_constant_profile( cursor, station_identifier, quantity, sd.sdfloat( 1.0, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION], )
 
 conn.commit()
 conn.close()
