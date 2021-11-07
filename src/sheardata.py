@@ -910,6 +910,34 @@ def set_station_value( cursor, station, quantity, value,                 \
             )
             )
 
+def set_constant_profile( cursor, station, quantity, value,                 \
+                          averaging_system=None, measurement_techniques=[], \
+                          mt_set=1, outlier=False, notes=[] ):
+    cursor.execute(
+    """
+    SELECT identifier
+    FROM points
+    WHERE station=?;
+    """,
+    (
+        station,
+    )
+    )
+
+    results = cursor.fetchall()
+    for result in results:
+        set_point_value(
+            cursor,
+            str(result[0]),
+            quantity,
+            value,
+            averaging_system=averaging_system,
+            measurement_techniques=measurement_techniques,
+            mt_set=mt_set,
+            outlier=outlier,
+            notes=notes,
+        )
+
 def get_station_value( cursor, station, quantity,             \
                        averaging_system=ANY_AVERAGING_SYSTEM, \
                        mt_set=1, ):
