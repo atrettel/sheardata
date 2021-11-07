@@ -230,6 +230,10 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.set_point_value( cursor, point_identifier, sd.Q_SPEED_OF_SOUND,                   speed_of_sound_uw,                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       measurement_techniques=[sd.MT_ZEROTH_ORDER_APPROXIMATION], notes=[dynamic_viscosity_note], )
                 sd.set_point_value( cursor, point_identifier, sd.Q_SPEED_OF_SOUND,                   speed_of_sound_dw,                averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, measurement_techniques=[sd.MT_ZEROTH_ORDER_APPROXIMATION], notes=[dynamic_viscosity_note], )
 
+                sd.set_point_value( cursor, point_identifier, sd.Q_LOCAL_TO_WALL_DYNAMIC_VISCOSITY_RATIO, dynamic_viscosity / wall_dynamic_viscosity, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+                sd.set_point_value( cursor, point_identifier, sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO,       temperature_dw    / wall_temperature,       averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO,       temperature_uw    / wall_temperature,       averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+
                 sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY_AUTOCOVARIANCE,                 R_uu_dw,                                   averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
                 sd.set_point_value( cursor, point_identifier, sd.Q_TRANSVERSE_VELOCITY_AUTOCOVARIANCE,                 R_vv_dw,                                   averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
                 sd.set_point_value( cursor, point_identifier, sd.Q_SPANWISE_VELOCITY_AUTOCOVARIANCE,                   R_ww_dw,                                   averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
@@ -279,8 +283,6 @@ with open( globals_filename, "r" ) as globals_file:
         center_line_temperature_dw = sd.get_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,         sd.WALL_POINT_LABEL,        averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
 
         bulk_to_center_line_velocity_ratio       = bulk_velocity / center_line_velocity
-        center_line_to_wall_temperature_ratio_uw = center_line_temperature_uw / wall_temperature
-        center_line_to_wall_temperature_ratio_dw = center_line_temperature_dw / wall_temperature
 
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER, bulk_reynolds_number, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, measurement_techniques=[sd.MT_CALCULATION], )
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,     bulk_mach_number,     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, measurement_techniques=[sd.MT_CALCULATION], )
@@ -306,8 +308,6 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_REYNOLDS_NUMBER,              sd.WALL_POINT_LABEL, friction_reynolds_number,                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER,   sd.WALL_POINT_LABEL, semi_local_friction_reynolds_number,      averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_MACH_NUMBER,                  sd.WALL_POINT_LABEL, friction_mach_number,                     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_CENTER_LINE_TO_WALL_TEMPERATURE_RATIO, sd.WALL_POINT_LABEL, center_line_to_wall_temperature_ratio_uw, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_CENTER_LINE_TO_WALL_TEMPERATURE_RATIO, sd.WALL_POINT_LABEL, center_line_to_wall_temperature_ratio_dw, averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_FANNING_FRICTION_FACTOR,               sd.WALL_POINT_LABEL, fanning_friction_factor,                  averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
 
 conn.commit()
