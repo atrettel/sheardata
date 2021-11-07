@@ -927,9 +927,7 @@ def set_station_value( cursor, station, quantity, value,                 \
             )
             )
 
-def set_constant_profile( cursor, station, quantity, value,                 \
-                          averaging_system=None, measurement_techniques=[], \
-                          mt_set=1, outlier=False, notes=[] ):
+def get_points_at_station( cursor, station ):
     cursor.execute(
     """
     SELECT identifier
@@ -942,10 +940,19 @@ def set_constant_profile( cursor, station, quantity, value,                 \
     )
 
     results = cursor.fetchall()
+    points = []
     for result in results:
+        points.append( str(result[0]) )
+
+    return points
+
+def set_constant_profile( cursor, station, quantity, value,                 \
+                          averaging_system=None, measurement_techniques=[], \
+                          mt_set=1, outlier=False, notes=[] ):
+    for point in get_points_at_station( cursor, station ):
         set_point_value(
             cursor,
-            str(result[0]),
+            point,
             quantity,
             value,
             averaging_system=averaging_system,
