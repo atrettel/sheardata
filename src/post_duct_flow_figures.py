@@ -116,6 +116,10 @@ for duct_type in duct_types:
             y_label
         )
 
+        point_label = sd.WALL_POINT_LABEL
+        if ( quantity == sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO ):
+            point_label = sd.CENTER_LINE_POINT_LABEL
+
         for study_type in [ sd.DIRECT_NUMERICAL_SIMULATION_STUDY_TYPE,
                                            sd.EXPERIMENTAL_STUDY_TYPE, ]:
             cursor.execute(
@@ -202,7 +206,7 @@ for duct_type in duct_types:
                 min_wall_to_center_line_temperature_ratio,
                 max_wall_to_center_line_temperature_ratio,
                 sd.Q_BULK_REYNOLDS_NUMBER,
-                sd.WALL_POINT_LABEL,
+                point_label,
                 quantity,
             )
             )
@@ -226,7 +230,7 @@ for duct_type in duct_types:
                     cursor,
                     station,
                     quantity,
-                    sd.WALL_POINT_LABEL,
+                    point_label,
                     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
                 ) )
 
