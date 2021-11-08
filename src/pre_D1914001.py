@@ -163,10 +163,10 @@ with open( ratio_filename, "r" ) as ratio_file:
         # be a turbulent value at a laminar Reynolds number.
         outlier = True if series_number == 49 else False
 
-        bulk_velocity    = sd.sdfloat(ratio_row[0]) * 1.0e-2
-        maximum_velocity = sd.sdfloat(ratio_row[1]) * 1.0e-2
-        working_fluid    =        str(ratio_row[2])
-        pipe             =        str(ratio_row[3])
+        bulk_velocity        = sd.sdfloat(ratio_row[0]) * 1.0e-2
+        center_line_velocity = sd.sdfloat(ratio_row[1]) * 1.0e-2
+        working_fluid        =        str(ratio_row[2])
+        pipe                 =        str(ratio_row[3])
 
         diameter                       = pipes[pipe].diameter
         distance_between_pressure_taps = pipes[pipe].distance_between_pressure_taps
@@ -250,7 +250,6 @@ with open( ratio_filename, "r" ) as ratio_file:
         sd.set_station_value( cursor, station_identifier, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,     outer_layer_development_length,   measurement_techniques=[sd.MT_ASSUMPTION], notes=[development_length_note], )
         sd.set_station_value( cursor, station_identifier, sd.Q_ASPECT_RATIO,                       1.0,                                                                                                    )
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                      bulk_velocity,                    averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             outlier=outlier, )
-        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO, bulk_velocity / maximum_velocity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], outlier=outlier, )
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER,               Re_bulk,                          averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], outlier=outlier, )
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,                   Ma_bulk,                          averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], outlier=outlier, )
         sd.set_station_value( cursor, station_identifier, sd.Q_VOLUMETRIC_FLOW_RATE,               volumetric_flow_rate,             averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                             outlier=outlier, )
@@ -320,7 +319,7 @@ with open( ratio_filename, "r" ) as ratio_file:
             )
 
         sd.set_labeled_value( cursor, station_identifier, sd.Q_STREAMWISE_VELOCITY,    sd.WALL_POINT_LABEL,        sd.sdfloat( 0.0, 0.0 ),            averaging_system=sd.BOTH_AVERAGING_SYSTEMS, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_STREAMWISE_VELOCITY,    sd.CENTER_LINE_POINT_LABEL, maximum_velocity,                  averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[mt_velocity], outlier=outlier,)
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_STREAMWISE_VELOCITY,    sd.CENTER_LINE_POINT_LABEL, center_line_velocity,              averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[mt_velocity], outlier=outlier,)
         sd.set_labeled_value( cursor, station_identifier, sd.Q_TRANSVERSE_COORDINATE,  sd.WALL_POINT_LABEL,        sd.sdfloat( 0.5*diameter.n, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_TRANSVERSE_COORDINATE,  sd.CENTER_LINE_POINT_LABEL, 0.0,                               averaging_system=sd.BOTH_AVERAGING_SYSTEMS, )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_DISTANCE_FROM_WALL,     sd.WALL_POINT_LABEL,        sd.sdfloat( 0.0, 0.0 ),            averaging_system=sd.BOTH_AVERAGING_SYSTEMS, )
@@ -332,6 +331,11 @@ with open( ratio_filename, "r" ) as ratio_file:
 
         for quantity in sd.INCOMPRESSIBLE_RATIO_PROFILES:
             sd.set_constant_profile( cursor, station_identifier, quantity, sd.sdfloat( 1.0, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION], )
+
+        for point_identifier in sd.get_points_at_station( cursor, station_identifier ):
+            streamwise_velocity = sd.get_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY )
+            sd.set_point_value( cursor, point_identifier,        sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO, streamwise_velocity /        bulk_velocity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, )
+            sd.set_point_value( cursor, point_identifier, sd.Q_LOCAL_TO_CENTER_LINE_STREAMWISE_VELOCITY_RATIO, streamwise_velocity / center_line_velocity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, )
 
 # Set 2: wall shear stress data
 shear_stress_filename = "../data/{:s}/wall_shear_stress_measurements.csv".format( study_identifier )
