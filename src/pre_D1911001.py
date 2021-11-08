@@ -277,6 +277,7 @@ with open( globals_filename, "r" ) as globals_file:
         bulk_velocity        = 4.0 * volumetric_flow_rate / ( math.pi * diameter**2.0 )
         Re_bulk              = bulk_velocity * diameter / kinematic_viscosity
         Ma_bulk              = bulk_velocity / speed_of_sound
+        center_line_velocity = sd.get_labeled_value( cursor, station_identifier, sd.Q_STREAMWISE_VELOCITY, sd.CENTER_LINE_POINT_LABEL, )
 
         maximum_velocity = sd.get_labeled_value(
             cursor,
@@ -291,12 +292,16 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                      bulk_velocity,                    averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], )
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER,               Re_bulk,                          averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], )
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,                   Ma_bulk,                          averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], )
-        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO, bulk_velocity / maximum_velocity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], )
 
         sd.set_labeled_value( cursor, station_identifier, sd.Q_HEAT_FLUX, sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION], )
 
         for quantity in sd.INCOMPRESSIBLE_RATIO_PROFILES:
             sd.set_constant_profile( cursor, station_identifier, quantity, sd.sdfloat( 1.0, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION], )
+
+        for point_identifier in sd.get_points_at_station( cursor, station_identifier ):
+            streamwise_velocity = sd.get_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY )
+            sd.set_point_value( cursor, point_identifier,        sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO, streamwise_velocity /        bulk_velocity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, )
+            sd.set_point_value( cursor, point_identifier, sd.Q_LOCAL_TO_CENTER_LINE_STREAMWISE_VELOCITY_RATIO, streamwise_velocity / center_line_velocity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, )
 
         # Wall shear stress measurements
         #
