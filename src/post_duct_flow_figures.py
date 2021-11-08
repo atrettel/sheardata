@@ -222,21 +222,13 @@ for duct_type in duct_types:
                     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
                 ) )
 
-                if ( quantity == sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO ):
-                    quantity_values_array.append( sd.get_station_value(
-                        cursor,
-                        station,
-                        quantity,
-                        averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-                    ) )
-                elif ( quantity == sd.Q_FANNING_FRICTION_FACTOR ):
-                    quantity_values_array.append( sd.get_labeled_value(
-                        cursor,
-                        station,
-                        quantity,
-                        sd.WALL_POINT_LABEL,
-                        averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
-                    ) )
+                quantity_values_array.append( sd.get_labeled_value(
+                    cursor,
+                    station,
+                    quantity,
+                    sd.WALL_POINT_LABEL,
+                    averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                ) )
 
             bulk_reynolds_number = np.array( bulk_reynolds_number_array )
             quantity_values      = np.array(      quantity_values_array )
