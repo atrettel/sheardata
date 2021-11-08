@@ -84,6 +84,7 @@ with open( globals_filename, "r" ) as globals_file:
         # previous post-processing.
         number_of_points = ny // 2 + 2
 
+        # TODO: calculate the bulk velocity from the data.
         bulk_velocity      = sd.sdfloat(   1.0, 0.0 )
         height             = sd.sdfloat(   2.0, 0.0 )
         aspect_ratio       = sd.sdfloat( "inf", 0.0 )
@@ -286,7 +287,6 @@ with open( globals_filename, "r" ) as globals_file:
 
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER, bulk_reynolds_number, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, measurement_techniques=[sd.MT_CALCULATION], )
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,     bulk_mach_number,     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, measurement_techniques=[sd.MT_CALCULATION], )
-        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO, bulk_to_center_line_velocity_ratio, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
 
         for quantity in [ sd.Q_ROUGHNESS_HEIGHT,
                           sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
@@ -313,6 +313,11 @@ with open( globals_filename, "r" ) as globals_file:
         # TODO: create profiles for these quantities.
         sd.set_labeled_value( cursor, station_identifier, sd.Q_LOCAL_TO_CENTER_LINE_TEMPERATURE_RATIO, sd.WALL_POINT_LABEL, wall_temperature / center_line_temperature_uw, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_LOCAL_TO_CENTER_LINE_TEMPERATURE_RATIO, sd.WALL_POINT_LABEL, wall_temperature / center_line_temperature_dw, averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+
+        for point_identifier in sd.get_points_at_station( cursor, station_identifier ):
+            streamwise_velocity = sd.get_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY )
+            sd.set_point_value( cursor, point_identifier,        sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO, streamwise_velocity /        bulk_velocity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, )
+            sd.set_point_value( cursor, point_identifier, sd.Q_LOCAL_TO_CENTER_LINE_STREAMWISE_VELOCITY_RATIO, streamwise_velocity / center_line_velocity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, )
 
 conn.commit()
 conn.close()
