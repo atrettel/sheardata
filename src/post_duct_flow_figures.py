@@ -59,8 +59,8 @@ min_wall_to_center_line_temperature_ratio = 0.9
 max_wall_to_center_line_temperature_ratio = 1.1
 
 for duct_type in duct_types:
-    for quantity in [ sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO,
-                                 sd.Q_FANNING_FRICTION_FACTOR, ]:
+    for quantity in [ sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO,
+                                      sd.Q_FANNING_FRICTION_FACTOR, ]:
         fig = plt.figure()
         ax  = fig.add_subplot( 1, 1, 1 )
 
@@ -75,16 +75,16 @@ for duct_type in duct_types:
         y_label        = None
         filename_label = None
         quantity_label = None
-        if ( quantity == sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO ):
+        if ( quantity == sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO ):
             bulk_reynolds_number_bounds = ( 1.00e+3, 1.00e+5, )
 
-            quantity_values_bounds = ( 1.0/2.0, 0.85, )
+            quantity_values_bounds = ( 1.0, 2.0 )
             if ( duct_type == "channel" ):
-                quantity_values_bounds = ( 2.0/3.0, 1.0, )
+                quantity_values_bounds = ( 1.0, 2.0 )
 
-            y_label        = r"$\frac{U_b}{U_c}$"
+            y_label        = r"$\frac{U_c}{U_b}$"
             filename_label = "velocity-ratios"
-            quantity_label = "Bulk-to-center-line velocity ratio"
+            quantity_label = "Center-line-to-bulk streamwise velocity ratio"
         elif ( quantity == sd.Q_FANNING_FRICTION_FACTOR ):
             bulk_reynolds_number_bounds = ( 1.00e+1, 1.00e+6, )
             quantity_values_bounds      = ( 1.00e-3, 1.00e-1, )
@@ -118,179 +118,94 @@ for duct_type in duct_types:
 
         for study_type in [ sd.DIRECT_NUMERICAL_SIMULATION_STUDY_TYPE,
                                            sd.EXPERIMENTAL_STUDY_TYPE, ]:
-            if ( quantity == sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO ):
-                cursor.execute(
-                """
+            cursor.execute(
+            """
+            SELECT identifier
+            FROM stations
+            WHERE study IN (
                 SELECT identifier
-                FROM stations
-                WHERE study IN (
-                    SELECT identifier
-                    FROM studies
-                    WHERE flow_class=? AND study_type=?
-                )
-                INTERSECT
+                FROM studies
+                WHERE flow_class=? AND study_type=?
+            )
+            INTERSECT
+            SELECT identifier
+            FROM stations
+            WHERE series IN (
                 SELECT identifier
-                FROM stations
-                WHERE series IN (
-                    SELECT identifier
-                    FROM series
-                    WHERE number_of_dimensions=? AND coordinate_system=? AND geometry=?
-                )
-                INTERSECT
-                SELECT identifier
-                FROM stations
-                WHERE previous_streamwise_station=next_streamwise_station
-                INTERSECT
-                SELECT station
-                FROM points
-                WHERE identifier IN (
-                    SELECT point
-                    FROM point_values
-                    WHERE quantity=? AND point_value<? AND outlier=0
-                )
-                INTERSECT
-                SELECT station
-                FROM station_values
-                WHERE quantity=? AND station_value>=? AND station_value<=? AND outlier=0
-                INTERSECT
-                SELECT station
-                FROM station_values
-                WHERE quantity=? AND station_value>=? AND station_value<? AND outlier=0
-                INTERSECT
-                SELECT station
-                FROM station_values
-                WHERE quantity=? AND station_value>=? AND outlier=0
-                INTERSECT
-                SELECT station
-                FROM points
-                WHERE point_label=? AND identifier IN (
-                    SELECT point
-                    FROM point_values
-                    WHERE quantity=? AND point_value>=? AND point_value<=? AND outlier=0
-                )
-                INTERSECT
-                SELECT station
-                FROM station_values
+                FROM series
+                WHERE number_of_dimensions=? AND coordinate_system=? AND geometry=?
+            )
+            INTERSECT
+            SELECT identifier
+            FROM stations
+            WHERE previous_streamwise_station=next_streamwise_station
+            INTERSECT
+            SELECT station
+            FROM points
+            WHERE identifier IN (
+                SELECT point
+                FROM point_values
+                WHERE quantity=? AND point_value<? AND outlier=0
+            )
+            INTERSECT
+            SELECT station
+            FROM station_values
+            WHERE quantity=? AND station_value>=? AND station_value<=? AND outlier=0
+            INTERSECT
+            SELECT station
+            FROM station_values
+            WHERE quantity=? AND station_value>=? AND station_value<? AND outlier=0
+            INTERSECT
+            SELECT station
+            FROM station_values
+            WHERE quantity=? AND station_value>=? AND outlier=0
+            INTERSECT
+            SELECT station
+            FROM points
+            WHERE point_label=? AND identifier IN (
+                SELECT point
+                FROM point_values
+                WHERE quantity=? AND point_value>=? AND point_value<=? AND outlier=0
+            )
+            INTERSECT
+            SELECT station
+            FROM station_values
+            WHERE quantity=? AND outlier=0
+            INTERSECT
+            SELECT station
+            FROM points
+            WHERE point_label=? AND identifier IN (
+                SELECT point
+                FROM point_values
                 WHERE quantity=? AND outlier=0
-                INTERSECT
-                SELECT station
-                FROM station_values
-                WHERE quantity=? AND outlier=0
-                ORDER BY identifier;
-                """,
-                (
-                    sd.DUCT_FLOW_CLASS,
-                    study_type,
-                    int(2),
-                    duct_types[duct_type].coordinate_system,
-                    duct_types[duct_type].geometry,
-                    sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
-                    max_inner_layer_roughness_height,
-                    sd.Q_ASPECT_RATIO,
-                    duct_types[duct_type].min_aspect_ratio,
-                    duct_types[duct_type].max_aspect_ratio,
-                    sd.Q_BULK_MACH_NUMBER,
-                    min_bulk_mach_number,
-                    max_bulk_mach_number,
-                    sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,
-                    min_outer_layer_development_length,
-                    sd.WALL_POINT_LABEL,
-                    sd.Q_LOCAL_TO_CENTER_LINE_TEMPERATURE_RATIO,
-                    min_wall_to_center_line_temperature_ratio,
-                    max_wall_to_center_line_temperature_ratio,
-                    sd.Q_BULK_REYNOLDS_NUMBER,
-                    quantity,
-                )
-                )
-            elif ( quantity == sd.Q_FANNING_FRICTION_FACTOR ):
-                cursor.execute(
-                """
-                SELECT identifier
-                FROM stations
-                WHERE study IN (
-                    SELECT identifier
-                    FROM studies
-                    WHERE flow_class=? AND study_type=?
-                )
-                INTERSECT
-                SELECT identifier
-                FROM stations
-                WHERE series IN (
-                    SELECT identifier
-                    FROM series
-                    WHERE number_of_dimensions=? AND coordinate_system=? AND geometry=?
-                )
-                INTERSECT
-                SELECT identifier
-                FROM stations
-                WHERE previous_streamwise_station=next_streamwise_station
-                INTERSECT
-                SELECT station
-                FROM points
-                WHERE identifier IN (
-                    SELECT point
-                    FROM point_values
-                    WHERE quantity=? AND point_value<? AND outlier=0
-                )
-                INTERSECT
-                SELECT station
-                FROM station_values
-                WHERE quantity=? AND station_value>=? AND station_value<=? AND outlier=0
-                INTERSECT
-                SELECT station
-                FROM station_values
-                WHERE quantity=? AND station_value>=? AND station_value<? AND outlier=0
-                INTERSECT
-                SELECT station
-                FROM station_values
-                WHERE quantity=? AND station_value>=? AND outlier=0
-                INTERSECT
-                SELECT station
-                FROM points
-                WHERE point_label=? AND identifier IN (
-                    SELECT point
-                    FROM point_values
-                    WHERE quantity=? AND point_value>=? AND point_value<=? AND outlier=0
-                )
-                INTERSECT
-                SELECT station
-                FROM station_values
-                WHERE quantity=? AND outlier=0
-                INTERSECT
-                SELECT station
-                FROM points
-                WHERE point_label=? AND identifier IN (
-                    SELECT point
-                    FROM point_values
-                    WHERE quantity=? AND outlier=0
-                )
-                ORDER BY identifier;
-                """,
-                (
-                    sd.DUCT_FLOW_CLASS,
-                    study_type,
-                    int(2),
-                    duct_types[duct_type].coordinate_system,
-                    duct_types[duct_type].geometry,
-                    sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
-                    max_inner_layer_roughness_height,
-                    sd.Q_ASPECT_RATIO,
-                    duct_types[duct_type].min_aspect_ratio,
-                    duct_types[duct_type].max_aspect_ratio,
-                    sd.Q_BULK_MACH_NUMBER,
-                    min_bulk_mach_number,
-                    max_bulk_mach_number,
-                    sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,
-                    min_outer_layer_development_length,
-                    sd.WALL_POINT_LABEL,
-                    sd.Q_LOCAL_TO_CENTER_LINE_TEMPERATURE_RATIO,
-                    min_wall_to_center_line_temperature_ratio,
-                    max_wall_to_center_line_temperature_ratio,
-                    sd.Q_BULK_REYNOLDS_NUMBER,
-                    sd.WALL_POINT_LABEL,
-                    quantity,
-                )
-                )
+            )
+            ORDER BY identifier;
+            """,
+            (
+                sd.DUCT_FLOW_CLASS,
+                study_type,
+                int(2),
+                duct_types[duct_type].coordinate_system,
+                duct_types[duct_type].geometry,
+                sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
+                max_inner_layer_roughness_height,
+                sd.Q_ASPECT_RATIO,
+                duct_types[duct_type].min_aspect_ratio,
+                duct_types[duct_type].max_aspect_ratio,
+                sd.Q_BULK_MACH_NUMBER,
+                min_bulk_mach_number,
+                max_bulk_mach_number,
+                sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,
+                min_outer_layer_development_length,
+                sd.WALL_POINT_LABEL,
+                sd.Q_LOCAL_TO_CENTER_LINE_TEMPERATURE_RATIO,
+                min_wall_to_center_line_temperature_ratio,
+                max_wall_to_center_line_temperature_ratio,
+                sd.Q_BULK_REYNOLDS_NUMBER,
+                sd.WALL_POINT_LABEL,
+                quantity,
+            )
+            )
 
             stations = []
             for result in cursor.fetchall():
@@ -307,7 +222,7 @@ for duct_type in duct_types:
                     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
                 ) )
 
-                if ( quantity == sd.Q_BULK_TO_CENTER_LINE_VELOCITY_RATIO ):
+                if ( quantity == sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO ):
                     quantity_values_array.append( sd.get_station_value(
                         cursor,
                         station,
