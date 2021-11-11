@@ -31,6 +31,11 @@ sd.add_source( cursor, study_identifier, "DeanRB+1974+eng+RPRT",   sd.SECONDARY_
 sd.add_source( cursor, study_identifier, "JonesOC+1976+eng+JOUR",  sd.SECONDARY_SOURCE )
 sd.add_source( cursor, study_identifier, "DeanRB+1978+eng+JOUR",   sd.SECONDARY_SOURCE )
 
+series_11_note = sd.add_note(
+    cursor,
+    "../data/{:s}/note_series_11.tex".format( study_identifier ),
+)
+
 # p. 93
 #
 # \begin{quote}
@@ -171,6 +176,7 @@ with open( globals_filename, "r" ) as globals_file:
             number_of_dimensions=2,
             coordinate_system=sd.RECTANGULAR_COORDINATE_SYSTEM,
             identifiers={ sd.C_SELF : originators_identifier },
+            notes=[series_11_note],
         )
 
         sd.add_working_fluid_component(
