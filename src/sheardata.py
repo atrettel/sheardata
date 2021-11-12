@@ -1287,30 +1287,36 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,          \
 
     return np.array(profile1), np.array(profile2)
 
-def locate_labeled_point( cursor, station, label ):
+def locate_labeled_points( cursor, station, label ):
     cursor.execute(
     """
     SELECT identifier
     FROM points
     WHERE identifier
     LIKE ? AND point_label=?
-    ORDER BY identifier
-    LIMIT 1;
+    ORDER BY identifier;
     """,
     (
         sanitize_identifier(station)+'%',
         str(label),
     )
     )
-    result = cursor.fetchone()
-    return result[0]
+
+    results = cursor.fetchall()
+    points = []
+    for result in results:
+        points.append( str(result[0]) )
+
+    return points
 
 def set_labeled_value( cursor, station, quantity, label, value,          \
                        averaging_system=None, measurement_techniques=[], \
                        mt_set=1, outlier=False, notes=[] ):
+    points = locate_labeled_points( cursor, station, label )
+
     set_point_value(
         cursor,
-        locate_labeled_point( cursor, station, label ),
+        points[0],
         quantity,
         value,
         averaging_system=averaging_system,
@@ -1322,9 +1328,11 @@ def set_labeled_value( cursor, station, quantity, label, value,          \
 
 def get_labeled_value( cursor, station, quantity, label, \
                      averaging_system=ANY_AVERAGING_SYSTEM, mt_set=1, ):
+    points = locate_labeled_points( cursor, station, label )
+
     return get_point_value(
         cursor,
-        locate_labeled_point( cursor, station, label ),
+        points[0],
         quantity,
         averaging_system=averaging_system,
         mt_set=1,
