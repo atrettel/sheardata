@@ -135,8 +135,14 @@ PL_LOWER_WALL = "LW"
 PL_UPPER_EDGE = "UE"
 PL_UPPER_WALL = "UW"
 
+PL_EDGES = [ PL_LOWER_EDGE, PL_UPPER_EDGE ]
+PL_WALLS = [ PL_LOWER_WALL, PL_UPPER_WALL ]
+
 PL_LOWER = [ PL_LOWER_EDGE, PL_LOWER_WALL ]
 PL_UPPER = [ PL_UPPER_EDGE, PL_UPPER_WALL ]
+
+PL_LOWER_UPPER = [ PL_LOWER_EDGE, PL_LOWER_WALL,
+                   PL_UPPER_EDGE, PL_UPPER_WALL, ]
 
 # Quantities, series
 Q_ANGLE_OF_ATTACK                = "AOA"
@@ -1300,7 +1306,18 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,          \
 
     return np.array(profile1), np.array(profile2)
 
+def sanitize_point_label( label ):
+    sanitized_label = str(label)
+    if ( label in PL_EDGES ):
+        sanitized_label = PL_EDGE
+    elif ( label in PL_WALLS ):
+        sanitized_label = PL_WALL
+    return sanitized_label
+
 def locate_labeled_points( cursor, station, label ):
+    if ( label in PL_LOWER_UPPER ):
+        return [ locate_labeled_point( cursor, station_label ) ]
+
     cursor.execute(
     """
     SELECT identifier
@@ -1311,7 +1328,7 @@ def locate_labeled_points( cursor, station, label ):
     """,
     (
         sanitize_identifier(station)+'%',
-        str(label),
+        str(sanitize_point_label(label)),
     )
     )
 
