@@ -170,6 +170,18 @@ Q_TEST_LENGTH                    = "L_t"
 Q_TRANSVERSE_NUMBER_OF_POINTS    = "N_y"
 Q_VOLUMETRIC_FLOW_RATE           = "Vdot"
 
+Q_BODY_DIMENSIONS = {
+    1: Q_BODY_LENGTH,
+    2: Q_BODY_HEIGHT,
+    3: Q_BODY_WIDTH,
+}
+
+Q_NUMBER_OF_POINTS = {
+    1: Q_STREAMWISE_NUMBER_OF_POINTS,
+    2: Q_TRANSVERSE_NUMBER_OF_POINTS,
+    3:   Q_SPANWISE_NUMBER_OF_POINTS,
+}
+
 # Quantities, station
 Q_ASPECT_RATIO                           = "AR"
 Q_BULK_DYNAMIC_VISCOSITY                 = "mu_b"
@@ -245,7 +257,6 @@ Q_OUTER_LAYER_VELOCITY_DEFECT      = "deltaU+/delta"
 Q_PRANDTL_NUMBER                   = "Pr"
 Q_PRESSURE                         = "p"
 Q_SEMI_LOCAL_COORDINATE            = "y*"
-Q_SHEAR_STRESS                     = "tau"
 Q_SPANWISE_COORDINATE              = "Z"
 Q_SPANWISE_VELOCITY                = "W"
 Q_SPECIFIC_ENTHALPY                = "h"
@@ -268,44 +279,91 @@ Q_TOTAL_TEMPERATURE                = "T_0"
 Q_TRANSVERSE_COORDINATE            = "Y"
 Q_TRANSVERSE_VELOCITY              = "V"
 Q_VELOCITY_DEFECT                  = "deltaU"
-Q_VELOCITY_GRADIENT_XX             = "eps_xx"
-Q_VELOCITY_GRADIENT_XY             = "eps_xy"
-Q_VELOCITY_GRADIENT_XZ             = "eps_xz"
-Q_VELOCITY_GRADIENT_YX             = "eps_yx"
-Q_VELOCITY_GRADIENT_YY             = "eps_yy"
-Q_VELOCITY_GRADIENT_YZ             = "eps_yz"
-Q_VELOCITY_GRADIENT_ZX             = "eps_zx"
-Q_VELOCITY_GRADIENT_ZY             = "eps_zy"
-Q_VELOCITY_GRADIENT_ZZ             = "eps_zz"
+
+Q_COORDINATE = {
+    1: Q_STREAMWISE_COORDINATE,
+    2: Q_TRANSVERSE_COORDINATE,
+    3: Q_SPANWISE_COORDINATE,
+}
+
+Q_VELOCITY = {
+    1: Q_STREAMWISE_VELOCITY,
+    2: Q_TRANSVERSE_VELOCITY,
+    3: Q_SPANWISE_VELOCITY,
+}
+
+Q_VELOCITY_GRADIENT = {
+    (1,1): "eps_xx",
+    (1,2): "eps_xy",
+    (1,3): "eps_xz",
+    (2,1): "eps_yx",
+    (2,2): "eps_yy",
+    (2,3): "eps_yz",
+    (3,1): "eps_zx",
+    (3,2): "eps_zy",
+    (3,3): "eps_zz",
+}
+
+Q_STRESS = {
+    (1,1): "sigma_xx",
+    (1,2): "tau_xy",
+    (1,3): "tau_xz",
+    (2,1): "tau_xy",
+    (2,2): "sigma_yy",
+    (2,3): "tau_yz",
+    (3,1): "tau_xz",
+    (3,2): "tau_yz",
+    (3,3): "sigma_zz",
+}
+
+Q_SHEAR_STRESS = Q_STRESS[1,2]
 
 # Quantities, point, turbulence
-Q_INNER_LAYER_SPANWISE_VELOCITY_AUTOCOVARIANCE       = "(w'w')+"
-Q_INNER_LAYER_STREAMWISE_VELOCITY_AUTOCOVARIANCE     = "(u'u')+"
-Q_INNER_LAYER_TRANSVERSE_VELOCITY_AUTOCOVARIANCE     = "(v'v')+"
-Q_INNER_LAYER_TURBULENT_KINETIC_ENERGY               = "k+"
-Q_INNER_LAYER_VELOCITY_CROSS_COVARIANCE_XY           = "(u'v')+"
-Q_INNER_LAYER_VELOCITY_CROSS_COVARIANCE_XZ           = "(u'w')+"
-Q_INNER_LAYER_VELOCITY_CROSS_COVARIANCE_YZ           = "(v'w')+"
+Q_INNER_LAYER_SPECIFIC_TURBULENT_KINETIC_ENERGY      = "k+"
 Q_MASS_DENSITY_AUTOCOVARIANCE                        = "rho'rho'"
-Q_MORKOVIN_SCALED_SPANWISE_VELOCITY_AUTOCOVARIANCE   = "(w'w')*"
-Q_MORKOVIN_SCALED_STREAMWISE_VELOCITY_AUTOCOVARIANCE = "(u'u')*"
-Q_MORKOVIN_SCALED_TRANSVERSE_VELOCITY_AUTOCOVARIANCE = "(v'v')*"
-Q_MORKOVIN_SCALED_TURBULENT_KINETIC_ENERGY           = "k*"
-Q_MORKOVIN_SCALED_VELOCITY_CROSS_COVARIANCE_XY       = "(u'v')*"
-Q_MORKOVIN_SCALED_VELOCITY_CROSS_COVARIANCE_XZ       = "(u'w')*"
-Q_MORKOVIN_SCALED_VELOCITY_CROSS_COVARIANCE_YZ       = "(v'w')*"
+Q_MORKOVIN_SCALED_SPECIFIC_TURBULENT_KINETIC_ENERGY  = "k*"
 Q_NORMALIZED_MASS_DENSITY_AUTOCOVARIANCE             = "rho'rho'/rho^2"
 Q_NORMALIZED_PRESSURE_AUTOCOVARIANCE                 = "p'p'/p^2"
 Q_NORMALIZED_TEMPERATURE_AUTOCOVARIANCE              = "T'T'/T^2"
 Q_PRESSURE_AUTOCOVARIANCE                            = "p'p'"
-Q_SPANWISE_VELOCITY_AUTOCOVARIANCE                   = "w'w'"
-Q_STREAMWISE_VELOCITY_AUTOCOVARIANCE                 = "u'u'"
-Q_TEMPERATURE_AUTOCOVARIANCE                         = "T'T'"
-Q_TRANSVERSE_VELOCITY_AUTOCOVARIANCE                 = "v'v'"
 Q_SPECIFIC_TURBULENT_KINETIC_ENERGY                  = "k"
-Q_VELOCITY_CROSS_COVARIANCE_XY                       = "u'v'"
-Q_VELOCITY_CROSS_COVARIANCE_XZ                       = "u'w'"
-Q_VELOCITY_CROSS_COVARIANCE_YZ                       = "v'w'"
+Q_TEMPERATURE_AUTOCOVARIANCE                         = "T'T'"
+
+Q_VELOCITY_COVARIANCE = {
+    (1,1): "(u'u')",
+    (1,2): "(u'v')",
+    (1,3): "(u'w')",
+    (2,1): "(u'v')",
+    (2,2): "(v'v')",
+    (2,3): "(v'w')",
+    (3,1): "(u'w')",
+    (3,2): "(v'w')",
+    (3,3): "(w'w')",
+}
+
+Q_INNER_LAYER_VELOCITY_COVARIANCE = {
+    (1,1): "(u'u')+",
+    (1,2): "(u'v')+",
+    (1,3): "(u'w')+",
+    (2,1): "(u'v')+",
+    (2,2): "(v'v')+",
+    (2,3): "(v'w')+",
+    (3,1): "(u'w')+",
+    (3,2): "(v'w')+",
+    (3,3): "(w'w')+",
+}
+
+Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE = {
+    (1,1): "(u'u')*",
+    (1,2): "(u'v')*",
+    (1,3): "(u'w')*",
+    (2,1): "(u'v')*",
+    (2,2): "(v'v')*",
+    (2,3): "(v'w')*",
+    (3,1): "(u'w')*",
+    (3,2): "(v'w')*",
+    (3,3): "(w'w')*",
+}
 
 # Quantities, point, ratios
 Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO        = "u/u_b"
