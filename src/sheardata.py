@@ -125,6 +125,19 @@ PL_CENTER_LINE = "CL"
 PL_EDGE        = "E"
 PL_WALL        = "W"
 
+# These point labels are only used to get data.  They are not used inside the
+# database itself.  They distinguish between different situations where there
+# might be multiple walls or edges, with lower having lower point number and
+# upper having the higher point number.  See the method locate_labeled_point()
+# for the implementation.
+PL_LOWER_EDGE = "LE"
+PL_LOWER_WALL = "LW"
+PL_UPPER_EDGE = "UE"
+PL_UPPER_WALL = "UW"
+
+PL_LOWER = [ PL_LOWER_EDGE, PL_LOWER_WALL ]
+PL_UPPER = [ PL_UPPER_EDGE, PL_UPPER_WALL ]
+
 # Quantities, series
 Q_ANGLE_OF_ATTACK                = "AOA"
 Q_BODY_HEIGHT                    = "h_b"
@@ -1309,14 +1322,40 @@ def locate_labeled_points( cursor, station, label ):
 
     return points
 
+def locate_labeled_point( cursor, station, label ):
+    points = locate_labeled_points( cursor, station, label )
+
+    point_numbers = {}
+    for point in points:
+        cursor.execute(
+        """
+        SELECT point_number
+        FROM points
+        WHERE identifier=?;
+        """,
+        (
+            point,
+        )
+        )
+        point_numbers[point] = int(cursor.fetchone()[0])
+
+    lower_point = min( point_numbers, key=point_numbers.get )
+    upper_point = max( point_numbers, key=point_numbers.get )
+
+    point = lower_point
+    if ( label in PL_LOWER ):
+        point = lower_point
+    elif ( label in PL_UPPER ):
+        point = upper_point
+
+    return point
+
 def set_labeled_value( cursor, station, quantity, label, value,          \
                        averaging_system=None, measurement_techniques=[], \
                        mt_set=1, outlier=False, notes=[] ):
-    points = locate_labeled_points( cursor, station, label )
-
     set_point_value(
         cursor,
-        points[0],
+        locate_labeled_point( cursor, station, label ),
         quantity,
         value,
         averaging_system=averaging_system,
@@ -1328,11 +1367,9 @@ def set_labeled_value( cursor, station, quantity, label, value,          \
 
 def get_labeled_value( cursor, station, quantity, label, \
                      averaging_system=ANY_AVERAGING_SYSTEM, mt_set=1, ):
-    points = locate_labeled_points( cursor, station, label )
-
     return get_point_value(
         cursor,
-        points[0],
+        locate_labeled_point( cursor, station, label ),
         quantity,
         averaging_system=averaging_system,
         mt_set=1,
