@@ -1328,7 +1328,7 @@ def locate_labeled_points( cursor, station, label ):
     """,
     (
         sanitize_identifier(station)+'%',
-        str(sanitize_point_label(label)),
+        str(label),
     )
     )
 
@@ -1340,7 +1340,8 @@ def locate_labeled_points( cursor, station, label ):
     return points
 
 def locate_labeled_point( cursor, station, label ):
-    points = locate_labeled_points( cursor, station, label )
+    points = locate_labeled_points( cursor, station,
+                                    sanitize_point_label(label) )
 
     point_numbers = {}
     for point in points:
