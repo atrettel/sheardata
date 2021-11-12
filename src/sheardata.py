@@ -280,6 +280,7 @@ Q_TRANSVERSE_COORDINATE            = "Y"
 Q_TRANSVERSE_VELOCITY              = "V"
 Q_VELOCITY_DEFECT                  = "deltaU"
 
+# TODO: Consider defining the numbers 1, 2, or 3 here as D_STREAMWISE, etc.
 Q_COORDINATE = {
     1: Q_STREAMWISE_COORDINATE,
     2: Q_TRANSVERSE_COORDINATE,
