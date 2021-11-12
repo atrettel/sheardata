@@ -116,9 +116,9 @@ for duct_type in duct_types:
             y_label
         )
 
-        point_label = sd.WALL_POINT_LABEL
+        point_label = sd.PL_WALL
         if ( quantity == sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO ):
-            point_label = sd.CENTER_LINE_POINT_LABEL
+            point_label = sd.PL_CENTER_LINE
 
         for study_type in [ sd.DIRECT_NUMERICAL_SIMULATION_STUDY_TYPE,
                                            sd.EXPERIMENTAL_STUDY_TYPE, ]:
@@ -201,7 +201,7 @@ for duct_type in duct_types:
                 max_bulk_mach_number,
                 sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,
                 min_outer_layer_development_length,
-                sd.WALL_POINT_LABEL,
+                sd.PL_WALL,
                 sd.Q_LOCAL_TO_CENTER_LINE_TEMPERATURE_RATIO,
                 min_wall_to_center_line_temperature_ratio,
                 max_wall_to_center_line_temperature_ratio,

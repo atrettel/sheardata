@@ -192,9 +192,9 @@ with open( globals_filename, "r" ) as globals_file:
         for point_number in range( n_points, 0, -1 ):
             point_label = None
             if ( point_number == 1 ):
-                point_label = sd.WALL_POINT_LABEL
+                point_label = sd.PL_WALL
             elif ( point_number == n_points ):
-                point_label = sd.CENTER_LINE_POINT_LABEL
+                point_label = sd.PL_CENTER_LINE
 
             point_identifier = sd.add_point(
                 cursor,
@@ -260,7 +260,7 @@ with open( globals_filename, "r" ) as globals_file:
                     cursor,
                     station_identifier,
                     quantity,
-                    sd.WALL_POINT_LABEL,
+                    sd.PL_WALL,
                     sd.sdfloat(0.0),
                     measurement_techniques=[sd.MT_ASSUMPTION],
                 )
@@ -277,13 +277,13 @@ with open( globals_filename, "r" ) as globals_file:
         bulk_velocity        = 4.0 * volumetric_flow_rate / ( math.pi * diameter**2.0 )
         Re_bulk              = bulk_velocity * diameter / kinematic_viscosity
         Ma_bulk              = bulk_velocity / speed_of_sound
-        center_line_velocity = sd.get_labeled_value( cursor, station_identifier, sd.Q_STREAMWISE_VELOCITY, sd.CENTER_LINE_POINT_LABEL, )
+        center_line_velocity = sd.get_labeled_value( cursor, station_identifier, sd.Q_STREAMWISE_VELOCITY, sd.PL_CENTER_LINE, )
 
         maximum_velocity = sd.get_labeled_value(
             cursor,
             station_identifier,
             sd.Q_STREAMWISE_VELOCITY,
-            sd.CENTER_LINE_POINT_LABEL,
+            sd.PL_CENTER_LINE,
             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,
         )
 
@@ -293,7 +293,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER,               Re_bulk,                          averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], )
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,                   Ma_bulk,                          averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_CALCULATION], )
 
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_HEAT_FLUX, sd.WALL_POINT_LABEL, sd.sdfloat( 0.0, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION], )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_HEAT_FLUX, sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION], )
 
         for quantity in sd.INCOMPRESSIBLE_RATIO_PROFILES:
             sd.set_constant_profile( cursor, station_identifier, quantity, sd.sdfloat( 1.0, 0.0 ), averaging_system=sd.BOTH_AVERAGING_SYSTEMS, measurement_techniques=[sd.MT_ASSUMPTION], )

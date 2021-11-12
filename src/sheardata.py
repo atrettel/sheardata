@@ -121,9 +121,9 @@ MT_WEIGHING_METHOD                          = "QWM"
 MT_ZEROTH_ORDER_APPROXIMATION               = "AP0"
 
 # Point labels
-CENTER_LINE_POINT_LABEL = "CL"
-EDGE_POINT_LABEL        = "E"
-WALL_POINT_LABEL        = "W"
+PL_CENTER_LINE = "CL"
+PL_EDGE        = "E"
+PL_WALL        = "W"
 
 # Quantities, series
 Q_ANGLE_OF_ATTACK                = "AOA"

@@ -369,9 +369,9 @@ CREATE TABLE point_labels (
 )
 
 point_labels = {}
-point_labels[ sd.CENTER_LINE_POINT_LABEL ] = "center-line"
-point_labels[ sd.EDGE_POINT_LABEL        ] = "edge"
-point_labels[ sd.WALL_POINT_LABEL        ] = "wall"
+point_labels[ sd.PL_CENTER_LINE ] = "center-line"
+point_labels[ sd.PL_EDGE        ] = "edge"
+point_labels[ sd.PL_WALL        ] = "wall"
 
 for identifier in point_labels:
     cursor.execute(

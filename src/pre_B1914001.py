@@ -100,7 +100,7 @@ with open( globals_filename, "r" ) as globals_file:
 
                 point_label = None
                 if ( point_number == 1 ):
-                    point_label = sd.WALL_POINT_LABEL
+                    point_label = sd.PL_WALL
 
                 point_identifier = sd.add_point(
                     cursor,
@@ -138,7 +138,7 @@ with open( globals_filename, "r" ) as globals_file:
                         cursor,
                         station_identifier,
                         quantity,
-                        sd.WALL_POINT_LABEL,
+                        sd.PL_WALL,
                         sd.sdfloat(0.0),
                         measurement_techniques=[sd.MT_ASSUMPTION],
                     )
