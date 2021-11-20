@@ -84,6 +84,18 @@ I identify several of these previous data compilations below.
 
     - Global data only.
 
+- Wheeler, A. J. and Johnston, J. P. 1972, "Three dimensional turbulent
+  boundary layers: Data sets for two-space coordinate flows", Stanford
+  University Thermosciences Report MD-32, NASA-CR-138962.
+
+    - This compilation is a continuation of the compilation by Coles and Hirst,
+      but for three-dimensional boundary layers.  However, the identifier
+      system is different.
+
+    - [NASA](https://ntrs.nasa.gov/citations/19740021540)
+
+    - [NTIS (abstract only)](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/N7429653.xhtml)
+
 - Birch, S. F. and Eggers, J. M. 1973.  *Free Turbulent Shear Flows*, Volume 2,
   "Summary of Data".  NASA-SP-321.
 
