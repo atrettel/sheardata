@@ -269,11 +269,11 @@ Q_VISCOUS_LENGTH_SCALE                  = "l_nu"
 
 # Quantities, point
 Q_DILATATION_RATE                  = "Thetadot"
-Q_DISTANCE_FROM_WALL               = "y"
+Q_DISTANCE_FROM_WALL               = TRANSVERSE_COORDINATE_SYMBOL
 Q_DYNAMIC_VISCOSITY                = "mu"
 Q_HEAT_CAPACITY_RATIO              = "gamma"
 Q_HEAT_FLUX                        = "q"
-Q_INNER_LAYER_COORDINATE           = "y+"
+Q_INNER_LAYER_COORDINATE           = "{:s}+".format(TRANSVERSE_COORDINATE_SYMBOL)
 Q_INNER_LAYER_TEMPERATURE          = "T+"
 Q_INNER_LAYER_VELOCITY             = "U+"
 Q_INNER_LAYER_VELOCITY_DEFECT      = "deltaU+"
@@ -286,7 +286,7 @@ Q_OUTER_LAYER_VELOCITY             = "F"
 Q_OUTER_LAYER_VELOCITY_DEFECT      = "deltaU+/delta"
 Q_PRANDTL_NUMBER                   = "Pr"
 Q_PRESSURE                         = "p"
-Q_SEMI_LOCAL_COORDINATE            = "y*"
+Q_SEMI_LOCAL_COORDINATE            = "{:s}*".format(TRANSVERSE_COORDINATE_SYMBOL)
 Q_SPANWISE_COORDINATE              = SPANWISE_COORDINATE_SYMBOL.upper()
 Q_SPANWISE_VELOCITY                = SPANWISE_VELOCITY_SYMBOL.upper()
 Q_SPECIFIC_ENTHALPY                = "h"
