@@ -44,8 +44,13 @@ RECTANGULAR_COORDINATE_SYSTEM = "XYZ"
 # direction is direction 3.  These variables are left here to provide the
 # option of redefining the order (if deemed necessary).
 D_STREAMWISE = 1
-D_TRANSVERSE = 2
-D_SPANWISE   = 3
+D_TRANSVERSE = 2 # 2 is the engineering convention;
+                 # 3 is the geophysical convention.
+D_SPANWISE   = (3 if D_TRANSVERSE == 2 else 2 )
+
+assert( D_STREAMWISE != D_TRANSVERSE )
+assert( D_STREAMWISE !=   D_SPANWISE )
+assert( D_TRANSVERSE !=   D_SPANWISE )
 
 STREAMWISE_COORDINATE_SYMBOL = "x"
 TRANSVERSE_COORDINATE_SYMBOL = ("y" if D_TRANSVERSE == 2 else "z")
