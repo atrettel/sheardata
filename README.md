@@ -35,6 +35,9 @@ format that is ready for both reference and study.  All of these compilations
 are older and presented in tabulated form, which requires digitization for use.
 I identify several of these previous data compilations below.
 
+Note that some of these data compilations provided data in a digital form
+distributed with the reports, not as printed tables.
+
 - Koo, Eugene Chen 1932, "Mechanisms of isothermal and non-isothermal flow of
   fluids in pipes".  Massachusetts Institute of Technology Ph.D. thesis.
 
@@ -69,11 +72,11 @@ I identify several of these previous data compilations below.
 - Coles, D. E. and Hirst, E. A. 1969.  *Computation of Turbulent Boundary
   layers—1968 AFOSR-IFP-Stanford Conference*, Volume 2, "Compiled Data".
 
-    - [WorldCat](https://www.worldcat.org/title/computation-of-turbulent-boundary-layers-1968-afosr-ifp-stanford-conference-proceedings/oclc/561999041)
+    - [DTIC (abstract only)](https://apps.dtic.mil/sti/citations/AD0696082)
 
     - [NTIS (abstract only)](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/AD696082.xhtml)
 
-    - [DTIC (abstract only)](https://apps.dtic.mil/sti/citations/AD0696082)
+    - [WorldCat](https://www.worldcat.org/title/computation-of-turbulent-boundary-layers-1968-afosr-ifp-stanford-conference-proceedings/oclc/561999041)
 
     - This compilation is unavailable online.
 
@@ -104,37 +107,53 @@ I identify several of these previous data compilations below.
 - Fernholz, H. H. and Finley, P. J. 1977.  *A Critical Compilation of
   Compressible Turbulent Boundary Layer Data*.  AGARD-AG-223.
 
-    - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA045367.xhtml)
-
     - [DTIC](https://apps.dtic.mil/sti/citations/ADA045367)
 
     - [NATO](https://www.sto.nato.int/publications/AGARD/Forms/AGARD%20Document%20Set/docsethomepage.aspx?ID=9138&FolderCTID=0x0120D5200078F9E87043356C409A0D30823AFA16F60B00B8BCE98BB37EB24A8258823D6B11F157&List=03e8ea21-64e6-4d37-8235-04fb61e122e9&RootFolder=%2Fpublications%2FAGARD%2FAGARD%2DAG%2D223)
+
+    - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA045367.xhtml)
 
 - Fernholz, H. H. and Finley, P. J. 1980.  *A Critical Commentary on Mean Flow
   Data for Two-Dimensional Compressible Turbulent Boundary Layers*.
   AGARD-AG-253.
 
-    - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA087704.xhtml)
-
     - [DTIC](https://apps.dtic.mil/sti/citations/ADA087704)
+
+    - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA087704.xhtml)
 
 - Fernholz, H. H. and Finley, P. J. and Mikulla, V. 1981.  *A Further
   Compilation of Compressible Boundary Layer Data with a Survey of Turbulence
   Data*.  AGARD-AG-263.
 
-    - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA111638.xhtml)
-
     - [DTIC](https://apps.dtic.mil/sti/citations/ADA111638)
 
+    - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA111638.xhtml)
+
     - [NATO](https://www.sto.nato.int/publications/AGARD/Forms/AGARD%20Document%20Set/docsethomepage.aspx?ID=9062&FolderCTID=0x0120D5200078F9E87043356C409A0D30823AFA16F60B00B8BCE98BB37EB24A8258823D6B11F157&List=03e8ea21-64e6-4d37-8235-04fb61e122e9&RootFolder=%2Fpublications%2FAGARD%2FAGARD%2DAG%2D263)
+
+- AGARD Fluid Dynamics Panel Working Group 4 (1979), "Experimental Data Base
+  for Computer Program Assessment", AGARD-AR-138.
+
+    - [DTIC](https://apps.dtic.mil/sti/citations/ADA073982)
+
+    - [NATO](https://www.sto.nato.int/publications/AGARD/Forms/AGARD%20Document%20Set/docsethomepage.aspx?ID=8802&FolderCTID=0x0120D5200078F9E87043356C409A0D30823AFA16F60B00B8BCE98BB37EB24A8258823D6B11F157&List=03e8ea21-64e6-4d37-8235-04fb61e122e9&RootFolder=https://www.sto.nato.int/publications/AGARD/AGARD-AR-138)
+
+    - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA073982.xhtml)
+
+- AGARD Fluid Dynamics Panel Working Group 4 (1984), "Experimental Data Base
+  for Computer Program Assessment.  Addendum", AGARD-AR-138-ADDENDUM.
+
+    - [DTIC](https://apps.dtic.mil/sti/citations/ADA147197)
+
+    - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA147197.xhtml)
 
 - Fernholz, H. H. and Finley, P. J. and Dussauge, J. P. and Smits, A. J. 1989.
   *Survey of Measurements and Measuring Techniques in Rapidly Distorted
   Compressible Turbulent Boundary Layers*.  AGARD-AG-315.
 
-    - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA211107.xhtml)
-
     - [DTIC](https://apps.dtic.mil/sti/citations/ADA211107)
+
+    - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA211107.xhtml)
 
 - Settles, G. S. and Dodson, L. J. 1991, *Hypersonic Shock/Boundary-Layer
   Interaction Database*.  NASA-CR-177577.
@@ -157,6 +176,30 @@ I identify several of these previous data compilations below.
 
     - [Internet Archive](https://archive.org/details/nasa_techdoc_19940032012)
 
+- AGARD Fluid Dynamics Panel Working Group 4 (1994), "A selection of
+  experimental test cases for the validation of CFD codes", AGARD-AR-303.
+
+    - [DTIC, volume 1](https://apps.dtic.mil/sti/citations/ADA286061)
+
+    - [DTIC, volume 2](https://apps.dtic.mil/sti/citations/ADA286216)
+
+    - [NTIS, volume 1](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA286061.xhtml)
+
+    - [NTIS, volume 2](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA286216.xhtml)
+
+    - The data is not tabulated in the volumes but was (at one point) available
+      on 9 floppy disks.  However, I have been unable to locate a copy.
+
+- AGARD Fluid Dynamics Panel Working Group 21 (1998), "A selection of test
+  cases for the validation of large-eddy simulations of turbulent flows,
+  AGARD-AR-345.
+
+    - [AGARD-AR-345 database](https://torroja.dmt.upm.es/turbdata/agard/)
+
+    - [DTIC, CD-ROM (abstract only)](https://apps.dtic.mil/sti/citations/ADM000830)
+
+    - [NATO](https://www.sto.nato.int/publications/AGARD/Forms/AGARD%20Document%20Set/docsethomepage.aspx?ID=8659&FolderCTID=0x0120D5200078F9E87043356C409A0D30823AFA16F60B00B8BCE98BB37EB24A8258823D6B11F157&List=03e8ea21-64e6-4d37-8235-04fb61e122e9&RootFolder=https://www.sto.nato.int/publications/AGARD/AGARD-AR-345)
+
 
 Links to other online databases
 -------------------------------
@@ -164,8 +207,6 @@ Links to other online databases
 Here is a list of several other notable online databases with shear flow data.
 Much of this data is available as plain text files or CSV files, but some data
 is only available in other formats.
-
-- [AGARD-AR-345 database](https://torroja.dmt.upm.es/turbdata/agard/)
 
 - [Center for Turbulence Research data](https://ctr.stanford.edu/research-data)
   (Stanford University)
