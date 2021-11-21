@@ -113,6 +113,15 @@ distributed with the reports, not as printed tables.
 
     - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA045367.xhtml)
 
+- AGARD Fluid Dynamics Panel Working Group 4 (1979), *Experimental Data Base
+  for Computer Program Assessment*, AGARD-AR-138.
+
+    - [DTIC](https://apps.dtic.mil/sti/citations/ADA073982)
+
+    - [NATO](https://www.sto.nato.int/publications/AGARD/Forms/AGARD%20Document%20Set/docsethomepage.aspx?ID=8802&FolderCTID=0x0120D5200078F9E87043356C409A0D30823AFA16F60B00B8BCE98BB37EB24A8258823D6B11F157&List=03e8ea21-64e6-4d37-8235-04fb61e122e9&RootFolder=https://www.sto.nato.int/publications/AGARD/AGARD-AR-138)
+
+    - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA073982.xhtml)
+
 - Fernholz, H. H. and Finley, P. J. 1980.  *A Critical Commentary on Mean Flow
   Data for Two-Dimensional Compressible Turbulent Boundary Layers*.
   AGARD-AG-253.
@@ -120,6 +129,17 @@ distributed with the reports, not as printed tables.
     - [DTIC](https://apps.dtic.mil/sti/citations/ADA087704)
 
     - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA087704.xhtml)
+
+- Complex Turbulent Flows (and later Collaborative Testing of Turbulence
+  Models)
+
+    - [DTIC, volume 1](https://apps.dtic.mil/sti/citations/ADA135569)
+
+    - [DTIC, volume 2](https://apps.dtic.mil/sti/citations/ADA135570)
+
+    - [DTIC, volume 3](https://apps.dtic.mil/sti/citations/ADA136034)
+
+    - [NASA, data files](https://turbmodels.larc.nasa.gov/bradshaw.html)
 
 - Fernholz, H. H. and Finley, P. J. and Mikulla, V. 1981.  *A Further
   Compilation of Compressible Boundary Layer Data with a Survey of Turbulence
@@ -131,17 +151,8 @@ distributed with the reports, not as printed tables.
 
     - [NATO](https://www.sto.nato.int/publications/AGARD/Forms/AGARD%20Document%20Set/docsethomepage.aspx?ID=9062&FolderCTID=0x0120D5200078F9E87043356C409A0D30823AFA16F60B00B8BCE98BB37EB24A8258823D6B11F157&List=03e8ea21-64e6-4d37-8235-04fb61e122e9&RootFolder=%2Fpublications%2FAGARD%2FAGARD%2DAG%2D263)
 
-- AGARD Fluid Dynamics Panel Working Group 4 (1979), "Experimental Data Base
-  for Computer Program Assessment", AGARD-AR-138.
-
-    - [DTIC](https://apps.dtic.mil/sti/citations/ADA073982)
-
-    - [NATO](https://www.sto.nato.int/publications/AGARD/Forms/AGARD%20Document%20Set/docsethomepage.aspx?ID=8802&FolderCTID=0x0120D5200078F9E87043356C409A0D30823AFA16F60B00B8BCE98BB37EB24A8258823D6B11F157&List=03e8ea21-64e6-4d37-8235-04fb61e122e9&RootFolder=https://www.sto.nato.int/publications/AGARD/AGARD-AR-138)
-
-    - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA073982.xhtml)
-
-- AGARD Fluid Dynamics Panel Working Group 4 (1984), "Experimental Data Base
-  for Computer Program Assessment.  Addendum", AGARD-AR-138-ADDENDUM.
+- AGARD Fluid Dynamics Panel Working Group 4 (1984), *Experimental Data Base
+  for Computer Program Assessment.  Addendum*, AGARD-AR-138-ADDENDUM.
 
     - [DTIC](https://apps.dtic.mil/sti/citations/ADA147197)
 
@@ -176,8 +187,8 @@ distributed with the reports, not as printed tables.
 
     - [Internet Archive](https://archive.org/details/nasa_techdoc_19940032012)
 
-- AGARD Fluid Dynamics Panel Working Group 4 (1994), "A selection of
-  experimental test cases for the validation of CFD codes", AGARD-AR-303.
+- AGARD Fluid Dynamics Panel Working Group 4 (1994), *A selection of
+  experimental test cases for the validation of CFD codes*, AGARD-AR-303.
 
     - [DTIC, volume 1](https://apps.dtic.mil/sti/citations/ADA286061)
 
@@ -190,8 +201,8 @@ distributed with the reports, not as printed tables.
     - The data is not tabulated in the volumes but was (at one point) available
       on 9 floppy disks.  However, I have been unable to locate a copy.
 
-- AGARD Fluid Dynamics Panel Working Group 21 (1998), "A selection of test
-  cases for the validation of large-eddy simulations of turbulent flows,
+- AGARD Fluid Dynamics Panel Working Group 21 (1998), *A selection of test
+  cases for the validation of large-eddy simulations of turbulent flows*,
   AGARD-AR-345.
 
     - [AGARD-AR-345 database](https://torroja.dmt.upm.es/turbdata/agard/)
@@ -210,9 +221,6 @@ is only available in other formats.
 
 - [Center for Turbulence Research data](https://ctr.stanford.edu/research-data)
   (Stanford University)
-
-- [Collaborative Testing of Turbulence
-  Models](https://turbmodels.larc.nasa.gov/bradshaw.html)
 
 - [Computational Turbulence Laboratory data](https://larsson.umd.edu/data/)
   (University of Maryland, Larsson group)
