@@ -474,6 +474,7 @@ quantities[ sd.Q_SHAPE_FACTOR_3_TO_2                    ] = quantity( "shape fac
 quantities[ sd.Q_SPANWISE_PRESSURE_GRADIENT             ] = quantity( "spanwise pressure gradient",               mass_exponent=+1.0, length_exponent=-2.0, time_exponent=-2.0, )
 quantities[ sd.Q_STREAMWISE_COORDINATE_REYNOLDS_NUMBER  ] = quantity( "streamwise coordinate Reynolds number",                                                                  )
 quantities[ sd.Q_STREAMWISE_PRESSURE_GRADIENT           ] = quantity( "streamwise pressure gradient",             mass_exponent=+1.0, length_exponent=-2.0, time_exponent=-2.0, )
+quantities[ sd.Q_TRANSVERSE_PRESSURE_GRADIENT           ] = quantity( "transverse pressure gradient",             mass_exponent=+1.0, length_exponent=-2.0, time_exponent=-2.0, )
 quantities[ sd.Q_WETTED_PERIMETER                       ] = quantity( "wetted perimeter",                       length_exponent=+2.0,                                           )
 quantities[ sd.Q_WIDTH                                  ] = quantity( "width",                                  length_exponent=+1.0,                                           )
 
