@@ -37,6 +37,16 @@ BOTH_AVERAGING_SYSTEMS            = "BOTH"
 CYLINDRICAL_COORDINATE_SYSTEM = "XRT"
 RECTANGULAR_COORDINATE_SYSTEM = "XYZ"
 
+# Directions
+#
+# Keep things as abstract but precise as possible.  The only times these
+# numbers should change is if a user prefers to say that the transverse
+# direction is direction 3.  These variables are left here to provide the
+# option of redefining the order (if deemed necessary).
+D_STREAMWISE = 1
+D_TRANSVERSE = 2
+D_SPANWISE   = 3
+
 # Flow classes
 BOUNDARY_LAYER_FLOW_CLASS  = "B"
 WALL_BOUNDED_FLOW_CLASS    = "C"
@@ -171,15 +181,15 @@ Q_TRANSVERSE_NUMBER_OF_POINTS    = "N_y"
 Q_VOLUMETRIC_FLOW_RATE           = "Vdot"
 
 Q_BODY_DIMENSIONS = {
-    1: Q_BODY_LENGTH,
-    2: Q_BODY_HEIGHT,
-    3: Q_BODY_WIDTH,
+    D_STREAMWISE: Q_BODY_LENGTH,
+    D_TRANSVERSE: Q_BODY_HEIGHT,
+    D_SPANWISE:   Q_BODY_WIDTH,
 }
 
 Q_NUMBER_OF_POINTS = {
-    1: Q_STREAMWISE_NUMBER_OF_POINTS,
-    2: Q_TRANSVERSE_NUMBER_OF_POINTS,
-    3:   Q_SPANWISE_NUMBER_OF_POINTS,
+    D_STREAMWISE: Q_STREAMWISE_NUMBER_OF_POINTS,
+    D_TRANSVERSE: Q_TRANSVERSE_NUMBER_OF_POINTS,
+    D_SPANWISE:     Q_SPANWISE_NUMBER_OF_POINTS,
 }
 
 # Quantities, station
@@ -282,42 +292,42 @@ Q_VELOCITY_DEFECT                  = "deltaU"
 
 # TODO: Consider defining the numbers 1, 2, or 3 here as D_STREAMWISE, etc.
 Q_COORDINATE = {
-    1: Q_STREAMWISE_COORDINATE,
-    2: Q_TRANSVERSE_COORDINATE,
-    3: Q_SPANWISE_COORDINATE,
+    D_STREAMWISE: Q_STREAMWISE_COORDINATE,
+    D_TRANSVERSE: Q_TRANSVERSE_COORDINATE,
+    D_SPANWISE:     Q_SPANWISE_COORDINATE,
 }
 
 Q_VELOCITY = {
-    1: Q_STREAMWISE_VELOCITY,
-    2: Q_TRANSVERSE_VELOCITY,
-    3: Q_SPANWISE_VELOCITY,
+    D_STREAMWISE: Q_STREAMWISE_VELOCITY,
+    D_TRANSVERSE: Q_TRANSVERSE_VELOCITY,
+    D_SPANWISE:     Q_SPANWISE_VELOCITY,
 }
 
 Q_VELOCITY_GRADIENT = {
-    (1,1): "eps_xx",
-    (1,2): "eps_xy",
-    (1,3): "eps_xz",
-    (2,1): "eps_yx",
-    (2,2): "eps_yy",
-    (2,3): "eps_yz",
-    (3,1): "eps_zx",
-    (3,2): "eps_zy",
-    (3,3): "eps_zz",
+    (D_STREAMWISE,D_STREAMWISE): "eps_xx",
+    (D_STREAMWISE,D_TRANSVERSE): "eps_xy",
+    (D_STREAMWISE,D_SPANWISE  ): "eps_xz",
+    (D_TRANSVERSE,D_STREAMWISE): "eps_yx",
+    (D_TRANSVERSE,D_TRANSVERSE): "eps_yy",
+    (D_TRANSVERSE,D_SPANWISE  ): "eps_yz",
+    (D_SPANWISE,  D_STREAMWISE): "eps_zx",
+    (D_SPANWISE,  D_TRANSVERSE): "eps_zy",
+    (D_SPANWISE,  D_SPANWISE  ): "eps_zz",
 }
 
 Q_STRESS = {
-    (1,1): "sigma_xx",
-    (1,2): "tau_xy",
-    (1,3): "tau_xz",
-    (2,1): "tau_xy",
-    (2,2): "sigma_yy",
-    (2,3): "tau_yz",
-    (3,1): "tau_xz",
-    (3,2): "tau_yz",
-    (3,3): "sigma_zz",
+    (D_STREAMWISE,D_STREAMWISE): "sigma_xx",
+    (D_STREAMWISE,D_TRANSVERSE): "tau_xy",
+    (D_STREAMWISE,D_SPANWISE  ): "tau_xz",
+    (D_TRANSVERSE,D_STREAMWISE): "tau_xy",
+    (D_TRANSVERSE,D_TRANSVERSE): "sigma_yy",
+    (D_TRANSVERSE,D_SPANWISE  ): "tau_yz",
+    (D_SPANWISE,  D_STREAMWISE): "tau_xz",
+    (D_SPANWISE,  D_TRANSVERSE): "tau_yz",
+    (D_SPANWISE,  D_SPANWISE  ): "sigma_zz",
 }
 
-Q_SHEAR_STRESS = Q_STRESS[1,2]
+Q_SHEAR_STRESS = Q_STRESS[D_STREAMWISE,D_TRANSVERSE]
 
 # Quantities, point, turbulence
 Q_INNER_LAYER_SPECIFIC_TURBULENT_KINETIC_ENERGY      = "k+"
@@ -331,39 +341,39 @@ Q_SPECIFIC_TURBULENT_KINETIC_ENERGY                  = "k"
 Q_TEMPERATURE_AUTOCOVARIANCE                         = "T'T'"
 
 Q_VELOCITY_COVARIANCE = {
-    (1,1): "(u'u')",
-    (1,2): "(u'v')",
-    (1,3): "(u'w')",
-    (2,1): "(u'v')",
-    (2,2): "(v'v')",
-    (2,3): "(v'w')",
-    (3,1): "(u'w')",
-    (3,2): "(v'w')",
-    (3,3): "(w'w')",
+    (D_STREAMWISE,D_STREAMWISE): "(u'u')",
+    (D_STREAMWISE,D_TRANSVERSE): "(u'v')",
+    (D_STREAMWISE,D_SPANWISE  ): "(u'w')",
+    (D_TRANSVERSE,D_STREAMWISE): "(u'v')",
+    (D_TRANSVERSE,D_TRANSVERSE): "(v'v')",
+    (D_TRANSVERSE,D_SPANWISE  ): "(v'w')",
+    (D_SPANWISE,  D_STREAMWISE): "(u'w')",
+    (D_SPANWISE,  D_TRANSVERSE): "(v'w')",
+    (D_SPANWISE,  D_SPANWISE  ): "(w'w')",
 }
 
 Q_INNER_LAYER_VELOCITY_COVARIANCE = {
-    (1,1): "(u'u')+",
-    (1,2): "(u'v')+",
-    (1,3): "(u'w')+",
-    (2,1): "(u'v')+",
-    (2,2): "(v'v')+",
-    (2,3): "(v'w')+",
-    (3,1): "(u'w')+",
-    (3,2): "(v'w')+",
-    (3,3): "(w'w')+",
+    (D_STREAMWISE,D_STREAMWISE): "(u'u')+",
+    (D_STREAMWISE,D_TRANSVERSE): "(u'v')+",
+    (D_STREAMWISE,D_SPANWISE  ): "(u'w')+",
+    (D_TRANSVERSE,D_STREAMWISE): "(u'v')+",
+    (D_TRANSVERSE,D_TRANSVERSE): "(v'v')+",
+    (D_TRANSVERSE,D_SPANWISE  ): "(v'w')+",
+    (D_SPANWISE,  D_STREAMWISE): "(u'w')+",
+    (D_SPANWISE,  D_TRANSVERSE): "(v'w')+",
+    (D_SPANWISE,  D_SPANWISE  ): "(w'w')+",
 }
 
 Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE = {
-    (1,1): "(u'u')*",
-    (1,2): "(u'v')*",
-    (1,3): "(u'w')*",
-    (2,1): "(u'v')*",
-    (2,2): "(v'v')*",
-    (2,3): "(v'w')*",
-    (3,1): "(u'w')*",
-    (3,2): "(v'w')*",
-    (3,3): "(w'w')*",
+    (D_STREAMWISE,D_STREAMWISE): "(u'u')*",
+    (D_STREAMWISE,D_TRANSVERSE): "(u'v')*",
+    (D_STREAMWISE,D_SPANWISE  ): "(u'w')*",
+    (D_TRANSVERSE,D_STREAMWISE): "(u'v')*",
+    (D_TRANSVERSE,D_TRANSVERSE): "(v'v')*",
+    (D_TRANSVERSE,D_SPANWISE  ): "(v'w')*",
+    (D_SPANWISE,  D_STREAMWISE): "(u'w')*",
+    (D_SPANWISE,  D_TRANSVERSE): "(v'w')*",
+    (D_SPANWISE,  D_SPANWISE  ): "(w'w')*",
 }
 
 # Quantities, point, ratios
