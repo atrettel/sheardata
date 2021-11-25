@@ -631,8 +631,8 @@ def create_value_types_list( value_type ):
     else:
         return [ value_type ]
 
-def set_study_value( cursor, study, quantity, value, value_type=None, \
-                     measurement_techniques=[], mt_set=1, outlier=False,    \
+def set_study_value( cursor, study, quantity, value, value_type=None,    \
+                     measurement_techniques=[], mt_set=1, outlier=False, \
                      notes=[] ):
     study_value, study_uncertainty = split_float( value )
     for avg_sys in create_value_types_list( value_type ):
@@ -686,8 +686,7 @@ def set_study_value( cursor, study, quantity, value, value_type=None, \
             )
             )
 
-def get_study_value( cursor, study, quantity,               \
-                     value_type=VT_ANY_AVERAGE, \
+def get_study_value( cursor, study, quantity, value_type=VT_ANY_AVERAGE, \
                      mt_set=1, ):
     if ( value_type == VT_ANY_AVERAGE ):
         cursor.execute(
@@ -829,8 +828,8 @@ def update_series_description( cursor, identifier, description ):
     )
     )
 
-def set_series_value( cursor, series, quantity, value, value_type=None, \
-                      measurement_techniques=[], mt_set=1, outlier=False,     \
+def set_series_value( cursor, series, quantity, value, value_type=None,   \
+                      measurement_techniques=[], mt_set=1, outlier=False, \
                       notes=[] ):
     series_value, series_uncertainty = split_float( value )
     for avg_sys in create_value_types_list( value_type ):
@@ -871,9 +870,8 @@ def set_series_value( cursor, series, quantity, value, value_type=None, \
         for note in notes:
             cursor.execute(
             """
-            INSERT INTO series_value_notes( series, quantity,
-                                            value_type, mt_set,
-                                            note )
+            INSERT INTO series_value_notes( series, quantity, value_type,
+                                            mt_set, note )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
@@ -885,8 +883,7 @@ def set_series_value( cursor, series, quantity, value, value_type=None, \
             )
             )
 
-def get_series_value( cursor, series, quantity,              \
-                      value_type=VT_ANY_AVERAGE, \
+def get_series_value( cursor, series, quantity, value_type=VT_ANY_AVERAGE, \
                       mt_set=1, ):
     if ( value_type == VT_ANY_AVERAGE ):
         cursor.execute(
@@ -980,9 +977,9 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
 
     return station
 
-def set_station_value( cursor, station, quantity, value,                 \
-                       value_type=None, measurement_techniques=[], \
-                       mt_set=1, outlier=False, notes=[] ):
+def set_station_value( cursor, station, quantity, value, value_type=None,  \
+                       measurement_techniques=[], mt_set=1, outlier=False, \
+                       notes=[] ):
     station_value, station_uncertainty = split_float( value )
     for avg_sys in create_value_types_list( value_type ):
         cursor.execute(
@@ -1022,9 +1019,8 @@ def set_station_value( cursor, station, quantity, value,                 \
         for note in notes:
             cursor.execute(
             """
-            INSERT INTO station_value_notes( station, quantity,
-                                             value_type, mt_set,
-                                             note )
+            INSERT INTO station_value_notes( station, quantity, value_type,
+                                             mt_set, note )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
@@ -1055,9 +1051,9 @@ def get_points_at_station( cursor, station ):
 
     return points
 
-def set_constant_profile( cursor, station, quantity, value,                 \
-                          value_type=None, measurement_techniques=[], \
-                          mt_set=1, outlier=False, notes=[] ):
+def set_constant_profile( cursor, station, quantity, value, value_type=None,  \
+                          measurement_techniques=[], mt_set=1, outlier=False, \
+                          notes=[] ):
     for point in get_points_at_station( cursor, station ):
         set_point_value(
             cursor,
@@ -1178,8 +1174,8 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
 
     return point
 
-def set_point_value( cursor, point, quantity, value, value_type=None, \
-                     measurement_techniques=[], mt_set=1, outlier=False,    \
+def set_point_value( cursor, point, quantity, value, value_type=None,    \
+                     measurement_techniques=[], mt_set=1, outlier=False, \
                      notes=[] ):
     point_value, point_uncertainty = split_float( value )
     for avg_sys in create_value_types_list( value_type ):
@@ -1204,8 +1200,8 @@ def set_point_value( cursor, point, quantity, value, value_type=None, \
         for measurement_technique in measurement_techniques:
             cursor.execute(
             """
-            INSERT INTO point_values_mt( point, quantity, value_type,
-                                         mt_set, measurement_technique )
+            INSERT INTO point_values_mt( point, quantity, value_type, mt_set,
+                                         measurement_technique )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
@@ -1220,8 +1216,8 @@ def set_point_value( cursor, point, quantity, value, value_type=None, \
         for note in notes:
             cursor.execute(
             """
-            INSERT INTO point_value_notes( point, quantity, value_type,
-                                           mt_set, note )
+            INSERT INTO point_value_notes( point, quantity, value_type, mt_set,
+                                           note )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
@@ -1233,8 +1229,7 @@ def set_point_value( cursor, point, quantity, value, value_type=None, \
             )
             )
 
-def get_point_value( cursor, point, quantity,               \
-                     value_type=VT_ANY_AVERAGE, \
+def get_point_value( cursor, point, quantity, value_type=VT_ANY_AVERAGE, \
                      mt_set=1, ):
     if ( value_type == VT_ANY_AVERAGE ):
         cursor.execute(
@@ -1270,8 +1265,8 @@ def get_point_value( cursor, point, quantity,               \
 # TODO: Change this to getting intersecting profiles.  Allow for an arbitrary
 # number of quantities, so that requests can be made for more than 2 profiles
 # at once.
-def get_twin_profiles( cursor, station, quantity1, quantity2,          \
-                       value_type1=None, value_type2=None, \
+def get_twin_profiles( cursor, station, quantity1, quantity2, \
+                       value_type1=None, value_type2=None,    \
                        excluded_point_labels=[], ):
     if ( value_type1 == None ):
         if ( value_type2 == None ):
@@ -1458,7 +1453,7 @@ def locate_labeled_point( cursor, station, label ):
 
     return point
 
-def set_labeled_value( cursor, station, quantity, label, value,          \
+def set_labeled_value( cursor, station, quantity, label, value,    \
                        value_type=None, measurement_techniques=[], \
                        mt_set=1, outlier=False, notes=[] ):
     set_point_value(
