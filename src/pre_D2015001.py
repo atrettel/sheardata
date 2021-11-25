@@ -133,7 +133,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value( cursor, station_identifier, sd.Q_ASPECT_RATIO,                       aspect_ratio,                   )
         sd.set_station_value( cursor, station_identifier, sd.Q_HEIGHT,                             height,                         )
         sd.set_station_value( cursor, station_identifier, sd.Q_HALF_HEIGHT,                        half_height,                    )
-        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                      bulk_velocity,                      averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                      bulk_velocity,                      value_type=sd.VT_UNWEIGHTED_AVERAGE, )
 
         point_number = 0
         series_filename = "../data/{:s}/{:s}_profiles.csv".format(
@@ -211,51 +211,51 @@ with open( globals_filename, "r" ) as globals_file:
                 normalized_temperature_autocovariance_dw  =  temperature_autocovariance_dw / temperature_dw
 
                 sd.set_point_value( cursor, point_identifier, sd.Q_DISTANCE_FROM_WALL,               distance_from_wall,                                                                                                                                                                 )
-                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_COORDINATE,           inner_layer_coordinate,           averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                                                       )
+                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_COORDINATE,           inner_layer_coordinate,           value_type=sd.VT_BOTH_AVERAGES,                                                                                                       )
                 sd.set_point_value( cursor, point_identifier, sd.Q_OUTER_LAYER_COORDINATE,           outer_layer_coordinate,                                                                                                                                                             )
-                sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,              streamwise_velocity_uw,           averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                                                                                  )
-                sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,              streamwise_velocity_dw,           averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM,                                                                                            )
-                sd.set_point_value( cursor, point_identifier, sd.Q_MASS_DENSITY,                     mass_density,                     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                                                                                  )
-                sd.set_point_value( cursor, point_identifier, sd.Q_PRESSURE,                         pressure,                         averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                                                                                  )
-                sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE,                      temperature_uw,                   averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,                                                                                                  )
-                sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE,                      temperature_dw,                   averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM,                                                                                            )
-                sd.set_point_value( cursor, point_identifier, sd.Q_DYNAMIC_VISCOSITY,                dynamic_viscosity,                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       measurement_techniques=[sd.MT_ZEROTH_ORDER_APPROXIMATION], notes=[dynamic_viscosity_note], )
-                sd.set_point_value( cursor, point_identifier, sd.Q_KINEMATIC_VISCOSITY,              kinematic_viscosity,              averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       measurement_techniques=[sd.MT_APPROXIMATION],              notes=[dynamic_viscosity_note], )
-                sd.set_point_value( cursor, point_identifier, sd.Q_PRANDTL_NUMBER,                   prandtl_number,                   averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                                                       )
-                sd.set_point_value( cursor, point_identifier, sd.Q_HEAT_CAPACITY_RATIO,              heat_capacity_ratio,              averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                                                       )
-                sd.set_point_value( cursor, point_identifier, sd.Q_SPECIFIC_GAS_CONSTANT,            specific_gas_constant,            averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                                                       )
-                sd.set_point_value( cursor, point_identifier, sd.Q_SPECIFIC_ISOBARIC_HEAT_CAPACITY,  specific_isobaric_heat_capacity,  averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                                                       )
-                sd.set_point_value( cursor, point_identifier, sd.Q_SPECIFIC_ISOCHORIC_HEAT_CAPACITY, specific_isochoric_heat_capacity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS,                                                                                                       )
-                sd.set_point_value( cursor, point_identifier, sd.Q_THERMAL_CONDUCTIVITY,             thermal_conductivity,             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       measurement_techniques=[sd.MT_APPROXIMATION],              notes=[dynamic_viscosity_note], )
-                sd.set_point_value( cursor, point_identifier, sd.Q_THERMAL_DIFFUSIVITY,              thermal_diffusivity,              averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       measurement_techniques=[sd.MT_APPROXIMATION],              notes=[dynamic_viscosity_note], )
-                sd.set_point_value( cursor, point_identifier, sd.Q_SPEED_OF_SOUND,                   speed_of_sound_uw,                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       measurement_techniques=[sd.MT_ZEROTH_ORDER_APPROXIMATION], notes=[dynamic_viscosity_note], )
-                sd.set_point_value( cursor, point_identifier, sd.Q_SPEED_OF_SOUND,                   speed_of_sound_dw,                averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, measurement_techniques=[sd.MT_ZEROTH_ORDER_APPROXIMATION], notes=[dynamic_viscosity_note], )
+                sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,              streamwise_velocity_uw,           value_type=sd.VT_UNWEIGHTED_AVERAGE,                                                                                                  )
+                sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,              streamwise_velocity_dw,           value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE,                                                                                            )
+                sd.set_point_value( cursor, point_identifier, sd.Q_MASS_DENSITY,                     mass_density,                     value_type=sd.VT_UNWEIGHTED_AVERAGE,                                                                                                  )
+                sd.set_point_value( cursor, point_identifier, sd.Q_PRESSURE,                         pressure,                         value_type=sd.VT_UNWEIGHTED_AVERAGE,                                                                                                  )
+                sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE,                      temperature_uw,                   value_type=sd.VT_UNWEIGHTED_AVERAGE,                                                                                                  )
+                sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE,                      temperature_dw,                   value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE,                                                                                            )
+                sd.set_point_value( cursor, point_identifier, sd.Q_DYNAMIC_VISCOSITY,                dynamic_viscosity,                value_type=sd.VT_UNWEIGHTED_AVERAGE,       measurement_techniques=[sd.MT_ZEROTH_ORDER_APPROXIMATION], notes=[dynamic_viscosity_note], )
+                sd.set_point_value( cursor, point_identifier, sd.Q_KINEMATIC_VISCOSITY,              kinematic_viscosity,              value_type=sd.VT_UNWEIGHTED_AVERAGE,       measurement_techniques=[sd.MT_APPROXIMATION],              notes=[dynamic_viscosity_note], )
+                sd.set_point_value( cursor, point_identifier, sd.Q_PRANDTL_NUMBER,                   prandtl_number,                   value_type=sd.VT_BOTH_AVERAGES,                                                                                                       )
+                sd.set_point_value( cursor, point_identifier, sd.Q_HEAT_CAPACITY_RATIO,              heat_capacity_ratio,              value_type=sd.VT_BOTH_AVERAGES,                                                                                                       )
+                sd.set_point_value( cursor, point_identifier, sd.Q_SPECIFIC_GAS_CONSTANT,            specific_gas_constant,            value_type=sd.VT_BOTH_AVERAGES,                                                                                                       )
+                sd.set_point_value( cursor, point_identifier, sd.Q_SPECIFIC_ISOBARIC_HEAT_CAPACITY,  specific_isobaric_heat_capacity,  value_type=sd.VT_BOTH_AVERAGES,                                                                                                       )
+                sd.set_point_value( cursor, point_identifier, sd.Q_SPECIFIC_ISOCHORIC_HEAT_CAPACITY, specific_isochoric_heat_capacity, value_type=sd.VT_BOTH_AVERAGES,                                                                                                       )
+                sd.set_point_value( cursor, point_identifier, sd.Q_THERMAL_CONDUCTIVITY,             thermal_conductivity,             value_type=sd.VT_UNWEIGHTED_AVERAGE,       measurement_techniques=[sd.MT_APPROXIMATION],              notes=[dynamic_viscosity_note], )
+                sd.set_point_value( cursor, point_identifier, sd.Q_THERMAL_DIFFUSIVITY,              thermal_diffusivity,              value_type=sd.VT_UNWEIGHTED_AVERAGE,       measurement_techniques=[sd.MT_APPROXIMATION],              notes=[dynamic_viscosity_note], )
+                sd.set_point_value( cursor, point_identifier, sd.Q_SPEED_OF_SOUND,                   speed_of_sound_uw,                value_type=sd.VT_UNWEIGHTED_AVERAGE,       measurement_techniques=[sd.MT_ZEROTH_ORDER_APPROXIMATION], notes=[dynamic_viscosity_note], )
+                sd.set_point_value( cursor, point_identifier, sd.Q_SPEED_OF_SOUND,                   speed_of_sound_dw,                value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, measurement_techniques=[sd.MT_ZEROTH_ORDER_APPROXIMATION], notes=[dynamic_viscosity_note], )
 
-                sd.set_point_value( cursor, point_identifier, sd.Q_LOCAL_TO_WALL_DYNAMIC_VISCOSITY_RATIO, dynamic_viscosity / wall_dynamic_viscosity, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
-                sd.set_point_value( cursor, point_identifier, sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO,       temperature_dw    / wall_temperature,       averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO,       temperature_uw    / wall_temperature,       averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
+                sd.set_point_value( cursor, point_identifier, sd.Q_LOCAL_TO_WALL_DYNAMIC_VISCOSITY_RATIO, dynamic_viscosity / wall_dynamic_viscosity, value_type=sd.VT_UNWEIGHTED_AVERAGE,       )
+                sd.set_point_value( cursor, point_identifier, sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO,       temperature_dw    / wall_temperature,       value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO,       temperature_uw    / wall_temperature,       value_type=sd.VT_UNWEIGHTED_AVERAGE,       )
 
-                sd.set_point_value( cursor, point_identifier, sd.Q_VELOCITY_COVARIANCE[1,1],                          R_uu_dw,                                   averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_VELOCITY_COVARIANCE[2,2],                          R_vv_dw,                                   averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_VELOCITY_COVARIANCE[3,3],                          R_ww_dw,                                   averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_VELOCITY_COVARIANCE[1,2],                          R_uv_dw,                                   averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[1,1],              R_uu_plus_dw,                              averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[2,2],              R_vv_plus_dw,                              averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[3,3],              R_ww_plus_dw,                              averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[1,2],              R_uv_plus_dw,                              averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[1,1],          R_uu_star_dw,                              averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[2,2],          R_vv_star_dw,                              averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[3,3],          R_ww_star_dw,                              averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[1,2],          R_uv_star_dw,                              averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_SPECIFIC_TURBULENT_KINETIC_ENERGY,                 TKE_dw,                                    averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_SPECIFIC_TURBULENT_KINETIC_ENERGY,     TKE_plus_dw,                               averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_MORKOVIN_SCALED_SPECIFIC_TURBULENT_KINETIC_ENERGY, TKE_star_dw,                               averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_MASS_DENSITY_AUTOCOVARIANCE,                       mass_density_autocovariance_uw,            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
-                sd.set_point_value( cursor, point_identifier, sd.Q_PRESSURE_AUTOCOVARIANCE,                           pressure_autocovariance_uw,                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
-                sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE_AUTOCOVARIANCE,                        temperature_autocovariance_dw,             averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_NORMALIZED_MASS_DENSITY_AUTOCOVARIANCE,            normalized_mass_density_autocovariance_uw, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
-                sd.set_point_value( cursor, point_identifier, sd.Q_NORMALIZED_PRESSURE_AUTOCOVARIANCE,                normalized_pressure_autocovariance_uw,     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
-                sd.set_point_value( cursor, point_identifier, sd.Q_NORMALIZED_TEMPERATURE_AUTOCOVARIANCE,             normalized_temperature_autocovariance_dw,  averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_VELOCITY_COVARIANCE[1,1],                          R_uu_dw,                                   value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_VELOCITY_COVARIANCE[2,2],                          R_vv_dw,                                   value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_VELOCITY_COVARIANCE[3,3],                          R_ww_dw,                                   value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_VELOCITY_COVARIANCE[1,2],                          R_uv_dw,                                   value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[1,1],              R_uu_plus_dw,                              value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[2,2],              R_vv_plus_dw,                              value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[3,3],              R_ww_plus_dw,                              value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[1,2],              R_uv_plus_dw,                              value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[1,1],          R_uu_star_dw,                              value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[2,2],          R_vv_star_dw,                              value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[3,3],          R_ww_star_dw,                              value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[1,2],          R_uv_star_dw,                              value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_SPECIFIC_TURBULENT_KINETIC_ENERGY,                 TKE_dw,                                    value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_INNER_LAYER_SPECIFIC_TURBULENT_KINETIC_ENERGY,     TKE_plus_dw,                               value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_MORKOVIN_SCALED_SPECIFIC_TURBULENT_KINETIC_ENERGY, TKE_star_dw,                               value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_MASS_DENSITY_AUTOCOVARIANCE,                       mass_density_autocovariance_uw,            value_type=sd.VT_UNWEIGHTED_AVERAGE,       )
+                sd.set_point_value( cursor, point_identifier, sd.Q_PRESSURE_AUTOCOVARIANCE,                           pressure_autocovariance_uw,                value_type=sd.VT_UNWEIGHTED_AVERAGE,       )
+                sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE_AUTOCOVARIANCE,                        temperature_autocovariance_dw,             value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_NORMALIZED_MASS_DENSITY_AUTOCOVARIANCE,            normalized_mass_density_autocovariance_uw, value_type=sd.VT_UNWEIGHTED_AVERAGE,       )
+                sd.set_point_value( cursor, point_identifier, sd.Q_NORMALIZED_PRESSURE_AUTOCOVARIANCE,                normalized_pressure_autocovariance_uw,     value_type=sd.VT_UNWEIGHTED_AVERAGE,       )
+                sd.set_point_value( cursor, point_identifier, sd.Q_NORMALIZED_TEMPERATURE_AUTOCOVARIANCE,             normalized_temperature_autocovariance_dw,  value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
 
         bulk_quantities = {}
         for quantity in [ sd.Q_MASS_DENSITY,
@@ -266,7 +266,7 @@ with open( globals_filename, "r" ) as globals_file:
                 station_identifier,
                 sd.Q_DISTANCE_FROM_WALL,
                 quantity,
-                averaging_system2=sd.UNWEIGHTED_AVERAGING_SYSTEM,
+                value_type2=sd.VT_UNWEIGHTED_AVERAGE,
             )
             bulk_quantities[quantity] = sd.integrate_using_trapezoid_rule( outer_layer_coordinate_profile, quantity_profile )
 
@@ -279,14 +279,14 @@ with open( globals_filename, "r" ) as globals_file:
 
         fanning_friction_factor = 2.0 * wall_shear_stress / ( bulk_mass_density * bulk_velocity**2.0 )
 
-        center_line_velocity       = sd.get_labeled_value( cursor, station_identifier, sd.Q_STREAMWISE_VELOCITY, sd.PL_CENTER_LINE, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
-        center_line_temperature_uw = sd.get_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,         sd.PL_WALL,        averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
-        center_line_temperature_dw = sd.get_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,         sd.PL_WALL,        averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+        center_line_velocity       = sd.get_labeled_value( cursor, station_identifier, sd.Q_STREAMWISE_VELOCITY, sd.PL_CENTER_LINE, value_type=sd.VT_UNWEIGHTED_AVERAGE,       )
+        center_line_temperature_uw = sd.get_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,         sd.PL_WALL,        value_type=sd.VT_UNWEIGHTED_AVERAGE,       )
+        center_line_temperature_dw = sd.get_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,         sd.PL_WALL,        value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
 
         bulk_to_center_line_velocity_ratio = bulk_velocity / center_line_velocity
 
-        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER, bulk_reynolds_number, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, measurement_techniques=[sd.MT_CALCULATION], )
-        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,     bulk_mach_number,     averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, measurement_techniques=[sd.MT_CALCULATION], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER, bulk_reynolds_number, value_type=sd.VT_UNWEIGHTED_AVERAGE, measurement_techniques=[sd.MT_CALCULATION], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,     bulk_mach_number,     value_type=sd.VT_UNWEIGHTED_AVERAGE, measurement_techniques=[sd.MT_CALCULATION], )
 
         for quantity in [ sd.Q_ROUGHNESS_HEIGHT,
                           sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
@@ -299,25 +299,25 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.sdfloat( 0.0, 0.0 ),
             )
 
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_SHEAR_STRESS,                        sd.PL_WALL, wall_shear_stress,                   averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_VELOCITY,                   sd.PL_WALL, friction_velocity,                   averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_VISCOUS_LENGTH_SCALE,                sd.PL_WALL, viscous_length_scale,                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_TEMPERATURE,                sd.PL_WALL, friction_temperature,                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_INNER_LAYER_HEAT_FLUX,               sd.PL_WALL, B_q,                                 averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_HEAT_FLUX,                           sd.PL_WALL, wall_heat_flux,                      averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_REYNOLDS_NUMBER,            sd.PL_WALL, friction_reynolds_number,            averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER, sd.PL_WALL, semi_local_friction_reynolds_number, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_MACH_NUMBER,                sd.PL_WALL, friction_mach_number,                averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_FANNING_FRICTION_FACTOR,             sd.PL_WALL, fanning_friction_factor,             averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_SHEAR_STRESS,                        sd.PL_WALL, wall_shear_stress,                   value_type=sd.VT_UNWEIGHTED_AVERAGE, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_VELOCITY,                   sd.PL_WALL, friction_velocity,                   value_type=sd.VT_UNWEIGHTED_AVERAGE, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_VISCOUS_LENGTH_SCALE,                sd.PL_WALL, viscous_length_scale,                value_type=sd.VT_UNWEIGHTED_AVERAGE, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_TEMPERATURE,                sd.PL_WALL, friction_temperature,                value_type=sd.VT_UNWEIGHTED_AVERAGE, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_INNER_LAYER_HEAT_FLUX,               sd.PL_WALL, B_q,                                 value_type=sd.VT_UNWEIGHTED_AVERAGE, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_HEAT_FLUX,                           sd.PL_WALL, wall_heat_flux,                      value_type=sd.VT_UNWEIGHTED_AVERAGE, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_REYNOLDS_NUMBER,            sd.PL_WALL, friction_reynolds_number,            value_type=sd.VT_UNWEIGHTED_AVERAGE, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER, sd.PL_WALL, semi_local_friction_reynolds_number, value_type=sd.VT_UNWEIGHTED_AVERAGE, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FRICTION_MACH_NUMBER,                sd.PL_WALL, friction_mach_number,                value_type=sd.VT_UNWEIGHTED_AVERAGE, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_FANNING_FRICTION_FACTOR,             sd.PL_WALL, fanning_friction_factor,             value_type=sd.VT_UNWEIGHTED_AVERAGE, )
 
         # TODO: create profiles for these quantities.
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_LOCAL_TO_CENTER_LINE_TEMPERATURE_RATIO, sd.PL_WALL, wall_temperature / center_line_temperature_uw, averaging_system=sd.UNWEIGHTED_AVERAGING_SYSTEM,       )
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_LOCAL_TO_CENTER_LINE_TEMPERATURE_RATIO, sd.PL_WALL, wall_temperature / center_line_temperature_dw, averaging_system=sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_LOCAL_TO_CENTER_LINE_TEMPERATURE_RATIO, sd.PL_WALL, wall_temperature / center_line_temperature_uw, value_type=sd.VT_UNWEIGHTED_AVERAGE,       )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_LOCAL_TO_CENTER_LINE_TEMPERATURE_RATIO, sd.PL_WALL, wall_temperature / center_line_temperature_dw, value_type=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
 
         for point_identifier in sd.get_points_at_station( cursor, station_identifier ):
             streamwise_velocity = sd.get_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY )
-            sd.set_point_value( cursor, point_identifier,        sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO, streamwise_velocity /        bulk_velocity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, )
-            sd.set_point_value( cursor, point_identifier, sd.Q_LOCAL_TO_CENTER_LINE_STREAMWISE_VELOCITY_RATIO, streamwise_velocity / center_line_velocity, averaging_system=sd.BOTH_AVERAGING_SYSTEMS, )
+            sd.set_point_value( cursor, point_identifier,        sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO, streamwise_velocity /        bulk_velocity, value_type=sd.VT_BOTH_AVERAGES, )
+            sd.set_point_value( cursor, point_identifier, sd.Q_LOCAL_TO_CENTER_LINE_STREAMWISE_VELOCITY_RATIO, streamwise_velocity / center_line_velocity, value_type=sd.VT_BOTH_AVERAGES, )
 
 conn.commit()
 conn.close()

@@ -16,24 +16,24 @@ cursor.execute( "PRAGMA foreign_keys = ON;" )
 # Averaging systems
 cursor.execute(
 """
-CREATE TABLE averaging_systems (
+CREATE TABLE value_types (
     identifier  TEXT PRIMARY KEY UNIQUE,
     system_name TEXT NOT NULL
 );
 """
 )
 
-averaging_systems = {}
-averaging_systems[       sd.UNWEIGHTED_AVERAGING_SYSTEM ]       = "unweighted averaging"
-averaging_systems[ sd.DENSITY_WEIGHTED_AVERAGING_SYSTEM ] = "density-weighted averaging"
+value_types = {}
+value_types[       sd.VT_UNWEIGHTED_AVERAGE ]       = "unweighted averaging"
+value_types[ sd.VT_DENSITY_WEIGHTED_AVERAGE ] = "density-weighted averaging"
 
-for identifier in averaging_systems:
+for identifier in value_types:
     cursor.execute(
     """
-    INSERT INTO averaging_systems( identifier, system_name )
+    INSERT INTO value_types( identifier, system_name )
     VALUES( ?, ? );
     """,
-    ( identifier, averaging_systems[identifier], )
+    ( identifier, value_types[identifier], )
     )
 
 # Coordinate systems
@@ -780,13 +780,13 @@ CREATE TABLE study_values (
     quantity              TEXT NOT NULL,
     study_value           REAL NOT NULL,
     study_uncertainty     REAL DEFAULT NULL CHECK ( study_uncertainty >= 0.0 ),
-    averaging_system      TEXT DEFAULT NULL,
+    value_type      TEXT DEFAULT NULL,
     mt_set                INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(study, quantity, averaging_system, mt_set),
+    PRIMARY KEY(study, quantity, value_type, mt_set),
     FOREIGN KEY(study)                 REFERENCES                studies(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
-    FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier)
+    FOREIGN KEY(value_type)      REFERENCES      value_types(identifier)
 );
 """
 )
@@ -799,13 +799,13 @@ CREATE TABLE series_values (
     quantity              TEXT NOT NULL,
     series_value          REAL NOT NULL,
     series_uncertainty    REAL DEFAULT NULL CHECK ( series_uncertainty >= 0.0 ),
-    averaging_system      TEXT DEFAULT NULL,
+    value_type      TEXT DEFAULT NULL,
     mt_set                INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(series, quantity, averaging_system, mt_set),
+    PRIMARY KEY(series, quantity, value_type, mt_set),
     FOREIGN KEY(series)                REFERENCES                 series(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
-    FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier)
+    FOREIGN KEY(value_type)      REFERENCES      value_types(identifier)
 );
 """
 )
@@ -818,13 +818,13 @@ CREATE TABLE station_values (
     quantity              TEXT NOT NULL,
     station_value         REAL NOT NULL,
     station_uncertainty   REAL DEFAULT NULL CHECK ( station_uncertainty >= 0.0 ),
-    averaging_system      TEXT DEFAULT NULL,
+    value_type      TEXT DEFAULT NULL,
     mt_set                INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(station, quantity, averaging_system, mt_set),
+    PRIMARY KEY(station, quantity, value_type, mt_set),
     FOREIGN KEY(station)               REFERENCES               stations(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
-    FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier)
+    FOREIGN KEY(value_type)      REFERENCES      value_types(identifier)
 );
 """
 )
@@ -837,13 +837,13 @@ CREATE TABLE point_values (
     quantity              TEXT NOT NULL,
     point_value           REAL NOT NULL,
     point_uncertainty     REAL DEFAULT NULL CHECK ( point_uncertainty >= 0.0 ),
-    averaging_system      TEXT DEFAULT NULL,
+    value_type      TEXT DEFAULT NULL,
     mt_set                INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(point, quantity, averaging_system, mt_set),
+    PRIMARY KEY(point, quantity, value_type, mt_set),
     FOREIGN KEY(point)                 REFERENCES                 points(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
-    FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier)
+    FOREIGN KEY(value_type)      REFERENCES      value_types(identifier)
 );
 """
 )
@@ -854,13 +854,13 @@ cursor.execute(
 CREATE TABLE study_values_mt (
     study                 TEXT NOT NULL,
     quantity              TEXT NOT NULL,
-    averaging_system      TEXT DEFAULT NULL,
+    value_type      TEXT DEFAULT NULL,
     mt_set                INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     measurement_technique TEXT DEFAULT NULL,
-    PRIMARY KEY(study, quantity, averaging_system, mt_set, measurement_technique),
+    PRIMARY KEY(study, quantity, value_type, mt_set, measurement_technique),
     FOREIGN KEY(study)                 REFERENCES                studies(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
-    FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier),
+    FOREIGN KEY(value_type)      REFERENCES      value_types(identifier),
     FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier)
 );
 """
@@ -872,13 +872,13 @@ cursor.execute(
 CREATE TABLE series_values_mt (
     series                TEXT NOT NULL,
     quantity              TEXT NOT NULL,
-    averaging_system      TEXT DEFAULT NULL,
+    value_type      TEXT DEFAULT NULL,
     mt_set                INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     measurement_technique TEXT DEFAULT NULL,
-    PRIMARY KEY(series, quantity, averaging_system, mt_set, measurement_technique),
+    PRIMARY KEY(series, quantity, value_type, mt_set, measurement_technique),
     FOREIGN KEY(series)                REFERENCES                 series(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
-    FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier),
+    FOREIGN KEY(value_type)      REFERENCES      value_types(identifier),
     FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier)
 );
 """
@@ -890,13 +890,13 @@ cursor.execute(
 CREATE TABLE station_values_mt (
     station               TEXT NOT NULL,
     quantity              TEXT NOT NULL,
-    averaging_system      TEXT DEFAULT NULL,
+    value_type      TEXT DEFAULT NULL,
     mt_set                INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     measurement_technique TEXT DEFAULT NULL,
-    PRIMARY KEY(station, quantity, averaging_system, mt_set, measurement_technique),
+    PRIMARY KEY(station, quantity, value_type, mt_set, measurement_technique),
     FOREIGN KEY(station)               REFERENCES               stations(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
-    FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier),
+    FOREIGN KEY(value_type)      REFERENCES      value_types(identifier),
     FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier)
 );
 """
@@ -908,13 +908,13 @@ cursor.execute(
 CREATE TABLE point_values_mt (
     point                 TEXT NOT NULL,
     quantity              TEXT NOT NULL,
-    averaging_system      TEXT DEFAULT NULL,
+    value_type      TEXT DEFAULT NULL,
     mt_set                INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     measurement_technique TEXT DEFAULT NULL,
-    PRIMARY KEY(point, quantity, averaging_system, mt_set, measurement_technique),
+    PRIMARY KEY(point, quantity, value_type, mt_set, measurement_technique),
     FOREIGN KEY(point)                 REFERENCES                 points(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
-    FOREIGN KEY(averaging_system)      REFERENCES      averaging_systems(identifier),
+    FOREIGN KEY(value_type)      REFERENCES      value_types(identifier),
     FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier)
 );
 """
@@ -939,13 +939,13 @@ cursor.execute(
 CREATE TABLE study_value_notes (
     study            TEXT NOT NULL,
     quantity         TEXT NOT NULL,
-    averaging_system TEXT DEFAULT NULL,
+    value_type TEXT DEFAULT NULL,
     mt_set           INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     note             INTEGER NOT NULL CHECK ( note > 0 ),
-    PRIMARY KEY(study, quantity, averaging_system, mt_set, note),
+    PRIMARY KEY(study, quantity, value_type, mt_set, note),
     FOREIGN KEY(study)            REFERENCES           studies(identifier),
     FOREIGN KEY(quantity)         REFERENCES        quantities(identifier),
-    FOREIGN KEY(averaging_system) REFERENCES averaging_systems(identifier),
+    FOREIGN KEY(value_type) REFERENCES value_types(identifier),
     FOREIGN KEY(note)             REFERENCES             notes(note_id)
 );
 """
@@ -970,13 +970,13 @@ cursor.execute(
 CREATE TABLE series_value_notes (
     series           TEXT NOT NULL,
     quantity         TEXT NOT NULL,
-    averaging_system TEXT DEFAULT NULL,
+    value_type TEXT DEFAULT NULL,
     mt_set           INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     note             INTEGER NOT NULL CHECK ( note > 0 ),
-    PRIMARY KEY(series, quantity, averaging_system, mt_set, note),
+    PRIMARY KEY(series, quantity, value_type, mt_set, note),
     FOREIGN KEY(series)           REFERENCES            series(identifier),
     FOREIGN KEY(quantity)         REFERENCES        quantities(identifier),
-    FOREIGN KEY(averaging_system) REFERENCES averaging_systems(identifier),
+    FOREIGN KEY(value_type) REFERENCES value_types(identifier),
     FOREIGN KEY(note)             REFERENCES             notes(note_id)
 );
 """
@@ -1001,13 +1001,13 @@ cursor.execute(
 CREATE TABLE station_value_notes (
     station          TEXT NOT NULL,
     quantity         TEXT NOT NULL,
-    averaging_system TEXT DEFAULT NULL,
+    value_type TEXT DEFAULT NULL,
     mt_set           INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     note             INTEGER NOT NULL CHECK ( note > 0 ),
-    PRIMARY KEY(station, quantity, averaging_system, mt_set, note),
+    PRIMARY KEY(station, quantity, value_type, mt_set, note),
     FOREIGN KEY(station)          REFERENCES          stations(identifier),
     FOREIGN KEY(quantity)         REFERENCES        quantities(identifier),
-    FOREIGN KEY(averaging_system) REFERENCES averaging_systems(identifier),
+    FOREIGN KEY(value_type) REFERENCES value_types(identifier),
     FOREIGN KEY(note)             REFERENCES             notes(note_id)
 );
 """
@@ -1032,13 +1032,13 @@ cursor.execute(
 CREATE TABLE point_value_notes (
     point            TEXT NOT NULL,
     quantity         TEXT NOT NULL,
-    averaging_system TEXT DEFAULT NULL,
+    value_type TEXT DEFAULT NULL,
     mt_set           INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     note             INTEGER NOT NULL CHECK ( note > 0 ),
-    PRIMARY KEY(point, quantity, averaging_system, mt_set, note),
+    PRIMARY KEY(point, quantity, value_type, mt_set, note),
     FOREIGN KEY(point)            REFERENCES            points(identifier),
     FOREIGN KEY(quantity)         REFERENCES        quantities(identifier),
-    FOREIGN KEY(averaging_system) REFERENCES averaging_systems(identifier),
+    FOREIGN KEY(value_type) REFERENCES value_types(identifier),
     FOREIGN KEY(note)             REFERENCES             notes(note_id)
 );
 """
