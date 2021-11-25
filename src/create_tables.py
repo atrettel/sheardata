@@ -13,7 +13,7 @@ conn = sqlite3.connect( sys.argv[1] )
 cursor =  conn.cursor()
 cursor.execute( "PRAGMA foreign_keys = ON;" )
 
-# Averaging systems
+# Value types
 cursor.execute(
 """
 CREATE TABLE value_types (
@@ -24,7 +24,8 @@ CREATE TABLE value_types (
 )
 
 value_types = {}
-value_types[       sd.VT_UNWEIGHTED_AVERAGE ]       = "unweighted averaging"
+value_types[ sd.VT_UNAVERAGED_VALUE         ] = "unaveraged value"
+value_types[ sd.VT_UNWEIGHTED_AVERAGE       ] = "unweighted averaging"
 value_types[ sd.VT_DENSITY_WEIGHTED_AVERAGE ] = "density-weighted averaging"
 
 for identifier in value_types:
