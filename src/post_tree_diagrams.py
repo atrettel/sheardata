@@ -13,10 +13,10 @@ cursor.execute( "PRAGMA foreign_keys = ON;" )
 
 with open( "figure-flow-classification-tree-diagram.gv", "w" ) as f:
     f.write( 'digraph taxonomy {\n' )
-    f.write( 'concentrate=true\n' )
-    f.write( 'rankdir=LR\n' )
-    f.write( 'ranksep="0.25"\n' )
-    f.write( 'node [shape=circle, fixedsize=true, width="0.5", height="0.5", margin="0.25"]\n' )
+    f.write( 'concentrate=true;\n' )
+    f.write( 'rankdir=LR;\n' )
+    f.write( 'ranksep="0.25";\n' )
+    f.write( 'node [shape=circle, fixedsize=true, width="0.5", height="0.5", margin="0.25"];\n' )
 
     cursor.execute(
     """
@@ -29,7 +29,7 @@ with open( "figure-flow-classification-tree-diagram.gv", "w" ) as f:
         f.write( '"{:s}" [texlbl="{:s}"]'.format(
             result[0],
             r"\texttt{"+result[0]+r"}",
-        )+"\n" )
+        )+";\n" )
     
     cursor.execute(
     """
@@ -44,6 +44,8 @@ with open( "figure-flow-classification-tree-diagram.gv", "w" ) as f:
             result[0],
             result[1],
         )+"\n" )
+
+    f.write( '{rank = same; F; I; E;}\n' )
 
     f.write( '}\n' )
 
