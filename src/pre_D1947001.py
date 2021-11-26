@@ -218,7 +218,7 @@ for duct in ducts:
                     sd.RECTANGULAR_GEOMETRY
                 )
 
-            sd.add_air_components( cursor, series_identifier )
+            # TODO: set air as the working fluid.
 
             station_number = 1
             station_identifier = sd.add_station(

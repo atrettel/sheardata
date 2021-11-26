@@ -179,11 +179,7 @@ with open( globals_filename, "r" ) as globals_file:
             notes=[series_11_note],
         )
 
-        sd.add_working_fluid_component(
-            cursor,
-            series_identifier,
-            sd.WATER_LIQUID,
-        )
+        # TODO: set liquid water as the working fluid.
 
         sd.update_series_geometry(
             cursor,

@@ -89,22 +89,6 @@ GAS_PHASE    = "g"
 LIQUID_PHASE = "l"
 SOLID_PHASE  = "s"
 
-# Fluids
-ARGON_GAS          = "Ar(g)"
-CARBON_DIOXIDE_GAS = "CO2(g)"
-HELIUM_GAS         = "He(g)"
-HYDROGEN_GAS       = "H(g)"
-NITROGEN_GAS       = "N2(g)"
-OXYGEN_GAS         = "O2(g)"
-WATER_LIQUID       = "H2O(l)"
-WATER_VAPOR        = "H2O(g)"
-
-AIR_COMPONENTS = [ NITROGEN_GAS,
-                   OXYGEN_GAS,
-                   ARGON_GAS,
-                   CARBON_DIOXIDE_GAS,
-                   WATER_VAPOR, ]
-
 # Geometries
 ELLIPTICAL_GEOMETRY  = "E"
 RECTANGULAR_GEOMETRY = "R"
@@ -426,9 +410,6 @@ INCOMPRESSIBLE_RATIO_PROFILES = [
     Q_LOCAL_TO_WALL_MASS_DENSITY_RATIO,
     Q_LOCAL_TO_WALL_TEMPERATURE_RATIO,
 ]
-
-AMOUNT_FRACTION_PREFIX      = "X_"
-MASS_FRACTION_PREFIX        = "Y_"
 
 # Study types
 DIRECT_NUMERICAL_SIMULATION_STUDY_TYPE = "DNS"
@@ -1483,94 +1464,6 @@ def get_labeled_value( cursor, station, quantity, label,
         mt_set=1,
     )
 
-def add_working_fluid_component( cursor, series, fluid ):
-    cursor.execute(
-    """
-    INSERT INTO components( series, fluid )
-    VALUES( ?, ? );
-    """,
-    ( sanitize_identifier(series), str(fluid), )
-    )
-
-def set_working_fluid_name( cursor, series, name ):
-    cursor.execute(
-    """
-    INSERT INTO components( series, name )
-    VALUES( ?, ? );
-    """,
-    ( sanitize_identifier(series), str(name), )
-    )
-
-def add_air_components( cursor, series ):
-    for fluid in AIR_COMPONENTS:
-        add_working_fluid_component( cursor, series, fluid )
-
-def get_working_fluid_components( cursor, series ):
-    cursor.execute(
-    """
-    SELECT fluid
-    FROM components
-    WHERE series=?
-    ORDER BY fluid;
-    """,
-    ( sanitize_identifier(series), )
-    )
-    components = []
-    for component in cursor.fetchall():
-        if ( component[0] != None ):
-            components.append( str(component[0]) )
-    return components
-
-def get_working_fluid_name( cursor, series ):
-    components = get_working_fluid_components( cursor, series )
-    n_components = len(components)
-    if not components:
-        cursor.execute(
-        """
-        SELECT name
-        FROM components
-        WHERE series=?
-        LIMIT 1;
-        """,
-        ( sanitize_identifier(series), )
-        )
-        result = cursor.fetchone()
-        return result[0]
-    else:
-        if all( comp in components for comp in AIR_COMPONENTS ):
-            return "air (g)"
-        elif ( n_components == 1 ):
-            cursor.execute(
-            """
-            SELECT fluid_name, phase
-            FROM fluids
-            WHERE identifier=?
-            LIMIT 1;
-            """,
-            ( str(components[0]), )
-            )
-            result = cursor.fetchone()
-            return "{:s} ({:s})".format( result[0], result[1] )
-        else:
-            name = "mixture of "
-            i_component = 0
-            for component in components:
-                cursor.execute(
-                """
-                SELECT fluid_name, phase
-                FROM fluids
-                WHERE identifier=?
-                LIMIT 1;
-                """,
-                ( str(component), )
-                )
-                result = cursor.fetchone()
-                name += "{:s} ({:s})".format( result[0], result[1] )
-                i_component += 1
-                if ( i_component != n_components ):
-                    name += " and "
-            return name
-
 def integrate_using_trapezoid_rule( x, f, F0=sdfloat(0.0,0.0) ):
     F = F0
     for i in range(len(x)-1):
@@ -1665,6 +1558,7 @@ def ideal_gas_mass_density( temperature,                            \
                             pressure=STANDARD_ATMOSPHERIC_PRESSURE, \
                             specific_gas_constant=DRY_AIR_SPECIFIC_GAS_CONSTANT, ):
     return pressure / ( specific_gas_constant * temperature )
+
 def ideal_gas_speed_of_sound( temperature, \
         heat_capacity_ratio=DRY_AIR_HEAT_CAPACITY_RATIO, \
         specific_gas_constant=DRY_AIR_SPECIFIC_GAS_CONSTANT, ):

@@ -204,6 +204,9 @@ with open( elements_filename, "r" ) as elements_file:
         )
 
 # Fluids
+#
+# This table is vestigial at the moment until a better way to handle fluid
+# mixtures and properties is implemented.
 cursor.execute(
 """
 CREATE TABLE fluids (
@@ -214,33 +217,6 @@ CREATE TABLE fluids (
 );
 """
 )
-
-class fluid:
-    name       = None
-    phase      = None
-
-    def __init__( self, name, phase ):
-        self.name       = name
-        self.phase      = phase
-
-fluids = {}
-fluids[ sd.ARGON_GAS          ] = fluid( "argon",          "g" )
-fluids[ sd.CARBON_DIOXIDE_GAS ] = fluid( "carbon dioxide", "g" )
-fluids[ sd.HELIUM_GAS         ] = fluid( "helium",         "g" )
-fluids[ sd.HYDROGEN_GAS       ] = fluid( "hydrogen",       "g" )
-fluids[ sd.NITROGEN_GAS       ] = fluid( "nitrogen",       "g" )
-fluids[ sd.OXYGEN_GAS         ] = fluid( "oxygen",         "g" )
-fluids[ sd.WATER_LIQUID       ] = fluid( "water",          "l" )
-fluids[ sd.WATER_VAPOR        ] = fluid( "water",          "g" )
-
-for identifier in fluids:
-    cursor.execute(
-    """
-    INSERT INTO fluids( identifier, fluid_name, phase )
-    VALUES( ?, ?, ? );
-    """,
-    ( identifier, fluids[identifier].name, fluids[identifier].phase, )
-    )
 
 # Geometries
 cursor.execute(
@@ -607,17 +583,6 @@ quantities[ sd.Q_LOCAL_TO_WALL_MASS_DENSITY_RATIO               ] = quantity( "l
 quantities[ sd.Q_LOCAL_TO_WALL_STREAMWISE_VELOCITY_RATIO        ] = quantity( "local-to-wall streamwise velocity ratio",        )
 quantities[ sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO                ] = quantity( "local-to-wall temperature ratio",                )
 
-# Quantities, point, component-based
-for prefix in [ sd.AMOUNT_FRACTION_PREFIX,
-                sd.MASS_FRACTION_PREFIX, ]:
-    for fluid in fluids:
-        name = "unknown quantity"
-        if ( prefix == sd.AMOUNT_FRACTION_PREFIX ):
-            name = "amount fraction for "
-        elif ( prefix == sd.MASS_FRACTION_PREFIX ):
-            name = "mass fraction for "
-        quantities[ prefix+fluid ] = quantity( name+fluids[fluid].name+" ("+fluids[fluid].phase+")" )
-
 for identifier in quantities:
     cursor.execute(
     """
@@ -754,6 +719,9 @@ CREATE TABLE sources (
 )
 
 # Components
+#
+# This table is vestigial at the moment until a better way to handle fluid
+# mixtures and properties is implemented.
 cursor.execute(
 """
 CREATE TABLE components (

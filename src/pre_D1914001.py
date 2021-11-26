@@ -216,14 +216,7 @@ with open( ratio_filename, "r" ) as ratio_file:
             coordinate_system=sd.CYLINDRICAL_COORDINATE_SYSTEM,
         )
 
-        if ( working_fluid == "Air" ):
-            sd.add_air_components( cursor, series_identifier )
-        elif ( working_fluid == "Water" ):
-            sd.add_working_fluid_component(
-                cursor,
-                series_identifier,
-                sd.WATER_LIQUID,
-            )
+        # TODO: set working fluids.
 
         sd.update_series_geometry(
             cursor,
@@ -390,20 +383,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             outlier=outlier,
         )
 
-        if ( working_fluid == "Air" ):
-            sd.add_air_components( cursor, series_identifier )
-        elif ( working_fluid == "Water" ):
-            sd.add_working_fluid_component(
-                cursor,
-                series_identifier,
-                sd.WATER_LIQUID,
-            )
-        elif ( working_fluid == "Thick oil" ):
-            sd.set_working_fluid_name(
-                cursor,
-                series_identifier,
-                "Stanton and Pannell thick oil",
-            )
+        # TODO: add working fluid components.
 
         # Without knowing precisely what "thick oil" is it is difficult to
         # assume anything else.

@@ -95,7 +95,8 @@ with open( globals_filename, "r" ) as globals_file:
         # \begin{quote}
         # air was the fluid chosen for the experiments
         # \end{quote}
-        sd.add_air_components( cursor, series_identifier )
+
+        # TODO: set air as the working fluid.
 
         sd.update_series_geometry(
             cursor,
