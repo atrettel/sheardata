@@ -101,7 +101,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.update_series_geometry(
             cursor,
             series_identifier,
-            sd.ELLIPTICAL_GEOMETRY
+            sd.GM_ELLIPTICAL
         )
 
         station_number = 1

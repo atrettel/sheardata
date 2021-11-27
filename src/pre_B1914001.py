@@ -59,7 +59,7 @@ sd.set_series_value( cursor, series_identifier, sd.Q_FREESTREAM_VELOCITY, freest
 sd.update_series_geometry(
     cursor,
     series_identifier,
-    sd.RECTANGULAR_GEOMETRY
+    sd.GM_RECTANGULAR
 )
 
 globals_filename = "../data/{:s}/globals.csv".format( study_identifier )

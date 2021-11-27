@@ -90,8 +90,8 @@ PH_LIQUID = "l"
 PH_SOLID  = "s"
 
 # Geometries
-ELLIPTICAL_GEOMETRY  = "E"
-RECTANGULAR_GEOMETRY = "R"
+GM_ELLIPTICAL  = "E"
+GM_RECTANGULAR = "R"
 
 # Measurement techniques (and other sources of information)
 MT_APPROXIMATION                            = "APP"

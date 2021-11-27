@@ -184,7 +184,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.update_series_geometry(
             cursor,
             series_identifier,
-            sd.RECTANGULAR_GEOMETRY
+            sd.GM_RECTANGULAR
         )
 
         sd.set_series_value( cursor, series_identifier, sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS, distance_between_pressure_taps, )

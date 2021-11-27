@@ -221,7 +221,7 @@ with open( ratio_filename, "r" ) as ratio_file:
         sd.update_series_geometry(
             cursor,
             series_identifier,
-            sd.ELLIPTICAL_GEOMETRY
+            sd.GM_ELLIPTICAL
         )
 
         sd.set_series_value( cursor, series_identifier, sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS, distance_between_pressure_taps, )
@@ -401,7 +401,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
         sd.update_series_geometry(
             cursor,
             series_identifier,
-            sd.ELLIPTICAL_GEOMETRY
+            sd.GM_ELLIPTICAL
         )
 
         if ( distance_between_pressure_taps != None ):

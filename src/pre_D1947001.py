@@ -198,7 +198,7 @@ for duct in ducts:
                 sd.update_series_geometry(
                     cursor,
                     series_identifier,
-                    sd.ELLIPTICAL_GEOMETRY
+                    sd.GM_ELLIPTICAL
                 )
             else:
                 series_identifier = sd.add_series(
@@ -215,7 +215,7 @@ for duct in ducts:
                 sd.update_series_geometry(
                     cursor,
                     series_identifier,
-                    sd.RECTANGULAR_GEOMETRY
+                    sd.GM_RECTANGULAR
                 )
 
             # TODO: set air as the working fluid.

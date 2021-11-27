@@ -229,8 +229,8 @@ CREATE TABLE geometries (
 )
 
 geometries = {}
-geometries[ sd.ELLIPTICAL_GEOMETRY  ] =  "elliptical geometry"
-geometries[ sd.RECTANGULAR_GEOMETRY ] = "rectangular geometry"
+geometries[ sd.GM_ELLIPTICAL  ] =  "elliptical geometry"
+geometries[ sd.GM_RECTANGULAR ] = "rectangular geometry"
 
 for identifier in geometries:
     cursor.execute(
