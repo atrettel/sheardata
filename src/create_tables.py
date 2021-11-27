@@ -155,9 +155,9 @@ CREATE TABLE phases (
 )
 
 phases = {}
-phases[ sd.GAS_PHASE    ] =    "gas"
-phases[ sd.LIQUID_PHASE ] = "liquid"
-phases[ sd.SOLID_PHASE  ] =  "solid"
+phases[ sd.PH_GAS    ] =    "gas"
+phases[ sd.PH_LIQUID ] = "liquid"
+phases[ sd.PH_SOLID  ] =  "solid"
 
 for identifier in phases:
     cursor.execute(

@@ -85,9 +85,9 @@ FR_TRANSITIONAL = "trans"
 FR_TURBULENT    = "turb"
 
 # Phases
-GAS_PHASE    = "g"
-LIQUID_PHASE = "l"
-SOLID_PHASE  = "s"
+PH_GAS    = "g"
+PH_LIQUID = "l"
+PH_SOLID  = "s"
 
 # Geometries
 ELLIPTICAL_GEOMETRY  = "E"
