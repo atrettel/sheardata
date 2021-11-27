@@ -131,9 +131,9 @@ CREATE TABLE flow_regimes (
 )
 
 flow_regimes = {}
-flow_regimes[      sd.LAMINAR_FLOW_REGIME ] =      "laminar flow"
-flow_regimes[ sd.TRANSITIONAL_FLOW_REGIME ] = "transitional flow"
-flow_regimes[    sd.TURBULENT_FLOW_REGIME ] =    "turbulent flow"
+flow_regimes[      sd.FR_LAMINAR ] =      "laminar flow"
+flow_regimes[ sd.FR_TRANSITIONAL ] = "transitional flow"
+flow_regimes[    sd.FR_TURBULENT ] =    "turbulent flow"
 
 for identifier in flow_regimes:
     cursor.execute(

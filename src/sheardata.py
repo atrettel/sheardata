@@ -80,9 +80,9 @@ FC_UNCLASSIFIED_FLOW    = "U"
 FC_WAKE                 = "W"
 
 # Flow regimes
-LAMINAR_FLOW_REGIME      = "lam"
-TRANSITIONAL_FLOW_REGIME = "trans"
-TURBULENT_FLOW_REGIME    = "turb"
+FR_LAMINAR      = "lam"
+FR_TRANSITIONAL = "trans"
+FR_TURBULENT    = "turb"
 
 # Phases
 GAS_PHASE    = "g"
