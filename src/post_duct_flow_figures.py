@@ -48,8 +48,8 @@ class DuctType:
         self.laminar_constant  = float(laminar_constant)
 
 duct_types = {}
-duct_types["channel"] = DuctType( sd.RECTANGULAR_GEOMETRY, sd.RECTANGULAR_COORDINATE_SYSTEM, 7.0, float("inf"), 24.0 )
-duct_types["pipe"]    = DuctType(  sd.ELLIPTICAL_GEOMETRY, sd.CYLINDRICAL_COORDINATE_SYSTEM, 1.0,          1.0, 16.0 )
+duct_types["channel"] = DuctType( sd.RECTANGULAR_GEOMETRY, sd.CS_RECTANGULAR, 7.0, float("inf"), 24.0 )
+duct_types["pipe"]    = DuctType(  sd.ELLIPTICAL_GEOMETRY, sd.CS_CYLINDRICAL, 1.0,          1.0, 16.0 )
 
 max_inner_layer_roughness_height = 1.0
 min_bulk_mach_number = 0.0

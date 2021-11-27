@@ -83,7 +83,7 @@ with open( globals_filename, "r" ) as globals_file:
             study_number=study_number,
             series_number=series_number,
             number_of_dimensions=2,
-            coordinate_system=sd.CYLINDRICAL_COORDINATE_SYSTEM,
+            coordinate_system=sd.CS_CYLINDRICAL,
         )
 
         sd.set_series_value( cursor, series_identifier, sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS, distance_between_pressure_taps, )

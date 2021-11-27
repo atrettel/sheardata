@@ -48,8 +48,8 @@ CREATE TABLE coordinate_systems (
 )
 
 coordinate_systems = {}
-coordinate_systems[ sd.RECTANGULAR_COORDINATE_SYSTEM ] = "rectangular coordinates"
-coordinate_systems[ sd.CYLINDRICAL_COORDINATE_SYSTEM ] = "cylindrical coordinates"
+coordinate_systems[ sd.CS_RECTANGULAR ] = "rectangular coordinates"
+coordinate_systems[ sd.CS_CYLINDRICAL ] = "cylindrical coordinates"
 
 for identifier in coordinate_systems:
     cursor.execute(

@@ -180,7 +180,7 @@ with open( globals_filename, "r" ) as globals_file:
             study_number=study_number,
             series_number=series_number,
             number_of_dimensions=2,
-            coordinate_system=sd.RECTANGULAR_COORDINATE_SYSTEM,
+            coordinate_system=sd.CS_RECTANGULAR,
         )
 
         # TODO: set liquid water as the working fluid.
