@@ -610,9 +610,9 @@ CREATE TABLE study_types (
 )
 
 study_types = {}
-study_types[ sd.DIRECT_NUMERICAL_SIMULATION_STUDY_TYPE ] = "direct numerical simulation"
-study_types[                sd.EXPERIMENTAL_STUDY_TYPE ] = "experiment"
-study_types[       sd.LARGE_EDDY_SIMULATION_STUDY_TYPE ] = "large eddy simulation"
+study_types[ sd.ST_DIRECT_NUMERICAL_SIMULATION ] = "direct numerical simulation"
+study_types[ sd.ST_EXPERIMENT                  ] = "experiment"
+study_types[ sd.ST_LARGE_EDDY_SIMULATION       ] = "large eddy simulation"
 
 for identifier in study_types:
     cursor.execute(

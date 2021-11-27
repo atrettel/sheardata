@@ -120,8 +120,8 @@ for duct_type in duct_types:
         if ( quantity == sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO ):
             point_label = sd.PL_CENTER_LINE
 
-        for study_type in [ sd.DIRECT_NUMERICAL_SIMULATION_STUDY_TYPE,
-                                           sd.EXPERIMENTAL_STUDY_TYPE, ]:
+        for study_type in [ sd.ST_DIRECT_NUMERICAL_SIMULATION,
+                                           sd.ST_EXPERIMENT, ]:
             cursor.execute(
             """
             SELECT identifier
@@ -239,7 +239,7 @@ for duct_type in duct_types:
 
             study_order = 2
             marker_type = "o"
-            if ( study_type == sd.DIRECT_NUMERICAL_SIMULATION_STUDY_TYPE ):
+            if ( study_type == sd.ST_DIRECT_NUMERICAL_SIMULATION ):
                 marker_type = "d"
                 study_order = 3
 

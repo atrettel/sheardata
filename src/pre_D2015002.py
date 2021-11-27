@@ -23,7 +23,7 @@ study_identifier = sd.add_study(
     flow_class=flow_class,
     year=year,
     study_number=study_number,
-    study_type=sd.DIRECT_NUMERICAL_SIMULATION_STUDY_TYPE,
+    study_type=sd.ST_DIRECT_NUMERICAL_SIMULATION,
 )
 
 sd.add_source( cursor, study_identifier, "LeeM+2015+eng+JOUR", sd.PRIMARY_SOURCE )
