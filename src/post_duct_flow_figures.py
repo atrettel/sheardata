@@ -186,7 +186,7 @@ for duct_type in duct_types:
             ORDER BY identifier;
             """,
             (
-                sd.DUCT_FLOW_CLASS,
+                sd.FC_DUCT_FLOW,
                 study_type,
                 int(2),
                 duct_types[duct_type].coordinate_system,

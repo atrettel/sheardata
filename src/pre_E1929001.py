@@ -14,7 +14,7 @@ conn   = sqlite3.connect( sys.argv[1] )
 cursor = conn.cursor()
 cursor.execute( "PRAGMA foreign_keys = ON;" )
 
-flow_class   = sd.EXTERNAL_FLOW_CLASS
+flow_class   = sd.FC_EXTERNAL_FLOW
 year         = 1929
 study_number = 1
 
