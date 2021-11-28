@@ -45,7 +45,10 @@ with open( "figure-flow-classification-tree-diagram.gv", "w" ) as f:
             result[1],
         )+"\n" )
 
-    f.write( '{rank = same; F; I; E;}\n' )
+    f.write( '{rank = same; edge[style=invis]; F -> E -> I; rankdir=TB;}\n' )
+    f.write( '{rank = same; edge[style=invis]; J -> M -> W; rankdir=TB;}\n' )
+    f.write( '{rank = same; edge[style=invis]; B -> K; rankdir=TB;}\n' )
+    f.write( '{rank = same; edge[style=invis]; D -> R; rankdir=TB;}\n' )
 
     f.write( '}\n' )
 
