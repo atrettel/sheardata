@@ -210,7 +210,7 @@ with open( elements_filename, "r" ) as elements_file:
 cursor.execute(
 """
 CREATE TABLE fluids (
-    identifier TEXT PRIMARY KEY UNIQUE,
+    fluid_id   TEXT PRIMARY KEY UNIQUE,
     fluid_name TEXT NOT NULL,
     phase_id   TEXT NOT NULL,
     FOREIGN KEY(phase_id) REFERENCES phases(phase_id)
@@ -742,15 +742,15 @@ CREATE TABLE sources (
 cursor.execute(
 """
 CREATE TABLE components (
-    series TEXT NOT NULL,
-    fluid  TEXT DEFAULT NULL,
-    name   TEXT DEFAULT NULL CHECK (
-        fluid IS NULL     AND name IS NOT NULL
+    series   TEXT NOT NULL,
+    fluid_id TEXT DEFAULT NULL,
+    name     TEXT DEFAULT NULL CHECK (
+        fluid_id IS     NULL AND name IS NOT NULL
         OR
-        fluid IS NOT NULL AND name IS NULL ),
-    PRIMARY KEY(series, fluid),
-    FOREIGN KEY(series) REFERENCES series(identifier),
-    FOREIGN KEY(fluid)  REFERENCES fluids(identifier)
+        fluid_id IS NOT NULL AND name IS NULL ),
+    PRIMARY KEY(series, fluid_id),
+    FOREIGN KEY(series)   REFERENCES series(identifier),
+    FOREIGN KEY(fluid_id) REFERENCES fluids(fluid_id)
 );
 """
 )
