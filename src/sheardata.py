@@ -538,7 +538,7 @@ def add_study( cursor, flow_class, year, study_number, study_type, \
     study = identify_study( flow_class, year, study_number )
     cursor.execute(
     """
-    INSERT INTO studies( identifier, flow_class, year, study_number,
+    INSERT INTO studies( identifier, flow_class_id, year, study_number,
                          study_type, outlier )
     VALUES( ?, ?, ?, ?, ?, ? );
     """,

@@ -64,10 +64,10 @@ for identifier in coordinate_systems:
 cursor.execute(
 """
 CREATE TABLE flow_classes (
-    identifier TEXT PRIMARY KEY UNIQUE CHECK ( length(identifier) = 1 ),
-    class_name TEXT NOT NULL,
-    parent     TEXT DEFAULT NULL,
-    FOREIGN KEY(parent) REFERENCES flow_classes(identifier)
+    flow_class_id     TEXT PRIMARY KEY UNIQUE CHECK ( length(flow_class_id) = 1 ),
+    flow_class_name   TEXT NOT NULL,
+    flow_class_parent TEXT DEFAULT NULL,
+    FOREIGN KEY(flow_class_parent) REFERENCES flow_classes(flow_class_id)
 );
 """
 )
@@ -104,7 +104,7 @@ flow_classes[ sd.FC_WALL_JET             ] = flow_class( "wall jet",            
 for identifier in flow_classes:
     cursor.execute(
     """
-    INSERT INTO flow_classes( identifier, class_name )
+    INSERT INTO flow_classes( flow_class_id, flow_class_name )
     VALUES( ?, ? );
     """,
     ( identifier, flow_classes[identifier].name, )
@@ -115,7 +115,7 @@ for identifier in flow_classes:
     if ( flow_classes[identifier].is_child() ):
         cursor.execute(
         """
-        UPDATE flow_classes SET parent=? WHERE identifier=?;
+        UPDATE flow_classes SET flow_class_parent=? WHERE flow_class_id=?;
         """,
         ( flow_classes[identifier].parent, identifier, )
         )
@@ -645,14 +645,14 @@ cursor.execute(
 """
 CREATE TABLE studies (
     identifier            TEXT PRIMARY KEY UNIQUE,
-    flow_class            TEXT NOT NULL DEFAULT 'U',
+    flow_class_id         TEXT NOT NULL DEFAULT 'U',
     year                  INTEGER NOT NULL CHECK (        year  >= 0 AND         year <= 9999 ),
     study_number          INTEGER NOT NULL CHECK ( study_number >  0 AND study_number <=  999 ),
     study_type            TEXT NOT NULL,
     outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     description           TEXT DEFAULT NULL,
     provenance            TEXT DEFAULT NULL,
-    FOREIGN KEY(flow_class) REFERENCES flow_classes(identifier),
+    FOREIGN KEY(flow_class_id) REFERENCES flow_classes(flow_class_id),
     FOREIGN KEY(study_type) REFERENCES  study_types(identifier)
 );
 """
@@ -1140,18 +1140,6 @@ CREATE TABLE point_identifiers (
 );
 """
 )
-
-#CREATE VIEW confined_flow_classes   AS WITH RECURSIVE children(identifier) AS ( VALUES('C') UNION SELECT flow_classes.identifier FROM flow_classes, children WHERE flow_classes.parent=children.identifier ) SELECT identifier FROM children ORDER BY identifier;
-#CREATE VIEW external_flow_classes   AS WITH RECURSIVE children(identifier) AS ( VALUES('E') UNION SELECT flow_classes.identifier FROM flow_classes, children WHERE flow_classes.parent=children.identifier ) SELECT identifier FROM children ORDER BY identifier;
-#CREATE VIEW free_shear_flow_classes AS WITH RECURSIVE children(identifier) AS ( VALUES('F') UNION SELECT flow_classes.identifier FROM flow_classes, children WHERE flow_classes.parent=children.identifier ) SELECT identifier FROM children ORDER BY identifier;
-#CREATE VIEW internal_flow_classes   AS WITH RECURSIVE children(identifier) AS ( VALUES('I') UNION SELECT flow_classes.identifier FROM flow_classes, children WHERE flow_classes.parent=children.identifier ) SELECT identifier FROM children ORDER BY identifier;
-#CREATE VIEW shear_layer_classes     AS WITH RECURSIVE children(identifier) AS ( VALUES('S') UNION SELECT flow_classes.identifier FROM flow_classes, children WHERE flow_classes.parent=children.identifier ) SELECT identifier FROM children ORDER BY identifier;
-
-#CREATE VIEW confined_flow_studies   AS SELECT studies.identifier FROM studies WHERE studies.flow_class IN ( SELECT identifier FROM confined_flow_classes   );
-#CREATE VIEW external_flow_studies   AS SELECT studies.identifier FROM studies WHERE studies.flow_class IN ( SELECT identifier FROM external_flow_classes   );
-#CREATE VIEW free_shear_flow_studies AS SELECT studies.identifier FROM studies WHERE studies.flow_class IN ( SELECT identifier FROM free_shear_flow_classes );
-#CREATE VIEW internal_flow_studies   AS SELECT studies.identifier FROM studies WHERE studies.flow_class IN ( SELECT identifier FROM internal_flow_classes   );
-#CREATE VIEW shear_layer_studies     AS SELECT studies.identifier FROM studies WHERE studies.flow_class IN ( SELECT identifier FROM shear_layer_classes     );
 
 conn.commit()
 conn.close()

@@ -17,9 +17,9 @@ with open( "list-flow-classes.tex.tmp", "w" ) as f:
 
     cursor.execute(
     """
-    SELECT identifier, class_name
+    SELECT flow_class_id, flow_class_name
     FROM flow_classes
-    ORDER BY identifier;
+    ORDER BY flow_class_id;
     """
     )
     for result in cursor.fetchall():

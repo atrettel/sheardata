@@ -20,9 +20,9 @@ with open( "figure-flow-classification-tree-diagram.gv", "w" ) as f:
 
     cursor.execute(
     """
-    SELECT identifier
+    SELECT flow_class_id
     FROM flow_classes
-    ORDER BY identifier;
+    ORDER BY flow_class_id;
     """
     )
     for result in cursor.fetchall():
@@ -33,10 +33,10 @@ with open( "figure-flow-classification-tree-diagram.gv", "w" ) as f:
     
     cursor.execute(
     """
-    SELECT parent, identifier
+    SELECT flow_class_parent, flow_class_id
     FROM flow_classes
-    WHERE parent IS NOT NULL
-    ORDER BY parent;
+    WHERE flow_class_parent IS NOT NULL
+    ORDER BY flow_class_parent;
     """
     )
     for result in cursor.fetchall():
