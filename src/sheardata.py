@@ -1117,7 +1117,7 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
     cursor.execute(
     """
     INSERT INTO points( identifier, station, series, study, point_number,
-                        point_label, outlier )
+                        point_label_id, outlier )
     VALUES( ?, ?, ?, ?, ?, ?, ? );
     """,
     (
@@ -1347,7 +1347,7 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,
 
         cursor.execute(
         """
-        SELECT point_label
+        SELECT point_label_id
         FROM points
         WHERE identifier=?;
         """,
@@ -1393,7 +1393,7 @@ def locate_labeled_points( cursor, station, label ):
     SELECT identifier
     FROM points
     WHERE identifier
-    LIKE ? AND point_label=?
+    LIKE ? AND point_label_id=?
     ORDER BY identifier;
     """,
     (

@@ -339,8 +339,8 @@ CREATE TABLE notes (
 cursor.execute(
 """
 CREATE TABLE point_labels (
-    identifier TEXT PRIMARY KEY UNIQUE,
-    label_name TEXT NOT NULL
+    point_label_id   TEXT PRIMARY KEY UNIQUE,
+    point_label_name TEXT NOT NULL
 );
 """
 )
@@ -353,7 +353,7 @@ point_labels[ sd.PL_WALL        ] = "wall"
 for identifier in point_labels:
     cursor.execute(
     """
-    INSERT INTO point_labels( identifier, label_name )
+    INSERT INTO point_labels( point_label_id, point_label_name )
     VALUES( ?, ? );
     """,
     ( identifier, point_labels[identifier], )
@@ -710,10 +710,10 @@ CREATE TABLE points (
     series               TEXT NOT NULL,
     study                TEXT NOT NULL,
     point_number         INTEGER NOT NULL CHECK ( point_number > 0 AND point_number <= 9999 ),
-    point_label          TEXT DEFAULT NULL,
+    point_label_id       TEXT DEFAULT NULL,
     outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     description          TEXT DEFAULT NULL,
-    FOREIGN KEY(point_label) REFERENCES point_labels(identifier)
+    FOREIGN KEY(point_label_id) REFERENCES point_labels(point_label_id)
 );
 """
 )
