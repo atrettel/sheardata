@@ -124,8 +124,8 @@ for identifier in flow_classes:
 cursor.execute(
 """
 CREATE TABLE flow_regimes (
-    identifier  TEXT PRIMARY KEY UNIQUE,
-    regime_name TEXT NOT NULL
+    flow_regime_id   TEXT PRIMARY KEY UNIQUE,
+    flow_regime_name TEXT NOT NULL
 );
 """
 )
@@ -138,7 +138,7 @@ flow_regimes[    sd.FR_TURBULENT ] =    "turbulent flow"
 for identifier in flow_regimes:
     cursor.execute(
     """
-    INSERT INTO flow_regimes( identifier, regime_name )
+    INSERT INTO flow_regimes( flow_regime_id, flow_regime_name )
     VALUES( ?, ? );
     """,
     ( identifier, flow_regimes[identifier], )
@@ -685,14 +685,14 @@ CREATE TABLE stations (
     series                       TEXT NOT NULL,
     study                        TEXT NOT NULL,
     station_number               INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <= 999 ),
-    flow_regime                  TEXT DEFAULT NULL,
+    flow_regime_id               TEXT DEFAULT NULL,
     previous_streamwise_station  TEXT DEFAULT NULL,
     next_streamwise_station      TEXT DEFAULT NULL,
     previous_spanwise_station    TEXT DEFAULT NULL,
     next_spanwise_station        TEXT DEFAULT NULL,
     outlier                      INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     description                  TEXT DEFAULT NULL,
-    FOREIGN KEY(flow_regime)                 REFERENCES flow_regimes(identifier),
+    FOREIGN KEY(flow_regime_id)              REFERENCES flow_regimes(flow_regime_id),
     FOREIGN KEY(previous_streamwise_station) REFERENCES     stations(identifier),
     FOREIGN KEY(next_streamwise_station)     REFERENCES     stations(identifier),
     FOREIGN KEY(previous_spanwise_station)   REFERENCES     stations(identifier),
