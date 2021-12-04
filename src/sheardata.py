@@ -621,7 +621,7 @@ def set_study_value( cursor, study, quantity, value,
         cursor.execute(
         """
         INSERT INTO study_values( study, quantity, study_value,
-                                  study_uncertainty, value_type, mt_set,
+                                  study_uncertainty, value_type_id, mt_set,
                                   outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ? );
         """,
@@ -639,7 +639,7 @@ def set_study_value( cursor, study, quantity, value,
         for measurement_technique in measurement_techniques:
             cursor.execute(
             """
-            INSERT INTO study_values_mt( study, quantity, value_type,
+            INSERT INTO study_values_mt( study, quantity, value_type_id,
                                          mt_set, measurement_technique )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -655,7 +655,7 @@ def set_study_value( cursor, study, quantity, value,
         for note in notes:
             cursor.execute(
             """
-            INSERT INTO study_value_notes( study, quantity, value_type,
+            INSERT INTO study_value_notes( study, quantity, value_type_id,
                                            mt_set, note )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -689,7 +689,7 @@ def get_study_value( cursor, study, quantity, value_type=VT_ANY_AVERAGE,
         """
         SELECT study_value, study_uncertainty
         FROM study_values
-        WHERE study=? AND quantity=? AND value_type=? AND mt_set=?
+        WHERE study=? AND quantity=? AND value_type_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -819,7 +819,7 @@ def set_series_value( cursor, series, quantity, value,
         cursor.execute(
         """
         INSERT INTO series_values( series, quantity, series_value,
-                                   series_uncertainty, value_type,
+                                   series_uncertainty, value_type_id,
                                    mt_set, outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ? );
         """,
@@ -837,7 +837,7 @@ def set_series_value( cursor, series, quantity, value,
         for measurement_technique in measurement_techniques:
             cursor.execute(
             """
-            INSERT INTO series_values_mt( series, quantity, value_type,
+            INSERT INTO series_values_mt( series, quantity, value_type_id,
                                           mt_set, measurement_technique )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -853,7 +853,7 @@ def set_series_value( cursor, series, quantity, value,
         for note in notes:
             cursor.execute(
             """
-            INSERT INTO series_value_notes( series, quantity, value_type,
+            INSERT INTO series_value_notes( series, quantity, value_type_id,
                                             mt_set, note )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -887,7 +887,7 @@ def get_series_value( cursor, series, quantity, value_type=VT_ANY_AVERAGE, \
         """
         SELECT series_value, series_uncertainty
         FROM series_values
-        WHERE series=? AND quantity=? AND value_type=? AND mt_set=?
+        WHERE series=? AND quantity=? AND value_type_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -969,7 +969,7 @@ def set_station_value( cursor, station, quantity, value,
         cursor.execute(
         """
         INSERT INTO station_values( station, quantity, station_value,
-                                    station_uncertainty, value_type,
+                                    station_uncertainty, value_type_id,
                                     mt_set, outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ? );
         """,
@@ -987,7 +987,7 @@ def set_station_value( cursor, station, quantity, value,
         for measurement_technique in measurement_techniques:
             cursor.execute(
             """
-            INSERT INTO station_values_mt( station, quantity, value_type,
+            INSERT INTO station_values_mt( station, quantity, value_type_id,
                                            mt_set, measurement_technique )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -1003,7 +1003,7 @@ def set_station_value( cursor, station, quantity, value,
         for note in notes:
             cursor.execute(
             """
-            INSERT INTO station_value_notes( station, quantity, value_type,
+            INSERT INTO station_value_notes( station, quantity, value_type_id,
                                              mt_set, note )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -1073,7 +1073,7 @@ def get_station_value( cursor, station, quantity, value_type=VT_ANY_AVERAGE, \
         """
         SELECT station_value, station_uncertainty
         FROM station_values
-        WHERE station=? AND quantity=? AND value_type=? AND mt_set=?
+        WHERE station=? AND quantity=? AND value_type_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -1167,7 +1167,7 @@ def set_point_value( cursor, point, quantity, value,
         cursor.execute(
         """
         INSERT INTO point_values( point, quantity, point_value,
-                                  point_uncertainty, value_type, mt_set,
+                                  point_uncertainty, value_type_id, mt_set,
                                   outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ? );
         """,
@@ -1185,7 +1185,7 @@ def set_point_value( cursor, point, quantity, value,
         for measurement_technique in measurement_techniques:
             cursor.execute(
             """
-            INSERT INTO point_values_mt( point, quantity, value_type, mt_set,
+            INSERT INTO point_values_mt( point, quantity, value_type_id, mt_set,
                                          measurement_technique )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -1201,7 +1201,7 @@ def set_point_value( cursor, point, quantity, value,
         for note in notes:
             cursor.execute(
             """
-            INSERT INTO point_value_notes( point, quantity, value_type, mt_set,
+            INSERT INTO point_value_notes( point, quantity, value_type_id, mt_set,
                                            note )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -1235,7 +1235,7 @@ def get_point_value( cursor, point, quantity, value_type=VT_ANY_AVERAGE, \
         """
         SELECT point_value, point_uncertainty
         FROM point_values
-        WHERE point=? AND quantity=? AND value_type=? AND mt_set=?
+        WHERE point=? AND quantity=? AND value_type_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -1284,7 +1284,7 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,
             INTERSECT
             SELECT point
             FROM point_values
-            WHERE point LIKE ? AND quantity=? AND value_type=? AND outlier=0
+            WHERE point LIKE ? AND quantity=? AND value_type_id=? AND outlier=0
             ORDER BY point;
             """,
             (
@@ -1302,7 +1302,7 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,
             """
             SELECT point
             FROM point_values
-            WHERE point LIKE ? AND quantity=? AND value_type=? AND outlier=0
+            WHERE point LIKE ? AND quantity=? AND value_type_id=? AND outlier=0
             INTERSECT
             SELECT point
             FROM point_values
@@ -1323,11 +1323,11 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,
             """
             SELECT point
             FROM point_values
-            WHERE point LIKE ? AND quantity=? AND value_type=? AND outlier=0
+            WHERE point LIKE ? AND quantity=? AND value_type_id=? AND outlier=0
             INTERSECT
             SELECT point
             FROM point_values
-            WHERE point LIKE ? AND quantity=? AND value_type=? AND outlier=0
+            WHERE point LIKE ? AND quantity=? AND value_type_id=? AND outlier=0
             ORDER BY point;
             """,
             (
