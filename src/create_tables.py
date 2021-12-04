@@ -148,7 +148,7 @@ for identifier in flow_regimes:
 cursor.execute(
 """
 CREATE TABLE phases (
-    identifier TEXT PRIMARY KEY UNIQUE,
+    phase_id   TEXT PRIMARY KEY UNIQUE,
     phase_name TEXT NOT NULL
 );
 """
@@ -162,7 +162,7 @@ phases[ sd.PH_SOLID  ] =  "solid"
 for identifier in phases:
     cursor.execute(
     """
-    INSERT INTO phases( identifier, phase_name )
+    INSERT INTO phases( phase_id, phase_name )
     VALUES( ?, ? );
     """,
     ( identifier, phases[identifier], )
@@ -212,8 +212,8 @@ cursor.execute(
 CREATE TABLE fluids (
     identifier TEXT PRIMARY KEY UNIQUE,
     fluid_name TEXT NOT NULL,
-    phase      TEXT NOT NULL,
-    FOREIGN KEY(phase) REFERENCES phases(identifier)
+    phase_id   TEXT NOT NULL,
+    FOREIGN KEY(phase_id) REFERENCES phases(phase_id)
 );
 """
 )
