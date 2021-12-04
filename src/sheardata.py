@@ -731,7 +731,7 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
     cursor.execute(
     """
     INSERT INTO series( identifier, study, series_number, number_of_dimensions,
-                        coordinate_system, outlier )
+                        coordinate_system_id, outlier )
     VALUES( ?, ?, ?, ?, ?, ? );
     """,
     (

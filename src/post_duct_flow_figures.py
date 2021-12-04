@@ -137,7 +137,7 @@ for duct_type in duct_types:
             WHERE series IN (
                 SELECT identifier
                 FROM series
-                WHERE number_of_dimensions=? AND coordinate_system=? AND geometry=?
+                WHERE number_of_dimensions=? AND coordinate_system_id=? AND geometry=?
             )
             INTERSECT
             SELECT identifier
