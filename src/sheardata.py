@@ -640,7 +640,7 @@ def set_study_value( cursor, study, quantity, value,
             cursor.execute(
             """
             INSERT INTO study_values_mt( study, quantity, value_type_id,
-                                         mt_set, measurement_technique )
+                                         mt_set, measurement_technique_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
@@ -838,7 +838,7 @@ def set_series_value( cursor, series, quantity, value,
             cursor.execute(
             """
             INSERT INTO series_values_mt( series, quantity, value_type_id,
-                                          mt_set, measurement_technique )
+                                          mt_set, measurement_technique_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
@@ -988,7 +988,7 @@ def set_station_value( cursor, station, quantity, value,
             cursor.execute(
             """
             INSERT INTO station_values_mt( station, quantity, value_type_id,
-                                           mt_set, measurement_technique )
+                                           mt_set, measurement_technique_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
@@ -1185,8 +1185,8 @@ def set_point_value( cursor, point, quantity, value,
         for measurement_technique in measurement_techniques:
             cursor.execute(
             """
-            INSERT INTO point_values_mt( point, quantity, value_type_id, mt_set,
-                                         measurement_technique )
+            INSERT INTO point_values_mt( point, quantity, value_type_id,
+                                         mt_set, measurement_technique_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (

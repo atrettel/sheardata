@@ -245,11 +245,11 @@ for identifier in geometries:
 cursor.execute(
 """
 CREATE TABLE measurement_techniques (
-    identifier     TEXT PRIMARY KEY UNIQUE,
-    technique_name TEXT NOT NULL,
-    intrusive      INTEGER NOT NULL DEFAULT 0 CHECK ( intrusive = 0 OR intrusive = 1 ),
-    parent         TEXT DEFAULT NULL,
-    FOREIGN KEY(parent) REFERENCES measurement_techniques(identifier)
+    measurement_technique_id     TEXT PRIMARY KEY UNIQUE,
+    measurement_technique_name   TEXT NOT NULL,
+    intrusive                    INTEGER NOT NULL DEFAULT 0 CHECK ( intrusive = 0 OR intrusive = 1 ),
+    measurement_technique_parent TEXT DEFAULT NULL,
+    FOREIGN KEY(measurement_technique_parent) REFERENCES measurement_techniques(measurement_technique_id)
 );
 """
 )
@@ -305,7 +305,7 @@ measurement_techniques[ sd.MT_VISCOUS_SUBLAYER_SLOPE_METHOD            ] = MeasT
 for identifier in measurement_techniques:
     cursor.execute(
     """
-    INSERT INTO measurement_techniques( identifier, technique_name, intrusive )
+    INSERT INTO measurement_techniques( measurement_technique_id, measurement_technique_name, intrusive )
     VALUES( ?, ?, ? );
     """,
     (
@@ -320,7 +320,7 @@ for identifier in measurement_techniques:
     if ( measurement_techniques[identifier].is_child() ):
         cursor.execute(
         """
-        UPDATE measurement_techniques SET parent=? WHERE identifier=?;
+        UPDATE measurement_techniques SET measurement_technique_parent=? WHERE measurement_technique_id=?;
         """,
         ( measurement_techniques[identifier].parent, identifier, )
         )
@@ -842,12 +842,12 @@ CREATE TABLE study_values_mt (
     quantity      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
-    measurement_technique TEXT DEFAULT NULL,
-    PRIMARY KEY(study, quantity, value_type_id, mt_set, measurement_technique),
+    measurement_technique_id TEXT DEFAULT NULL,
+    PRIMARY KEY(study, quantity, value_type_id, mt_set, measurement_technique_id),
     FOREIGN KEY(study)                 REFERENCES                studies(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
     FOREIGN KEY(value_type_id)         REFERENCES value_types(value_type_id),
-    FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier)
+    FOREIGN KEY(measurement_technique_id) REFERENCES measurement_techniques(measurement_technique_id)
 );
 """
 )
@@ -860,12 +860,12 @@ CREATE TABLE series_values_mt (
     quantity      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
-    measurement_technique TEXT DEFAULT NULL,
-    PRIMARY KEY(series, quantity, value_type_id, mt_set, measurement_technique),
+    measurement_technique_id TEXT DEFAULT NULL,
+    PRIMARY KEY(series, quantity, value_type_id, mt_set, measurement_technique_id),
     FOREIGN KEY(series)                REFERENCES                 series(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
     FOREIGN KEY(value_type_id)         REFERENCES value_types(value_type_id),
-    FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier)
+    FOREIGN KEY(measurement_technique_id) REFERENCES measurement_techniques(measurement_technique_id)
 );
 """
 )
@@ -878,12 +878,12 @@ CREATE TABLE station_values_mt (
     quantity      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
-    measurement_technique TEXT DEFAULT NULL,
-    PRIMARY KEY(station, quantity, value_type_id, mt_set, measurement_technique),
+    measurement_technique_id TEXT DEFAULT NULL,
+    PRIMARY KEY(station, quantity, value_type_id, mt_set, measurement_technique_id),
     FOREIGN KEY(station)               REFERENCES               stations(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
     FOREIGN KEY(value_type_id)         REFERENCES value_types(value_type_id),
-    FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier)
+    FOREIGN KEY(measurement_technique_id) REFERENCES measurement_techniques(measurement_technique_id)
 );
 """
 )
@@ -896,12 +896,12 @@ CREATE TABLE point_values_mt (
     quantity      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
-    measurement_technique TEXT DEFAULT NULL,
-    PRIMARY KEY(point, quantity, value_type_id, mt_set, measurement_technique),
+    measurement_technique_id TEXT DEFAULT NULL,
+    PRIMARY KEY(point, quantity, value_type_id, mt_set, measurement_technique_id),
     FOREIGN KEY(point)                 REFERENCES                 points(identifier),
     FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
     FOREIGN KEY(value_type_id)         REFERENCES value_types(value_type_id),
-    FOREIGN KEY(measurement_technique) REFERENCES measurement_techniques(identifier)
+    FOREIGN KEY(measurement_technique_id) REFERENCES measurement_techniques(measurement_technique_id)
 );
 """
 )

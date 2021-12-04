@@ -35,10 +35,10 @@ with open( "list-flow-classes.tex.tmp", "w" ) as f:
 def create_measurement_techniques_tree( parent ):
     cursor.execute(
     """
-    SELECT identifier, technique_name
+    SELECT measurement_technique_id, measurement_technique_name
     FROM measurement_techniques
-    WHERE parent=?
-    ORDER BY technique_name COLLATE NOCASE;
+    WHERE measurement_technique_parent=?
+    ORDER BY measurement_technique_name COLLATE NOCASE;
     """,
     ( parent, )
     )
