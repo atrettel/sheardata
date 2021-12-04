@@ -66,9 +66,9 @@ with open( "list-quantities.tex.tmp", "w" ) as f:
 
     cursor.execute(
     """
-    SELECT identifier, quantity_name
+    SELECT quantity_id, quantity_name
     FROM quantities
-    ORDER BY identifier COLLATE NOCASE;
+    ORDER BY quantity_id COLLATE NOCASE;
     """
     )
     for result in cursor.fetchall():

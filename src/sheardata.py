@@ -620,7 +620,7 @@ def set_study_value( cursor, study, quantity, value,
     for avg_sys in create_value_types_list( value_type ):
         cursor.execute(
         """
-        INSERT INTO study_values( study, quantity, study_value,
+        INSERT INTO study_values( study, quantity_id, study_value,
                                   study_uncertainty, value_type_id, mt_set,
                                   outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ? );
@@ -639,7 +639,7 @@ def set_study_value( cursor, study, quantity, value,
         for measurement_technique in measurement_techniques:
             cursor.execute(
             """
-            INSERT INTO study_values_mt( study, quantity, value_type_id,
+            INSERT INTO study_values_mt( study, quantity_id, value_type_id,
                                          mt_set, measurement_technique_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -655,7 +655,7 @@ def set_study_value( cursor, study, quantity, value,
         for note in notes:
             cursor.execute(
             """
-            INSERT INTO study_value_notes( study, quantity, value_type_id,
+            INSERT INTO study_value_notes( study, quantity_id, value_type_id,
                                            mt_set, note_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -675,7 +675,7 @@ def get_study_value( cursor, study, quantity, value_type=VT_ANY_AVERAGE,
         """
         SELECT study_value, study_uncertainty
         FROM study_values
-        WHERE study=? AND quantity=? AND mt_set=?
+        WHERE study=? AND quantity_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -689,7 +689,7 @@ def get_study_value( cursor, study, quantity, value_type=VT_ANY_AVERAGE,
         """
         SELECT study_value, study_uncertainty
         FROM study_values
-        WHERE study=? AND quantity=? AND value_type_id=? AND mt_set=?
+        WHERE study=? AND quantity_id=? AND value_type_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -818,7 +818,7 @@ def set_series_value( cursor, series, quantity, value,
     for avg_sys in create_value_types_list( value_type ):
         cursor.execute(
         """
-        INSERT INTO series_values( series, quantity, series_value,
+        INSERT INTO series_values( series, quantity_id, series_value,
                                    series_uncertainty, value_type_id,
                                    mt_set, outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ? );
@@ -837,7 +837,7 @@ def set_series_value( cursor, series, quantity, value,
         for measurement_technique in measurement_techniques:
             cursor.execute(
             """
-            INSERT INTO series_values_mt( series, quantity, value_type_id,
+            INSERT INTO series_values_mt( series, quantity_id, value_type_id,
                                           mt_set, measurement_technique_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -853,7 +853,7 @@ def set_series_value( cursor, series, quantity, value,
         for note in notes:
             cursor.execute(
             """
-            INSERT INTO series_value_notes( series, quantity, value_type_id,
+            INSERT INTO series_value_notes( series, quantity_id, value_type_id,
                                             mt_set, note_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -873,7 +873,7 @@ def get_series_value( cursor, series, quantity, value_type=VT_ANY_AVERAGE, \
         """
         SELECT series_value, series_uncertainty
         FROM series_values
-        WHERE series=? AND quantity=? AND mt_set=?
+        WHERE series=? AND quantity_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -887,7 +887,7 @@ def get_series_value( cursor, series, quantity, value_type=VT_ANY_AVERAGE, \
         """
         SELECT series_value, series_uncertainty
         FROM series_values
-        WHERE series=? AND quantity=? AND value_type_id=? AND mt_set=?
+        WHERE series=? AND quantity_id=? AND value_type_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -968,7 +968,7 @@ def set_station_value( cursor, station, quantity, value,
     for avg_sys in create_value_types_list( value_type ):
         cursor.execute(
         """
-        INSERT INTO station_values( station, quantity, station_value,
+        INSERT INTO station_values( station, quantity_id, station_value,
                                     station_uncertainty, value_type_id,
                                     mt_set, outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ? );
@@ -987,7 +987,7 @@ def set_station_value( cursor, station, quantity, value,
         for measurement_technique in measurement_techniques:
             cursor.execute(
             """
-            INSERT INTO station_values_mt( station, quantity, value_type_id,
+            INSERT INTO station_values_mt( station, quantity_id, value_type_id,
                                            mt_set, measurement_technique_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -1003,7 +1003,7 @@ def set_station_value( cursor, station, quantity, value,
         for note in notes:
             cursor.execute(
             """
-            INSERT INTO station_value_notes( station, quantity, value_type_id,
+            INSERT INTO station_value_notes( station, quantity_id, value_type_id,
                                              mt_set, note_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -1059,7 +1059,7 @@ def get_station_value( cursor, station, quantity, value_type=VT_ANY_AVERAGE, \
         """
         SELECT station_value, station_uncertainty
         FROM station_values
-        WHERE station=? AND quantity=? AND mt_set=?
+        WHERE station=? AND quantity_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -1073,7 +1073,7 @@ def get_station_value( cursor, station, quantity, value_type=VT_ANY_AVERAGE, \
         """
         SELECT station_value, station_uncertainty
         FROM station_values
-        WHERE station=? AND quantity=? AND value_type_id=? AND mt_set=?
+        WHERE station=? AND quantity_id=? AND value_type_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -1166,7 +1166,7 @@ def set_point_value( cursor, point, quantity, value,
     for avg_sys in create_value_types_list( value_type ):
         cursor.execute(
         """
-        INSERT INTO point_values( point, quantity, point_value,
+        INSERT INTO point_values( point, quantity_id, point_value,
                                   point_uncertainty, value_type_id, mt_set,
                                   outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ? );
@@ -1185,7 +1185,7 @@ def set_point_value( cursor, point, quantity, value,
         for measurement_technique in measurement_techniques:
             cursor.execute(
             """
-            INSERT INTO point_values_mt( point, quantity, value_type_id,
+            INSERT INTO point_values_mt( point, quantity_id, value_type_id,
                                          mt_set, measurement_technique_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -1201,7 +1201,7 @@ def set_point_value( cursor, point, quantity, value,
         for note in notes:
             cursor.execute(
             """
-            INSERT INTO point_value_notes( point, quantity, value_type_id,
+            INSERT INTO point_value_notes( point, quantity_id, value_type_id,
                                            mt_set, note_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -1221,7 +1221,7 @@ def get_point_value( cursor, point, quantity, value_type=VT_ANY_AVERAGE, \
         """
         SELECT point_value, point_uncertainty
         FROM point_values
-        WHERE point=? AND quantity=? AND mt_set=?
+        WHERE point=? AND quantity_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -1235,7 +1235,7 @@ def get_point_value( cursor, point, quantity, value_type=VT_ANY_AVERAGE, \
         """
         SELECT point_value, point_uncertainty
         FROM point_values
-        WHERE point=? AND quantity=? AND value_type_id=? AND mt_set=?
+        WHERE point=? AND quantity_id=? AND value_type_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -1260,11 +1260,11 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,
             """
             SELECT point
             FROM point_values
-            WHERE point LIKE ? AND quantity=? AND outlier=0
+            WHERE point LIKE ? AND quantity_id=? AND outlier=0
             INTERSECT
             SELECT point
             FROM point_values
-            WHERE point LIKE ? AND quantity=? AND outlier=0
+            WHERE point LIKE ? AND quantity_id=? AND outlier=0
             ORDER BY point;
             """,
             (
@@ -1280,11 +1280,11 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,
             """
             SELECT point
             FROM point_values
-            WHERE point LIKE ? AND quantity=? AND outlier=0
+            WHERE point LIKE ? AND quantity_id=? AND outlier=0
             INTERSECT
             SELECT point
             FROM point_values
-            WHERE point LIKE ? AND quantity=? AND value_type_id=? AND outlier=0
+            WHERE point LIKE ? AND quantity_id=? AND value_type_id=? AND outlier=0
             ORDER BY point;
             """,
             (
@@ -1302,11 +1302,11 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,
             """
             SELECT point
             FROM point_values
-            WHERE point LIKE ? AND quantity=? AND value_type_id=? AND outlier=0
+            WHERE point LIKE ? AND quantity_id=? AND value_type_id=? AND outlier=0
             INTERSECT
             SELECT point
             FROM point_values
-            WHERE point LIKE ? AND quantity=? AND outlier=0
+            WHERE point LIKE ? AND quantity_id=? AND outlier=0
             ORDER BY point;
             """,
             (
@@ -1323,11 +1323,11 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,
             """
             SELECT point
             FROM point_values
-            WHERE point LIKE ? AND quantity=? AND value_type_id=? AND outlier=0
+            WHERE point LIKE ? AND quantity_id=? AND value_type_id=? AND outlier=0
             INTERSECT
             SELECT point
             FROM point_values
-            WHERE point LIKE ? AND quantity=? AND value_type_id=? AND outlier=0
+            WHERE point LIKE ? AND quantity_id=? AND value_type_id=? AND outlier=0
             ORDER BY point;
             """,
             (

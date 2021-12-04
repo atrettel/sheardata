@@ -380,7 +380,7 @@ for identifier in point_labels:
 cursor.execute(
 """
 CREATE TABLE quantities (
-    identifier           TEXT PRIMARY KEY UNIQUE,
+    quantity_id          TEXT PRIMARY KEY UNIQUE,
     quantity_name        TEXT NOT NULL,
     length_exponent      REAL NOT NULL DEFAULT 0.0,
     mass_exponent        REAL NOT NULL DEFAULT 0.0,
@@ -603,7 +603,7 @@ quantities[ sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO                ] = quantity( "l
 for identifier in quantities:
     cursor.execute(
     """
-    INSERT INTO quantities( identifier, quantity_name, length_exponent, mass_exponent, time_exponent, temperature_exponent )
+    INSERT INTO quantities( quantity_id, quantity_name, length_exponent, mass_exponent, time_exponent, temperature_exponent )
     VALUES( ?, ?, ?, ?, ?, ? );
     """,
     (
@@ -763,15 +763,15 @@ cursor.execute(
 """
 CREATE TABLE study_values (
     study             TEXT NOT NULL,
-    quantity          TEXT NOT NULL,
+    quantity_id       TEXT NOT NULL,
     study_value       REAL NOT NULL,
     study_uncertainty REAL DEFAULT NULL CHECK ( study_uncertainty >= 0.0 ),
     value_type_id     TEXT NOT NULL,
     mt_set            INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(study, quantity, value_type_id, mt_set),
+    PRIMARY KEY(study, quantity_id, value_type_id, mt_set),
     FOREIGN KEY(study)      REFERENCES     studies(identifier),
-    FOREIGN KEY(quantity)   REFERENCES  quantities(identifier),
+    FOREIGN KEY(quantity_id)   REFERENCES  quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
 );
 """
@@ -782,15 +782,15 @@ cursor.execute(
 """
 CREATE TABLE series_values (
     series             TEXT NOT NULL,
-    quantity           TEXT NOT NULL,
+    quantity_id        TEXT NOT NULL,
     series_value       REAL NOT NULL,
     series_uncertainty REAL DEFAULT NULL CHECK ( series_uncertainty >= 0.0 ),
     value_type_id      TEXT NOT NULL,
     mt_set             INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     outlier            INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(series, quantity, value_type_id, mt_set),
+    PRIMARY KEY(series, quantity_id, value_type_id, mt_set),
     FOREIGN KEY(series)     REFERENCES      series(identifier),
-    FOREIGN KEY(quantity)   REFERENCES  quantities(identifier),
+    FOREIGN KEY(quantity_id)   REFERENCES  quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
 );
 """
@@ -801,15 +801,15 @@ cursor.execute(
 """
 CREATE TABLE station_values (
     station             TEXT NOT NULL,
-    quantity            TEXT NOT NULL,
+    quantity_id         TEXT NOT NULL,
     station_value       REAL NOT NULL,
     station_uncertainty REAL DEFAULT NULL CHECK ( station_uncertainty >= 0.0 ),
     value_type_id       TEXT NOT NULL,
     mt_set              INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     outlier             INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(station, quantity, value_type_id, mt_set),
+    PRIMARY KEY(station, quantity_id, value_type_id, mt_set),
     FOREIGN KEY(station)    REFERENCES    stations(identifier),
-    FOREIGN KEY(quantity)   REFERENCES  quantities(identifier),
+    FOREIGN KEY(quantity_id)   REFERENCES  quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
 );
 """
@@ -820,15 +820,15 @@ cursor.execute(
 """
 CREATE TABLE point_values (
     point             TEXT NOT NULL,
-    quantity          TEXT NOT NULL,
+    quantity_id       TEXT NOT NULL,
     point_value       REAL NOT NULL,
     point_uncertainty REAL DEFAULT NULL CHECK ( point_uncertainty >= 0.0 ),
     value_type_id     TEXT NOT NULL,
     mt_set            INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(point, quantity, value_type_id, mt_set),
+    PRIMARY KEY(point, quantity_id, value_type_id, mt_set),
     FOREIGN KEY(point)      REFERENCES      points(identifier),
-    FOREIGN KEY(quantity)   REFERENCES  quantities(identifier),
+    FOREIGN KEY(quantity_id)   REFERENCES  quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
 );
 """
@@ -839,13 +839,13 @@ cursor.execute(
 """
 CREATE TABLE study_values_mt (
     study         TEXT NOT NULL,
-    quantity      TEXT NOT NULL,
+    quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     measurement_technique_id TEXT DEFAULT NULL,
-    PRIMARY KEY(study, quantity, value_type_id, mt_set, measurement_technique_id),
+    PRIMARY KEY(study, quantity_id, value_type_id, mt_set, measurement_technique_id),
     FOREIGN KEY(study)                 REFERENCES                studies(identifier),
-    FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
+    FOREIGN KEY(quantity_id)           REFERENCES             quantities(quantity_id),
     FOREIGN KEY(value_type_id)         REFERENCES value_types(value_type_id),
     FOREIGN KEY(measurement_technique_id) REFERENCES measurement_techniques(measurement_technique_id)
 );
@@ -857,13 +857,13 @@ cursor.execute(
 """
 CREATE TABLE series_values_mt (
     series        TEXT NOT NULL,
-    quantity      TEXT NOT NULL,
+    quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     measurement_technique_id TEXT DEFAULT NULL,
-    PRIMARY KEY(series, quantity, value_type_id, mt_set, measurement_technique_id),
+    PRIMARY KEY(series, quantity_id, value_type_id, mt_set, measurement_technique_id),
     FOREIGN KEY(series)                REFERENCES                 series(identifier),
-    FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
+    FOREIGN KEY(quantity_id)           REFERENCES             quantities(quantity_id),
     FOREIGN KEY(value_type_id)         REFERENCES value_types(value_type_id),
     FOREIGN KEY(measurement_technique_id) REFERENCES measurement_techniques(measurement_technique_id)
 );
@@ -875,13 +875,13 @@ cursor.execute(
 """
 CREATE TABLE station_values_mt (
     station       TEXT NOT NULL,
-    quantity      TEXT NOT NULL,
+    quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     measurement_technique_id TEXT DEFAULT NULL,
-    PRIMARY KEY(station, quantity, value_type_id, mt_set, measurement_technique_id),
+    PRIMARY KEY(station, quantity_id, value_type_id, mt_set, measurement_technique_id),
     FOREIGN KEY(station)               REFERENCES               stations(identifier),
-    FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
+    FOREIGN KEY(quantity_id)           REFERENCES             quantities(quantity_id),
     FOREIGN KEY(value_type_id)         REFERENCES value_types(value_type_id),
     FOREIGN KEY(measurement_technique_id) REFERENCES measurement_techniques(measurement_technique_id)
 );
@@ -893,13 +893,13 @@ cursor.execute(
 """
 CREATE TABLE point_values_mt (
     point         TEXT NOT NULL,
-    quantity      TEXT NOT NULL,
+    quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     measurement_technique_id TEXT DEFAULT NULL,
-    PRIMARY KEY(point, quantity, value_type_id, mt_set, measurement_technique_id),
+    PRIMARY KEY(point, quantity_id, value_type_id, mt_set, measurement_technique_id),
     FOREIGN KEY(point)                 REFERENCES                 points(identifier),
-    FOREIGN KEY(quantity)              REFERENCES             quantities(identifier),
+    FOREIGN KEY(quantity_id)           REFERENCES             quantities(quantity_id),
     FOREIGN KEY(value_type_id)         REFERENCES value_types(value_type_id),
     FOREIGN KEY(measurement_technique_id) REFERENCES measurement_techniques(measurement_technique_id)
 );
@@ -924,13 +924,13 @@ cursor.execute(
 """
 CREATE TABLE study_value_notes (
     study         TEXT NOT NULL,
-    quantity      TEXT NOT NULL,
+    quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(study, quantity, value_type_id, mt_set, note_id),
+    PRIMARY KEY(study, quantity_id, value_type_id, mt_set, note_id),
     FOREIGN KEY(study)            REFERENCES     studies(identifier),
-    FOREIGN KEY(quantity)         REFERENCES  quantities(identifier),
+    FOREIGN KEY(quantity_id)         REFERENCES  quantities(quantity_id),
     FOREIGN KEY(value_type_id)    REFERENCES value_types(value_type_id),
     FOREIGN KEY(note_id)          REFERENCES          notes(note_id)
 );
@@ -955,13 +955,13 @@ cursor.execute(
 """
 CREATE TABLE series_value_notes (
     series        TEXT NOT NULL,
-    quantity      TEXT NOT NULL,
+    quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(series, quantity, value_type_id, mt_set, note_id),
+    PRIMARY KEY(series, quantity_id, value_type_id, mt_set, note_id),
     FOREIGN KEY(series)     REFERENCES      series(identifier),
-    FOREIGN KEY(quantity)   REFERENCES  quantities(identifier),
+    FOREIGN KEY(quantity_id)   REFERENCES  quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
     FOREIGN KEY(note_id)       REFERENCES notes(note_id)
 );
@@ -986,13 +986,13 @@ cursor.execute(
 """
 CREATE TABLE station_value_notes (
     station       TEXT NOT NULL,
-    quantity      TEXT NOT NULL,
+    quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(station, quantity, value_type_id, mt_set, note_id),
+    PRIMARY KEY(station, quantity_id, value_type_id, mt_set, note_id),
     FOREIGN KEY(station)    REFERENCES    stations(identifier),
-    FOREIGN KEY(quantity)   REFERENCES  quantities(identifier),
+    FOREIGN KEY(quantity_id)   REFERENCES  quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
     FOREIGN KEY(note_id)       REFERENCES notes(note_id)
 );
@@ -1017,13 +1017,13 @@ cursor.execute(
 """
 CREATE TABLE point_value_notes (
     point         TEXT NOT NULL,
-    quantity      TEXT NOT NULL,
+    quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(point, quantity, value_type_id, mt_set, note_id),
+    PRIMARY KEY(point, quantity_id, value_type_id, mt_set, note_id),
     FOREIGN KEY(point)      REFERENCES      points(identifier),
-    FOREIGN KEY(quantity)   REFERENCES  quantities(identifier),
+    FOREIGN KEY(quantity_id)   REFERENCES  quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
     FOREIGN KEY(note_id)       REFERENCES notes(note_id)
 );

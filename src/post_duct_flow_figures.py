@@ -149,39 +149,39 @@ for duct_type in duct_types:
             WHERE identifier IN (
                 SELECT point
                 FROM point_values
-                WHERE quantity=? AND point_value<? AND outlier=0
+                WHERE quantity_id=? AND point_value<? AND outlier=0
             )
             INTERSECT
             SELECT station
             FROM station_values
-            WHERE quantity=? AND station_value>=? AND station_value<=? AND outlier=0
+            WHERE quantity_id=? AND station_value>=? AND station_value<=? AND outlier=0
             INTERSECT
             SELECT station
             FROM station_values
-            WHERE quantity=? AND station_value>=? AND station_value<? AND outlier=0
+            WHERE quantity_id=? AND station_value>=? AND station_value<? AND outlier=0
             INTERSECT
             SELECT station
             FROM station_values
-            WHERE quantity=? AND station_value>=? AND outlier=0
+            WHERE quantity_id=? AND station_value>=? AND outlier=0
             INTERSECT
             SELECT station
             FROM points
             WHERE point_label_id=? AND identifier IN (
                 SELECT point
                 FROM point_values
-                WHERE quantity=? AND point_value>=? AND point_value<=? AND outlier=0
+                WHERE quantity_id=? AND point_value>=? AND point_value<=? AND outlier=0
             )
             INTERSECT
             SELECT station
             FROM station_values
-            WHERE quantity=? AND outlier=0
+            WHERE quantity_id=? AND outlier=0
             INTERSECT
             SELECT station
             FROM points
             WHERE point_label_id=? AND identifier IN (
                 SELECT point
                 FROM point_values
-                WHERE quantity=? AND outlier=0
+                WHERE quantity_id=? AND outlier=0
             )
             ORDER BY identifier;
             """,
