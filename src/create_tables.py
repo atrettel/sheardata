@@ -173,8 +173,8 @@ cursor.execute(
 """
 CREATE TABLE elements (
     atomic_number  INTEGER PRIMARY KEY UNIQUE,
-    element_symbol TEXT NOT NULL,
-    element_name   TEXT NOT NULL,
+    element_symbol TEXT UNIQUE NOT NULL,
+    element_name   TEXT UNIQUE NOT NULL,
     atomic_weight  REAL NOT NULL CHECK ( atomic_weight > 0.0 )
 );
 """
