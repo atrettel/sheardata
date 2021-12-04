@@ -775,7 +775,7 @@ def update_series_geometry( cursor, identifier, geometry ):
     cursor.execute(
     """
     UPDATE series
-    SET geometry=?
+    SET geometry_id=?
     WHERE identifier=?;
     """,
     (

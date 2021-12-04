@@ -222,7 +222,7 @@ CREATE TABLE fluids (
 cursor.execute(
 """
 CREATE TABLE geometries (
-    identifier    TEXT PRIMARY KEY UNIQUE,
+    geometry_id   TEXT PRIMARY KEY UNIQUE,
     geometry_name TEXT NOT NULL
 );
 """
@@ -235,7 +235,7 @@ geometries[ sd.GM_RECTANGULAR ] = "rectangular geometry"
 for identifier in geometries:
     cursor.execute(
     """
-    INSERT INTO geometries( identifier, geometry_name )
+    INSERT INTO geometries( geometry_id, geometry_name )
     VALUES( ?, ? );
     """,
     ( identifier, geometries[identifier], )
@@ -667,12 +667,12 @@ CREATE TABLE series (
     series_number        INTEGER NOT NULL CHECK ( series_number > 0 AND series_number <= 999 ),
     number_of_dimensions INTEGER NOT NULL DEFAULT 2 CHECK ( number_of_dimensions > 0 AND number_of_dimensions <= 3 ),
     coordinate_system_id TEXT NOT NULL DEFAULT 'XYZ',
-    geometry             TEXT DEFAULT NULL,
+    geometry_id          TEXT DEFAULT NULL,
     number_of_sides      TEXT DEFAULT NULL CHECK ( number_of_sides > 1 ),
     outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     description          TEXT DEFAULT NULL,
     FOREIGN KEY(coordinate_system_id) REFERENCES coordinate_systems(coordinate_system_id),
-    FOREIGN KEY(geometry)          REFERENCES         geometries(identifier)
+    FOREIGN KEY(geometry_id)          REFERENCES         geometries(geometry_id)
 );
 """
 )
