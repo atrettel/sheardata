@@ -86,7 +86,7 @@ with open( "list-notes.tex.tmp", "w" ) as f:
 
     cursor.execute(
     """
-    SELECT note_id, contents
+    SELECT note_id, note_contents
     FROM notes
     ORDER BY note_id;
     """

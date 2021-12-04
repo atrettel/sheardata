@@ -555,7 +555,7 @@ def add_study( cursor, flow_class, year, study_number, study_type, \
     for note in notes:
         cursor.execute(
         """
-        INSERT INTO study_notes( study, note )
+        INSERT INTO study_notes( study, note_id )
         VALUES( ?, ? );
         """,
         (
@@ -656,7 +656,7 @@ def set_study_value( cursor, study, quantity, value,
             cursor.execute(
             """
             INSERT INTO study_value_notes( study, quantity, value_type_id,
-                                           mt_set, note )
+                                           mt_set, note_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
@@ -747,7 +747,7 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
     for note in notes:
         cursor.execute(
         """
-        INSERT INTO series_notes( series, note )
+        INSERT INTO series_notes( series, note_id )
         VALUES( ?, ? );
         """,
         (
@@ -854,7 +854,7 @@ def set_series_value( cursor, series, quantity, value,
             cursor.execute(
             """
             INSERT INTO series_value_notes( series, quantity, value_type_id,
-                                            mt_set, note )
+                                            mt_set, note_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
@@ -936,7 +936,7 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
     for note in notes:
         cursor.execute(
         """
-        INSERT INTO station_notes( station, note )
+        INSERT INTO station_notes( station, note_id )
         VALUES( ?, ? );
         """,
         (
@@ -1004,7 +1004,7 @@ def set_station_value( cursor, station, quantity, value,
             cursor.execute(
             """
             INSERT INTO station_value_notes( station, quantity, value_type_id,
-                                             mt_set, note )
+                                             mt_set, note_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
@@ -1134,7 +1134,7 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
     for note in notes:
         cursor.execute(
         """
-        INSERT INTO point_notes( point, note )
+        INSERT INTO point_notes( point, note_id )
         VALUES( ?, ? );
         """,
         (
@@ -1201,8 +1201,8 @@ def set_point_value( cursor, point, quantity, value,
         for note in notes:
             cursor.execute(
             """
-            INSERT INTO point_value_notes( point, quantity, value_type_id, mt_set,
-                                           note )
+            INSERT INTO point_value_notes( point, quantity, value_type_id,
+                                           mt_set, note_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
@@ -1591,7 +1591,7 @@ def add_note( cursor, filename ):
 
     cursor.execute(
     """
-    INSERT INTO notes( contents )
+    INSERT INTO notes( note_contents )
     VALUES( ? );
     """,
     (

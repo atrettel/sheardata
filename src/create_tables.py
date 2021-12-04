@@ -329,8 +329,8 @@ for identifier in measurement_techniques:
 cursor.execute(
 """
 CREATE TABLE notes (
-    note_id  INTEGER PRIMARY KEY CHECK ( note_id > 0 ),
-    contents TEXT NOT NULL
+    note_id       INTEGER PRIMARY KEY CHECK ( note_id > 0 ),
+    note_contents TEXT NOT NULL
 );
 """
 )
@@ -910,11 +910,11 @@ CREATE TABLE point_values_mt (
 cursor.execute(
 """
 CREATE TABLE study_notes (
-    study TEXT NOT NULL,
-    note  INTEGER NOT NULL CHECK ( note > 0 ),
-    PRIMARY KEY(study, note),
+    study   TEXT NOT NULL,
+    note_id INTEGER NOT NULL CHECK ( note_id > 0 ),
+    PRIMARY KEY(study, note_id),
     FOREIGN KEY(study) REFERENCES studies(identifier),
-    FOREIGN KEY(note)  REFERENCES   notes(note_id)
+    FOREIGN KEY(note_id) REFERENCES notes(note_id)
 );
 """
 )
@@ -927,12 +927,12 @@ CREATE TABLE study_value_notes (
     quantity      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
-    note          INTEGER NOT NULL CHECK ( note > 0 ),
-    PRIMARY KEY(study, quantity, value_type_id, mt_set, note),
+    note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
+    PRIMARY KEY(study, quantity, value_type_id, mt_set, note_id),
     FOREIGN KEY(study)            REFERENCES     studies(identifier),
     FOREIGN KEY(quantity)         REFERENCES  quantities(identifier),
     FOREIGN KEY(value_type_id)    REFERENCES value_types(value_type_id),
-    FOREIGN KEY(note)             REFERENCES          notes(note_id)
+    FOREIGN KEY(note_id)          REFERENCES          notes(note_id)
 );
 """
 )
@@ -941,11 +941,11 @@ CREATE TABLE study_value_notes (
 cursor.execute(
 """
 CREATE TABLE series_notes (
-    series TEXT NOT NULL,
-    note   INTEGER NOT NULL CHECK ( note > 0 ),
-    PRIMARY KEY(series, note),
+    series  TEXT NOT NULL,
+    note_id INTEGER NOT NULL CHECK ( note_id > 0 ),
+    PRIMARY KEY(series, note_id),
     FOREIGN KEY(series) REFERENCES series(identifier),
-    FOREIGN KEY(note)   REFERENCES  notes(note_id)
+    FOREIGN KEY(note_id) REFERENCES notes(note_id)
 );
 """
 )
@@ -958,12 +958,12 @@ CREATE TABLE series_value_notes (
     quantity      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
-    note          INTEGER NOT NULL CHECK ( note > 0 ),
-    PRIMARY KEY(series, quantity, value_type_id, mt_set, note),
+    note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
+    PRIMARY KEY(series, quantity, value_type_id, mt_set, note_id),
     FOREIGN KEY(series)     REFERENCES      series(identifier),
     FOREIGN KEY(quantity)   REFERENCES  quantities(identifier),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
-    FOREIGN KEY(note)       REFERENCES          notes(note_id)
+    FOREIGN KEY(note_id)       REFERENCES notes(note_id)
 );
 """
 )
@@ -973,10 +973,10 @@ cursor.execute(
 """
 CREATE TABLE station_notes (
     station TEXT NOT NULL,
-    note    INTEGER NOT NULL CHECK ( note > 0 ),
-    PRIMARY KEY(station, note),
+    note_id INTEGER NOT NULL CHECK ( note_id > 0 ),
+    PRIMARY KEY(station, note_id),
     FOREIGN KEY(station) REFERENCES stations(identifier),
-    FOREIGN KEY(note)    REFERENCES    notes(note_id)
+    FOREIGN KEY(note_id) REFERENCES notes(note_id)
 );
 """
 )
@@ -989,12 +989,12 @@ CREATE TABLE station_value_notes (
     quantity      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
-    note          INTEGER NOT NULL CHECK ( note > 0 ),
-    PRIMARY KEY(station, quantity, value_type_id, mt_set, note),
+    note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
+    PRIMARY KEY(station, quantity, value_type_id, mt_set, note_id),
     FOREIGN KEY(station)    REFERENCES    stations(identifier),
     FOREIGN KEY(quantity)   REFERENCES  quantities(identifier),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
-    FOREIGN KEY(note)       REFERENCES          notes(note_id)
+    FOREIGN KEY(note_id)       REFERENCES notes(note_id)
 );
 """
 )
@@ -1003,11 +1003,11 @@ CREATE TABLE station_value_notes (
 cursor.execute(
 """
 CREATE TABLE point_notes (
-    point TEXT NOT NULL,
-    note  INTEGER NOT NULL CHECK ( note > 0 ),
-    PRIMARY KEY(point, note),
+    point   TEXT NOT NULL,
+    note_id INTEGER NOT NULL CHECK ( note_id > 0 ),
+    PRIMARY KEY(point, note_id),
     FOREIGN KEY(point) REFERENCES points(identifier),
-    FOREIGN KEY(note)  REFERENCES  notes(note_id)
+    FOREIGN KEY(note_id) REFERENCES notes(note_id)
 );
 """
 )
@@ -1020,12 +1020,12 @@ CREATE TABLE point_value_notes (
     quantity      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
-    note          INTEGER NOT NULL CHECK ( note > 0 ),
-    PRIMARY KEY(point, quantity, value_type_id, mt_set, note),
+    note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
+    PRIMARY KEY(point, quantity, value_type_id, mt_set, note_id),
     FOREIGN KEY(point)      REFERENCES      points(identifier),
     FOREIGN KEY(quantity)   REFERENCES  quantities(identifier),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
-    FOREIGN KEY(note)       REFERENCES          notes(note_id)
+    FOREIGN KEY(note_id)       REFERENCES notes(note_id)
 );
 """
 )
