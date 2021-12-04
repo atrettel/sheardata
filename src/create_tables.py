@@ -360,6 +360,23 @@ for identifier in point_labels:
     )
 
 # Quantities
+#
+# I have implemented all quantities in the same table, though I divide them up
+# into categories based on whether they apply to a study, series, station, or
+# point.  Separate tables may be a better design choice in the long run because
+# it enforces the division, but for the moment I am leaving it with only one
+# table for simplicity.
+#
+# The advantage of a single table is that it grants the ability to apply some
+# quantities to both a point and a station, for example.  Coordinates are
+# nominally point quantities, but it may also be a good idea to specify the x
+# and z coordinates at the station level too if those coordinates are in fact
+# constant for an entire station (they most likely will be).  That would allow
+# for `SELECT` statements at the station level while also retaining the
+# relevant data at another level.  The problem is that this duplication
+# violates the idea that data should only be in one particular place in the
+# database, and for that reason I have only implemented coordinates as point
+# quantities so far.
 cursor.execute(
 """
 CREATE TABLE quantities (
