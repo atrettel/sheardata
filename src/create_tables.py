@@ -219,6 +219,12 @@ CREATE TABLE fluids (
 )
 
 # Geometries
+#
+# TODO: consider creating a hierarchy of geometries organized by the number of
+# sides an object has.  For example, rectangles are a particular form of
+# quadrilaterals, and circles are a particular form of ellipses, etc.  The
+# point of this is to be able to select different duct flow cross sections or
+# airfoil sections in a useful manner.  I still need to think about this more.
 cursor.execute(
 """
 CREATE TABLE geometries (
