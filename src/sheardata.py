@@ -583,8 +583,8 @@ def update_study_description( cursor, identifier, description ):
     cursor.execute(
     """
     UPDATE studies
-    SET description=?
-    WHERE identifier=?;
+    SET study_description=?
+    WHERE study_id=?;
     """,
     (
         description.strip(),
@@ -596,8 +596,8 @@ def update_study_provenance( cursor, identifier, provenance ):
     cursor.execute(
     """
     UPDATE studies
-    SET provenance=?
-    WHERE identifier=?:
+    SET study_provenance=?
+    WHERE study_id=?:
     """,
     (
         provenance.strip(),
@@ -788,7 +788,7 @@ def update_series_description( cursor, identifier, description ):
     cursor.execute(
     """
     UPDATE series
-    SET description=?
+    SET series_description=?
     WHERE series_id=?;
     """,
     (

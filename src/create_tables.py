@@ -656,8 +656,8 @@ CREATE TABLE studies (
     study_number          INTEGER NOT NULL CHECK ( study_number >  0 AND study_number <=  999 ),
     study_type_id         TEXT NOT NULL,
     outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    description           TEXT DEFAULT NULL,
-    provenance            TEXT DEFAULT NULL,
+    study_description     TEXT DEFAULT NULL,
+    study_provenance      TEXT DEFAULT NULL,
     FOREIGN KEY(flow_class_id) REFERENCES flow_classes(flow_class_id),
     FOREIGN KEY(study_type_id) REFERENCES  study_types(study_type_id)
 );
@@ -675,7 +675,7 @@ CREATE TABLE series (
     coordinate_system_id TEXT NOT NULL DEFAULT 'XYZ',
     geometry_id          TEXT DEFAULT NULL,
     outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    description          TEXT DEFAULT NULL,
+    study_description    TEXT DEFAULT NULL,
     FOREIGN KEY(coordinate_system_id) REFERENCES coordinate_systems(coordinate_system_id),
     FOREIGN KEY(geometry_id)          REFERENCES geometries(geometry_id)
 );
@@ -696,7 +696,7 @@ CREATE TABLE stations (
     previous_spanwise_station    TEXT DEFAULT NULL,
     next_spanwise_station        TEXT DEFAULT NULL,
     outlier                      INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    description                  TEXT DEFAULT NULL,
+    station_description          TEXT DEFAULT NULL,
     FOREIGN KEY(flow_regime_id)              REFERENCES flow_regimes(flow_regime_id),
     FOREIGN KEY(previous_streamwise_station) REFERENCES     stations(identifier),
     FOREIGN KEY(next_streamwise_station)     REFERENCES     stations(identifier),
@@ -717,7 +717,7 @@ CREATE TABLE points (
     point_number         INTEGER NOT NULL CHECK ( point_number > 0 AND point_number <= 9999 ),
     point_label_id       TEXT DEFAULT NULL,
     outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    description          TEXT DEFAULT NULL,
+    point_description    TEXT DEFAULT NULL,
     FOREIGN KEY(point_label_id) REFERENCES point_labels(point_label_id)
 );
 """
