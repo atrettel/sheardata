@@ -620,8 +620,8 @@ for identifier in quantities:
 cursor.execute(
 """
 CREATE TABLE study_types (
-    identifier TEXT PRIMARY KEY UNIQUE,
-    type_name  TEXT NOT NULL
+    study_type_id   TEXT PRIMARY KEY UNIQUE,
+    study_type_name TEXT NOT NULL
 );
 """
 )
@@ -634,7 +634,7 @@ study_types[ sd.ST_LARGE_EDDY_SIMULATION       ] = "large eddy simulation"
 for identifier in study_types:
     cursor.execute(
     """
-    INSERT INTO study_types( identifier, type_name )
+    INSERT INTO study_types( study_type_id, study_type_name )
     VALUES( ?, ? );
     """,
     ( identifier, study_types[identifier], )
@@ -648,12 +648,12 @@ CREATE TABLE studies (
     flow_class_id         TEXT NOT NULL DEFAULT 'U',
     year                  INTEGER NOT NULL CHECK (        year  >= 0 AND         year <= 9999 ),
     study_number          INTEGER NOT NULL CHECK ( study_number >  0 AND study_number <=  999 ),
-    study_type            TEXT NOT NULL,
+    study_type_id         TEXT NOT NULL,
     outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     description           TEXT DEFAULT NULL,
     provenance            TEXT DEFAULT NULL,
     FOREIGN KEY(flow_class_id) REFERENCES flow_classes(flow_class_id),
-    FOREIGN KEY(study_type) REFERENCES  study_types(identifier)
+    FOREIGN KEY(study_type_id) REFERENCES  study_types(study_type_id)
 );
 """
 )

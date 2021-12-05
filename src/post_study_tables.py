@@ -50,7 +50,7 @@ with open( "table-all-studies.tex.tmp", "w" ) as f:
 
         cursor.execute(
         """
-        SELECT study_type
+        SELECT study_type_id
         FROM studies
         WHERE identifier=?;
         """,

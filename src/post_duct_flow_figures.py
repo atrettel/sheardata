@@ -129,7 +129,7 @@ for duct_type in duct_types:
             WHERE study IN (
                 SELECT identifier
                 FROM studies
-                WHERE flow_class_id=? AND study_type=?
+                WHERE flow_class_id=? AND study_type_id=?
             )
             INTERSECT
             SELECT identifier
