@@ -710,7 +710,7 @@ CREATE TABLE stations (
 cursor.execute(
 """
 CREATE TABLE points (
-    identifier           TEXT PRIMARY KEY UNIQUE,
+    point_id             TEXT PRIMARY KEY UNIQUE,
     station_id           TEXT NOT NULL,
     series_id            TEXT NOT NULL,
     study_id             TEXT NOT NULL,
@@ -824,15 +824,15 @@ CREATE TABLE station_values (
 cursor.execute(
 """
 CREATE TABLE point_values (
-    point             TEXT NOT NULL,
+    point_id          TEXT NOT NULL,
     quantity_id       TEXT NOT NULL,
     point_value       REAL NOT NULL,
     point_uncertainty REAL DEFAULT NULL CHECK ( point_uncertainty >= 0.0 ),
     value_type_id     TEXT NOT NULL,
     mt_set            INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(point, quantity_id, value_type_id, mt_set),
-    FOREIGN KEY(point)      REFERENCES      points(identifier),
+    PRIMARY KEY(point_id, quantity_id, value_type_id, mt_set),
+    FOREIGN KEY(point_id)      REFERENCES      points(point_id),
     FOREIGN KEY(quantity_id)   REFERENCES  quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
 );
@@ -897,15 +897,15 @@ CREATE TABLE station_values_mt (
 cursor.execute(
 """
 CREATE TABLE point_values_mt (
-    point         TEXT NOT NULL,
+    point_id      TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     measurement_technique_id TEXT DEFAULT NULL,
-    PRIMARY KEY(point, quantity_id, value_type_id, mt_set, measurement_technique_id),
-    FOREIGN KEY(point)                 REFERENCES                 points(identifier),
-    FOREIGN KEY(quantity_id)           REFERENCES             quantities(quantity_id),
-    FOREIGN KEY(value_type_id)         REFERENCES value_types(value_type_id),
+    PRIMARY KEY(point_id, quantity_id, value_type_id, mt_set, measurement_technique_id),
+    FOREIGN KEY(point_id)                 REFERENCES points(point_id),
+    FOREIGN KEY(quantity_id)              REFERENCES quantities(quantity_id),
+    FOREIGN KEY(value_type_id)            REFERENCES value_types(value_type_id),
     FOREIGN KEY(measurement_technique_id) REFERENCES measurement_techniques(measurement_technique_id)
 );
 """
@@ -1008,11 +1008,11 @@ CREATE TABLE station_value_notes (
 cursor.execute(
 """
 CREATE TABLE point_notes (
-    point   TEXT NOT NULL,
-    note_id INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(point, note_id),
-    FOREIGN KEY(point) REFERENCES points(identifier),
-    FOREIGN KEY(note_id) REFERENCES notes(note_id)
+    point_id TEXT NOT NULL,
+    note_id  INTEGER NOT NULL CHECK ( note_id > 0 ),
+    PRIMARY KEY(point_id, note_id),
+    FOREIGN KEY(point_id) REFERENCES points(point_id),
+    FOREIGN KEY(note_id)  REFERENCES notes(note_id)
 );
 """
 )
@@ -1021,14 +1021,14 @@ CREATE TABLE point_notes (
 cursor.execute(
 """
 CREATE TABLE point_value_notes (
-    point         TEXT NOT NULL,
+    point_id      TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(point, quantity_id, value_type_id, mt_set, note_id),
-    FOREIGN KEY(point)      REFERENCES      points(identifier),
-    FOREIGN KEY(quantity_id)   REFERENCES  quantities(quantity_id),
+    PRIMARY KEY(point_id, quantity_id, value_type_id, mt_set, note_id),
+    FOREIGN KEY(point_id)      REFERENCES points(point_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
     FOREIGN KEY(note_id)       REFERENCES notes(note_id)
 );
@@ -1136,11 +1136,11 @@ CREATE TABLE station_identifiers (
 cursor.execute(
 """
 CREATE TABLE point_identifiers (
-    point       TEXT NOT NULL,
+    point_id    TEXT NOT NULL,
     compilation INTEGER NOT NULL CHECK ( compilation >= 0 ),
     identifier  TEXT NOT NULL,
-    PRIMARY KEY(point, compilation),
-    FOREIGN KEY(point)       REFERENCES       points(identifier),
+    PRIMARY KEY(point_id, compilation),
+    FOREIGN KEY(point_id)    REFERENCES points(point_id),
     FOREIGN KEY(compilation) REFERENCES compilations(compilation_id)
 );
 """

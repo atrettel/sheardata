@@ -146,8 +146,8 @@ for duct_type in duct_types:
             INTERSECT
             SELECT station_id
             FROM points
-            WHERE identifier IN (
-                SELECT point
+            WHERE point_id IN (
+                SELECT point_id
                 FROM point_values
                 WHERE quantity_id=? AND point_value<? AND outlier=0
             )
@@ -166,8 +166,8 @@ for duct_type in duct_types:
             INTERSECT
             SELECT station_id
             FROM points
-            WHERE point_label_id=? AND identifier IN (
-                SELECT point
+            WHERE point_label_id=? AND point_id IN (
+                SELECT point_id
                 FROM point_values
                 WHERE quantity_id=? AND point_value>=? AND point_value<=? AND outlier=0
             )
@@ -178,8 +178,8 @@ for duct_type in duct_types:
             INTERSECT
             SELECT station_id
             FROM points
-            WHERE point_label_id=? AND identifier IN (
-                SELECT point
+            WHERE point_label_id=? AND point_id IN (
+                SELECT point_id
                 FROM point_values
                 WHERE quantity_id=? AND outlier=0
             )

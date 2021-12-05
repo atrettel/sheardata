@@ -1008,7 +1008,7 @@ def set_station_value( cursor, station, quantity, value,
 def get_points_at_station( cursor, station ):
     cursor.execute(
     """
-    SELECT identifier
+    SELECT point_id
     FROM points
     WHERE station_id=?;
     """,
@@ -1105,7 +1105,7 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
     )
     cursor.execute(
     """
-    INSERT INTO points( identifier, station_id, series_id, study_id,
+    INSERT INTO points( point_id, station_id, series_id, study_id,
                         point_number, point_label_id, outlier )
     VALUES( ?, ?, ?, ?, ?, ?, ? );
     """,
@@ -1123,7 +1123,7 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
     for note in notes:
         cursor.execute(
         """
-        INSERT INTO point_notes( point, note_id )
+        INSERT INTO point_notes( point_id, note_id )
         VALUES( ?, ? );
         """,
         (
@@ -1135,7 +1135,7 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
     for compilation in identifiers:
         cursor.execute(
         """
-        INSERT INTO point_identifiers( point, compilation, identifier )
+        INSERT INTO point_identifiers( point_id, compilation, identifier )
         VALUES( ?, ?, ? );
         """,
         (
@@ -1155,7 +1155,7 @@ def set_point_value( cursor, point, quantity, value,
     for avg_sys in create_value_types_list( value_type ):
         cursor.execute(
         """
-        INSERT INTO point_values( point, quantity_id, point_value,
+        INSERT INTO point_values( point_id, quantity_id, point_value,
                                   point_uncertainty, value_type_id, mt_set,
                                   outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ? );
@@ -1174,7 +1174,7 @@ def set_point_value( cursor, point, quantity, value,
         for measurement_technique in measurement_techniques:
             cursor.execute(
             """
-            INSERT INTO point_values_mt( point, quantity_id, value_type_id,
+            INSERT INTO point_values_mt( point_id, quantity_id, value_type_id,
                                          mt_set, measurement_technique_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -1190,7 +1190,7 @@ def set_point_value( cursor, point, quantity, value,
         for note in notes:
             cursor.execute(
             """
-            INSERT INTO point_value_notes( point, quantity_id, value_type_id,
+            INSERT INTO point_value_notes( point_id, quantity_id, value_type_id,
                                            mt_set, note_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -1210,7 +1210,7 @@ def get_point_value( cursor, point, quantity, value_type=VT_ANY_AVERAGE, \
         """
         SELECT point_value, point_uncertainty
         FROM point_values
-        WHERE point=? AND quantity_id=? AND mt_set=?
+        WHERE point_id=? AND quantity_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -1224,7 +1224,7 @@ def get_point_value( cursor, point, quantity, value_type=VT_ANY_AVERAGE, \
         """
         SELECT point_value, point_uncertainty
         FROM point_values
-        WHERE point=? AND quantity_id=? AND value_type_id=? AND mt_set=?
+        WHERE point_id=? AND quantity_id=? AND value_type_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -1247,14 +1247,14 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,
             # Both value types are unspecified.
             cursor.execute(
             """
-            SELECT point
+            SELECT point_id
             FROM point_values
-            WHERE point LIKE ? AND quantity_id=? AND outlier=0
+            WHERE point_id LIKE ? AND quantity_id=? AND outlier=0
             INTERSECT
-            SELECT point
+            SELECT point_id
             FROM point_values
-            WHERE point LIKE ? AND quantity_id=? AND outlier=0
-            ORDER BY point;
+            WHERE point_id LIKE ? AND quantity_id=? AND outlier=0
+            ORDER BY point_id;
             """,
             (
                 sanitize_identifier(station)+'%',
@@ -1267,14 +1267,14 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,
             # Only the second value type is specified.
             cursor.execute(
             """
-            SELECT point
+            SELECT point_id
             FROM point_values
-            WHERE point LIKE ? AND quantity_id=? AND outlier=0
+            WHERE point_id LIKE ? AND quantity_id=? AND outlier=0
             INTERSECT
-            SELECT point
+            SELECT point_id
             FROM point_values
-            WHERE point LIKE ? AND quantity_id=? AND value_type_id=? AND outlier=0
-            ORDER BY point;
+            WHERE point_id LIKE ? AND quantity_id=? AND value_type_id=? AND outlier=0
+            ORDER BY point_id;
             """,
             (
                 sanitize_identifier(station)+'%',
@@ -1289,14 +1289,14 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,
             # Only the first value type is specified.
             cursor.execute(
             """
-            SELECT point
+            SELECT point_id
             FROM point_values
-            WHERE point LIKE ? AND quantity_id=? AND value_type_id=? AND outlier=0
+            WHERE point_id LIKE ? AND quantity_id=? AND value_type_id=? AND outlier=0
             INTERSECT
-            SELECT point
+            SELECT point_id
             FROM point_values
-            WHERE point LIKE ? AND quantity_id=? AND outlier=0
-            ORDER BY point;
+            WHERE point_id LIKE ? AND quantity_id=? AND outlier=0
+            ORDER BY point_id;
             """,
             (
                 sanitize_identifier(station)+'%',
@@ -1310,14 +1310,14 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,
             # Both value types are specified.
             cursor.execute(
             """
-            SELECT point
+            SELECT point_id
             FROM point_values
-            WHERE point LIKE ? AND quantity_id=? AND value_type_id=? AND outlier=0
+            WHERE point_id LIKE ? AND quantity_id=? AND value_type_id=? AND outlier=0
             INTERSECT
-            SELECT point
+            SELECT point_id
             FROM point_values
-            WHERE point LIKE ? AND quantity_id=? AND value_type_id=? AND outlier=0
-            ORDER BY point;
+            WHERE point_id LIKE ? AND quantity_id=? AND value_type_id=? AND outlier=0
+            ORDER BY point_id;
             """,
             (
                 sanitize_identifier(station)+'%',
@@ -1338,7 +1338,7 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,
         """
         SELECT point_label_id
         FROM points
-        WHERE identifier=?;
+        WHERE point_id=?;
         """,
         (
             point,
@@ -1379,11 +1379,11 @@ def locate_labeled_points( cursor, station, label ):
 
     cursor.execute(
     """
-    SELECT identifier
+    SELECT point_id
     FROM points
-    WHERE identifier
+    WHERE point_id
     LIKE ? AND point_label_id=?
-    ORDER BY identifier;
+    ORDER BY point_id;
     """,
     (
         sanitize_identifier(station)+'%',
@@ -1408,7 +1408,7 @@ def locate_labeled_point( cursor, station, label ):
         """
         SELECT point_number
         FROM points
-        WHERE identifier=?;
+        WHERE point_id=?;
         """,
         (
             point,
