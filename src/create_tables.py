@@ -668,7 +668,6 @@ CREATE TABLE series (
     number_of_dimensions INTEGER NOT NULL DEFAULT 2 CHECK ( number_of_dimensions > 0 AND number_of_dimensions <= 3 ),
     coordinate_system_id TEXT NOT NULL DEFAULT 'XYZ',
     geometry_id          TEXT DEFAULT NULL,
-    number_of_sides      TEXT DEFAULT NULL CHECK ( number_of_sides > 1 ),
     outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     description          TEXT DEFAULT NULL,
     FOREIGN KEY(coordinate_system_id) REFERENCES coordinate_systems(coordinate_system_id),

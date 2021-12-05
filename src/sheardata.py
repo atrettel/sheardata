@@ -784,19 +784,6 @@ def update_series_geometry( cursor, identifier, geometry ):
     )
     )
 
-def update_series_number_of_sides( cursor, identifier, number_of_sides ):
-    cursor.execute(
-    """
-    UPDATE series
-    SET number_of_sides=?
-    WHERE identifier=?;
-    """,
-    (
-        int(number_of_sides),
-        sanitize_identifier(identifier),
-    )
-    )
-
 def update_series_description( cursor, identifier, description ):
     cursor.execute(
     """
