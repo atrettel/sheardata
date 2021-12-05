@@ -54,7 +54,8 @@ coordinate_systems[ sd.CS_CYLINDRICAL ] = "cylindrical coordinates"
 for identifier in coordinate_systems:
     cursor.execute(
     """
-    INSERT INTO coordinate_systems( coordinate_system_id, coordinate_system_name )
+    INSERT INTO coordinate_systems( coordinate_system_id,
+                                    coordinate_system_name )
     VALUES( ?, ? );
     """,
     ( identifier, coordinate_systems[identifier], )
@@ -64,8 +65,8 @@ for identifier in coordinate_systems:
 cursor.execute(
 """
 CREATE TABLE flow_classes (
-    flow_class_id     TEXT PRIMARY KEY UNIQUE CHECK ( length(flow_class_id) = 1 ),
-    flow_class_name   TEXT NOT NULL,
+    flow_class_id        TEXT PRIMARY KEY UNIQUE CHECK ( length(flow_class_id) = 1 ),
+    flow_class_name      TEXT NOT NULL,
     flow_class_parent_id TEXT DEFAULT NULL,
     FOREIGN KEY(flow_class_parent_id) REFERENCES flow_classes(flow_class_id)
 );
@@ -115,7 +116,9 @@ for identifier in flow_classes:
     if ( flow_classes[identifier].is_child() ):
         cursor.execute(
         """
-        UPDATE flow_classes SET flow_class_parent_id=? WHERE flow_class_id=?;
+        UPDATE flow_classes
+        SET flow_class_parent_id=?
+        WHERE flow_class_id=?;
         """,
         ( flow_classes[identifier].parent, identifier, )
         )
@@ -251,9 +254,9 @@ for identifier in geometries:
 cursor.execute(
 """
 CREATE TABLE measurement_techniques (
-    meastech_id     TEXT PRIMARY KEY UNIQUE,
-    meastech_name   TEXT NOT NULL,
-    intrusive                    INTEGER NOT NULL DEFAULT 0 CHECK ( intrusive = 0 OR intrusive = 1 ),
+    meastech_id        TEXT PRIMARY KEY UNIQUE,
+    meastech_name      TEXT NOT NULL,
+    intrusive          INTEGER NOT NULL DEFAULT 0 CHECK ( intrusive = 0 OR intrusive = 1 ),
     meastech_parent_id TEXT DEFAULT NULL,
     FOREIGN KEY(meastech_parent_id) REFERENCES measurement_techniques(meastech_id)
 );
@@ -326,7 +329,9 @@ for identifier in measurement_techniques:
     if ( measurement_techniques[identifier].is_child() ):
         cursor.execute(
         """
-        UPDATE measurement_techniques SET meastech_parent_id=? WHERE meastech_id=?;
+        UPDATE measurement_techniques
+        SET meastech_parent_id=?
+        WHERE meastech_id=?;
         """,
         ( measurement_techniques[identifier].parent, identifier, )
         )
@@ -609,7 +614,9 @@ quantities[ sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO                ] = quantity( "l
 for identifier in quantities:
     cursor.execute(
     """
-    INSERT INTO quantities( quantity_id, quantity_name, length_exponent, mass_exponent, time_exponent, temperature_exponent )
+    INSERT INTO quantities( quantity_id, quantity_name, length_exponent,
+                            mass_exponent, time_exponent,
+                            temperature_exponent )
     VALUES( ?, ?, ?, ?, ?, ? );
     """,
     (
@@ -650,16 +657,16 @@ for identifier in study_types:
 cursor.execute(
 """
 CREATE TABLE studies (
-    study_id              TEXT PRIMARY KEY UNIQUE,
-    flow_class_id         TEXT NOT NULL DEFAULT 'U',
-    year                  INTEGER NOT NULL CHECK (        year  >= 0 AND         year <= 9999 ),
-    study_number          INTEGER NOT NULL CHECK ( study_number >  0 AND study_number <=  999 ),
-    study_type_id         TEXT NOT NULL,
-    outlier               INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    study_description     TEXT DEFAULT NULL,
-    study_provenance      TEXT DEFAULT NULL,
+    study_id          TEXT PRIMARY KEY UNIQUE,
+    flow_class_id     TEXT NOT NULL DEFAULT 'U',
+    year              INTEGER NOT NULL CHECK (        year  >= 0 AND         year <= 9999 ),
+    study_number      INTEGER NOT NULL CHECK ( study_number >  0 AND study_number <=  999 ),
+    study_type_id     TEXT NOT NULL,
+    outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
+    study_description TEXT DEFAULT NULL,
+    study_provenance  TEXT DEFAULT NULL,
     FOREIGN KEY(flow_class_id) REFERENCES flow_classes(flow_class_id),
-    FOREIGN KEY(study_type_id) REFERENCES  study_types(study_type_id)
+    FOREIGN KEY(study_type_id) REFERENCES study_types(study_type_id)
 );
 """
 )
@@ -687,17 +694,17 @@ CREATE TABLE series (
 cursor.execute(
 """
 CREATE TABLE stations (
-    station_id                      TEXT PRIMARY KEY UNIQUE,
-    series_id                       TEXT NOT NULL,
-    study_id                        TEXT NOT NULL,
-    station_number                  INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <= 999 ),
-    flow_regime_id                  TEXT DEFAULT NULL,
-    previous_streamwise_station_id  TEXT DEFAULT NULL,
-    next_streamwise_station_id      TEXT DEFAULT NULL,
-    previous_spanwise_station_id    TEXT DEFAULT NULL,
-    next_spanwise_station_id        TEXT DEFAULT NULL,
-    outlier                         INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    station_description             TEXT DEFAULT NULL,
+    station_id                     TEXT PRIMARY KEY UNIQUE,
+    series_id                      TEXT NOT NULL,
+    study_id                       TEXT NOT NULL,
+    station_number                 INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <= 999 ),
+    flow_regime_id                 TEXT DEFAULT NULL,
+    previous_streamwise_station_id TEXT DEFAULT NULL,
+    next_streamwise_station_id     TEXT DEFAULT NULL,
+    previous_spanwise_station_id   TEXT DEFAULT NULL,
+    next_spanwise_station_id       TEXT DEFAULT NULL,
+    outlier                        INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
+    station_description            TEXT DEFAULT NULL,
     FOREIGN KEY(series_id)                      REFERENCES series(series_id),
     FOREIGN KEY(study_id)                       REFERENCES studies(study_id),
     FOREIGN KEY(flow_regime_id)                 REFERENCES flow_regimes(flow_regime_id),
@@ -713,14 +720,14 @@ CREATE TABLE stations (
 cursor.execute(
 """
 CREATE TABLE points (
-    point_id             TEXT PRIMARY KEY UNIQUE,
-    station_id           TEXT NOT NULL,
-    series_id            TEXT NOT NULL,
-    study_id             TEXT NOT NULL,
-    point_number         INTEGER NOT NULL CHECK ( point_number > 0 AND point_number <= 9999 ),
-    point_label_id       TEXT DEFAULT NULL,
-    outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    point_description    TEXT DEFAULT NULL,
+    point_id          TEXT PRIMARY KEY UNIQUE,
+    station_id        TEXT NOT NULL,
+    series_id         TEXT NOT NULL,
+    study_id          TEXT NOT NULL,
+    point_number      INTEGER NOT NULL CHECK ( point_number > 0 AND point_number <= 9999 ),
+    point_label_id    TEXT DEFAULT NULL,
+    outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
+    point_description TEXT DEFAULT NULL,
     FOREIGN KEY(station_id)     REFERENCES stations(station_id),
     FOREIGN KEY(series_id)      REFERENCES series(series_id),
     FOREIGN KEY(study_id)       REFERENCES studies(study_id),
@@ -778,11 +785,11 @@ CREATE TABLE study_values (
     study_value       REAL NOT NULL,
     study_uncertainty REAL DEFAULT NULL CHECK ( study_uncertainty >= 0.0 ),
     value_type_id     TEXT NOT NULL,
-    meastech_set            INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    meastech_set      INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     PRIMARY KEY(study_id, quantity_id, value_type_id, meastech_set),
-    FOREIGN KEY(study_id)      REFERENCES     studies(study_id),
-    FOREIGN KEY(quantity_id)   REFERENCES  quantities(quantity_id),
+    FOREIGN KEY(study_id)      REFERENCES studies(study_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
 );
 """
@@ -797,7 +804,7 @@ CREATE TABLE series_values (
     series_value       REAL NOT NULL,
     series_uncertainty REAL DEFAULT NULL CHECK ( series_uncertainty >= 0.0 ),
     value_type_id      TEXT NOT NULL,
-    meastech_set             INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    meastech_set       INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     outlier            INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     PRIMARY KEY(series_id, quantity_id, value_type_id, meastech_set),
     FOREIGN KEY(series_id)     REFERENCES series(series_id),
@@ -816,7 +823,7 @@ CREATE TABLE station_values (
     station_value       REAL NOT NULL,
     station_uncertainty REAL DEFAULT NULL CHECK ( station_uncertainty >= 0.0 ),
     value_type_id       TEXT NOT NULL,
-    meastech_set              INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    meastech_set        INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     outlier             INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     PRIMARY KEY(station_id, quantity_id, value_type_id, meastech_set),
     FOREIGN KEY(station_id)    REFERENCES stations(station_id),
@@ -835,11 +842,11 @@ CREATE TABLE point_values (
     point_value       REAL NOT NULL,
     point_uncertainty REAL DEFAULT NULL CHECK ( point_uncertainty >= 0.0 ),
     value_type_id     TEXT NOT NULL,
-    meastech_set            INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    meastech_set      INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     PRIMARY KEY(point_id, quantity_id, value_type_id, meastech_set),
-    FOREIGN KEY(point_id)      REFERENCES      points(point_id),
-    FOREIGN KEY(quantity_id)   REFERENCES  quantities(quantity_id),
+    FOREIGN KEY(point_id)      REFERENCES points(point_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
 );
 """
@@ -852,13 +859,13 @@ CREATE TABLE study_values_mt (
     study_id      TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
-    meastech_set        INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
-    meastech_id TEXT DEFAULT NULL,
+    meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    meastech_id   TEXT DEFAULT NULL,
     PRIMARY KEY(study_id, quantity_id, value_type_id, meastech_set, meastech_id),
-    FOREIGN KEY(study_id)              REFERENCES studies(study_id),
-    FOREIGN KEY(quantity_id)           REFERENCES             quantities(quantity_id),
-    FOREIGN KEY(value_type_id)         REFERENCES value_types(value_type_id),
-    FOREIGN KEY(meastech_id) REFERENCES measurement_techniques(meastech_id)
+    FOREIGN KEY(study_id)      REFERENCES studies(study_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
+    FOREIGN KEY(meastech_id)   REFERENCES measurement_techniques(meastech_id)
 );
 """
 )
@@ -870,13 +877,13 @@ CREATE TABLE series_values_mt (
     series_Id     TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
-    meastech_set        INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
-    meastech_id TEXT DEFAULT NULL,
+    meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    meastech_id   TEXT DEFAULT NULL,
     PRIMARY KEY(series_id, quantity_id, value_type_id, meastech_set, meastech_id),
-    FOREIGN KEY(series_id)                REFERENCES series(series_id),
-    FOREIGN KEY(quantity_id)              REFERENCES quantities(quantity_id),
-    FOREIGN KEY(value_type_id)            REFERENCES value_types(value_type_id),
-    FOREIGN KEY(meastech_id) REFERENCES measurement_techniques(meastech_id)
+    FOREIGN KEY(series_id)     REFERENCES series(series_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
+    FOREIGN KEY(meastech_id)   REFERENCES measurement_techniques(meastech_id)
 );
 """
 )
@@ -888,13 +895,13 @@ CREATE TABLE station_values_mt (
     station_id    TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
-    meastech_set        INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
-    meastech_id TEXT DEFAULT NULL,
+    meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    meastech_id   TEXT DEFAULT NULL,
     PRIMARY KEY(station_id, quantity_id, value_type_id, meastech_set, meastech_id),
-    FOREIGN KEY(station_id)               REFERENCES stations(station_id),
-    FOREIGN KEY(quantity_id)              REFERENCES quantities(quantity_id),
-    FOREIGN KEY(value_type_id)            REFERENCES value_types(value_type_id),
-    FOREIGN KEY(meastech_id) REFERENCES measurement_techniques(meastech_id)
+    FOREIGN KEY(station_id)    REFERENCES stations(station_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
+    FOREIGN KEY(meastech_id)   REFERENCES measurement_techniques(meastech_id)
 );
 """
 )
@@ -906,13 +913,13 @@ CREATE TABLE point_values_mt (
     point_id      TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
-    meastech_set        INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
-    meastech_id TEXT DEFAULT NULL,
+    meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    meastech_id   TEXT DEFAULT NULL,
     PRIMARY KEY(point_id, quantity_id, value_type_id, meastech_set, meastech_id),
-    FOREIGN KEY(point_id)                 REFERENCES points(point_id),
-    FOREIGN KEY(quantity_id)              REFERENCES quantities(quantity_id),
-    FOREIGN KEY(value_type_id)            REFERENCES value_types(value_type_id),
-    FOREIGN KEY(meastech_id) REFERENCES measurement_techniques(meastech_id)
+    FOREIGN KEY(point_id)      REFERENCES points(point_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
+    FOREIGN KEY(meastech_id)   REFERENCES measurement_techniques(meastech_id)
 );
 """
 )
@@ -925,7 +932,7 @@ CREATE TABLE study_notes (
     note_id  INTEGER NOT NULL CHECK ( note_id > 0 ),
     PRIMARY KEY(study_id, note_id),
     FOREIGN KEY(study_id) REFERENCES studies(study_id),
-    FOREIGN KEY(note_id) REFERENCES notes(note_id)
+    FOREIGN KEY(note_id)  REFERENCES notes(note_id)
 );
 """
 )
@@ -937,13 +944,13 @@ CREATE TABLE study_value_notes (
     study_id      TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
-    meastech_set        INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
     PRIMARY KEY(study_id, quantity_id, value_type_id, meastech_set, note_id),
-    FOREIGN KEY(study_id)            REFERENCES     studies(study_id),
-    FOREIGN KEY(quantity_id)         REFERENCES  quantities(quantity_id),
-    FOREIGN KEY(value_type_id)    REFERENCES value_types(value_type_id),
-    FOREIGN KEY(note_id)          REFERENCES          notes(note_id)
+    FOREIGN KEY(study_id)      REFERENCES studies(study_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
+    FOREIGN KEY(note_id)       REFERENCES notes(note_id)
 );
 """
 )
@@ -968,11 +975,11 @@ CREATE TABLE series_value_notes (
     series_id     TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
-    meastech_set        INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
     PRIMARY KEY(series_id, quantity_id, value_type_id, meastech_set, note_id),
-    FOREIGN KEY(series_id)     REFERENCES      series(series_id),
-    FOREIGN KEY(quantity_id)   REFERENCES  quantities(quantity_id),
+    FOREIGN KEY(series_id)     REFERENCES series(series_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
     FOREIGN KEY(note_id)       REFERENCES notes(note_id)
 );
@@ -999,7 +1006,7 @@ CREATE TABLE station_value_notes (
     station_id    TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
-    meastech_set        INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
     PRIMARY KEY(station_id, quantity_id, value_type_id, meastech_set, note_id),
     FOREIGN KEY(station_id)    REFERENCES stations(station_id),
@@ -1030,7 +1037,7 @@ CREATE TABLE point_value_notes (
     point_id      TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
-    meastech_set        INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
     PRIMARY KEY(point_id, quantity_id, value_type_id, meastech_set, note_id),
     FOREIGN KEY(point_id)      REFERENCES points(point_id),
@@ -1104,7 +1111,7 @@ CREATE TABLE study_identifiers (
     compilation INTEGER NOT NULL CHECK ( compilation >= 0 ),
     identifier  TEXT NOT NULL,
     PRIMARY KEY(study_id, compilation),
-    FOREIGN KEY(study_id)       REFERENCES      studies(study_id),
+    FOREIGN KEY(study_id)    REFERENCES studies(study_id),
     FOREIGN KEY(compilation) REFERENCES compilations(compilation_id)
 );
 """
