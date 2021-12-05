@@ -730,7 +730,7 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
     )
     cursor.execute(
     """
-    INSERT INTO series( identifier, study_id, series_number, number_of_dimensions,
+    INSERT INTO series( series_id, study_id, series_number, number_of_dimensions,
                         coordinate_system_id, outlier )
     VALUES( ?, ?, ?, ?, ?, ? );
     """,
@@ -747,7 +747,7 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
     for note in notes:
         cursor.execute(
         """
-        INSERT INTO series_notes( series, note_id )
+        INSERT INTO series_notes( series_id, note_id )
         VALUES( ?, ? );
         """,
         (
@@ -759,7 +759,7 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
     for compilation in identifiers:
         cursor.execute(
         """
-        INSERT INTO series_identifiers( series, compilation, identifier )
+        INSERT INTO series_identifiers( series_id, compilation, identifier )
         VALUES( ?, ?, ? );
         """,
         (
@@ -776,7 +776,7 @@ def update_series_geometry( cursor, identifier, geometry ):
     """
     UPDATE series
     SET geometry_id=?
-    WHERE identifier=?;
+    WHERE series_id=?;
     """,
     (
         str(geometry),
@@ -789,7 +789,7 @@ def update_series_description( cursor, identifier, description ):
     """
     UPDATE series
     SET description=?
-    WHERE identifier=?;
+    WHERE series_id=?;
     """,
     (
         description.strip(),
@@ -805,7 +805,7 @@ def set_series_value( cursor, series, quantity, value,
     for avg_sys in create_value_types_list( value_type ):
         cursor.execute(
         """
-        INSERT INTO series_values( series, quantity_id, series_value,
+        INSERT INTO series_values( series_id, quantity_id, series_value,
                                    series_uncertainty, value_type_id,
                                    mt_set, outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ? );
@@ -824,7 +824,7 @@ def set_series_value( cursor, series, quantity, value,
         for measurement_technique in measurement_techniques:
             cursor.execute(
             """
-            INSERT INTO series_values_mt( series, quantity_id, value_type_id,
+            INSERT INTO series_values_mt( series_id, quantity_id, value_type_id,
                                           mt_set, measurement_technique_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -840,7 +840,7 @@ def set_series_value( cursor, series, quantity, value,
         for note in notes:
             cursor.execute(
             """
-            INSERT INTO series_value_notes( series, quantity_id, value_type_id,
+            INSERT INTO series_value_notes( series_id, quantity_id, value_type_id,
                                             mt_set, note_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -860,7 +860,7 @@ def get_series_value( cursor, series, quantity, value_type=VT_ANY_AVERAGE, \
         """
         SELECT series_value, series_uncertainty
         FROM series_values
-        WHERE series=? AND quantity_id=? AND mt_set=?
+        WHERE series_id=? AND quantity_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -874,7 +874,7 @@ def get_series_value( cursor, series, quantity, value_type=VT_ANY_AVERAGE, \
         """
         SELECT series_value, series_uncertainty
         FROM series_values
-        WHERE series=? AND quantity_id=? AND value_type_id=? AND mt_set=?
+        WHERE series_id=? AND quantity_id=? AND value_type_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -908,7 +908,7 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
     )
     cursor.execute(
     """
-    INSERT INTO stations( identifier, series, study_id, station_number, 
+    INSERT INTO stations( identifier, series_id, study_id, station_number, 
                           outlier )
     VALUES( ?, ?, ?, ?, ? );
     """,
@@ -1104,7 +1104,7 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
     )
     cursor.execute(
     """
-    INSERT INTO points( identifier, station, series, study_id, point_number,
+    INSERT INTO points( identifier, station, series_id, study_id, point_number,
                         point_label_id, outlier )
     VALUES( ?, ?, ?, ?, ?, ?, ? );
     """,

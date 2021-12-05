@@ -134,8 +134,8 @@ for duct_type in duct_types:
             INTERSECT
             SELECT identifier
             FROM stations
-            WHERE series IN (
-                SELECT identifier
+            WHERE series_id IN (
+                SELECT series_id
                 FROM series
                 WHERE number_of_dimensions=? AND coordinate_system_id=? AND geometry_id=?
             )

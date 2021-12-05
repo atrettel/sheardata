@@ -668,7 +668,7 @@ CREATE TABLE studies (
 cursor.execute(
 """
 CREATE TABLE series (
-    identifier           TEXT PRIMARY KEY UNIQUE,
+    series_id            TEXT PRIMARY KEY UNIQUE,
     study_id             TEXT NOT NULL,
     series_number        INTEGER NOT NULL CHECK ( series_number > 0 AND series_number <= 999 ),
     number_of_dimensions INTEGER NOT NULL DEFAULT 2 CHECK ( number_of_dimensions > 0 AND number_of_dimensions <= 3 ),
@@ -677,7 +677,7 @@ CREATE TABLE series (
     outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     description          TEXT DEFAULT NULL,
     FOREIGN KEY(coordinate_system_id) REFERENCES coordinate_systems(coordinate_system_id),
-    FOREIGN KEY(geometry_id)          REFERENCES         geometries(geometry_id)
+    FOREIGN KEY(geometry_id)          REFERENCES geometries(geometry_id)
 );
 """
 )
@@ -687,7 +687,7 @@ cursor.execute(
 """
 CREATE TABLE stations (
     identifier                   TEXT PRIMARY KEY UNIQUE,
-    series                       TEXT NOT NULL,
+    series_id                    TEXT NOT NULL,
     study_id                     TEXT NOT NULL,
     station_number               INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <= 999 ),
     flow_regime_id               TEXT DEFAULT NULL,
@@ -712,7 +712,7 @@ cursor.execute(
 CREATE TABLE points (
     identifier           TEXT PRIMARY KEY UNIQUE,
     station              TEXT NOT NULL,
-    series               TEXT NOT NULL,
+    series_id            TEXT NOT NULL,
     study_id             TEXT NOT NULL,
     point_number         INTEGER NOT NULL CHECK ( point_number > 0 AND point_number <= 9999 ),
     point_label_id       TEXT DEFAULT NULL,
@@ -747,15 +747,15 @@ CREATE TABLE sources (
 cursor.execute(
 """
 CREATE TABLE components (
-    series   TEXT NOT NULL,
-    fluid_id TEXT DEFAULT NULL,
-    name     TEXT DEFAULT NULL CHECK (
+    series_id TEXT NOT NULL,
+    fluid_id  TEXT DEFAULT NULL,
+    name      TEXT DEFAULT NULL CHECK (
         fluid_id IS     NULL AND name IS NOT NULL
         OR
         fluid_id IS NOT NULL AND name IS NULL ),
-    PRIMARY KEY(series, fluid_id),
-    FOREIGN KEY(series)   REFERENCES series(identifier),
-    FOREIGN KEY(fluid_id) REFERENCES fluids(fluid_id)
+    PRIMARY KEY(series_id, fluid_id),
+    FOREIGN KEY(series_id) REFERENCES series(series_id),
+    FOREIGN KEY(fluid_id)  REFERENCES fluids(fluid_id)
 );
 """
 )
@@ -786,16 +786,16 @@ CREATE TABLE study_values (
 cursor.execute(
 """
 CREATE TABLE series_values (
-    series             TEXT NOT NULL,
+    series_id          TEXT NOT NULL,
     quantity_id        TEXT NOT NULL,
     series_value       REAL NOT NULL,
     series_uncertainty REAL DEFAULT NULL CHECK ( series_uncertainty >= 0.0 ),
     value_type_id      TEXT NOT NULL,
     mt_set             INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     outlier            INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(series, quantity_id, value_type_id, mt_set),
-    FOREIGN KEY(series)     REFERENCES      series(identifier),
-    FOREIGN KEY(quantity_id)   REFERENCES  quantities(quantity_id),
+    PRIMARY KEY(series_id, quantity_id, value_type_id, mt_set),
+    FOREIGN KEY(series_id)     REFERENCES series(series_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
 );
 """
@@ -861,15 +861,15 @@ CREATE TABLE study_values_mt (
 cursor.execute(
 """
 CREATE TABLE series_values_mt (
-    series        TEXT NOT NULL,
+    series_Id     TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     measurement_technique_id TEXT DEFAULT NULL,
-    PRIMARY KEY(series, quantity_id, value_type_id, mt_set, measurement_technique_id),
-    FOREIGN KEY(series)                REFERENCES                 series(identifier),
-    FOREIGN KEY(quantity_id)           REFERENCES             quantities(quantity_id),
-    FOREIGN KEY(value_type_id)         REFERENCES value_types(value_type_id),
+    PRIMARY KEY(series_id, quantity_id, value_type_id, mt_set, measurement_technique_id),
+    FOREIGN KEY(series_id)                REFERENCES series(series_id),
+    FOREIGN KEY(quantity_id)              REFERENCES quantities(quantity_id),
+    FOREIGN KEY(value_type_id)            REFERENCES value_types(value_type_id),
     FOREIGN KEY(measurement_technique_id) REFERENCES measurement_techniques(measurement_technique_id)
 );
 """
@@ -946,11 +946,11 @@ CREATE TABLE study_value_notes (
 cursor.execute(
 """
 CREATE TABLE series_notes (
-    series  TEXT NOT NULL,
-    note_id INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(series, note_id),
-    FOREIGN KEY(series) REFERENCES series(identifier),
-    FOREIGN KEY(note_id) REFERENCES notes(note_id)
+    series_id TEXT NOT NULL,
+    note_id   INTEGER NOT NULL CHECK ( note_id > 0 ),
+    PRIMARY KEY(series_id, note_id),
+    FOREIGN KEY(series_id) REFERENCES series(series_id),
+    FOREIGN KEY(note_id)   REFERENCES notes(note_id)
 );
 """
 )
@@ -959,13 +959,13 @@ CREATE TABLE series_notes (
 cursor.execute(
 """
 CREATE TABLE series_value_notes (
-    series        TEXT NOT NULL,
+    series_id     TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(series, quantity_id, value_type_id, mt_set, note_id),
-    FOREIGN KEY(series)     REFERENCES      series(identifier),
+    PRIMARY KEY(series_id, quantity_id, value_type_id, mt_set, note_id),
+    FOREIGN KEY(series_id)     REFERENCES      series(series_id),
     FOREIGN KEY(quantity_id)   REFERENCES  quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
     FOREIGN KEY(note_id)       REFERENCES notes(note_id)
@@ -1108,11 +1108,11 @@ CREATE TABLE study_identifiers (
 cursor.execute(
 """
 CREATE TABLE series_identifiers (
-    series      TEXT NOT NULL,
+    series_id   TEXT NOT NULL,
     compilation INTEGER NOT NULL CHECK ( compilation >= 0 ),
     identifier  TEXT NOT NULL,
-    PRIMARY KEY(series, compilation),
-    FOREIGN KEY(series)      REFERENCES       series(identifier),
+    PRIMARY KEY(series_id, compilation),
+    FOREIGN KEY(series_id)   REFERENCES series(series_id),
     FOREIGN KEY(compilation) REFERENCES compilations(compilation_id)
 );
 """
