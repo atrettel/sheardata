@@ -675,7 +675,7 @@ CREATE TABLE series (
     coordinate_system_id TEXT NOT NULL DEFAULT 'XYZ',
     geometry_id          TEXT DEFAULT NULL,
     outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    study_description    TEXT DEFAULT NULL,
+    series_description   TEXT DEFAULT NULL,
     FOREIGN KEY(coordinate_system_id) REFERENCES coordinate_systems(coordinate_system_id),
     FOREIGN KEY(geometry_id)          REFERENCES geometries(geometry_id)
 );
