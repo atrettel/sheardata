@@ -676,6 +676,7 @@ CREATE TABLE series (
     geometry_id          TEXT DEFAULT NULL,
     outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     series_description   TEXT DEFAULT NULL,
+    FOREIGN KEY(study_id)             REFERENCES studies(study_id),
     FOREIGN KEY(coordinate_system_id) REFERENCES coordinate_systems(coordinate_system_id),
     FOREIGN KEY(geometry_id)          REFERENCES geometries(geometry_id)
 );
@@ -697,6 +698,8 @@ CREATE TABLE stations (
     next_spanwise_station_id        TEXT DEFAULT NULL,
     outlier                         INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     station_description             TEXT DEFAULT NULL,
+    FOREIGN KEY(series_id)                      REFERENCES series(series_id),
+    FOREIGN KEY(study_id)                       REFERENCES studies(study_id),
     FOREIGN KEY(flow_regime_id)                 REFERENCES flow_regimes(flow_regime_id),
     FOREIGN KEY(previous_streamwise_station_id) REFERENCES stations(station_id),
     FOREIGN KEY(next_streamwise_station_id)     REFERENCES stations(station_id),
@@ -718,6 +721,9 @@ CREATE TABLE points (
     point_label_id       TEXT DEFAULT NULL,
     outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     point_description    TEXT DEFAULT NULL,
+    FOREIGN KEY(station_id)     REFERENCES stations(station_id),
+    FOREIGN KEY(series_id)      REFERENCES series(series_id),
+    FOREIGN KEY(study_id)       REFERENCES studies(study_id),
     FOREIGN KEY(point_label_id) REFERENCES point_labels(point_label_id)
 );
 """
