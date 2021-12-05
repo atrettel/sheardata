@@ -644,7 +644,7 @@ for identifier in study_types:
 cursor.execute(
 """
 CREATE TABLE studies (
-    identifier            TEXT PRIMARY KEY UNIQUE,
+    study_id              TEXT PRIMARY KEY UNIQUE,
     flow_class_id         TEXT NOT NULL DEFAULT 'U',
     year                  INTEGER NOT NULL CHECK (        year  >= 0 AND         year <= 9999 ),
     study_number          INTEGER NOT NULL CHECK ( study_number >  0 AND study_number <=  999 ),
@@ -663,7 +663,7 @@ cursor.execute(
 """
 CREATE TABLE series (
     identifier           TEXT PRIMARY KEY UNIQUE,
-    study                TEXT NOT NULL,
+    study_id             TEXT NOT NULL,
     series_number        INTEGER NOT NULL CHECK ( series_number > 0 AND series_number <= 999 ),
     number_of_dimensions INTEGER NOT NULL DEFAULT 2 CHECK ( number_of_dimensions > 0 AND number_of_dimensions <= 3 ),
     coordinate_system_id TEXT NOT NULL DEFAULT 'XYZ',
@@ -683,7 +683,7 @@ cursor.execute(
 CREATE TABLE stations (
     identifier                   TEXT PRIMARY KEY UNIQUE,
     series                       TEXT NOT NULL,
-    study                        TEXT NOT NULL,
+    study_id                     TEXT NOT NULL,
     station_number               INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <= 999 ),
     flow_regime_id               TEXT DEFAULT NULL,
     previous_streamwise_station  TEXT DEFAULT NULL,
@@ -708,7 +708,7 @@ CREATE TABLE points (
     identifier           TEXT PRIMARY KEY UNIQUE,
     station              TEXT NOT NULL,
     series               TEXT NOT NULL,
-    study                TEXT NOT NULL,
+    study_id             TEXT NOT NULL,
     point_number         INTEGER NOT NULL CHECK ( point_number > 0 AND point_number <= 9999 ),
     point_label_id       TEXT DEFAULT NULL,
     outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
@@ -726,11 +726,11 @@ CREATE TABLE points (
 cursor.execute(
 """
 CREATE TABLE sources (
-    study          TEXT NOT NULL,
+    study_id       TEXT NOT NULL,
     source         TEXT NOT NULL,
     classification INTEGER NOT NULL DEFAULT 1 CHECK ( classification = 1 OR classification = 2 ),
-    PRIMARY KEY(study, source),
-    FOREIGN KEY(study) REFERENCES studies(identifier)
+    PRIMARY KEY(study_id, source),
+    FOREIGN KEY(study_id) REFERENCES studies(study_id)
 );
 """
 )
@@ -762,15 +762,15 @@ CREATE TABLE components (
 cursor.execute(
 """
 CREATE TABLE study_values (
-    study             TEXT NOT NULL,
+    study_id          TEXT NOT NULL,
     quantity_id       TEXT NOT NULL,
     study_value       REAL NOT NULL,
     study_uncertainty REAL DEFAULT NULL CHECK ( study_uncertainty >= 0.0 ),
     value_type_id     TEXT NOT NULL,
     mt_set            INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(study, quantity_id, value_type_id, mt_set),
-    FOREIGN KEY(study)      REFERENCES     studies(identifier),
+    PRIMARY KEY(study_id, quantity_id, value_type_id, mt_set),
+    FOREIGN KEY(study_id)      REFERENCES     studies(study_id),
     FOREIGN KEY(quantity_id)   REFERENCES  quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
 );
@@ -838,13 +838,13 @@ CREATE TABLE point_values (
 cursor.execute(
 """
 CREATE TABLE study_values_mt (
-    study         TEXT NOT NULL,
+    study_id      TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     measurement_technique_id TEXT DEFAULT NULL,
-    PRIMARY KEY(study, quantity_id, value_type_id, mt_set, measurement_technique_id),
-    FOREIGN KEY(study)                 REFERENCES                studies(identifier),
+    PRIMARY KEY(study_id, quantity_id, value_type_id, mt_set, measurement_technique_id),
+    FOREIGN KEY(study_id)              REFERENCES studies(study_id),
     FOREIGN KEY(quantity_id)           REFERENCES             quantities(quantity_id),
     FOREIGN KEY(value_type_id)         REFERENCES value_types(value_type_id),
     FOREIGN KEY(measurement_technique_id) REFERENCES measurement_techniques(measurement_technique_id)
@@ -910,10 +910,10 @@ CREATE TABLE point_values_mt (
 cursor.execute(
 """
 CREATE TABLE study_notes (
-    study   TEXT NOT NULL,
-    note_id INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(study, note_id),
-    FOREIGN KEY(study) REFERENCES studies(identifier),
+    study_id TEXT NOT NULL,
+    note_id  INTEGER NOT NULL CHECK ( note_id > 0 ),
+    PRIMARY KEY(study_id, note_id),
+    FOREIGN KEY(study_id) REFERENCES studies(study_id),
     FOREIGN KEY(note_id) REFERENCES notes(note_id)
 );
 """
@@ -923,13 +923,13 @@ CREATE TABLE study_notes (
 cursor.execute(
 """
 CREATE TABLE study_value_notes (
-    study         TEXT NOT NULL,
+    study_id      TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(study, quantity_id, value_type_id, mt_set, note_id),
-    FOREIGN KEY(study)            REFERENCES     studies(identifier),
+    PRIMARY KEY(study_id, quantity_id, value_type_id, mt_set, note_id),
+    FOREIGN KEY(study_id)            REFERENCES     studies(study_id),
     FOREIGN KEY(quantity_id)         REFERENCES  quantities(quantity_id),
     FOREIGN KEY(value_type_id)    REFERENCES value_types(value_type_id),
     FOREIGN KEY(note_id)          REFERENCES          notes(note_id)
@@ -1089,11 +1089,11 @@ for compilation_id in compilation_sources:
 cursor.execute(
 """
 CREATE TABLE study_identifiers (
-    study       TEXT NOT NULL,
+    study_id    TEXT NOT NULL,
     compilation INTEGER NOT NULL CHECK ( compilation >= 0 ),
     identifier  TEXT NOT NULL,
-    PRIMARY KEY(study, compilation),
-    FOREIGN KEY(study)       REFERENCES      studies(identifier),
+    PRIMARY KEY(study_id, compilation),
+    FOREIGN KEY(study_id)       REFERENCES      studies(study_id),
     FOREIGN KEY(compilation) REFERENCES compilations(compilation_id)
 );
 """

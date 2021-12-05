@@ -538,7 +538,7 @@ def add_study( cursor, flow_class, year, study_number, study_type, \
     study = identify_study( flow_class, year, study_number )
     cursor.execute(
     """
-    INSERT INTO studies( identifier, flow_class_id, year, study_number,
+    INSERT INTO studies( study_id, flow_class_id, year, study_number,
                          study_type_id, outlier )
     VALUES( ?, ?, ?, ?, ?, ? );
     """,
@@ -555,7 +555,7 @@ def add_study( cursor, flow_class, year, study_number, study_type, \
     for note in notes:
         cursor.execute(
         """
-        INSERT INTO study_notes( study, note_id )
+        INSERT INTO study_notes( study_id, note_id )
         VALUES( ?, ? );
         """,
         (
@@ -567,7 +567,7 @@ def add_study( cursor, flow_class, year, study_number, study_type, \
     for compilation in identifiers:
         cursor.execute(
         """
-        INSERT INTO study_identifiers( study, compilation, identifier )
+        INSERT INTO study_identifiers( study_id, compilation, identifier )
         VALUES( ?, ?, ? );
         """,
         (
@@ -620,7 +620,7 @@ def set_study_value( cursor, study, quantity, value,
     for avg_sys in create_value_types_list( value_type ):
         cursor.execute(
         """
-        INSERT INTO study_values( study, quantity_id, study_value,
+        INSERT INTO study_values( study_id, quantity_id, study_value,
                                   study_uncertainty, value_type_id, mt_set,
                                   outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ? );
@@ -639,7 +639,7 @@ def set_study_value( cursor, study, quantity, value,
         for measurement_technique in measurement_techniques:
             cursor.execute(
             """
-            INSERT INTO study_values_mt( study, quantity_id, value_type_id,
+            INSERT INTO study_values_mt( study_id, quantity_id, value_type_id,
                                          mt_set, measurement_technique_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -655,7 +655,7 @@ def set_study_value( cursor, study, quantity, value,
         for note in notes:
             cursor.execute(
             """
-            INSERT INTO study_value_notes( study, quantity_id, value_type_id,
+            INSERT INTO study_value_notes( study_id, quantity_id, value_type_id,
                                            mt_set, note_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
@@ -675,7 +675,7 @@ def get_study_value( cursor, study, quantity, value_type=VT_ANY_AVERAGE,
         """
         SELECT study_value, study_uncertainty
         FROM study_values
-        WHERE study=? AND quantity_id=? AND mt_set=?
+        WHERE study_id=? AND quantity_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -689,7 +689,7 @@ def get_study_value( cursor, study, quantity, value_type=VT_ANY_AVERAGE,
         """
         SELECT study_value, study_uncertainty
         FROM study_values
-        WHERE study=? AND quantity_id=? AND value_type_id=? AND mt_set=?
+        WHERE study_id=? AND quantity_id=? AND value_type_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -704,7 +704,7 @@ def get_study_value( cursor, study, quantity, value_type=VT_ANY_AVERAGE,
 def add_source( cursor, study, source, classification ):
     cursor.execute(
     """
-    INSERT INTO sources( study, source, classification )
+    INSERT INTO sources( study_id, source, classification )
     VALUES( ?, ?, ? );
     """,
     (
@@ -730,7 +730,7 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
     )
     cursor.execute(
     """
-    INSERT INTO series( identifier, study, series_number, number_of_dimensions,
+    INSERT INTO series( identifier, study_id, series_number, number_of_dimensions,
                         coordinate_system_id, outlier )
     VALUES( ?, ?, ?, ?, ?, ? );
     """,
@@ -921,7 +921,8 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
     )
     cursor.execute(
     """
-    INSERT INTO stations( identifier, series, study, station_number, outlier )
+    INSERT INTO stations( identifier, series, study_id, station_number, 
+                          outlier )
     VALUES( ?, ?, ?, ?, ? );
     """,
     (
@@ -1116,7 +1117,7 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
     )
     cursor.execute(
     """
-    INSERT INTO points( identifier, station, series, study, point_number,
+    INSERT INTO points( identifier, station, series, study_id, point_number,
                         point_label_id, outlier )
     VALUES( ?, ?, ?, ?, ?, ?, ? );
     """,

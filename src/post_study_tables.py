@@ -24,9 +24,9 @@ with open( "table-all-studies.tex.tmp", "w" ) as f:
 
     cursor.execute(
     """
-    SELECT identifier
+    SELECT study_id
     FROM studies
-    ORDER BY identifier;
+    ORDER BY study_id;
     """
     )
     for result in cursor.fetchall():
@@ -36,7 +36,7 @@ with open( "table-all-studies.tex.tmp", "w" ) as f:
         """
         SELECT source
         FROM sources
-        WHERE study=? AND classification=?
+        WHERE study_id=? AND classification=?
         ORDER BY source COLLATE NOCASE;
         """,
         (
@@ -52,7 +52,7 @@ with open( "table-all-studies.tex.tmp", "w" ) as f:
         """
         SELECT study_type_id
         FROM studies
-        WHERE identifier=?;
+        WHERE study_id=?;
         """,
         ( study, )
         )
@@ -62,7 +62,7 @@ with open( "table-all-studies.tex.tmp", "w" ) as f:
         """
         SELECT COUNT(*)
         FROM series
-        WHERE study=?;
+        WHERE study_id=?;
         """,
         ( study, )
         )
@@ -72,7 +72,7 @@ with open( "table-all-studies.tex.tmp", "w" ) as f:
         """
         SELECT COUNT(*)
         FROM stations
-        WHERE study=?;
+        WHERE study_id=?;
         """,
         ( study, )
         )
@@ -82,7 +82,7 @@ with open( "table-all-studies.tex.tmp", "w" ) as f:
         """
         SELECT COUNT(*)
         FROM points
-        WHERE study=?;
+        WHERE study_id=?;
         """,
         ( study, )
         )

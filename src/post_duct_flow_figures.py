@@ -126,8 +126,8 @@ for duct_type in duct_types:
             """
             SELECT identifier
             FROM stations
-            WHERE study IN (
-                SELECT identifier
+            WHERE study_id IN (
+                SELECT study_id
                 FROM studies
                 WHERE flow_class_id=? AND study_type_id=?
             )
