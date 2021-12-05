@@ -124,7 +124,7 @@ for duct_type in duct_types:
                                            sd.ST_EXPERIMENT, ]:
             cursor.execute(
             """
-            SELECT identifier
+            SELECT station_id
             FROM stations
             WHERE study_id IN (
                 SELECT study_id
@@ -132,7 +132,7 @@ for duct_type in duct_types:
                 WHERE flow_class_id=? AND study_type_id=?
             )
             INTERSECT
-            SELECT identifier
+            SELECT station_id
             FROM stations
             WHERE series_id IN (
                 SELECT series_id
@@ -140,11 +140,11 @@ for duct_type in duct_types:
                 WHERE number_of_dimensions=? AND coordinate_system_id=? AND geometry_id=?
             )
             INTERSECT
-            SELECT identifier
+            SELECT station_id
             FROM stations
-            WHERE previous_streamwise_station=next_streamwise_station
+            WHERE previous_streamwise_station_id=next_streamwise_station_id
             INTERSECT
-            SELECT station
+            SELECT station_id
             FROM points
             WHERE identifier IN (
                 SELECT point
@@ -152,19 +152,19 @@ for duct_type in duct_types:
                 WHERE quantity_id=? AND point_value<? AND outlier=0
             )
             INTERSECT
-            SELECT station
+            SELECT station_id
             FROM station_values
             WHERE quantity_id=? AND station_value>=? AND station_value<=? AND outlier=0
             INTERSECT
-            SELECT station
+            SELECT station_id
             FROM station_values
             WHERE quantity_id=? AND station_value>=? AND station_value<? AND outlier=0
             INTERSECT
-            SELECT station
+            SELECT station_id
             FROM station_values
             WHERE quantity_id=? AND station_value>=? AND outlier=0
             INTERSECT
-            SELECT station
+            SELECT station_id
             FROM points
             WHERE point_label_id=? AND identifier IN (
                 SELECT point
@@ -172,18 +172,18 @@ for duct_type in duct_types:
                 WHERE quantity_id=? AND point_value>=? AND point_value<=? AND outlier=0
             )
             INTERSECT
-            SELECT station
+            SELECT station_id
             FROM station_values
             WHERE quantity_id=? AND outlier=0
             INTERSECT
-            SELECT station
+            SELECT station_id
             FROM points
             WHERE point_label_id=? AND identifier IN (
                 SELECT point
                 FROM point_values
                 WHERE quantity_id=? AND outlier=0
             )
-            ORDER BY identifier;
+            ORDER BY station_id;
             """,
             (
                 sd.FC_DUCT_FLOW,

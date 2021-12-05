@@ -908,7 +908,7 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
     )
     cursor.execute(
     """
-    INSERT INTO stations( identifier, series_id, study_id, station_number, 
+    INSERT INTO stations( station_id, series_id, study_id, station_number, 
                           outlier )
     VALUES( ?, ?, ?, ?, ? );
     """,
@@ -924,7 +924,7 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
     for note in notes:
         cursor.execute(
         """
-        INSERT INTO station_notes( station, note_id )
+        INSERT INTO station_notes( station_id, note_id )
         VALUES( ?, ? );
         """,
         (
@@ -936,7 +936,7 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
     for compilation in identifiers:
         cursor.execute(
         """
-        INSERT INTO station_identifiers( station, compilation, identifier )
+        INSERT INTO station_identifiers( station_id, compilation, identifier )
         VALUES( ?, ?, ? );
         """,
         (
@@ -956,7 +956,7 @@ def set_station_value( cursor, station, quantity, value,
     for avg_sys in create_value_types_list( value_type ):
         cursor.execute(
         """
-        INSERT INTO station_values( station, quantity_id, station_value,
+        INSERT INTO station_values( station_id, quantity_id, station_value,
                                     station_uncertainty, value_type_id,
                                     mt_set, outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ? );
@@ -975,8 +975,9 @@ def set_station_value( cursor, station, quantity, value,
         for measurement_technique in measurement_techniques:
             cursor.execute(
             """
-            INSERT INTO station_values_mt( station, quantity_id, value_type_id,
-                                           mt_set, measurement_technique_id )
+            INSERT INTO station_values_mt( station_id, quantity_id, 
+                                           value_type_id, mt_set,
+                                           measurement_technique_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
@@ -991,8 +992,8 @@ def set_station_value( cursor, station, quantity, value,
         for note in notes:
             cursor.execute(
             """
-            INSERT INTO station_value_notes( station, quantity_id, value_type_id,
-                                             mt_set, note_id )
+            INSERT INTO station_value_notes( station_id, quantity_id,
+                                             value_type_id, mt_set, note_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
@@ -1009,7 +1010,7 @@ def get_points_at_station( cursor, station ):
     """
     SELECT identifier
     FROM points
-    WHERE station=?;
+    WHERE station_id=?;
     """,
     (
         station,
@@ -1047,7 +1048,7 @@ def get_station_value( cursor, station, quantity, value_type=VT_ANY_AVERAGE, \
         """
         SELECT station_value, station_uncertainty
         FROM station_values
-        WHERE station=? AND quantity_id=? AND mt_set=?
+        WHERE station_id=? AND quantity_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -1061,7 +1062,7 @@ def get_station_value( cursor, station, quantity, value_type=VT_ANY_AVERAGE, \
         """
         SELECT station_value, station_uncertainty
         FROM station_values
-        WHERE station=? AND quantity_id=? AND value_type_id=? AND mt_set=?
+        WHERE station_id=? AND quantity_id=? AND value_type_id=? AND mt_set=?
         LIMIT 1;
         """,
         (
@@ -1104,8 +1105,8 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
     )
     cursor.execute(
     """
-    INSERT INTO points( identifier, station, series_id, study_id, point_number,
-                        point_label_id, outlier )
+    INSERT INTO points( identifier, station_id, series_id, study_id,
+                        point_number, point_label_id, outlier )
     VALUES( ?, ?, ?, ?, ?, ?, ? );
     """,
     (
@@ -1508,8 +1509,8 @@ def mark_station_as_periodic( cursor, station, \
         cursor.execute(
         """
         UPDATE stations
-        SET previous_streamwise_station=?, next_streamwise_station=?
-        WHERE identifier=?;
+        SET previous_streamwise_station_id=?, next_streamwise_station_id=?
+        WHERE station_id=?;
         """,
         (
             sanitize_identifier( station ),
@@ -1521,8 +1522,8 @@ def mark_station_as_periodic( cursor, station, \
         cursor.execute(
         """
         UPDATE stations
-        SET previous_spanwise_station=?, next_spanwise_station=?
-        WHERE identifier=?;
+        SET previous_spanwise_station_id=?, next_spanwise_station_id=?
+        WHERE station_id=?;
         """,
         (
             sanitize_identifier( station ),

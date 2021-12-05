@@ -686,22 +686,22 @@ CREATE TABLE series (
 cursor.execute(
 """
 CREATE TABLE stations (
-    identifier                   TEXT PRIMARY KEY UNIQUE,
-    series_id                    TEXT NOT NULL,
-    study_id                     TEXT NOT NULL,
-    station_number               INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <= 999 ),
-    flow_regime_id               TEXT DEFAULT NULL,
-    previous_streamwise_station  TEXT DEFAULT NULL,
-    next_streamwise_station      TEXT DEFAULT NULL,
-    previous_spanwise_station    TEXT DEFAULT NULL,
-    next_spanwise_station        TEXT DEFAULT NULL,
-    outlier                      INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    station_description          TEXT DEFAULT NULL,
-    FOREIGN KEY(flow_regime_id)              REFERENCES flow_regimes(flow_regime_id),
-    FOREIGN KEY(previous_streamwise_station) REFERENCES     stations(identifier),
-    FOREIGN KEY(next_streamwise_station)     REFERENCES     stations(identifier),
-    FOREIGN KEY(previous_spanwise_station)   REFERENCES     stations(identifier),
-    FOREIGN KEY(next_spanwise_station)       REFERENCES     stations(identifier)
+    station_id                      TEXT PRIMARY KEY UNIQUE,
+    series_id                       TEXT NOT NULL,
+    study_id                        TEXT NOT NULL,
+    station_number                  INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <= 999 ),
+    flow_regime_id                  TEXT DEFAULT NULL,
+    previous_streamwise_station_id  TEXT DEFAULT NULL,
+    next_streamwise_station_id      TEXT DEFAULT NULL,
+    previous_spanwise_station_id    TEXT DEFAULT NULL,
+    next_spanwise_station_id        TEXT DEFAULT NULL,
+    outlier                         INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
+    station_description             TEXT DEFAULT NULL,
+    FOREIGN KEY(flow_regime_id)                 REFERENCES flow_regimes(flow_regime_id),
+    FOREIGN KEY(previous_streamwise_station_id) REFERENCES stations(station_id),
+    FOREIGN KEY(next_streamwise_station_id)     REFERENCES stations(station_id),
+    FOREIGN KEY(previous_spanwise_station_id)   REFERENCES stations(station_id),
+    FOREIGN KEY(next_spanwise_station_id)       REFERENCES stations(station_id)
 );
 """
 )
@@ -711,7 +711,7 @@ cursor.execute(
 """
 CREATE TABLE points (
     identifier           TEXT PRIMARY KEY UNIQUE,
-    station              TEXT NOT NULL,
+    station_id           TEXT NOT NULL,
     series_id            TEXT NOT NULL,
     study_id             TEXT NOT NULL,
     point_number         INTEGER NOT NULL CHECK ( point_number > 0 AND point_number <= 9999 ),
@@ -805,16 +805,16 @@ CREATE TABLE series_values (
 cursor.execute(
 """
 CREATE TABLE station_values (
-    station             TEXT NOT NULL,
+    station_id          TEXT NOT NULL,
     quantity_id         TEXT NOT NULL,
     station_value       REAL NOT NULL,
     station_uncertainty REAL DEFAULT NULL CHECK ( station_uncertainty >= 0.0 ),
     value_type_id       TEXT NOT NULL,
     mt_set              INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     outlier             INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(station, quantity_id, value_type_id, mt_set),
-    FOREIGN KEY(station)    REFERENCES    stations(identifier),
-    FOREIGN KEY(quantity_id)   REFERENCES  quantities(quantity_id),
+    PRIMARY KEY(station_id, quantity_id, value_type_id, mt_set),
+    FOREIGN KEY(station_id)    REFERENCES stations(station_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
 );
 """
@@ -879,15 +879,15 @@ CREATE TABLE series_values_mt (
 cursor.execute(
 """
 CREATE TABLE station_values_mt (
-    station       TEXT NOT NULL,
+    station_id    TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     measurement_technique_id TEXT DEFAULT NULL,
-    PRIMARY KEY(station, quantity_id, value_type_id, mt_set, measurement_technique_id),
-    FOREIGN KEY(station)               REFERENCES               stations(identifier),
-    FOREIGN KEY(quantity_id)           REFERENCES             quantities(quantity_id),
-    FOREIGN KEY(value_type_id)         REFERENCES value_types(value_type_id),
+    PRIMARY KEY(station_id, quantity_id, value_type_id, mt_set, measurement_technique_id),
+    FOREIGN KEY(station_id)               REFERENCES stations(station_id),
+    FOREIGN KEY(quantity_id)              REFERENCES quantities(quantity_id),
+    FOREIGN KEY(value_type_id)            REFERENCES value_types(value_type_id),
     FOREIGN KEY(measurement_technique_id) REFERENCES measurement_techniques(measurement_technique_id)
 );
 """
@@ -977,11 +977,11 @@ CREATE TABLE series_value_notes (
 cursor.execute(
 """
 CREATE TABLE station_notes (
-    station TEXT NOT NULL,
-    note_id INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(station, note_id),
-    FOREIGN KEY(station) REFERENCES stations(identifier),
-    FOREIGN KEY(note_id) REFERENCES notes(note_id)
+    station_id TEXT NOT NULL,
+    note_id    INTEGER NOT NULL CHECK ( note_id > 0 ),
+    PRIMARY KEY(station_id, note_id),
+    FOREIGN KEY(station_id) REFERENCES stations(station_id),
+    FOREIGN KEY(note_id)    REFERENCES notes(note_id)
 );
 """
 )
@@ -990,14 +990,14 @@ CREATE TABLE station_notes (
 cursor.execute(
 """
 CREATE TABLE station_value_notes (
-    station       TEXT NOT NULL,
+    station_id    TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     mt_set        INTEGER NOT NULL DEFAULT 1 CHECK ( mt_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(station, quantity_id, value_type_id, mt_set, note_id),
-    FOREIGN KEY(station)    REFERENCES    stations(identifier),
-    FOREIGN KEY(quantity_id)   REFERENCES  quantities(quantity_id),
+    PRIMARY KEY(station_id, quantity_id, value_type_id, mt_set, note_id),
+    FOREIGN KEY(station_id)    REFERENCES stations(station_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
     FOREIGN KEY(note_id)       REFERENCES notes(note_id)
 );
@@ -1122,11 +1122,11 @@ CREATE TABLE series_identifiers (
 cursor.execute(
 """
 CREATE TABLE station_identifiers (
-    station     TEXT NOT NULL,
+    station_id  TEXT NOT NULL,
     compilation INTEGER NOT NULL CHECK ( compilation >= 0 ),
     identifier  TEXT NOT NULL,
-    PRIMARY KEY(station, compilation),
-    FOREIGN KEY(station)     REFERENCES     stations(identifier),
+    PRIMARY KEY(station_id, compilation),
+    FOREIGN KEY(station_id)  REFERENCES stations(station_id),
     FOREIGN KEY(compilation) REFERENCES compilations(compilation_id)
 );
 """
