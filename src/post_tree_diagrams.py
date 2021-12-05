@@ -4,6 +4,7 @@
 #
 # SPDX-License-Identifier: MIT
 
+import sheardata as sd
 import sqlite3
 import sys
 
@@ -45,10 +46,27 @@ with open( "figure-flow-classification-tree-diagram.gv", "w" ) as f:
             result[1],
         )+"\n" )
 
-    f.write( '{rank = same; edge[style=invis]; F -> E -> I; rankdir=LR;}\n' )
-    f.write( '{rank = same; edge[style=invis]; J -> M -> W; rankdir=LR;}\n' )
-    f.write( '{rank = same; edge[style=invis]; B -> K; rankdir=LR;}\n' )
-    f.write( '{rank = same; edge[style=invis]; D -> R; rankdir=LR;}\n' )
+    f.write( '{rank = same; edge[style=invis]; '+'{:s} -> {:s} -> {:s}'.format(
+        sd.FC_FREE_SHEAR_FLOW,
+        sd.FC_EXTERNAL_FLOW,
+        sd.FC_INTERNAL_FLOW,
+    )+'; rankdir=LR;}\n' )
+
+    f.write( '{rank = same; edge[style=invis]; '+'{:s} -> {:s} -> {:s}'.format(
+        sd.FC_FREE_JET,
+        sd.FC_MIXING_LAYER,
+        sd.FC_WAKE,
+    )+'; rankdir=LR;}\n' )
+
+    f.write( '{rank = same; edge[style=invis]; '+'{:s} -> {:s}'.format(
+        sd.FC_BOUNDARY_LAYER,
+        sd.FC_WALL_JET,
+    )+'; rankdir=LR;}\n' )
+
+    f.write( '{rank = same; edge[style=invis]; '+'{:s} -> {:s}'.format(
+        sd.FC_DUCT_FLOW,
+        sd.FC_BOUNDARY_DRIVEN_FLOW,
+    )+'; rankdir=LR;}\n' )
 
     f.write( '}\n' )
 
