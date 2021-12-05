@@ -33,10 +33,10 @@ with open( "figure-flow-classification-tree-diagram.gv", "w" ) as f:
     
     cursor.execute(
     """
-    SELECT flow_class_parent, flow_class_id
+    SELECT flow_class_parent_id, flow_class_id
     FROM flow_classes
-    WHERE flow_class_parent IS NOT NULL
-    ORDER BY flow_class_parent;
+    WHERE flow_class_parent_id IS NOT NULL
+    ORDER BY flow_class_parent_id;
     """
     )
     for result in cursor.fetchall():

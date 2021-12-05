@@ -66,8 +66,8 @@ cursor.execute(
 CREATE TABLE flow_classes (
     flow_class_id     TEXT PRIMARY KEY UNIQUE CHECK ( length(flow_class_id) = 1 ),
     flow_class_name   TEXT NOT NULL,
-    flow_class_parent TEXT DEFAULT NULL,
-    FOREIGN KEY(flow_class_parent) REFERENCES flow_classes(flow_class_id)
+    flow_class_parent_id TEXT DEFAULT NULL,
+    FOREIGN KEY(flow_class_parent_id) REFERENCES flow_classes(flow_class_id)
 );
 """
 )
@@ -115,7 +115,7 @@ for identifier in flow_classes:
     if ( flow_classes[identifier].is_child() ):
         cursor.execute(
         """
-        UPDATE flow_classes SET flow_class_parent=? WHERE flow_class_id=?;
+        UPDATE flow_classes SET flow_class_parent_id=? WHERE flow_class_id=?;
         """,
         ( flow_classes[identifier].parent, identifier, )
         )
