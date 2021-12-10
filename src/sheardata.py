@@ -582,7 +582,7 @@ def add_study( cursor, flow_class_id, year, study_number, study_type_id,
 
     return study_id
 
-def update_study_description( cursor, study_id, description ):
+def update_study_description( cursor, study_id, study_description ):
     cursor.execute(
     """
     UPDATE studies
@@ -590,12 +590,12 @@ def update_study_description( cursor, study_id, description ):
     WHERE study_id=?;
     """,
     (
-        description.strip(),
+        study_description.strip(),
         sanitize_identifier(study_id),
     )
     )
 
-def update_study_provenance( cursor, study_id, provenance ):
+def update_study_provenance( cursor, study_id, study_provenance ):
     cursor.execute(
     """
     UPDATE studies
@@ -603,7 +603,7 @@ def update_study_provenance( cursor, study_id, provenance ):
     WHERE study_id=?:
     """,
     (
-        provenance.strip(),
+        study_provenance.strip(),
         sanitize_identifier(study_id),
     )
     )
@@ -789,7 +789,7 @@ def update_series_geometry( cursor, series_id, geometry_id ):
     )
     )
 
-def update_series_description( cursor, series_id, description ):
+def update_series_description( cursor, series_id, series_description ):
     cursor.execute(
     """
     UPDATE series
@@ -797,7 +797,7 @@ def update_series_description( cursor, series_id, description ):
     WHERE series_id=?;
     """,
     (
-        description.strip(),
+        series_description.strip(),
         sanitize_identifier(series_id),
     )
     )
