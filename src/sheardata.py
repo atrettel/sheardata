@@ -894,7 +894,7 @@ def get_series_value( cursor, series_id, quantity, value_type=VT_ANY_AVERAGE, \
 
 def add_station( cursor, flow_class, year, study_number, series_number, \
                 station_number, outlier=False, notes=[], identifiers={}, ):
-    station = identify_station(
+    station_id = identify_station(
         flow_class,
         year,
         study_number,
@@ -919,7 +919,7 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
     VALUES( ?, ?, ?, ?, ? );
     """,
     (
-        station,
+        station_id,
         series_id,
         study_id,
         int(station_number),
@@ -934,7 +934,7 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
         VALUES( ?, ? );
         """,
         (
-            station,
+            station_id,
             int(note),
         )
         )
@@ -947,15 +947,15 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
         VALUES( ?, ?, ? );
         """,
         (
-            station,
+            station_id,
             int(compilation),
             identifiers[compilation],
         )
         )
 
-    return station
+    return station_id
 
-def set_station_value( cursor, station, quantity, value,
+def set_station_value( cursor, station_id, quantity, value,
                        value_type=VT_UNAVERAGED_VALUE,
                        measurement_techniques=[], meastech_set=1,
                        outlier=False, notes=[] ):
@@ -969,7 +969,7 @@ def set_station_value( cursor, station, quantity, value,
         VALUES( ?, ?, ?, ?, ?, ?, ? );
         """,
         (
-            sanitize_identifier(station),
+            sanitize_identifier(station_id),
             str(quantity),
             station_value,
             station_uncertainty,
@@ -988,7 +988,7 @@ def set_station_value( cursor, station, quantity, value,
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
-                sanitize_identifier(station),
+                sanitize_identifier(station_id),
                 str(quantity),
                 avg_sys,
                 meastech_set,
@@ -1000,11 +1000,12 @@ def set_station_value( cursor, station, quantity, value,
             cursor.execute(
             """
             INSERT INTO station_value_notes( station_id, quantity_id,
-                                             value_type_id, meastech_set, note_id )
+                                             value_type_id, meastech_set,
+                                             note_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
-                sanitize_identifier(station),
+                sanitize_identifier(station_id),
                 str(quantity),
                 avg_sys,
                 meastech_set,
@@ -1012,7 +1013,7 @@ def set_station_value( cursor, station, quantity, value,
             )
             )
 
-def get_points_at_station( cursor, station ):
+def get_points_at_station( cursor, station_id ):
     cursor.execute(
     """
     SELECT point_id
@@ -1020,7 +1021,7 @@ def get_points_at_station( cursor, station ):
     WHERE station_id=?;
     """,
     (
-        station,
+        station_id,
     )
     )
 
@@ -1031,11 +1032,11 @@ def get_points_at_station( cursor, station ):
 
     return points
 
-def set_constant_profile( cursor, station, quantity, value,
+def set_constant_profile( cursor, station_id, quantity, value,
                           value_type=VT_UNAVERAGED_VALUE,
                           measurement_techniques=[], meastech_set=1,
                           outlier=False, notes=[] ):
-    for point in get_points_at_station( cursor, station ):
+    for point in get_points_at_station( cursor, station_id ):
         set_point_value(
             cursor,
             point,
@@ -1048,8 +1049,8 @@ def set_constant_profile( cursor, station, quantity, value,
             notes=notes,
         )
 
-def get_station_value( cursor, station, quantity, value_type=VT_ANY_AVERAGE, \
-                       meastech_set=1, ):
+def get_station_value( cursor, station_id, quantity,
+                       value_type=VT_ANY_AVERAGE, meastech_set=1, ):
     if ( value_type == VT_ANY_AVERAGE ):
         cursor.execute(
         """
@@ -1059,7 +1060,7 @@ def get_station_value( cursor, station, quantity, value_type=VT_ANY_AVERAGE, \
         LIMIT 1;
         """,
         (
-            sanitize_identifier(station),
+            sanitize_identifier(station_id),
             str(quantity),
             meastech_set,
         )
@@ -1073,7 +1074,7 @@ def get_station_value( cursor, station, quantity, value_type=VT_ANY_AVERAGE, \
         LIMIT 1;
         """,
         (
-            sanitize_identifier(station),
+            sanitize_identifier(station_id),
             str(quantity),
             value_type,
             meastech_set,
@@ -1092,7 +1093,7 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
         station_number,
         point_number,
     )
-    station = identify_station(
+    station_id = identify_station(
         flow_class,
         year,
         study_number,
@@ -1118,7 +1119,7 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
     """,
     (
         point,
-        station,
+        station_id,
         series_id,
         study_id,
         int(point_number),
@@ -1247,7 +1248,7 @@ def get_point_value( cursor, point, quantity, value_type=VT_ANY_AVERAGE, \
 # TODO: Change this to getting intersecting profiles.  Allow for an arbitrary
 # number of quantities, so that requests can be made for more than 2 profiles
 # at once.
-def get_twin_profiles( cursor, station, quantity1, quantity2,
+def get_twin_profiles( cursor, station_id, quantity1, quantity2,
                        value_type1=None, value_type2=None,
                        excluded_point_labels=[], ):
     if ( value_type1 == None ):
@@ -1265,9 +1266,9 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,
             ORDER BY point_id;
             """,
             (
-                sanitize_identifier(station)+'%',
+                sanitize_identifier(station_id)+'%',
                 str(quantity1),
-                sanitize_identifier(station)+'%',
+                sanitize_identifier(station_id)+'%',
                 str(quantity2),
             )
             )
@@ -1285,9 +1286,9 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,
             ORDER BY point_id;
             """,
             (
-                sanitize_identifier(station)+'%',
+                sanitize_identifier(station_id)+'%',
                 str(quantity1),
-                sanitize_identifier(station)+'%',
+                sanitize_identifier(station_id)+'%',
                 str(quantity2),
                 str(value_type2),
             )
@@ -1307,10 +1308,10 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,
             ORDER BY point_id;
             """,
             (
-                sanitize_identifier(station)+'%',
+                sanitize_identifier(station_id)+'%',
                 str(quantity1),
                 str(value_type1),
-                sanitize_identifier(station)+'%',
+                sanitize_identifier(station_id)+'%',
                 str(quantity2),
             )
             )
@@ -1328,10 +1329,10 @@ def get_twin_profiles( cursor, station, quantity1, quantity2,
             ORDER BY point_id;
             """,
             (
-                sanitize_identifier(station)+'%',
+                sanitize_identifier(station_id)+'%',
                 str(quantity1),
                 str(value_type1),
-                sanitize_identifier(station)+'%',
+                sanitize_identifier(station_id)+'%',
                 str(quantity2),
                 str(value_type2),
             )
@@ -1381,7 +1382,7 @@ def sanitize_point_label( label ):
         sanitized_label = PL_WALL
     return sanitized_label
 
-def locate_labeled_points( cursor, station, label ):
+def locate_labeled_points( cursor, station_id, label ):
     if ( label in PL_LOWER_UPPER ):
         return [ locate_labeled_point( cursor, station_label ) ]
 
@@ -1394,7 +1395,7 @@ def locate_labeled_points( cursor, station, label ):
     ORDER BY point_id;
     """,
     (
-        sanitize_identifier(station)+'%',
+        sanitize_identifier(station_id)+'%',
         str(label),
     )
     )
@@ -1406,8 +1407,8 @@ def locate_labeled_points( cursor, station, label ):
 
     return points
 
-def locate_labeled_point( cursor, station, label ):
-    points = locate_labeled_points( cursor, station,
+def locate_labeled_point( cursor, station_id, label ):
+    points = locate_labeled_points( cursor, station_id,
                                     sanitize_point_label(label) )
 
     point_numbers = {}
@@ -1435,13 +1436,13 @@ def locate_labeled_point( cursor, station, label ):
 
     return point
 
-def set_labeled_value( cursor, station, quantity, label, value,
+def set_labeled_value( cursor, station_id, quantity, label, value,
                        value_type=VT_UNAVERAGED_VALUE,
                        measurement_techniques=[], meastech_set=1,
                        outlier=False, notes=[] ):
     set_point_value(
         cursor,
-        locate_labeled_point( cursor, station, label ),
+        locate_labeled_point( cursor, station_id, label ),
         quantity,
         value,
         value_type=value_type,
@@ -1451,11 +1452,11 @@ def set_labeled_value( cursor, station, quantity, label, value,
         notes=notes,
     )
 
-def get_labeled_value( cursor, station, quantity, label,
+def get_labeled_value( cursor, station_id, quantity, label,
                        value_type=VT_ANY_AVERAGE, meastech_set=1, ):
     return get_point_value(
         cursor,
-        locate_labeled_point( cursor, station, label ),
+        locate_labeled_point( cursor, station_id, label ),
         quantity,
         value_type=value_type,
         meastech_set=1,
@@ -1511,7 +1512,7 @@ def calculate_molar_mass_of_molecular_formula( cursor, formula ):
         molar_mass += count * 1.0e-3 * atomic_weight
     return molar_mass
 
-def mark_station_as_periodic( cursor, station, \
+def mark_station_as_periodic( cursor, station_id, \
                               streamwise=True, spanwise=False ):
     if ( streamwise ):
         cursor.execute(
@@ -1521,9 +1522,9 @@ def mark_station_as_periodic( cursor, station, \
         WHERE station_id=?;
         """,
         (
-            sanitize_identifier( station ),
-            sanitize_identifier( station ),
-            sanitize_identifier( station ),
+            sanitize_identifier( station_id ),
+            sanitize_identifier( station_id ),
+            sanitize_identifier( station_id ),
         )
         )
     if ( spanwise ):
@@ -1534,9 +1535,9 @@ def mark_station_as_periodic( cursor, station, \
         WHERE station_id=?;
         """,
         (
-            sanitize_identifier( station ),
-            sanitize_identifier( station ),
-            sanitize_identifier( station ),
+            sanitize_identifier( station_id ),
+            sanitize_identifier( station_id ),
+            sanitize_identifier( station_id ),
         )
         )
 
