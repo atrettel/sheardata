@@ -721,7 +721,7 @@ def add_study_source( cursor, study_id, citation_key, classification ):
 def add_series( cursor, flow_class, year, study_number, series_number,  \
                 number_of_dimensions, coordinate_system, outlier=False, \
                 notes=[], identifiers={}, ):
-    series = identify_series(
+    series_id = identify_series(
         flow_class,
         year,
         study_number,
@@ -739,7 +739,7 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
     VALUES( ?, ?, ?, ?, ?, ? );
     """,
     (
-        series,
+        series_id,
         study_id,
         int(series_number),
         int(number_of_dimensions),
@@ -755,7 +755,7 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
         VALUES( ?, ? );
         """,
         (
-            series,
+            series_id,
             int(note),
         )
         )
@@ -768,15 +768,15 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
         VALUES( ?, ?, ? );
         """,
         (
-            series,
+            series_id,
             int(compilation),
             identifiers[compilation],
         )
         )
 
-    return series
+    return series_id
 
-def update_series_geometry( cursor, identifier, geometry ):
+def update_series_geometry( cursor, series_id, geometry ):
     cursor.execute(
     """
     UPDATE series
@@ -785,11 +785,11 @@ def update_series_geometry( cursor, identifier, geometry ):
     """,
     (
         str(geometry),
-        sanitize_identifier(identifier),
+        sanitize_identifier(series_id),
     )
     )
 
-def update_series_description( cursor, identifier, description ):
+def update_series_description( cursor, series_id, description ):
     cursor.execute(
     """
     UPDATE series
@@ -798,11 +798,11 @@ def update_series_description( cursor, identifier, description ):
     """,
     (
         description.strip(),
-        sanitize_identifier(identifier),
+        sanitize_identifier(series_id),
     )
     )
 
-def set_series_value( cursor, series, quantity, value,
+def set_series_value( cursor, series_id, quantity, value,
                       value_type=VT_UNAVERAGED_VALUE,
                       measurement_techniques=[], meastech_set=1,
                       outlier=False, notes=[] ):
@@ -816,7 +816,7 @@ def set_series_value( cursor, series, quantity, value,
         VALUES( ?, ?, ?, ?, ?, ?, ? );
         """,
         (
-            sanitize_identifier(series),
+            sanitize_identifier(series_id),
             str(quantity),
             series_value,
             series_uncertainty,
@@ -829,12 +829,13 @@ def set_series_value( cursor, series, quantity, value,
         for measurement_technique in measurement_techniques:
             cursor.execute(
             """
-            INSERT INTO series_values_mt( series_id, quantity_id, value_type_id,
-                                          meastech_set, meastech_id )
+            INSERT INTO series_values_mt( series_id, quantity_id,
+                                          value_type_id, meastech_set,
+                                          meastech_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
-                sanitize_identifier(series),
+                sanitize_identifier(series_id),
                 str(quantity),
                 avg_sys,
                 meastech_set,
@@ -850,7 +851,7 @@ def set_series_value( cursor, series, quantity, value,
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
-                sanitize_identifier(series),
+                sanitize_identifier(series_id),
                 str(quantity),
                 avg_sys,
                 meastech_set,
@@ -858,7 +859,7 @@ def set_series_value( cursor, series, quantity, value,
             )
             )
 
-def get_series_value( cursor, series, quantity, value_type=VT_ANY_AVERAGE, \
+def get_series_value( cursor, series_id, quantity, value_type=VT_ANY_AVERAGE, \
                       meastech_set=1, ):
     if ( value_type == VT_ANY_AVERAGE ):
         cursor.execute(
@@ -869,7 +870,7 @@ def get_series_value( cursor, series, quantity, value_type=VT_ANY_AVERAGE, \
         LIMIT 1;
         """,
         (
-            sanitize_identifier(series),
+            sanitize_identifier(series_id),
             str(quantity),
             meastech_set,
         )
@@ -883,7 +884,7 @@ def get_series_value( cursor, series, quantity, value_type=VT_ANY_AVERAGE, \
         LIMIT 1;
         """,
         (
-            sanitize_identifier(series),
+            sanitize_identifier(series_id),
             str(quantity),
             value_type,
             meastech_set,
@@ -900,7 +901,7 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
         series_number,
         station_number,
     )
-    series = identify_series(
+    series_id = identify_series(
         flow_class,
         year,
         study_number,
@@ -919,7 +920,7 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
     """,
     (
         station,
-        series,
+        series_id,
         study_id,
         int(station_number),
         int(outlier),
@@ -1098,7 +1099,7 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
         series_number,
         station_number,
     )
-    series = identify_series(
+    series_id = identify_series(
         flow_class,
         year,
         study_number,
@@ -1118,7 +1119,7 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
     (
         point,
         station,
-        series,
+        series_id,
         study_id,
         int(point_number),
         point_label,
