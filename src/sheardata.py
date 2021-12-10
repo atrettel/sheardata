@@ -537,7 +537,7 @@ def truncate_to_station( identifier ):
 
 def add_study( cursor, flow_class, year, study_number, study_type, \
                outlier=False, notes=[], identifiers={}, ):
-    study = identify_study( flow_class, year, study_number )
+    study_id = identify_study( flow_class, year, study_number )
     cursor.execute(
     """
     INSERT INTO studies( study_id, flow_class_id, year, study_number,
@@ -545,7 +545,7 @@ def add_study( cursor, flow_class, year, study_number, study_type, \
     VALUES( ?, ?, ?, ?, ?, ? );
     """,
     (
-        study,
+        study_id,
         str(flow_class),
         int(year),
         int(study_number),
@@ -561,7 +561,7 @@ def add_study( cursor, flow_class, year, study_number, study_type, \
         VALUES( ?, ? );
         """,
         (
-            study,
+            study_id,
             int(note),
         )
         )
@@ -574,15 +574,15 @@ def add_study( cursor, flow_class, year, study_number, study_type, \
         VALUES( ?, ?, ? );
         """,
         (
-            study,
+            study_id,
             int(compilation),
             identifiers[compilation],
         )
         )
 
-    return study
+    return study_id
 
-def update_study_description( cursor, identifier, description ):
+def update_study_description( cursor, study_id, description ):
     cursor.execute(
     """
     UPDATE studies
@@ -591,11 +591,11 @@ def update_study_description( cursor, identifier, description ):
     """,
     (
         description.strip(),
-        sanitize_identifier(identifier),
+        sanitize_identifier(study_id),
     )
     )
 
-def update_study_provenance( cursor, identifier, provenance ):
+def update_study_provenance( cursor, study_id, provenance ):
     cursor.execute(
     """
     UPDATE studies
@@ -604,7 +604,7 @@ def update_study_provenance( cursor, identifier, provenance ):
     """,
     (
         provenance.strip(),
-        sanitize_identifier(identifier),
+        sanitize_identifier(study_id),
     )
     )
 
@@ -615,7 +615,7 @@ def create_value_types_list( value_type ):
     else:
         return [ value_type ]
 
-def set_study_value( cursor, study, quantity, value,
+def set_study_value( cursor, study_id, quantity, value,
                      value_type=VT_UNAVERAGED_VALUE,
                      measurement_techniques=[], meastech_set=1,
                      outlier=False, notes=[] ):
@@ -624,12 +624,12 @@ def set_study_value( cursor, study, quantity, value,
         cursor.execute(
         """
         INSERT INTO study_values( study_id, quantity_id, study_value,
-                                  study_uncertainty, value_type_id, meastech_set,
-                                  outlier )
+                                  study_uncertainty, value_type_id,
+                                  meastech_set, outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ? );
         """,
         (
-            sanitize_identifier(study),
+            sanitize_identifier(study_id),
             str(quantity),
             study_value,
             study_uncertainty,
@@ -647,7 +647,7 @@ def set_study_value( cursor, study, quantity, value,
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
-                sanitize_identifier(study),
+                sanitize_identifier(study_id),
                 str(quantity),
                 avg_sys,
                 meastech_set,
@@ -658,12 +658,13 @@ def set_study_value( cursor, study, quantity, value,
         for note in notes:
             cursor.execute(
             """
-            INSERT INTO study_value_notes( study_id, quantity_id, value_type_id,
-                                           meastech_set, note_id )
+            INSERT INTO study_value_notes( study_id, quantity_id,
+                                           value_type_id, meastech_set,
+                                           note_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
-                sanitize_identifier(study),
+                sanitize_identifier(study_id),
                 str(quantity),
                 avg_sys,
                 meastech_set,
@@ -671,7 +672,7 @@ def set_study_value( cursor, study, quantity, value,
             )
             )
 
-def get_study_value( cursor, study, quantity, value_type=VT_ANY_AVERAGE,
+def get_study_value( cursor, study_id, quantity, value_type=VT_ANY_AVERAGE,
                      meastech_set=1, ):
     if ( value_type == VT_ANY_AVERAGE ):
         cursor.execute(
@@ -682,7 +683,7 @@ def get_study_value( cursor, study, quantity, value_type=VT_ANY_AVERAGE,
         LIMIT 1;
         """,
         (
-            sanitize_identifier(study),
+            sanitize_identifier(study_id),
             str(quantity),
             meastech_set,
         )
@@ -696,7 +697,7 @@ def get_study_value( cursor, study, quantity, value_type=VT_ANY_AVERAGE,
         LIMIT 1;
         """,
         (
-            sanitize_identifier(study),
+            sanitize_identifier(study_id),
             str(quantity),
             value_type,
             meastech_set,
@@ -704,14 +705,14 @@ def get_study_value( cursor, study, quantity, value_type=VT_ANY_AVERAGE,
         )
     return fetch_float( cursor )
 
-def add_study_source( cursor, study, citation_key, classification ):
+def add_study_source( cursor, study_id, citation_key, classification ):
     cursor.execute(
     """
     INSERT INTO study_sources( study_id, citation_key, classification )
     VALUES( ?, ?, ? );
     """,
     (
-        sanitize_identifier(study),
+        sanitize_identifier(study_id),
         str(citation_key),
         int(classification),
     )
@@ -726,7 +727,7 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
         study_number,
         series_number,
     )
-    study = identify_study(
+    study_id = identify_study(
         flow_class,
         year,
         study_number,
@@ -739,7 +740,7 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
     """,
     (
         series,
-        study,
+        study_id,
         int(series_number),
         int(number_of_dimensions),
         str(coordinate_system),
@@ -905,7 +906,7 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
         study_number,
         series_number,
     )
-    study = identify_study(
+    study_id = identify_study(
         flow_class,
         year,
         study_number,
@@ -919,7 +920,7 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
     (
         station,
         series,
-        study,
+        study_id,
         int(station_number),
         int(outlier),
     )
@@ -1103,7 +1104,7 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
         study_number,
         series_number,
     )
-    study = identify_study(
+    study_id = identify_study(
         flow_class,
         year,
         study_number,
@@ -1118,7 +1119,7 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
         point,
         station,
         series,
-        study,
+        study_id,
         int(point_number),
         point_label,
         int(outlier),
@@ -1539,14 +1540,14 @@ def mark_station_as_periodic( cursor, station, \
         )
 
 def count_studies( identifiers ):
-    studies = {}
+    study_ids = {}
     for identifier in identifiers:
-        study = truncate_to_study( identifier )
-        if ( study not in studies ):
-            studies[study] = 1
+        study_id = truncate_to_study( identifier )
+        if ( study_id not in study_ids ):
+            study_ids[study_id] = 1
         else:
-            studies[study] += 1
-    return studies
+            study_ids[study_id] += 1
+    return study_ids
 
 # TODO: Later, make the pressure a required argument.
 def ideal_gas_mass_density( temperature,                            \
