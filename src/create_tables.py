@@ -1076,8 +1076,6 @@ for compilation_id in compilations:
     )
 
 # Compilation sources
-#
-# The sources are citation keys.
 cursor.execute(
 """
 CREATE TABLE compilation_sources (
@@ -1109,7 +1107,7 @@ for compilation_id in compilation_sources:
         ( compilation_id, citation_key, )
         )
 
-# Study identifiers
+# Study external identifiers
 cursor.execute(
 """
 CREATE TABLE study_external_identifiers (
@@ -1123,7 +1121,7 @@ CREATE TABLE study_external_identifiers (
 """
 )
 
-# Series identifiers
+# Series external identifiers
 cursor.execute(
 """
 CREATE TABLE series_external_identifiers (
@@ -1137,7 +1135,7 @@ CREATE TABLE series_external_identifiers (
 """
 )
 
-# Station identifiers
+# Station external identifiers
 cursor.execute(
 """
 CREATE TABLE station_external_identifiers (
@@ -1151,7 +1149,7 @@ CREATE TABLE station_external_identifiers (
 """
 )
 
-# Point identifiers
+# Point external identifiers
 cursor.execute(
 """
 CREATE TABLE point_external_identifiers (
