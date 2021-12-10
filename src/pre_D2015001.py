@@ -219,17 +219,17 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.set_point_value( cursor, point_identifier, sd.Q_PRESSURE,                         pressure,                         value_type_id=sd.VT_UNWEIGHTED_AVERAGE,                                                                                                  )
                 sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE,                      temperature_uw,                   value_type_id=sd.VT_UNWEIGHTED_AVERAGE,                                                                                                  )
                 sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE,                      temperature_dw,                   value_type_id=sd.VT_DENSITY_WEIGHTED_AVERAGE,                                                                                            )
-                sd.set_point_value( cursor, point_identifier, sd.Q_DYNAMIC_VISCOSITY,                dynamic_viscosity,                value_type_id=sd.VT_UNWEIGHTED_AVERAGE,       measurement_techniques=[sd.MT_ZEROTH_ORDER_APPROXIMATION], notes=[dynamic_viscosity_note], )
-                sd.set_point_value( cursor, point_identifier, sd.Q_KINEMATIC_VISCOSITY,              kinematic_viscosity,              value_type_id=sd.VT_UNWEIGHTED_AVERAGE,       measurement_techniques=[sd.MT_APPROXIMATION],              notes=[dynamic_viscosity_note], )
+                sd.set_point_value( cursor, point_identifier, sd.Q_DYNAMIC_VISCOSITY,                dynamic_viscosity,                value_type_id=sd.VT_UNWEIGHTED_AVERAGE,       meastech_ids=[sd.MT_ZEROTH_ORDER_APPROXIMATION], notes=[dynamic_viscosity_note], )
+                sd.set_point_value( cursor, point_identifier, sd.Q_KINEMATIC_VISCOSITY,              kinematic_viscosity,              value_type_id=sd.VT_UNWEIGHTED_AVERAGE,       meastech_ids=[sd.MT_APPROXIMATION],              notes=[dynamic_viscosity_note], )
                 sd.set_point_value( cursor, point_identifier, sd.Q_PRANDTL_NUMBER,                   prandtl_number,                   value_type_id=sd.VT_BOTH_AVERAGES,                                                                                                       )
                 sd.set_point_value( cursor, point_identifier, sd.Q_HEAT_CAPACITY_RATIO,              heat_capacity_ratio,              value_type_id=sd.VT_BOTH_AVERAGES,                                                                                                       )
                 sd.set_point_value( cursor, point_identifier, sd.Q_SPECIFIC_GAS_CONSTANT,            specific_gas_constant,            value_type_id=sd.VT_BOTH_AVERAGES,                                                                                                       )
                 sd.set_point_value( cursor, point_identifier, sd.Q_SPECIFIC_ISOBARIC_HEAT_CAPACITY,  specific_isobaric_heat_capacity,  value_type_id=sd.VT_BOTH_AVERAGES,                                                                                                       )
                 sd.set_point_value( cursor, point_identifier, sd.Q_SPECIFIC_ISOCHORIC_HEAT_CAPACITY, specific_isochoric_heat_capacity, value_type_id=sd.VT_BOTH_AVERAGES,                                                                                                       )
-                sd.set_point_value( cursor, point_identifier, sd.Q_THERMAL_CONDUCTIVITY,             thermal_conductivity,             value_type_id=sd.VT_UNWEIGHTED_AVERAGE,       measurement_techniques=[sd.MT_APPROXIMATION],              notes=[dynamic_viscosity_note], )
-                sd.set_point_value( cursor, point_identifier, sd.Q_THERMAL_DIFFUSIVITY,              thermal_diffusivity,              value_type_id=sd.VT_UNWEIGHTED_AVERAGE,       measurement_techniques=[sd.MT_APPROXIMATION],              notes=[dynamic_viscosity_note], )
-                sd.set_point_value( cursor, point_identifier, sd.Q_SPEED_OF_SOUND,                   speed_of_sound_uw,                value_type_id=sd.VT_UNWEIGHTED_AVERAGE,       measurement_techniques=[sd.MT_ZEROTH_ORDER_APPROXIMATION], notes=[dynamic_viscosity_note], )
-                sd.set_point_value( cursor, point_identifier, sd.Q_SPEED_OF_SOUND,                   speed_of_sound_dw,                value_type_id=sd.VT_DENSITY_WEIGHTED_AVERAGE, measurement_techniques=[sd.MT_ZEROTH_ORDER_APPROXIMATION], notes=[dynamic_viscosity_note], )
+                sd.set_point_value( cursor, point_identifier, sd.Q_THERMAL_CONDUCTIVITY,             thermal_conductivity,             value_type_id=sd.VT_UNWEIGHTED_AVERAGE,       meastech_ids=[sd.MT_APPROXIMATION],              notes=[dynamic_viscosity_note], )
+                sd.set_point_value( cursor, point_identifier, sd.Q_THERMAL_DIFFUSIVITY,              thermal_diffusivity,              value_type_id=sd.VT_UNWEIGHTED_AVERAGE,       meastech_ids=[sd.MT_APPROXIMATION],              notes=[dynamic_viscosity_note], )
+                sd.set_point_value( cursor, point_identifier, sd.Q_SPEED_OF_SOUND,                   speed_of_sound_uw,                value_type_id=sd.VT_UNWEIGHTED_AVERAGE,       meastech_ids=[sd.MT_ZEROTH_ORDER_APPROXIMATION], notes=[dynamic_viscosity_note], )
+                sd.set_point_value( cursor, point_identifier, sd.Q_SPEED_OF_SOUND,                   speed_of_sound_dw,                value_type_id=sd.VT_DENSITY_WEIGHTED_AVERAGE, meastech_ids=[sd.MT_ZEROTH_ORDER_APPROXIMATION], notes=[dynamic_viscosity_note], )
 
                 sd.set_point_value( cursor, point_identifier, sd.Q_LOCAL_TO_WALL_DYNAMIC_VISCOSITY_RATIO, dynamic_viscosity / wall_dynamic_viscosity, value_type_id=sd.VT_UNWEIGHTED_AVERAGE,       )
                 sd.set_point_value( cursor, point_identifier, sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO,       temperature_dw    / wall_temperature,       value_type_id=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
@@ -285,8 +285,8 @@ with open( globals_filename, "r" ) as globals_file:
 
         bulk_to_center_line_velocity_ratio = bulk_velocity / center_line_velocity
 
-        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER, bulk_reynolds_number, value_type_id=sd.VT_UNWEIGHTED_AVERAGE, measurement_techniques=[sd.MT_CALCULATION], )
-        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,     bulk_mach_number,     value_type_id=sd.VT_UNWEIGHTED_AVERAGE, measurement_techniques=[sd.MT_CALCULATION], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER, bulk_reynolds_number, value_type_id=sd.VT_UNWEIGHTED_AVERAGE, meastech_ids=[sd.MT_CALCULATION], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,     bulk_mach_number,     value_type_id=sd.VT_UNWEIGHTED_AVERAGE, meastech_ids=[sd.MT_CALCULATION], )
 
         for quantity in [ sd.Q_ROUGHNESS_HEIGHT,
                           sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,

@@ -231,7 +231,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_COORDINATE,  sd.sdfloat(0.0),        )
             sd.set_point_value( cursor, point_identifier, sd.Q_TRANSVERSE_COORDINATE,  r_reversed[i],          )
             sd.set_point_value( cursor, point_identifier, sd.Q_SPANWISE_COORDINATE,    sd.sdfloat(0.0),        )
-            sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    u_reversed[i], value_type_id=sd.VT_BOTH_AVERAGES, measurement_techniques=[mt_velocity], notes=current_notes, )
+            sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    u_reversed[i], value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[mt_velocity], notes=current_notes, )
 
             for quantity in [ sd.Q_TRANSVERSE_VELOCITY,
                               sd.Q_SPANWISE_VELOCITY, ]:
@@ -241,15 +241,15 @@ with open( globals_filename, "r" ) as globals_file:
                     quantity,
                     sd.sdfloat(0.0),
                     value_type_id=sd.VT_BOTH_AVERAGES,
-                    measurement_techniques=[sd.MT_ASSUMPTION],
+                    meastech_ids=[sd.MT_ASSUMPTION],
                 )
 
             # Assumed constant profiles
-            sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE,         temperature,         value_type_id=sd.VT_BOTH_AVERAGES, measurement_techniques=[sd.MT_ASSUMPTION],  )
-            sd.set_point_value( cursor, point_identifier, sd.Q_MASS_DENSITY,        mass_density,        value_type_id=sd.VT_BOTH_AVERAGES, measurement_techniques=[sd.MT_ASSUMPTION],  )
-            sd.set_point_value( cursor, point_identifier, sd.Q_KINEMATIC_VISCOSITY, kinematic_viscosity, value_type_id=sd.VT_BOTH_AVERAGES, measurement_techniques=[sd.MT_ASSUMPTION],  )
-            sd.set_point_value( cursor, point_identifier, sd.Q_DYNAMIC_VISCOSITY,   dynamic_viscosity,   value_type_id=sd.VT_BOTH_AVERAGES, measurement_techniques=[sd.MT_ASSUMPTION],  )
-            sd.set_point_value( cursor, point_identifier, sd.Q_SPEED_OF_SOUND,      speed_of_sound,      value_type_id=sd.VT_BOTH_AVERAGES, measurement_techniques=[sd.MT_CALCULATION], )
+            sd.set_point_value( cursor, point_identifier, sd.Q_TEMPERATURE,         temperature,         value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_ASSUMPTION],  )
+            sd.set_point_value( cursor, point_identifier, sd.Q_MASS_DENSITY,        mass_density,        value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_ASSUMPTION],  )
+            sd.set_point_value( cursor, point_identifier, sd.Q_KINEMATIC_VISCOSITY, kinematic_viscosity, value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_ASSUMPTION],  )
+            sd.set_point_value( cursor, point_identifier, sd.Q_DYNAMIC_VISCOSITY,   dynamic_viscosity,   value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_ASSUMPTION],  )
+            sd.set_point_value( cursor, point_identifier, sd.Q_SPEED_OF_SOUND,      speed_of_sound,      value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_CALCULATION], )
 
             i += 1
 
@@ -263,7 +263,7 @@ with open( globals_filename, "r" ) as globals_file:
                     quantity,
                     sd.PL_WALL,
                     sd.sdfloat(0.0),
-                    measurement_techniques=[sd.MT_ASSUMPTION],
+                    meastech_ids=[sd.MT_ASSUMPTION],
                 )
 
         r_prof, u_prof = sd.get_twin_profiles(
@@ -288,16 +288,16 @@ with open( globals_filename, "r" ) as globals_file:
             value_type_id=sd.VT_UNWEIGHTED_AVERAGE,
         )
 
-        sd.set_station_value( cursor, station_identifier, sd.Q_VOLUMETRIC_FLOW_RATE,               volumetric_flow_rate,             value_type_id=sd.VT_BOTH_AVERAGES, measurement_techniques=[sd.MT_CALCULATION], )
-        sd.set_station_value( cursor, station_identifier, sd.Q_MASS_FLOW_RATE,                     mass_flow_rate,                   value_type_id=sd.VT_BOTH_AVERAGES, measurement_techniques=[sd.MT_CALCULATION], )
-        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                      bulk_velocity,                    value_type_id=sd.VT_BOTH_AVERAGES, measurement_techniques=[sd.MT_CALCULATION], )
-        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER,               Re_bulk,                          value_type_id=sd.VT_BOTH_AVERAGES, measurement_techniques=[sd.MT_CALCULATION], )
-        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,                   Ma_bulk,                          value_type_id=sd.VT_BOTH_AVERAGES, measurement_techniques=[sd.MT_CALCULATION], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_VOLUMETRIC_FLOW_RATE,               volumetric_flow_rate,             value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_CALCULATION], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_MASS_FLOW_RATE,                     mass_flow_rate,                   value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_CALCULATION], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                      bulk_velocity,                    value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_CALCULATION], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER,               Re_bulk,                          value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_CALCULATION], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_BULK_MACH_NUMBER,                   Ma_bulk,                          value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_CALCULATION], )
 
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_HEAT_FLUX, sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ), value_type_id=sd.VT_BOTH_AVERAGES, measurement_techniques=[sd.MT_ASSUMPTION], )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_HEAT_FLUX, sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ), value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_ASSUMPTION], )
 
         for quantity in sd.INCOMPRESSIBLE_RATIO_PROFILES:
-            sd.set_constant_profile( cursor, station_identifier, quantity, sd.sdfloat( 1.0, 0.0 ), value_type_id=sd.VT_BOTH_AVERAGES, measurement_techniques=[sd.MT_ASSUMPTION], )
+            sd.set_constant_profile( cursor, station_identifier, quantity, sd.sdfloat( 1.0, 0.0 ), value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_ASSUMPTION], )
 
         for point_identifier in sd.get_points_at_station( cursor, station_identifier ):
             streamwise_velocity = sd.get_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY )
