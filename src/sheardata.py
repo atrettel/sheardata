@@ -1026,20 +1026,20 @@ def get_points_at_station( cursor, station_id ):
     )
 
     results = cursor.fetchall()
-    points = []
+    point_ids = []
     for result in results:
-        points.append( str(result[0]) )
+        point_ids.append( str(result[0]) )
 
-    return points
+    return point_ids
 
 def set_constant_profile( cursor, station_id, quantity, value,
                           value_type=VT_UNAVERAGED_VALUE,
                           measurement_techniques=[], meastech_set=1,
                           outlier=False, notes=[] ):
-    for point in get_points_at_station( cursor, station_id ):
+    for point_id in get_points_at_station( cursor, station_id ):
         set_point_value(
             cursor,
-            point,
+            point_id,
             quantity,
             value,
             value_type=value_type,
@@ -1085,7 +1085,7 @@ def get_station_value( cursor, station_id, quantity,
 def add_point( cursor, flow_class, year, study_number, series_number,         \
                station_number, point_number, point_label=None, outlier=False, \
                notes=[], identifiers={}, ):
-    point = identify_point(
+    point_id = identify_point(
         flow_class,
         year,
         study_number,
@@ -1118,7 +1118,7 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
     VALUES( ?, ?, ?, ?, ?, ?, ? );
     """,
     (
-        point,
+        point_id,
         station_id,
         series_id,
         study_id,
@@ -1135,7 +1135,7 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
         VALUES( ?, ? );
         """,
         (
-            point,
+            point_id,
             int(note),
         )
         )
@@ -1148,15 +1148,15 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
         VALUES( ?, ?, ? );
         """,
         (
-            point,
+            point_id,
             int(compilation),
             identifiers[compilation],
         )
         )
 
-    return point
+    return point_id
 
-def set_point_value( cursor, point, quantity, value,
+def set_point_value( cursor, point_id, quantity, value,
                      value_type=VT_UNAVERAGED_VALUE,
                      measurement_techniques=[], meastech_set=1,
                      outlier=False, notes=[] ):
@@ -1170,7 +1170,7 @@ def set_point_value( cursor, point, quantity, value,
         VALUES( ?, ?, ?, ?, ?, ?, ? );
         """,
         (
-            sanitize_identifier(point),
+            sanitize_identifier(point_id),
             str(quantity),
             point_value,
             point_uncertainty,
@@ -1188,7 +1188,7 @@ def set_point_value( cursor, point, quantity, value,
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
-                sanitize_identifier(point),
+                sanitize_identifier(point_id),
                 str(quantity),
                 avg_sys,
                 meastech_set,
@@ -1199,12 +1199,13 @@ def set_point_value( cursor, point, quantity, value,
         for note in notes:
             cursor.execute(
             """
-            INSERT INTO point_value_notes( point_id, quantity_id, value_type_id,
-                                           meastech_set, note_id )
+            INSERT INTO point_value_notes( point_id, quantity_id,
+                                           value_type_id, meastech_set,
+                                           note_id )
             VALUES( ?, ?, ?, ?, ? );
             """,
             (
-                sanitize_identifier(point),
+                sanitize_identifier(point_id),
                 str(quantity),
                 avg_sys,
                 meastech_set,
@@ -1212,7 +1213,7 @@ def set_point_value( cursor, point, quantity, value,
             )
             )
 
-def get_point_value( cursor, point, quantity, value_type=VT_ANY_AVERAGE, \
+def get_point_value( cursor, point_id, quantity, value_type=VT_ANY_AVERAGE, \
                      meastech_set=1, ):
     if ( value_type == VT_ANY_AVERAGE ):
         cursor.execute(
@@ -1223,7 +1224,7 @@ def get_point_value( cursor, point, quantity, value_type=VT_ANY_AVERAGE, \
         LIMIT 1;
         """,
         (
-            sanitize_identifier(point),
+            sanitize_identifier(point_id),
             str(quantity),
             meastech_set,
         )
@@ -1237,7 +1238,7 @@ def get_point_value( cursor, point, quantity, value_type=VT_ANY_AVERAGE, \
         LIMIT 1;
         """,
         (
-            sanitize_identifier(point),
+            sanitize_identifier(point_id),
             str(quantity),
             value_type,
             meastech_set,
@@ -1250,7 +1251,7 @@ def get_point_value( cursor, point, quantity, value_type=VT_ANY_AVERAGE, \
 # at once.
 def get_twin_profiles( cursor, station_id, quantity1, quantity2,
                        value_type1=None, value_type2=None,
-                       excluded_point_labels=[], ):
+                       excluded_point_label_ids=[], ):
     if ( value_type1 == None ):
         if ( value_type2 == None ):
             # Both value types are unspecified.
@@ -1339,9 +1340,9 @@ def get_twin_profiles( cursor, station_id, quantity1, quantity2,
             )
 
     results = cursor.fetchall()
-    points = []
+    point_ids = []
     for result in results:
-        point = str(result[0])
+        point_id = str(result[0])
 
         cursor.execute(
         """
@@ -1350,40 +1351,40 @@ def get_twin_profiles( cursor, station_id, quantity1, quantity2,
         WHERE point_id=?;
         """,
         (
-            point,
+            point_id,
         )
         )
-        point_label = cursor.fetchone()[0]
+        point_label_id = cursor.fetchone()[0]
 
-        if ( point_label not in excluded_point_labels ):
-            points.append( result[0] )
+        if ( point_label_id not in excluded_point_label_ids ):
+            point_ids.append( result[0] )
 
     profile1 = []
     profile2 = []
-    for point in points:
+    for point_id in point_ids:
         profile1.append( get_point_value(
             cursor,
-            point,
+            point_id,
             quantity1,
         ) )
         profile2.append( get_point_value(
             cursor,
-            point,
+            point_id,
             quantity2,
         ) )
 
     return np.array(profile1), np.array(profile2)
 
-def sanitize_point_label( label ):
-    sanitized_label = str(label)
-    if ( label in PL_EDGES ):
-        sanitized_label = PL_EDGE
-    elif ( label in PL_WALLS ):
-        sanitized_label = PL_WALL
-    return sanitized_label
+def sanitize_point_label( point_label_id ):
+    sanitized_point_label_id = str(point_label_id)
+    if ( point_label_id in PL_EDGES ):
+        sanitized_point_label_id = PL_EDGE
+    elif ( point_label_id in PL_WALLS ):
+        sanitized_point_label_id = PL_WALL
+    return sanitized_point_label_id
 
-def locate_labeled_points( cursor, station_id, label ):
-    if ( label in PL_LOWER_UPPER ):
+def locate_labeled_points( cursor, station_id, point_label_id ):
+    if ( point_label_id in PL_LOWER_UPPER ):
         return [ locate_labeled_point( cursor, station_label ) ]
 
     cursor.execute(
@@ -1396,23 +1397,23 @@ def locate_labeled_points( cursor, station_id, label ):
     """,
     (
         sanitize_identifier(station_id)+'%',
-        str(label),
+        str(point_label_id),
     )
     )
 
     results = cursor.fetchall()
-    points = []
+    point_ids = []
     for result in results:
-        points.append( str(result[0]) )
+        point_ids.append( str(result[0]) )
 
-    return points
+    return point_ids
 
-def locate_labeled_point( cursor, station_id, label ):
-    points = locate_labeled_points( cursor, station_id,
-                                    sanitize_point_label(label) )
+def locate_labeled_point( cursor, station_id, point_label_id ):
+    point_ids = locate_labeled_points( cursor, station_id,
+                                       sanitize_point_label(point_label_id) )
 
     point_numbers = {}
-    for point in points:
+    for point_id in point_ids:
         cursor.execute(
         """
         SELECT point_number
@@ -1420,29 +1421,29 @@ def locate_labeled_point( cursor, station_id, label ):
         WHERE point_id=?;
         """,
         (
-            point,
+            point_id,
         )
         )
-        point_numbers[point] = int(cursor.fetchone()[0])
+        point_numbers[point_id] = int(cursor.fetchone()[0])
 
-    lower_point = min( point_numbers, key=point_numbers.get )
-    upper_point = max( point_numbers, key=point_numbers.get )
+    lower_point_id = min( point_numbers, key=point_numbers.get )
+    upper_point_id = max( point_numbers, key=point_numbers.get )
 
-    point = lower_point
-    if ( label in PL_LOWER ):
-        point = lower_point
-    elif ( label in PL_UPPER ):
-        point = upper_point
+    point_id = lower_point_id
+    if ( point_label_id in PL_LOWER ):
+        point_id = lower_point_id
+    elif ( point_label_id in PL_UPPER ):
+        point_id = upper_point_id
 
-    return point
+    return point_id
 
-def set_labeled_value( cursor, station_id, quantity, label, value,
+def set_labeled_value( cursor, station_id, quantity, point_label_id, value,
                        value_type=VT_UNAVERAGED_VALUE,
                        measurement_techniques=[], meastech_set=1,
                        outlier=False, notes=[] ):
     set_point_value(
         cursor,
-        locate_labeled_point( cursor, station_id, label ),
+        locate_labeled_point( cursor, station_id, point_label_id ),
         quantity,
         value,
         value_type=value_type,
@@ -1452,11 +1453,11 @@ def set_labeled_value( cursor, station_id, quantity, label, value,
         notes=notes,
     )
 
-def get_labeled_value( cursor, station_id, quantity, label,
+def get_labeled_value( cursor, station_id, quantity, point_label_id,
                        value_type=VT_ANY_AVERAGE, meastech_set=1, ):
     return get_point_value(
         cursor,
-        locate_labeled_point( cursor, station_id, label ),
+        locate_labeled_point( cursor, station_id, point_label_id ),
         quantity,
         value_type=value_type,
         meastech_set=1,
