@@ -191,7 +191,7 @@ for duct in ducts:
                     study_number=study_number,
                     series_number=series_number,
                     number_of_dimensions=2,
-                    coordinate_system=sd.CS_CYLINDRICAL,
+                    coordinate_system_id=sd.CS_CYLINDRICAL,
                     identifiers={ sd.C_SELF : originators_identifier },
                 )
 
@@ -208,7 +208,7 @@ for duct in ducts:
                     study_number=study_number,
                     series_number=series_number,
                     number_of_dimensions=2,
-                    coordinate_system=sd.CS_RECTANGULAR,
+                    coordinate_system_id=sd.CS_RECTANGULAR,
                     identifiers={ sd.C_SELF : originators_identifier },
                 )
 

@@ -213,7 +213,7 @@ with open( ratio_filename, "r" ) as ratio_file:
             study_number=study_number,
             series_number=series_number,
             number_of_dimensions=2,
-            coordinate_system=sd.CS_CYLINDRICAL,
+            coordinate_system_id=sd.CS_CYLINDRICAL,
         )
 
         # TODO: set working fluids.
@@ -379,7 +379,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             study_number=study_number,
             series_number=series_number,
             number_of_dimensions=2,
-            coordinate_system=sd.CS_CYLINDRICAL,
+            coordinate_system_id=sd.CS_CYLINDRICAL,
             outlier=outlier,
         )
 

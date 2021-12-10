@@ -719,7 +719,7 @@ def add_study_source( cursor, study_id, citation_key, classification ):
     )
 
 def add_series( cursor, flow_class_id, year, study_number, series_number,  \
-                number_of_dimensions, coordinate_system, outlier=False, \
+                number_of_dimensions, coordinate_system_id, outlier=False, \
                 notes=[], identifiers={}, ):
     series_id = identify_series(
         flow_class_id,
@@ -743,7 +743,7 @@ def add_series( cursor, flow_class_id, year, study_number, series_number,  \
         study_id,
         int(series_number),
         int(number_of_dimensions),
-        str(coordinate_system),
+        str(coordinate_system_id),
         int(outlier),
     )
     )
