@@ -23,7 +23,7 @@ study_identifier = sd.add_study(
     flow_class_id=flow_class,
     year=year,
     study_number=study_number,
-    study_type=sd.ST_EXPERIMENT,
+    study_type_id=sd.ST_EXPERIMENT,
 )
 
 sd.add_study_source( cursor, study_identifier, "RoosFW+1971+eng+JOUR", sd.PRIMARY_SOURCE )

@@ -535,7 +535,7 @@ def truncate_to_station( identifier ):
     sanitized_identifier = sanitize_identifier( identifier )
     return sanitized_identifier[0:14]
 
-def add_study( cursor, flow_class_id, year, study_number, study_type, \
+def add_study( cursor, flow_class_id, year, study_number, study_type_id,
                outlier=False, notes=[], identifiers={}, ):
     study_id = identify_study( flow_class_id, year, study_number )
     cursor.execute(
@@ -549,7 +549,7 @@ def add_study( cursor, flow_class_id, year, study_number, study_type, \
         str(flow_class_id),
         int(year),
         int(study_number),
-        str(study_type),
+        str(study_type_id),
         int(outlier),
     )
     )
