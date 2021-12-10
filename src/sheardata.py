@@ -608,19 +608,19 @@ def update_study_provenance( cursor, study_id, provenance ):
     )
     )
 
-def create_value_types_list( value_type ):
-    if ( value_type == VT_BOTH_AVERAGES ):
+def create_value_types_list( value_type_id ):
+    if ( value_type_id == VT_BOTH_AVERAGES ):
         return [ VT_DENSITY_WEIGHTED_AVERAGE,
                        VT_UNWEIGHTED_AVERAGE, ]
     else:
-        return [ value_type ]
+        return [ value_type_id ]
 
 def set_study_value( cursor, study_id, quantity_id, value,
-                     value_type=VT_UNAVERAGED_VALUE,
+                     value_type_id=VT_UNAVERAGED_VALUE,
                      measurement_techniques=[], meastech_set=1,
                      outlier=False, notes=[] ):
     study_value, study_uncertainty = split_float( value )
-    for avg_sys in create_value_types_list( value_type ):
+    for value_type_id in create_value_types_list( value_type_id ):
         cursor.execute(
         """
         INSERT INTO study_values( study_id, quantity_id, study_value,
@@ -633,7 +633,7 @@ def set_study_value( cursor, study_id, quantity_id, value,
             str(quantity_id),
             study_value,
             study_uncertainty,
-            avg_sys,
+            value_type_id,
             meastech_set,
             int(outlier),
         )
@@ -649,7 +649,7 @@ def set_study_value( cursor, study_id, quantity_id, value,
             (
                 sanitize_identifier(study_id),
                 str(quantity_id),
-                avg_sys,
+                value_type_id,
                 meastech_set,
                 measurement_technique,
             )
@@ -666,15 +666,15 @@ def set_study_value( cursor, study_id, quantity_id, value,
             (
                 sanitize_identifier(study_id),
                 str(quantity_id),
-                avg_sys,
+                value_type_id,
                 meastech_set,
                 int(note),
             )
             )
 
-def get_study_value( cursor, study_id, quantity_id, value_type=VT_ANY_AVERAGE,
-                     meastech_set=1, ):
-    if ( value_type == VT_ANY_AVERAGE ):
+def get_study_value( cursor, study_id, quantity_id,
+                     value_type_id=VT_ANY_AVERAGE, meastech_set=1, ):
+    if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
         """
         SELECT study_value, study_uncertainty
@@ -699,7 +699,7 @@ def get_study_value( cursor, study_id, quantity_id, value_type=VT_ANY_AVERAGE,
         (
             sanitize_identifier(study_id),
             str(quantity_id),
-            value_type,
+            value_type_id,
             meastech_set,
         )
         )
@@ -803,11 +803,11 @@ def update_series_description( cursor, series_id, description ):
     )
 
 def set_series_value( cursor, series_id, quantity_id, value,
-                      value_type=VT_UNAVERAGED_VALUE,
+                      value_type_id=VT_UNAVERAGED_VALUE,
                       measurement_techniques=[], meastech_set=1,
                       outlier=False, notes=[] ):
     series_value, series_uncertainty = split_float( value )
-    for avg_sys in create_value_types_list( value_type ):
+    for value_type_id in create_value_types_list( value_type_id ):
         cursor.execute(
         """
         INSERT INTO series_values( series_id, quantity_id, series_value,
@@ -820,7 +820,7 @@ def set_series_value( cursor, series_id, quantity_id, value,
             str(quantity_id),
             series_value,
             series_uncertainty,
-            avg_sys,
+            value_type_id,
             meastech_set,
             int(outlier),
         )
@@ -837,7 +837,7 @@ def set_series_value( cursor, series_id, quantity_id, value,
             (
                 sanitize_identifier(series_id),
                 str(quantity_id),
-                avg_sys,
+                value_type_id,
                 meastech_set,
                 measurement_technique,
             )
@@ -853,15 +853,15 @@ def set_series_value( cursor, series_id, quantity_id, value,
             (
                 sanitize_identifier(series_id),
                 str(quantity_id),
-                avg_sys,
+                value_type_id,
                 meastech_set,
                 int(note),
             )
             )
 
-def get_series_value( cursor, series_id, quantity_id, value_type=VT_ANY_AVERAGE, \
-                      meastech_set=1, ):
-    if ( value_type == VT_ANY_AVERAGE ):
+def get_series_value( cursor, series_id, quantity_id,
+                      value_type_id=VT_ANY_AVERAGE, meastech_set=1, ):
+    if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
         """
         SELECT series_value, series_uncertainty
@@ -886,7 +886,7 @@ def get_series_value( cursor, series_id, quantity_id, value_type=VT_ANY_AVERAGE,
         (
             sanitize_identifier(series_id),
             str(quantity_id),
-            value_type,
+            value_type_id,
             meastech_set,
         )
         )
@@ -956,11 +956,11 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
     return station_id
 
 def set_station_value( cursor, station_id, quantity_id, value,
-                       value_type=VT_UNAVERAGED_VALUE,
+                       value_type_id=VT_UNAVERAGED_VALUE,
                        measurement_techniques=[], meastech_set=1,
                        outlier=False, notes=[] ):
     station_value, station_uncertainty = split_float( value )
-    for avg_sys in create_value_types_list( value_type ):
+    for value_type_id in create_value_types_list( value_type_id ):
         cursor.execute(
         """
         INSERT INTO station_values( station_id, quantity_id, station_value,
@@ -973,7 +973,7 @@ def set_station_value( cursor, station_id, quantity_id, value,
             str(quantity_id),
             station_value,
             station_uncertainty,
-            avg_sys,
+            value_type_id,
             meastech_set,
             int(outlier),
         )
@@ -990,7 +990,7 @@ def set_station_value( cursor, station_id, quantity_id, value,
             (
                 sanitize_identifier(station_id),
                 str(quantity_id),
-                avg_sys,
+                value_type_id,
                 meastech_set,
                 measurement_technique,
             )
@@ -1007,7 +1007,7 @@ def set_station_value( cursor, station_id, quantity_id, value,
             (
                 sanitize_identifier(station_id),
                 str(quantity_id),
-                avg_sys,
+                value_type_id,
                 meastech_set,
                 int(note),
             )
@@ -1033,7 +1033,7 @@ def get_points_at_station( cursor, station_id ):
     return point_ids
 
 def set_constant_profile( cursor, station_id, quantity_id, value,
-                          value_type=VT_UNAVERAGED_VALUE,
+                          value_type_id=VT_UNAVERAGED_VALUE,
                           measurement_techniques=[], meastech_set=1,
                           outlier=False, notes=[] ):
     for point_id in get_points_at_station( cursor, station_id ):
@@ -1042,7 +1042,7 @@ def set_constant_profile( cursor, station_id, quantity_id, value,
             point_id,
             quantity_id,
             value,
-            value_type=value_type,
+            value_type_id=value_type_id,
             measurement_techniques=measurement_techniques,
             meastech_set=meastech_set,
             outlier=outlier,
@@ -1050,8 +1050,8 @@ def set_constant_profile( cursor, station_id, quantity_id, value,
         )
 
 def get_station_value( cursor, station_id, quantity_id,
-                       value_type=VT_ANY_AVERAGE, meastech_set=1, ):
-    if ( value_type == VT_ANY_AVERAGE ):
+                       value_type_id=VT_ANY_AVERAGE, meastech_set=1, ):
+    if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
         """
         SELECT station_value, station_uncertainty
@@ -1076,7 +1076,7 @@ def get_station_value( cursor, station_id, quantity_id,
         (
             sanitize_identifier(station_id),
             str(quantity_id),
-            value_type,
+            value_type_id,
             meastech_set,
         )
         )
@@ -1157,11 +1157,11 @@ def add_point( cursor, flow_class, year, study_number, series_number,
     return point_id
 
 def set_point_value( cursor, point_id, quantity_id, value,
-                     value_type=VT_UNAVERAGED_VALUE,
+                     value_type_id=VT_UNAVERAGED_VALUE,
                      measurement_techniques=[], meastech_set=1,
                      outlier=False, notes=[] ):
     point_value, point_uncertainty = split_float( value )
-    for avg_sys in create_value_types_list( value_type ):
+    for value_type_id in create_value_types_list( value_type_id ):
         cursor.execute(
         """
         INSERT INTO point_values( point_id, quantity_id, point_value,
@@ -1174,7 +1174,7 @@ def set_point_value( cursor, point_id, quantity_id, value,
             str(quantity_id),
             point_value,
             point_uncertainty,
-            avg_sys,
+            value_type_id,
             meastech_set,
             int(outlier),
         )
@@ -1190,7 +1190,7 @@ def set_point_value( cursor, point_id, quantity_id, value,
             (
                 sanitize_identifier(point_id),
                 str(quantity_id),
-                avg_sys,
+                value_type_id,
                 meastech_set,
                 measurement_technique,
             )
@@ -1207,15 +1207,15 @@ def set_point_value( cursor, point_id, quantity_id, value,
             (
                 sanitize_identifier(point_id),
                 str(quantity_id),
-                avg_sys,
+                value_type_id,
                 meastech_set,
                 int(note),
             )
             )
 
 def get_point_value( cursor, point_id, quantity_id,
-                     value_type=VT_ANY_AVERAGE, meastech_set=1, ):
-    if ( value_type == VT_ANY_AVERAGE ):
+                     value_type_id=VT_ANY_AVERAGE, meastech_set=1, ):
+    if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
         """
         SELECT point_value, point_uncertainty
@@ -1240,7 +1240,7 @@ def get_point_value( cursor, point_id, quantity_id,
         (
             sanitize_identifier(point_id),
             str(quantity_id),
-            value_type,
+            value_type_id,
             meastech_set,
         )
         )
@@ -1250,10 +1250,10 @@ def get_point_value( cursor, point_id, quantity_id,
 # number of quantities, so that requests can be made for more than 2 profiles
 # at once.
 def get_twin_profiles( cursor, station_id, quantity_id1, quantity_id2,
-                       value_type1=None, value_type2=None,
+                       value_type_id1=None, value_type_id2=None,
                        excluded_point_label_ids=[], ):
-    if ( value_type1 == None ):
-        if ( value_type2 == None ):
+    if ( value_type_id1 == None ):
+        if ( value_type_id2 == None ):
             # Both value types are unspecified.
             cursor.execute(
             """
@@ -1291,11 +1291,11 @@ def get_twin_profiles( cursor, station_id, quantity_id1, quantity_id2,
                 str(quantity_id1),
                 sanitize_identifier(station_id)+'%',
                 str(quantity_id2),
-                str(value_type2),
+                str(value_type_id2),
             )
             )
     else:
-        if ( value_type2 == None ):
+        if ( value_type_id2 == None ):
             # Only the first value type is specified.
             cursor.execute(
             """
@@ -1311,7 +1311,7 @@ def get_twin_profiles( cursor, station_id, quantity_id1, quantity_id2,
             (
                 sanitize_identifier(station_id)+'%',
                 str(quantity_id1),
-                str(value_type1),
+                str(value_type_id1),
                 sanitize_identifier(station_id)+'%',
                 str(quantity_id2),
             )
@@ -1332,10 +1332,10 @@ def get_twin_profiles( cursor, station_id, quantity_id1, quantity_id2,
             (
                 sanitize_identifier(station_id)+'%',
                 str(quantity_id1),
-                str(value_type1),
+                str(value_type_id1),
                 sanitize_identifier(station_id)+'%',
                 str(quantity_id2),
-                str(value_type2),
+                str(value_type_id2),
             )
             )
 
@@ -1438,7 +1438,7 @@ def locate_labeled_point( cursor, station_id, point_label_id ):
     return point_id
 
 def set_labeled_value( cursor, station_id, quantity_id, point_label_id, value,
-                       value_type=VT_UNAVERAGED_VALUE,
+                       value_type_id=VT_UNAVERAGED_VALUE,
                        measurement_techniques=[], meastech_set=1,
                        outlier=False, notes=[] ):
     set_point_value(
@@ -1446,7 +1446,7 @@ def set_labeled_value( cursor, station_id, quantity_id, point_label_id, value,
         locate_labeled_point( cursor, station_id, point_label_id ),
         quantity_id,
         value,
-        value_type=value_type,
+        value_type_id=value_type_id,
         measurement_techniques=measurement_techniques,
         meastech_set=meastech_set,
         outlier=outlier,
@@ -1454,12 +1454,12 @@ def set_labeled_value( cursor, station_id, quantity_id, point_label_id, value,
     )
 
 def get_labeled_value( cursor, station_id, quantity_id, point_label_id,
-                       value_type=VT_ANY_AVERAGE, meastech_set=1, ):
+                       value_type_id=VT_ANY_AVERAGE, meastech_set=1, ):
     return get_point_value(
         cursor,
         locate_labeled_point( cursor, station_id, point_label_id ),
         quantity_id,
-        value_type=value_type,
+        value_type_id=value_type_id,
         meastech_set=1,
     )
 

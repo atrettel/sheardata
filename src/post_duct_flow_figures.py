@@ -223,7 +223,7 @@ for duct_type in duct_types:
                     cursor,
                     station,
                     sd.Q_BULK_REYNOLDS_NUMBER,
-                    value_type=sd.VT_UNWEIGHTED_AVERAGE,
+                    value_type_id=sd.VT_UNWEIGHTED_AVERAGE,
                 ) )
 
                 quantity_values_array.append( sd.get_labeled_value(
@@ -231,7 +231,7 @@ for duct_type in duct_types:
                     station,
                     quantity,
                     point_label,
-                    value_type=sd.VT_UNWEIGHTED_AVERAGE,
+                    value_type_id=sd.VT_UNWEIGHTED_AVERAGE,
                 ) )
 
             bulk_reynolds_number = np.array( bulk_reynolds_number_array )
