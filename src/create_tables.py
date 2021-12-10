@@ -1076,13 +1076,15 @@ for compilation_id in compilations:
     )
 
 # Compilation sources
+#
+# The sources are citation keys.
 cursor.execute(
 """
 CREATE TABLE compilation_sources (
-    compilation INTEGER NOT NULL CHECK ( compilation >= 0 ),
-    source      TEXT NOT NULL,
-    PRIMARY KEY(compilation, source),
-    FOREIGN KEY(compilation) REFERENCES compilations(compilation_id)
+    compilation_id INTEGER NOT NULL,
+    source         TEXT NOT NULL,
+    PRIMARY KEY(compilation_id, source),
+    FOREIGN KEY(compilation_id) REFERENCES compilations(compilation_id)
 );
 """
 )
@@ -1101,7 +1103,7 @@ for compilation_id in compilation_sources:
     for source in compilation_sources[compilation_id]:
         cursor.execute(
         """
-        INSERT INTO compilation_sources( compilation, source )
+        INSERT INTO compilation_sources( compilation_id, source )
         VALUES( ?, ? );
         """,
         ( compilation_id, source, )
@@ -1111,12 +1113,12 @@ for compilation_id in compilation_sources:
 cursor.execute(
 """
 CREATE TABLE study_identifiers (
-    study_id    TEXT NOT NULL,
-    compilation INTEGER NOT NULL CHECK ( compilation >= 0 ),
-    identifier  TEXT NOT NULL,
-    PRIMARY KEY(study_id, compilation),
-    FOREIGN KEY(study_id)    REFERENCES studies(study_id),
-    FOREIGN KEY(compilation) REFERENCES compilations(compilation_id)
+    study_id       TEXT NOT NULL,
+    compilation_id INTEGER NOT NULL,
+    identifier     TEXT NOT NULL,
+    PRIMARY KEY(study_id, compilation_id),
+    FOREIGN KEY(study_id)       REFERENCES studies(study_id),
+    FOREIGN KEY(compilation_id) REFERENCES compilations(compilation_id)
 );
 """
 )
@@ -1125,12 +1127,12 @@ CREATE TABLE study_identifiers (
 cursor.execute(
 """
 CREATE TABLE series_identifiers (
-    series_id   TEXT NOT NULL,
-    compilation INTEGER NOT NULL CHECK ( compilation >= 0 ),
-    identifier  TEXT NOT NULL,
-    PRIMARY KEY(series_id, compilation),
-    FOREIGN KEY(series_id)   REFERENCES series(series_id),
-    FOREIGN KEY(compilation) REFERENCES compilations(compilation_id)
+    series_id      TEXT NOT NULL,
+    compilation_id INTEGER NOT NULL,
+    identifier     TEXT NOT NULL,
+    PRIMARY KEY(series_id, compilation_id),
+    FOREIGN KEY(series_id)      REFERENCES series(series_id),
+    FOREIGN KEY(compilation_id) REFERENCES compilations(compilation_id)
 );
 """
 )
@@ -1139,12 +1141,12 @@ CREATE TABLE series_identifiers (
 cursor.execute(
 """
 CREATE TABLE station_identifiers (
-    station_id  TEXT NOT NULL,
-    compilation INTEGER NOT NULL CHECK ( compilation >= 0 ),
-    identifier  TEXT NOT NULL,
-    PRIMARY KEY(station_id, compilation),
-    FOREIGN KEY(station_id)  REFERENCES stations(station_id),
-    FOREIGN KEY(compilation) REFERENCES compilations(compilation_id)
+    station_id     TEXT NOT NULL,
+    compilation_id INTEGER NOT NULL,
+    identifier     TEXT NOT NULL,
+    PRIMARY KEY(station_id, compilation_id),
+    FOREIGN KEY(station_id)     REFERENCES stations(station_id),
+    FOREIGN KEY(compilation_id) REFERENCES compilations(compilation_id)
 );
 """
 )
@@ -1153,12 +1155,12 @@ CREATE TABLE station_identifiers (
 cursor.execute(
 """
 CREATE TABLE point_identifiers (
-    point_id    TEXT NOT NULL,
-    compilation INTEGER NOT NULL CHECK ( compilation >= 0 ),
-    identifier  TEXT NOT NULL,
-    PRIMARY KEY(point_id, compilation),
-    FOREIGN KEY(point_id)    REFERENCES points(point_id),
-    FOREIGN KEY(compilation) REFERENCES compilations(compilation_id)
+    point_id       TEXT NOT NULL,
+    compilation_id INTEGER NOT NULL,
+    identifier     TEXT NOT NULL,
+    PRIMARY KEY(point_id, compilation_id),
+    FOREIGN KEY(point_id)       REFERENCES points(point_id),
+    FOREIGN KEY(compilation_id) REFERENCES compilations(compilation_id)
 );
 """
 )
