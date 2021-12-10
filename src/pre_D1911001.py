@@ -205,7 +205,7 @@ with open( globals_filename, "r" ) as globals_file:
                 series_number=series_number,
                 station_number=station_number,
                 point_number=point_number,
-                point_label=point_label,
+                point_label_id=point_label,
             )
 
             distance_from_wall = 0.5 * diameter - r_reversed[i]

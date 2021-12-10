@@ -230,7 +230,7 @@ with open( globals_filename, "r" ) as globals_file:
             series_number=series_number,
             station_number=station_number,
             point_number=point_number,
-            point_label=sd.PL_WALL,
+            point_label_id=sd.PL_WALL,
         )
 
         # Assume a smooth surface.

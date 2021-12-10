@@ -263,7 +263,7 @@ with open( ratio_filename, "r" ) as ratio_file:
                 series_number=series_number,
                 station_number=station_number,
                 point_number=point_number,
-                point_label=point_label,
+                point_label_id=point_label,
             )
 
         # Measurement techniques for flow rate and center-line velocities
@@ -444,7 +444,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             series_number=series_number,
             station_number=station_number,
             point_number=point_number,
-            point_label=sd.PL_WALL,
+            point_label_id=sd.PL_WALL,
         )
 
         for quantity in [ sd.Q_ROUGHNESS_HEIGHT,

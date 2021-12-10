@@ -110,7 +110,7 @@ with open( globals_filename, "r" ) as globals_file:
                     series_number=series_number,
                     station_number=station_number,
                     point_number=point_number,
-                    point_label=point_label,
+                    point_label_id=point_label,
                 )
 
                 y = sd.sdfloat( float(station_row[0]) )

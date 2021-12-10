@@ -269,7 +269,7 @@ for duct in ducts:
                 series_number=series_number,
                 station_number=station_number,
                 point_number=point_number,
-                point_label=sd.PL_WALL,
+                point_label_id=sd.PL_WALL,
             )
 
             # TODO: Correct this assumption later.
