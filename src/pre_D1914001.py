@@ -26,8 +26,8 @@ study_identifier = sd.add_study(
     study_type=sd.ST_EXPERIMENT,
 )
 
-sd.add_source( cursor, study_identifier, "StantonTE+1914+eng+JOUR",   sd.PRIMARY_SOURCE )
-sd.add_source( cursor, study_identifier, "ObotNT+1988+eng+JOUR",    sd.SECONDARY_SOURCE )
+sd.add_study_source( cursor, study_identifier, "StantonTE+1914+eng+JOUR",   sd.PRIMARY_SOURCE )
+sd.add_study_source( cursor, study_identifier, "ObotNT+1988+eng+JOUR",    sd.SECONDARY_SOURCE )
 
 development_length_note = sd.add_note(
     cursor,

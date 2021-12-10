@@ -703,15 +703,15 @@ def get_study_value( cursor, study, quantity, value_type=VT_ANY_AVERAGE,
         )
     return fetch_float( cursor )
 
-def add_source( cursor, study, source, classification ):
+def add_study_source( cursor, study, citation_key, classification ):
     cursor.execute(
     """
-    INSERT INTO sources( study_id, source, classification )
+    INSERT INTO study_sources( study_id, citation_key, classification )
     VALUES( ?, ?, ? );
     """,
     (
         sanitize_identifier(study),
-        str(source),
+        str(citation_key),
         int(classification),
     )
     )

@@ -26,10 +26,10 @@ study_identifier = sd.add_study(
     study_type=sd.ST_EXPERIMENT,
 )
 
-sd.add_source( cursor, study_identifier, "DaviesSJ+1928+eng+JOUR",   sd.PRIMARY_SOURCE )
-sd.add_source( cursor, study_identifier, "DeanRB+1974+eng+RPRT",   sd.SECONDARY_SOURCE )
-sd.add_source( cursor, study_identifier, "JonesOC+1976+eng+JOUR",  sd.SECONDARY_SOURCE )
-sd.add_source( cursor, study_identifier, "DeanRB+1978+eng+JOUR",   sd.SECONDARY_SOURCE )
+sd.add_study_source( cursor, study_identifier, "DaviesSJ+1928+eng+JOUR",   sd.PRIMARY_SOURCE )
+sd.add_study_source( cursor, study_identifier, "DeanRB+1974+eng+RPRT",   sd.SECONDARY_SOURCE )
+sd.add_study_source( cursor, study_identifier, "JonesOC+1976+eng+JOUR",  sd.SECONDARY_SOURCE )
+sd.add_study_source( cursor, study_identifier, "DeanRB+1978+eng+JOUR",   sd.SECONDARY_SOURCE )
 
 series_11_note = sd.add_note(
     cursor,

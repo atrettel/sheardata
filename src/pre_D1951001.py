@@ -26,8 +26,8 @@ study_identifier = sd.add_study(
     study_type=sd.ST_EXPERIMENT,
 )
 
-sd.add_source( cursor, study_identifier, "SenecalVE+1951+eng+THES", sd.PRIMARY_SOURCE )
-sd.add_source( cursor, study_identifier, "SenecalVE+1953+eng+JOUR", sd.PRIMARY_SOURCE )
+sd.add_study_source( cursor, study_identifier, "SenecalVE+1951+eng+THES", sd.PRIMARY_SOURCE )
+sd.add_study_source( cursor, study_identifier, "SenecalVE+1953+eng+JOUR", sd.PRIMARY_SOURCE )
 
 conn.commit()
 conn.close()

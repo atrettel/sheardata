@@ -743,11 +743,11 @@ CREATE TABLE points (
 # source (2) created later.
 cursor.execute(
 """
-CREATE TABLE sources (
+CREATE TABLE study_sources (
     study_id       TEXT NOT NULL,
-    source         TEXT NOT NULL,
+    citation_key   TEXT NOT NULL,
     classification INTEGER NOT NULL DEFAULT 1 CHECK ( classification = 1 OR classification = 2 ),
-    PRIMARY KEY(study_id, source),
+    PRIMARY KEY(study_id, citation_key),
     FOREIGN KEY(study_id) REFERENCES studies(study_id)
 );
 """
@@ -1082,8 +1082,8 @@ cursor.execute(
 """
 CREATE TABLE compilation_sources (
     compilation_id INTEGER NOT NULL,
-    source         TEXT NOT NULL,
-    PRIMARY KEY(compilation_id, source),
+    citation_key   TEXT NOT NULL,
+    PRIMARY KEY(compilation_id, citation_key),
     FOREIGN KEY(compilation_id) REFERENCES compilations(compilation_id)
 );
 """
@@ -1100,13 +1100,13 @@ compilation_sources[ sd.C_ERCOFTAC     ] = [ "ERCOFTAC+DBASE" ]
 compilation_sources[ sd.C_AGARD_AR_345 ] = [ "AGARD+1998+eng+RPRT" ]
 
 for compilation_id in compilation_sources:
-    for source in compilation_sources[compilation_id]:
+    for citation_key in compilation_sources[compilation_id]:
         cursor.execute(
         """
-        INSERT INTO compilation_sources( compilation_id, source )
+        INSERT INTO compilation_sources( compilation_id, citation_key )
         VALUES( ?, ? );
         """,
-        ( compilation_id, source, )
+        ( compilation_id, citation_key, )
         )
 
 # Study identifiers

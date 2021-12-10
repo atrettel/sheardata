@@ -27,8 +27,8 @@ study_identifier = sd.add_study(
     identifiers={sd.C_CH_1969 : "1600"},
 )
 
-sd.add_source( cursor, study_identifier, "RiabouchinskyD+1914+fra+JOUR",   sd.PRIMARY_SOURCE )
-sd.add_source( cursor, study_identifier, "ColesDE+1969+eng+BOOK",        sd.SECONDARY_SOURCE )
+sd.add_study_source( cursor, study_identifier, "RiabouchinskyD+1914+fra+JOUR",   sd.PRIMARY_SOURCE )
+sd.add_study_source( cursor, study_identifier, "ColesDE+1969+eng+BOOK",        sd.SECONDARY_SOURCE )
 
 station_4_velocity_note = sd.add_note(
     cursor,

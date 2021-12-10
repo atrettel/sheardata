@@ -26,7 +26,7 @@ study_identifier = sd.add_study(
     study_type=sd.ST_EXPERIMENT,
 )
 
-sd.add_source( cursor, study_identifier, "WilliamsonCHK+1989+eng+JOUR", sd.PRIMARY_SOURCE )
+sd.add_study_source( cursor, study_identifier, "WilliamsonCHK+1989+eng+JOUR", sd.PRIMARY_SOURCE )
 
 conn.commit()
 conn.close()

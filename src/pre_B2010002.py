@@ -26,7 +26,7 @@ study_identifier = sd.add_study(
     study_type=sd.ST_DIRECT_NUMERICAL_SIMULATION,
 )
 
-sd.add_source( cursor, study_identifier, "SchlatterP+2010+eng+JOUR", sd.PRIMARY_SOURCE )
+sd.add_study_source( cursor, study_identifier, "SchlatterP+2010+eng+JOUR", sd.PRIMARY_SOURCE )
 
 conn.commit()
 conn.close()

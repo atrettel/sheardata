@@ -26,8 +26,8 @@ study_identifier = sd.add_study(
     study_type=sd.ST_EXPERIMENT,
 )
 
-sd.add_source( cursor, study_identifier, "StantonTE+1911+eng+JOUR",   sd.PRIMARY_SOURCE )
-sd.add_source( cursor, study_identifier, "KooEC+1932+eng+THES",     sd.SECONDARY_SOURCE )
+sd.add_study_source( cursor, study_identifier, "StantonTE+1911+eng+JOUR",   sd.PRIMARY_SOURCE )
+sd.add_study_source( cursor, study_identifier, "KooEC+1932+eng+THES",     sd.SECONDARY_SOURCE )
 
 center_line_velocity_note = sd.add_note(
     cursor,

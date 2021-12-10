@@ -34,10 +34,10 @@ with open( "table-all-studies.tex.tmp", "w" ) as f:
 
         cursor.execute(
         """
-        SELECT source
-        FROM sources
+        SELECT citation_key
+        FROM study_sources
         WHERE study_id=? AND classification=?
-        ORDER BY source COLLATE NOCASE;
+        ORDER BY citation_key COLLATE NOCASE;
         """,
         (
             study,
