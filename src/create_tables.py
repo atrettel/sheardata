@@ -28,13 +28,13 @@ value_types[ sd.VT_UNAVERAGED_VALUE         ] = "unaveraged value"
 value_types[ sd.VT_UNWEIGHTED_AVERAGE       ] = "unweighted averaging"
 value_types[ sd.VT_DENSITY_WEIGHTED_AVERAGE ] = "density-weighted averaging"
 
-for identifier in value_types:
+for value_type_id in value_types:
     cursor.execute(
     """
     INSERT INTO value_types( value_type_id, value_type_name )
     VALUES( ?, ? );
     """,
-    ( identifier, value_types[identifier], )
+    ( value_type_id, value_types[value_type_id], )
     )
 
 # Coordinate systems
@@ -51,14 +51,14 @@ coordinate_systems = {}
 coordinate_systems[ sd.CS_RECTANGULAR ] = "rectangular coordinates"
 coordinate_systems[ sd.CS_CYLINDRICAL ] = "cylindrical coordinates"
 
-for identifier in coordinate_systems:
+for coordinate_system_id in coordinate_systems:
     cursor.execute(
     """
     INSERT INTO coordinate_systems( coordinate_system_id,
                                     coordinate_system_name )
     VALUES( ?, ? );
     """,
-    ( identifier, coordinate_systems[identifier], )
+    ( coordinate_system_id, coordinate_systems[coordinate_system_id], )
     )
 
 # Flow classes
@@ -102,25 +102,25 @@ flow_classes[ sd.FC_WAKE                 ] = flow_class( "wake",                
 flow_classes[ sd.FC_WALL_BOUNDED_FLOW    ] = flow_class( "wall-bounded flow",            sd.FC_SHEAR_FLOW )
 flow_classes[ sd.FC_WALL_JET             ] = flow_class( "wall jet",                  sd.FC_EXTERNAL_FLOW )
 
-for identifier in flow_classes:
+for flow_class_id in flow_classes:
     cursor.execute(
     """
     INSERT INTO flow_classes( flow_class_id, flow_class_name )
     VALUES( ?, ? );
     """,
-    ( identifier, flow_classes[identifier].name, )
+    ( flow_class_id, flow_classes[flow_class_id].name, )
     )
 
 # Two separate loops MUST occur due to foreign key constraints.
-for identifier in flow_classes:
-    if ( flow_classes[identifier].is_child() ):
+for flow_class_id in flow_classes:
+    if ( flow_classes[flow_class_id].is_child() ):
         cursor.execute(
         """
         UPDATE flow_classes
         SET flow_class_parent_id=?
         WHERE flow_class_id=?;
         """,
-        ( flow_classes[identifier].parent, identifier, )
+        ( flow_classes[flow_class_id].parent, flow_class_id, )
         )
 
 # Flow regimes
@@ -138,13 +138,13 @@ flow_regimes[      sd.FR_LAMINAR ] =      "laminar flow"
 flow_regimes[ sd.FR_TRANSITIONAL ] = "transitional flow"
 flow_regimes[    sd.FR_TURBULENT ] =    "turbulent flow"
 
-for identifier in flow_regimes:
+for flow_regime_id in flow_regimes:
     cursor.execute(
     """
     INSERT INTO flow_regimes( flow_regime_id, flow_regime_name )
     VALUES( ?, ? );
     """,
-    ( identifier, flow_regimes[identifier], )
+    ( flow_regime_id, flow_regimes[flow_regime_id], )
     )
 
 # Phases
@@ -162,13 +162,13 @@ phases[ sd.PH_GAS    ] =    "gas"
 phases[ sd.PH_LIQUID ] = "liquid"
 phases[ sd.PH_SOLID  ] =  "solid"
 
-for identifier in phases:
+for phase_id in phases:
     cursor.execute(
     """
     INSERT INTO phases( phase_id, phase_name )
     VALUES( ?, ? );
     """,
-    ( identifier, phases[identifier], )
+    ( phase_id, phases[phase_id], )
     )
 
 # Elements
@@ -241,13 +241,13 @@ geometries = {}
 geometries[ sd.GM_ELLIPTICAL  ] =  "elliptical geometry"
 geometries[ sd.GM_RECTANGULAR ] = "rectangular geometry"
 
-for identifier in geometries:
+for geometry_id in geometries:
     cursor.execute(
     """
     INSERT INTO geometries( geometry_id, geometry_name )
     VALUES( ?, ? );
     """,
-    ( identifier, geometries[identifier], )
+    ( geometry_id, geometries[geometry_id], )
     )
 
 # Measurement techniques
@@ -311,29 +311,29 @@ measurement_techniques[ sd.MT_VELOCITY_PROFILE_METHOD                  ] = MeasT
 measurement_techniques[ sd.MT_CLAUSER_METHOD                           ] = MeasTech( "Clauser method",                           sd.MT_VELOCITY_PROFILE_METHOD,                      )
 measurement_techniques[ sd.MT_VISCOUS_SUBLAYER_SLOPE_METHOD            ] = MeasTech( "viscous sublayer slope method",            sd.MT_VELOCITY_PROFILE_METHOD,                      )
 
-for identifier in measurement_techniques:
+for meastech_id in measurement_techniques:
     cursor.execute(
     """
     INSERT INTO measurement_techniques( meastech_id, meastech_name, intrusive )
     VALUES( ?, ?, ? );
     """,
     (
-        identifier,
-        measurement_techniques[identifier].name,
-        measurement_techniques[identifier].intrusive,
+        meastech_id,
+        measurement_techniques[meastech_id].name,
+        measurement_techniques[meastech_id].intrusive,
     )
     )
 
 # Two separate loops MUST occur due to foreign key constraints.
-for identifier in measurement_techniques:
-    if ( measurement_techniques[identifier].is_child() ):
+for meastech_id in measurement_techniques:
+    if ( measurement_techniques[meastech_id].is_child() ):
         cursor.execute(
         """
         UPDATE measurement_techniques
         SET meastech_parent_id=?
         WHERE meastech_id=?;
         """,
-        ( measurement_techniques[identifier].parent, identifier, )
+        ( measurement_techniques[meastech_id].parent, meastech_id, )
         )
 
 # Notes
@@ -361,13 +361,13 @@ point_labels[ sd.PL_CENTER_LINE ] = "center-line"
 point_labels[ sd.PL_EDGE        ] = "edge"
 point_labels[ sd.PL_WALL        ] = "wall"
 
-for identifier in point_labels:
+for point_label_id in point_labels:
     cursor.execute(
     """
     INSERT INTO point_labels( point_label_id, point_label_name )
     VALUES( ?, ? );
     """,
-    ( identifier, point_labels[identifier], )
+    ( point_label_id, point_labels[point_label_id], )
     )
 
 # Quantities
@@ -611,7 +611,7 @@ quantities[ sd.Q_LOCAL_TO_WALL_MASS_DENSITY_RATIO               ] = quantity( "l
 quantities[ sd.Q_LOCAL_TO_WALL_STREAMWISE_VELOCITY_RATIO        ] = quantity( "local-to-wall streamwise velocity ratio",        )
 quantities[ sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO                ] = quantity( "local-to-wall temperature ratio",                )
 
-for identifier in quantities:
+for quantity_id in quantities:
     cursor.execute(
     """
     INSERT INTO quantities( quantity_id, quantity_name, length_exponent,
@@ -620,12 +620,12 @@ for identifier in quantities:
     VALUES( ?, ?, ?, ?, ?, ? );
     """,
     (
-        identifier,
-        quantities[identifier].name,
-        quantities[identifier].length_exponent,
-        quantities[identifier].mass_exponent,
-        quantities[identifier].time_exponent,
-        quantities[identifier].temperature_exponent,
+        quantity_id,
+        quantities[quantity_id].name,
+        quantities[quantity_id].length_exponent,
+        quantities[quantity_id].mass_exponent,
+        quantities[quantity_id].time_exponent,
+        quantities[quantity_id].temperature_exponent,
     )
     )
 
@@ -644,13 +644,13 @@ study_types[ sd.ST_DIRECT_NUMERICAL_SIMULATION ] = "direct numerical simulation"
 study_types[ sd.ST_EXPERIMENT                  ] = "experiment"
 study_types[ sd.ST_LARGE_EDDY_SIMULATION       ] = "large eddy simulation"
 
-for identifier in study_types:
+for study_type_id in study_types:
     cursor.execute(
     """
     INSERT INTO study_types( study_type_id, study_type_name )
     VALUES( ?, ? );
     """,
-    ( identifier, study_types[identifier], )
+    ( study_type_id, study_types[study_type_id], )
     )
 
 # Studies
