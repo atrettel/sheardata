@@ -523,15 +523,15 @@ def make_readable_identifier( identifier ):
         readable_identifier += "-" + sanitized_identifier[14:18]
     return readable_identifier
 
-def truncate_to_study( identifier ):
+def truncate_to_study_id( identifier ):
     sanitized_identifier = sanitize_identifier( identifier )
     return sanitized_identifier[0:8]
 
-def truncate_to_series( identifier ):
+def truncate_to_series_id( identifier ):
     sanitized_identifier = sanitize_identifier( identifier )
     return sanitized_identifier[0:11]
 
-def truncate_to_station( identifier ):
+def truncate_to_station_id( identifier ):
     sanitized_identifier = sanitize_identifier( identifier )
     return sanitized_identifier[0:14]
 
@@ -1546,7 +1546,7 @@ def mark_station_as_periodic( cursor, station_id, \
 def count_studies( identifiers ):
     study_ids = {}
     for identifier in identifiers:
-        study_id = truncate_to_study( identifier )
+        study_id = truncate_to_study_id( identifier )
         if ( study_id not in study_ids ):
             study_ids[study_id] = 1
         else:
