@@ -776,7 +776,7 @@ def add_series( cursor, flow_class_id, year, study_number, series_number,  \
 
     return series_id
 
-def update_series_geometry( cursor, series_id, geometry ):
+def update_series_geometry( cursor, series_id, geometry_id ):
     cursor.execute(
     """
     UPDATE series
@@ -784,7 +784,7 @@ def update_series_geometry( cursor, series_id, geometry ):
     WHERE series_id=?;
     """,
     (
-        str(geometry),
+        str(geometry_id),
         sanitize_identifier(series_id),
     )
     )
