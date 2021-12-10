@@ -20,7 +20,7 @@ study_number = 1
 
 study_identifier = sd.add_study(
     cursor,
-    flow_class=flow_class,
+    flow_class_id=flow_class,
     year=year,
     study_number=study_number,
     study_type=sd.ST_EXPERIMENT,
@@ -43,7 +43,7 @@ galilean_transformation_note = sd.add_note(
 series_number = 1
 series_identifier = sd.add_series(
     cursor,
-    flow_class=flow_class,
+    flow_class_id=flow_class,
     year=year,
     study_number=study_number,
     series_number=series_number,
@@ -74,7 +74,7 @@ with open( globals_filename, "r" ) as globals_file:
 
         station_identifier = sd.add_station(
             cursor,
-            flow_class=flow_class,
+            flow_class_id=flow_class,
             year=year,
             study_number=study_number,
             series_number=series_number,
@@ -104,7 +104,7 @@ with open( globals_filename, "r" ) as globals_file:
 
                 point_identifier = sd.add_point(
                     cursor,
-                    flow_class=flow_class,
+                    flow_class_id=flow_class,
                     year=year,
                     study_number=study_number,
                     series_number=series_number,

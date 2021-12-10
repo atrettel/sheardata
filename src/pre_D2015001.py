@@ -31,7 +31,7 @@ floating_point_precision_note = sd.add_note(
 
 study_identifier = sd.add_study(
     cursor,
-    flow_class=flow_class,
+    flow_class_id=flow_class,
     year=year,
     study_number=study_number,
     study_type=sd.ST_DIRECT_NUMERICAL_SIMULATION,
@@ -99,7 +99,7 @@ with open( globals_filename, "r" ) as globals_file:
 
         series_identifier = sd.add_series(
             cursor,
-            flow_class=flow_class,
+            flow_class_id=flow_class,
             year=year,
             study_number=study_number,
             series_number=series_number,
@@ -117,7 +117,7 @@ with open( globals_filename, "r" ) as globals_file:
         station_number = 1
         station_identifier = sd.add_station(
             cursor,
-            flow_class=flow_class,
+            flow_class_id=flow_class,
             year=year,
             study_number=study_number,
             series_number=series_number,
@@ -159,7 +159,7 @@ with open( globals_filename, "r" ) as globals_file:
 
                 point_identifier = sd.add_point(
                     cursor,
-                    flow_class=flow_class,
+                    flow_class_id=flow_class,
                     year=year,
                     study_number=study_number,
                     series_number=series_number,

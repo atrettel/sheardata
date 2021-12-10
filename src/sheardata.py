@@ -451,32 +451,32 @@ def fetch_float( cursor ):
     result = cursor.fetchone()
     return sdfloat( result[0], result[1] )
 
-def identify_study( flow_class, year, study_number, readable=False ):
+def identify_study( flow_class_id, year, study_number, readable=False ):
     separator = ""
     if ( readable ):
         separator = "-"
 
     return "{:1s}{:s}{:4d}{:s}{:3d}".format(
-        str(flow_class),
+        str(flow_class_id),
         str(separator),
         int(year),
         str(separator),
         int(study_number),
     ).replace(" ","0")
 
-def identify_series( flow_class, year, study_number, series_number, \
+def identify_series( flow_class_id, year, study_number, series_number, \
                      readable=False ):
     separator = ""
     if ( readable ):
         separator = "-"
 
     return "{:s}{:s}{:3d}".format(
-        identify_study( flow_class, year, study_number, readable=readable, ),
+        identify_study( flow_class_id, year, study_number, readable=readable, ),
         str(separator),
         int(series_number),
     ).replace(" ","0")
 
-def identify_station( flow_class, year, study_number, series_number, \
+def identify_station( flow_class_id, year, study_number, series_number, \
                       station_number, readable=False ):
     separator = ""
     if ( readable ):
@@ -484,13 +484,13 @@ def identify_station( flow_class, year, study_number, series_number, \
 
     return "{:s}{:s}{:3d}".format(
         identify_series(
-            flow_class, year, study_number, series_number, readable=readable,
+            flow_class_id, year, study_number, series_number, readable=readable,
         ),
         str(separator),
         int(station_number),
     ).replace(" ","0")
 
-def identify_point( flow_class, year, study_number, series_number, \
+def identify_point( flow_class_id, year, study_number, series_number, \
                     station_number, point_number, readable=False ):
     separator = ""
     if ( readable ):
@@ -498,7 +498,7 @@ def identify_point( flow_class, year, study_number, series_number, \
 
     return "{:s}{:s}{:4d}".format(
         identify_station(
-            flow_class, year, study_number, series_number, station_number, \
+            flow_class_id, year, study_number, series_number, station_number, \
             readable=readable,
         ),
         str(separator),
@@ -535,9 +535,9 @@ def truncate_to_station( identifier ):
     sanitized_identifier = sanitize_identifier( identifier )
     return sanitized_identifier[0:14]
 
-def add_study( cursor, flow_class, year, study_number, study_type, \
+def add_study( cursor, flow_class_id, year, study_number, study_type, \
                outlier=False, notes=[], identifiers={}, ):
-    study_id = identify_study( flow_class, year, study_number )
+    study_id = identify_study( flow_class_id, year, study_number )
     cursor.execute(
     """
     INSERT INTO studies( study_id, flow_class_id, year, study_number,
@@ -546,7 +546,7 @@ def add_study( cursor, flow_class, year, study_number, study_type, \
     """,
     (
         study_id,
-        str(flow_class),
+        str(flow_class_id),
         int(year),
         int(study_number),
         str(study_type),
@@ -718,17 +718,17 @@ def add_study_source( cursor, study_id, citation_key, classification ):
     )
     )
 
-def add_series( cursor, flow_class, year, study_number, series_number,  \
+def add_series( cursor, flow_class_id, year, study_number, series_number,  \
                 number_of_dimensions, coordinate_system, outlier=False, \
                 notes=[], identifiers={}, ):
     series_id = identify_series(
-        flow_class,
+        flow_class_id,
         year,
         study_number,
         series_number,
     )
     study_id = identify_study(
-        flow_class,
+        flow_class_id,
         year,
         study_number,
     )
@@ -892,23 +892,23 @@ def get_series_value( cursor, series_id, quantity_id,
         )
     return fetch_float( cursor )
 
-def add_station( cursor, flow_class, year, study_number, series_number, \
+def add_station( cursor, flow_class_id, year, study_number, series_number, \
                 station_number, outlier=False, notes=[], identifiers={}, ):
     station_id = identify_station(
-        flow_class,
+        flow_class_id,
         year,
         study_number,
         series_number,
         station_number,
     )
     series_id = identify_series(
-        flow_class,
+        flow_class_id,
         year,
         study_number,
         series_number,
     )
     study_id = identify_study(
-        flow_class,
+        flow_class_id,
         year,
         study_number,
     )
@@ -1082,11 +1082,11 @@ def get_station_value( cursor, station_id, quantity_id,
         )
     return fetch_float( cursor )
 
-def add_point( cursor, flow_class, year, study_number, series_number,
+def add_point( cursor, flow_class_id, year, study_number, series_number,
                station_number, point_number, point_label_id=None,
                outlier=False, notes=[], identifiers={}, ):
     point_id = identify_point(
-        flow_class,
+        flow_class_id,
         year,
         study_number,
         series_number,
@@ -1094,20 +1094,20 @@ def add_point( cursor, flow_class, year, study_number, series_number,
         point_number,
     )
     station_id = identify_station(
-        flow_class,
+        flow_class_id,
         year,
         study_number,
         series_number,
         station_number,
     )
     series_id = identify_series(
-        flow_class,
+        flow_class_id,
         year,
         study_number,
         series_number,
     )
     study_id = identify_study(
-        flow_class,
+        flow_class_id,
         year,
         study_number,
     )

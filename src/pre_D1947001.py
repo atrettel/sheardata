@@ -20,7 +20,7 @@ study_number = 1
 
 study_identifier = sd.add_study(
     cursor,
-    flow_class=flow_class,
+    flow_class_id=flow_class,
     year=year,
     study_number=study_number,
     study_type=sd.ST_EXPERIMENT,
@@ -186,7 +186,7 @@ for duct in ducts:
             if ( duct == "Round" ):
                 series_identifier = sd.add_series(
                     cursor,
-                    flow_class=flow_class,
+                    flow_class_id=flow_class,
                     year=year,
                     study_number=study_number,
                     series_number=series_number,
@@ -203,7 +203,7 @@ for duct in ducts:
             else:
                 series_identifier = sd.add_series(
                     cursor,
-                    flow_class=flow_class,
+                    flow_class_id=flow_class,
                     year=year,
                     study_number=study_number,
                     series_number=series_number,
@@ -223,7 +223,7 @@ for duct in ducts:
             station_number = 1
             station_identifier = sd.add_station(
                 cursor,
-                flow_class=flow_class,
+                flow_class_id=flow_class,
                 year=year,
                 study_number=study_number,
                 series_number=series_number,
@@ -263,7 +263,7 @@ for duct in ducts:
             point_number = 1
             point_identifier = sd.add_point(
                 cursor,
-                flow_class=flow_class,
+                flow_class_id=flow_class,
                 year=year,
                 study_number=study_number,
                 series_number=series_number,

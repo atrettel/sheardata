@@ -20,7 +20,7 @@ study_number = 1
 
 study_identifier = sd.add_study(
     cursor,
-    flow_class=flow_class,
+    flow_class_id=flow_class,
     year=year,
     study_number=study_number,
     study_type=sd.ST_EXPERIMENT,
