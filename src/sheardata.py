@@ -417,10 +417,12 @@ ST_EXPERIMENT                  = "EXP"
 ST_LARGE_EDDY_SIMULATION       = "LES"
 
 # Compilations
-C_SELF    = 0 # Originator
-C_CH_1969 = 1 # Coles and Hirst
-C_BE_1973 = 2 # Birch and Eggers
-C_FF_1977 = 3 # Fernholz and Finley
+C_SELF         = 0 # Originator
+C_CH_1969      = 1 # Coles and Hirst
+C_BE_1973      = 2 # Birch and Eggers
+C_FF_1977      = 3 # Fernholz and Finley
+C_ERCOFTAC     = 4 # ERCOFTAC Classic Collection
+C_AGARD_AR_345 = 5 # AGARD-AR-345 (Test cases for LES)
 
 # Source classifications
 PRIMARY_SOURCE   = 1

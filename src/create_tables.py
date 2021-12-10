@@ -1059,10 +1059,12 @@ CREATE TABLE compilations (
 )
 
 compilations = {}
-compilations[ sd.C_SELF    ] = "Originator"
-compilations[ sd.C_CH_1969 ] = "Coles and Hirst"
-compilations[ sd.C_BE_1973 ] = "Birch and Eggers"
-compilations[ sd.C_FF_1977 ] = "Fernholz and Finley"
+compilations[ sd.C_SELF         ] = "Originator"
+compilations[ sd.C_CH_1969      ] = "Coles and Hirst"
+compilations[ sd.C_BE_1973      ] = "Birch and Eggers"
+compilations[ sd.C_FF_1977      ] = "Fernholz and Finley"
+compilations[ sd.C_ERCOFTAC     ] = "ERCOFTAC Classic Collection"
+compilations[ sd.C_AGARD_AR_345 ] = "AGARD-AR-345"
 
 for compilation_id in compilations:
     cursor.execute(
