@@ -1112,10 +1112,10 @@ for compilation_id in compilation_sources:
 # Study identifiers
 cursor.execute(
 """
-CREATE TABLE study_identifiers (
-    study_id       TEXT NOT NULL,
-    compilation_id INTEGER NOT NULL,
-    identifier     TEXT NOT NULL,
+CREATE TABLE study_external_identifiers (
+    study_id          TEXT NOT NULL,
+    compilation_id    INTEGER NOT NULL,
+    study_external_id TEXT NOT NULL,
     PRIMARY KEY(study_id, compilation_id),
     FOREIGN KEY(study_id)       REFERENCES studies(study_id),
     FOREIGN KEY(compilation_id) REFERENCES compilations(compilation_id)
@@ -1126,10 +1126,10 @@ CREATE TABLE study_identifiers (
 # Series identifiers
 cursor.execute(
 """
-CREATE TABLE series_identifiers (
-    series_id      TEXT NOT NULL,
-    compilation_id INTEGER NOT NULL,
-    identifier     TEXT NOT NULL,
+CREATE TABLE series_external_identifiers (
+    series_id          TEXT NOT NULL,
+    compilation_id     INTEGER NOT NULL,
+    series_external_id TEXT NOT NULL,
     PRIMARY KEY(series_id, compilation_id),
     FOREIGN KEY(series_id)      REFERENCES series(series_id),
     FOREIGN KEY(compilation_id) REFERENCES compilations(compilation_id)
@@ -1140,10 +1140,10 @@ CREATE TABLE series_identifiers (
 # Station identifiers
 cursor.execute(
 """
-CREATE TABLE station_identifiers (
-    station_id     TEXT NOT NULL,
-    compilation_id INTEGER NOT NULL,
-    identifier     TEXT NOT NULL,
+CREATE TABLE station_external_identifiers (
+    station_id          TEXT NOT NULL,
+    compilation_id      INTEGER NOT NULL,
+    station_external_id TEXT NOT NULL,
     PRIMARY KEY(station_id, compilation_id),
     FOREIGN KEY(station_id)     REFERENCES stations(station_id),
     FOREIGN KEY(compilation_id) REFERENCES compilations(compilation_id)
@@ -1154,10 +1154,10 @@ CREATE TABLE station_identifiers (
 # Point identifiers
 cursor.execute(
 """
-CREATE TABLE point_identifiers (
-    point_id       TEXT NOT NULL,
-    compilation_id INTEGER NOT NULL,
-    identifier     TEXT NOT NULL,
+CREATE TABLE point_external_identifiers (
+    point_id          TEXT NOT NULL,
+    compilation_id    INTEGER NOT NULL,
+    point_external_id TEXT NOT NULL,
     PRIMARY KEY(point_id, compilation_id),
     FOREIGN KEY(point_id)       REFERENCES points(point_id),
     FOREIGN KEY(compilation_id) REFERENCES compilations(compilation_id)

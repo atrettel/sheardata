@@ -569,7 +569,8 @@ def add_study( cursor, flow_class, year, study_number, study_type, \
     for compilation in identifiers:
         cursor.execute(
         """
-        INSERT INTO study_identifiers( study_id, compilation_id, identifier )
+        INSERT INTO study_external_identifiers( study_id, compilation_id,
+                                                study_external_id )
         VALUES( ?, ?, ? );
         """,
         (
@@ -761,7 +762,8 @@ def add_series( cursor, flow_class, year, study_number, series_number,  \
     for compilation in identifiers:
         cursor.execute(
         """
-        INSERT INTO series_identifiers( series_id, compilation_id, identifier )
+        INSERT INTO series_external_identifiers( series_id, compilation_id,
+                                                 series_external_id )
         VALUES( ?, ?, ? );
         """,
         (
@@ -938,7 +940,8 @@ def add_station( cursor, flow_class, year, study_number, series_number, \
     for compilation in identifiers:
         cursor.execute(
         """
-        INSERT INTO station_identifiers( station_id, compilation_id, identifier )
+        INSERT INTO station_external_identifiers( station_id, compilation_id,
+                                                  station_external_id )
         VALUES( ?, ?, ? );
         """,
         (
@@ -1137,7 +1140,8 @@ def add_point( cursor, flow_class, year, study_number, series_number,         \
     for compilation in identifiers:
         cursor.execute(
         """
-        INSERT INTO point_identifiers( point_id, compilation_id, identifier )
+        INSERT INTO point_external_identifiers( point_id, compilation_id,
+                                                point_external_id )
         VALUES( ?, ?, ? );
         """,
         (
