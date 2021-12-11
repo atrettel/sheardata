@@ -18,7 +18,7 @@ flow_class   = sd.FC_DUCT_FLOW
 year         = 1951
 study_number = 1
 
-study_identifier = sd.add_study(
+study_id = sd.add_study(
     cursor,
     flow_class_id=flow_class,
     year=year,
@@ -26,8 +26,8 @@ study_identifier = sd.add_study(
     study_type_id=sd.ST_EXPERIMENT,
 )
 
-sd.add_study_source( cursor, study_identifier, "SenecalVE+1951+eng+THES", sd.PRIMARY_SOURCE )
-sd.add_study_source( cursor, study_identifier, "SenecalVE+1953+eng+JOUR", sd.PRIMARY_SOURCE )
+sd.add_study_source( cursor, study_id, "SenecalVE+1951+eng+THES", sd.PRIMARY_SOURCE )
+sd.add_study_source( cursor, study_id, "SenecalVE+1953+eng+JOUR", sd.PRIMARY_SOURCE )
 
 conn.commit()
 conn.close()

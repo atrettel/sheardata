@@ -18,7 +18,7 @@ flow_class   = sd.FC_BOUNDARY_LAYER
 year         = 2011
 study_number = 1
 
-study_identifier = sd.add_study(
+study_id = sd.add_study(
     cursor,
     flow_class_id=flow_class,
     year=year,
@@ -26,7 +26,7 @@ study_identifier = sd.add_study(
     study_type_id=sd.ST_DIRECT_NUMERICAL_SIMULATION,
 )
 
-sd.add_study_source( cursor, study_identifier, "PirozzoliS+2011+eng+JOUR", sd.PRIMARY_SOURCE )
+sd.add_study_source( cursor, study_id, "PirozzoliS+2011+eng+JOUR", sd.PRIMARY_SOURCE )
 
 conn.commit()
 conn.close()

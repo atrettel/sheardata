@@ -18,7 +18,7 @@ flow_class   = sd.FC_BOUNDARY_LAYER
 year         = 1940
 study_number = 1
 
-study_identifier = sd.add_study(
+study_id = sd.add_study(
     cursor,
     flow_class_id=flow_class,
     year=year,
@@ -26,21 +26,21 @@ study_identifier = sd.add_study(
     study_type_id=sd.ST_EXPERIMENT,
 )
 
-sd.add_study_source( cursor, study_identifier, "SchultzGrunowF+1940+deu+JOUR", sd.PRIMARY_SOURCE )
+sd.add_study_source( cursor, study_id, "SchultzGrunowF+1940+deu+JOUR", sd.PRIMARY_SOURCE )
 
 reynolds_number_typo_note = sd.add_note(
     cursor,
-    "../data/{:s}/note_reynolds_number_typo.tex".format( study_identifier ),
+    "../data/{:s}/note_reynolds_number_typo.tex".format( study_id ),
 )
 
 station_1_outlier_note = sd.add_note(
     cursor,
-    "../data/{:s}/note_station_1_outlier.tex".format( study_identifier ),
+    "../data/{:s}/note_station_1_outlier.tex".format( study_id ),
 )
 
 velocity_measurement_technique_note = sd.add_note(
     cursor,
-    "../data/{:s}/note_velocity_measurement_technique.tex".format( study_identifier ),
+    "../data/{:s}/note_velocity_measurement_technique.tex".format( study_id ),
 )
 
 conn.commit()

@@ -18,7 +18,7 @@ flow_class   = sd.FC_BOUNDARY_LAYER
 year         = 1914
 study_number = 1
 
-study_identifier = sd.add_study(
+study_id = sd.add_study(
     cursor,
     flow_class_id=flow_class,
     year=year,
@@ -27,21 +27,21 @@ study_identifier = sd.add_study(
     study_external_ids={sd.C_CH_1969 : "1600"},
 )
 
-sd.add_study_source( cursor, study_identifier, "RiabouchinskyD+1914+fra+JOUR",   sd.PRIMARY_SOURCE )
-sd.add_study_source( cursor, study_identifier, "ColesDE+1969+eng+BOOK",        sd.SECONDARY_SOURCE )
+sd.add_study_source( cursor, study_id, "RiabouchinskyD+1914+fra+JOUR",   sd.PRIMARY_SOURCE )
+sd.add_study_source( cursor, study_id, "ColesDE+1969+eng+BOOK",        sd.SECONDARY_SOURCE )
 
 station_4_velocity_note = sd.add_note(
     cursor,
-    "../data/{:s}/note_station_4_velocity.tex".format( study_identifier ),
+    "../data/{:s}/note_station_4_velocity.tex".format( study_id ),
 )
 
 galilean_transformation_note = sd.add_note(
     cursor,
-    "../data/{:s}/note_galilean_transformation.tex".format( study_identifier ),
+    "../data/{:s}/note_galilean_transformation.tex".format( study_id ),
 )
 
 series_number = 1
-series_identifier = sd.add_series(
+series_id = sd.add_series(
     cursor,
     flow_class_id=flow_class,
     year=year,
@@ -54,15 +54,15 @@ series_identifier = sd.add_series(
 
 freestream_velocity = sd.sdfloat(16.0)
 
-sd.set_series_value( cursor, series_identifier, sd.Q_FREESTREAM_VELOCITY, freestream_velocity, )
+sd.set_series_value( cursor, series_id, sd.Q_FREESTREAM_VELOCITY, freestream_velocity, )
 
 sd.update_series_geometry(
     cursor,
-    series_identifier,
+    series_id,
     sd.GM_RECTANGULAR
 )
 
-globals_filename = "../data/{:s}/globals.csv".format( study_identifier )
+globals_filename = "../data/{:s}/globals.csv".format( study_id )
 with open( globals_filename, "r" ) as globals_file:
     globals_reader = csv.reader( globals_file, delimiter=",", quotechar='"', \
         skipinitialspace=True )
@@ -72,7 +72,7 @@ with open( globals_filename, "r" ) as globals_file:
         x              = sd.sdfloat(globals_row[1])
         z              = sd.sdfloat(0.0)
 
-        station_identifier = sd.add_station(
+        station_id = sd.add_station(
             cursor,
             flow_class_id=flow_class,
             year=year,
@@ -84,7 +84,7 @@ with open( globals_filename, "r" ) as globals_file:
         # Add in previous and next stations.
 
         station_filename = "../data/{:s}/station_{:d}.csv".format(
-            study_identifier,
+            study_id,
             station_number,
         )
 
@@ -102,7 +102,7 @@ with open( globals_filename, "r" ) as globals_file:
                 if ( point_number == 1 ):
                     point_label = sd.PL_WALL
 
-                point_identifier = sd.add_point(
+                point_id = sd.add_point(
                     cursor,
                     flow_class_id=flow_class,
                     year=year,
@@ -123,20 +123,20 @@ with open( globals_filename, "r" ) as globals_file:
                 if ( station_number == 4 and point_number == 10 ):
                     current_notes = [station_4_velocity_note]
 
-                sd.set_point_value( cursor, point_identifier, sd.Q_DISTANCE_FROM_WALL,     y, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_COORDINATE,  x, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_TRANSVERSE_COORDINATE,  y, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_SPANWISE_COORDINATE,    z, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    u,                    value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_PITOT_STATIC_TUBE], note_ids=current_notes, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_SPANWISE_VELOCITY,      w,                    value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_ASSUMPTION],                             )
-                sd.set_point_value( cursor, point_identifier, sd.Q_OUTER_LAYER_VELOCITY,   outer_layer_velocity, value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_PITOT_STATIC_TUBE],                      )
+                sd.set_point_value( cursor, point_id, sd.Q_DISTANCE_FROM_WALL,     y, )
+                sd.set_point_value( cursor, point_id, sd.Q_STREAMWISE_COORDINATE,  x, )
+                sd.set_point_value( cursor, point_id, sd.Q_TRANSVERSE_COORDINATE,  y, )
+                sd.set_point_value( cursor, point_id, sd.Q_SPANWISE_COORDINATE,    z, )
+                sd.set_point_value( cursor, point_id, sd.Q_STREAMWISE_VELOCITY,    u,                    value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_PITOT_STATIC_TUBE], note_ids=current_notes, )
+                sd.set_point_value( cursor, point_id, sd.Q_SPANWISE_VELOCITY,      w,                    value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_ASSUMPTION],                             )
+                sd.set_point_value( cursor, point_id, sd.Q_OUTER_LAYER_VELOCITY,   outer_layer_velocity, value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_PITOT_STATIC_TUBE],                      )
 
         for quantity in [ sd.Q_ROUGHNESS_HEIGHT,
                           sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
                           sd.Q_OUTER_LAYER_ROUGHNESS_HEIGHT, ]:
             sd.set_labeled_value(
                 cursor,
-                station_identifier,
+                station_id,
                 quantity,
                 sd.PL_WALL,
                 sd.sdfloat(0.0),

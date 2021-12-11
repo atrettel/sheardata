@@ -18,7 +18,7 @@ flow_class   = sd.FC_DUCT_FLOW
 year         = 1999
 study_number = 1
 
-study_identifier = sd.add_study(
+study_id = sd.add_study(
     cursor,
     flow_class_id=flow_class,
     year=year,
@@ -26,7 +26,7 @@ study_identifier = sd.add_study(
     study_type_id=sd.ST_DIRECT_NUMERICAL_SIMULATION,
 )
 
-sd.add_study_source( cursor, study_identifier, "MoserRD+1999+eng+JOUR", sd.PRIMARY_SOURCE )
+sd.add_study_source( cursor, study_id, "MoserRD+1999+eng+JOUR", sd.PRIMARY_SOURCE )
 
 # The primary difficulty with this data is that only the friction Reynolds
 # number is given.  The rest of the data is dimensionless profiles.  The trick

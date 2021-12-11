@@ -18,7 +18,7 @@ flow_class   = sd.FC_DUCT_FLOW
 year         = 1932
 study_number = 1
 
-study_identifier = sd.add_study(
+study_id = sd.add_study(
     cursor,
     flow_class_id=flow_class,
     year=year,
@@ -26,13 +26,13 @@ study_identifier = sd.add_study(
     study_type_id=sd.ST_EXPERIMENT,
 )
 
-sd.add_study_source( cursor, study_identifier, "NikuradseJ+1932+deu+JOUR",      sd.PRIMARY_SOURCE )
-sd.add_study_source( cursor, study_identifier, "NikuradseJ+1933+deu+JOUR",      sd.PRIMARY_SOURCE )
-sd.add_study_source( cursor, study_identifier, "RobertsonJM+1957+eng+CPAPER", sd.SECONDARY_SOURCE )
-sd.add_study_source( cursor, study_identifier, "LindgrenER+1965+eng+RPRT",    sd.SECONDARY_SOURCE )
-sd.add_study_source( cursor, study_identifier, "BeattieDRH+1995+eng+CPAPER",  sd.SECONDARY_SOURCE )
-sd.add_study_source( cursor, study_identifier, "HagerWH+2008+eng+JOUR",       sd.SECONDARY_SOURCE )
-sd.add_study_source( cursor, study_identifier, "LaVioletteM+2017+eng+JOUR",   sd.SECONDARY_SOURCE )
+sd.add_study_source( cursor, study_id, "NikuradseJ+1932+deu+JOUR",      sd.PRIMARY_SOURCE )
+sd.add_study_source( cursor, study_id, "NikuradseJ+1933+deu+JOUR",      sd.PRIMARY_SOURCE )
+sd.add_study_source( cursor, study_id, "RobertsonJM+1957+eng+CPAPER", sd.SECONDARY_SOURCE )
+sd.add_study_source( cursor, study_id, "LindgrenER+1965+eng+RPRT",    sd.SECONDARY_SOURCE )
+sd.add_study_source( cursor, study_id, "BeattieDRH+1995+eng+CPAPER",  sd.SECONDARY_SOURCE )
+sd.add_study_source( cursor, study_id, "HagerWH+2008+eng+JOUR",       sd.SECONDARY_SOURCE )
+sd.add_study_source( cursor, study_id, "LaVioletteM+2017+eng+JOUR",   sd.SECONDARY_SOURCE )
 
 conn.commit()
 conn.close()
