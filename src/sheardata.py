@@ -536,7 +536,7 @@ def truncate_to_station_id( identifier ):
     return sanitized_identifier[0:14]
 
 def add_study( cursor, flow_class_id, year, study_number, study_type_id,
-               outlier=False, notes=[], identifiers={}, ):
+               outlier=False, notes=[], study_external_ids={}, ):
     study_id = identify_study( flow_class_id, year, study_number )
     cursor.execute(
     """
@@ -566,17 +566,17 @@ def add_study( cursor, flow_class_id, year, study_number, study_type_id,
         )
         )
 
-    for compilation in identifiers:
+    for compilation_id in study_external_ids:
         cursor.execute(
         """
-        INSERT INTO study_external_identifiers( study_id, compilation_id,
-                                                study_external_id )
+        INSERT INTO study_external_ids( study_id, compilation_id,
+                                        study_external_id )
         VALUES( ?, ?, ? );
         """,
         (
             study_id,
-            int(compilation),
-            identifiers[compilation],
+            int(compilation_id),
+            study_external_ids[compilation_id],
         )
         )
 
@@ -720,7 +720,7 @@ def add_study_source( cursor, study_id, citation_key, classification ):
 
 def add_series( cursor, flow_class_id, year, study_number, series_number,  \
                 number_of_dimensions, coordinate_system_id, outlier=False, \
-                notes=[], identifiers={}, ):
+                notes=[], series_external_ids={}, ):
     series_id = identify_series(
         flow_class_id,
         year,
@@ -760,17 +760,17 @@ def add_series( cursor, flow_class_id, year, study_number, series_number,  \
         )
         )
 
-    for compilation in identifiers:
+    for compilation_id in series_external_ids:
         cursor.execute(
         """
-        INSERT INTO series_external_identifiers( series_id, compilation_id,
-                                                 series_external_id )
+        INSERT INTO series_external_ids( series_id, compilation_id,
+                                         series_external_id )
         VALUES( ?, ?, ? );
         """,
         (
             series_id,
-            int(compilation),
-            identifiers[compilation],
+            int(compilation_id),
+            series_external_ids[compilation_id],
         )
         )
 
@@ -894,7 +894,7 @@ def get_series_value( cursor, series_id, quantity_id,
     return fetch_float( cursor )
 
 def add_station( cursor, flow_class_id, year, study_number, series_number, \
-                station_number, outlier=False, notes=[], identifiers={}, ):
+                station_number, outlier=False, notes=[], station_external_ids={}, ):
     station_id = identify_station(
         flow_class_id,
         year,
@@ -940,17 +940,17 @@ def add_station( cursor, flow_class_id, year, study_number, series_number, \
         )
         )
 
-    for compilation in identifiers:
+    for compilation_id in station_external_ids:
         cursor.execute(
         """
-        INSERT INTO station_external_identifiers( station_id, compilation_id,
-                                                  station_external_id )
+        INSERT INTO station_external_ids( station_id, compilation_id,
+                                          station_external_id )
         VALUES( ?, ?, ? );
         """,
         (
             station_id,
-            int(compilation),
-            identifiers[compilation],
+            int(compilation_id),
+            station_external_ids[compilation_id],
         )
         )
 
@@ -1085,7 +1085,7 @@ def get_station_value( cursor, station_id, quantity_id,
 
 def add_point( cursor, flow_class_id, year, study_number, series_number,
                station_number, point_number, point_label_id=None,
-               outlier=False, notes=[], identifiers={}, ):
+               outlier=False, notes=[], point_external_ids={}, ):
     point_id = identify_point(
         flow_class_id,
         year,
@@ -1141,17 +1141,17 @@ def add_point( cursor, flow_class_id, year, study_number, series_number,
         )
         )
 
-    for compilation in identifiers:
+    for compilation_id in point_external_ids:
         cursor.execute(
         """
-        INSERT INTO point_external_identifiers( point_id, compilation_id,
-                                                point_external_id )
+        INSERT INTO point_external_ids( point_id, compilation_id,
+                                        point_external_id )
         VALUES( ?, ?, ? );
         """,
         (
             point_id,
-            int(compilation),
-            identifiers[compilation],
+            int(compilation_id),
+            point_external_ids[compilation_id],
         )
         )
 

@@ -1110,7 +1110,7 @@ for compilation_id in compilation_sources:
 # Study external identifiers
 cursor.execute(
 """
-CREATE TABLE study_external_identifiers (
+CREATE TABLE study_external_ids (
     study_id          TEXT NOT NULL,
     compilation_id    INTEGER NOT NULL,
     study_external_id TEXT NOT NULL,
@@ -1124,7 +1124,7 @@ CREATE TABLE study_external_identifiers (
 # Series external identifiers
 cursor.execute(
 """
-CREATE TABLE series_external_identifiers (
+CREATE TABLE series_external_ids (
     series_id          TEXT NOT NULL,
     compilation_id     INTEGER NOT NULL,
     series_external_id TEXT NOT NULL,
@@ -1138,7 +1138,7 @@ CREATE TABLE series_external_identifiers (
 # Station external identifiers
 cursor.execute(
 """
-CREATE TABLE station_external_identifiers (
+CREATE TABLE station_external_ids (
     station_id          TEXT NOT NULL,
     compilation_id      INTEGER NOT NULL,
     station_external_id TEXT NOT NULL,
@@ -1152,7 +1152,7 @@ CREATE TABLE station_external_identifiers (
 # Point external identifiers
 cursor.execute(
 """
-CREATE TABLE point_external_identifiers (
+CREATE TABLE point_external_ids (
     point_id          TEXT NOT NULL,
     compilation_id    INTEGER NOT NULL,
     point_external_id TEXT NOT NULL,

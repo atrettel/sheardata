@@ -192,7 +192,7 @@ for duct in ducts:
                     series_number=series_number,
                     number_of_dimensions=2,
                     coordinate_system_id=sd.CS_CYLINDRICAL,
-                    identifiers={ sd.C_SELF : originators_identifier },
+                    series_external_ids={ sd.C_SELF : originators_identifier },
                 )
 
                 sd.update_series_geometry(
@@ -209,7 +209,7 @@ for duct in ducts:
                     series_number=series_number,
                     number_of_dimensions=2,
                     coordinate_system_id=sd.CS_RECTANGULAR,
-                    identifiers={ sd.C_SELF : originators_identifier },
+                    series_external_ids={ sd.C_SELF : originators_identifier },
                 )
 
                 sd.update_series_geometry(
@@ -228,7 +228,7 @@ for duct in ducts:
                 study_number=study_number,
                 series_number=series_number,
                 station_number=station_number,
-                identifiers={ sd.C_SELF : originators_identifier },
+                station_external_ids={ sd.C_SELF : originators_identifier },
             )
 
             sd.mark_station_as_periodic( cursor, station_identifier )
