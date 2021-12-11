@@ -59,15 +59,15 @@ min_wall_to_center_line_temperature_ratio = 0.9
 max_wall_to_center_line_temperature_ratio = 1.1
 
 for duct_type in duct_types:
-    for quantity in [ sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO,
-                                      sd.Q_FANNING_FRICTION_FACTOR, ]:
+    for quantity_id in [ sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO,
+                         sd.Q_FANNING_FRICTION_FACTOR, ]:
         fig = plt.figure()
         ax  = fig.add_subplot( 1, 1, 1 )
 
         all_station_ids = []
 
         ax.set_xscale( "log", nonposx="clip" )
-        if ( quantity == sd.Q_FANNING_FRICTION_FACTOR ):
+        if ( quantity_id == sd.Q_FANNING_FRICTION_FACTOR ):
             ax.set_yscale( "log", nonposy="clip" )
 
         bulk_reynolds_number_bounds = None
@@ -75,7 +75,7 @@ for duct_type in duct_types:
         y_label        = None
         filename_label = None
         quantity_label = None
-        if ( quantity == sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO ):
+        if ( quantity_id == sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO ):
             bulk_reynolds_number_bounds = ( 1.00e+3, 1.00e+5, )
 
             quantity_values_bounds = ( 1.0, 2.0 )
@@ -85,7 +85,7 @@ for duct_type in duct_types:
             y_label        = r"$\frac{U_c}{U_b}$"
             filename_label = "velocity-ratios"
             quantity_label = "Center-line-to-bulk streamwise velocity ratio"
-        elif ( quantity == sd.Q_FANNING_FRICTION_FACTOR ):
+        elif ( quantity_id == sd.Q_FANNING_FRICTION_FACTOR ):
             bulk_reynolds_number_bounds = ( 1.00e+1, 1.00e+6, )
             quantity_values_bounds      = ( 1.00e-3, 1.00e-1, )
 
@@ -117,7 +117,7 @@ for duct_type in duct_types:
         )
 
         point_label_id = sd.PL_WALL
-        if ( quantity == sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO ):
+        if ( quantity_id == sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO ):
             point_label_id = sd.PL_CENTER_LINE
 
         for study_type_id in [ sd.ST_DIRECT_NUMERICAL_SIMULATION,
@@ -207,7 +207,7 @@ for duct_type in duct_types:
                 max_wall_to_center_line_temperature_ratio,
                 sd.Q_BULK_REYNOLDS_NUMBER,
                 point_label_id,
-                quantity,
+                quantity_id,
             )
             )
 
@@ -229,7 +229,7 @@ for duct_type in duct_types:
                 quantity_values_array.append( sd.get_labeled_value(
                     cursor,
                     station_id,
-                    quantity,
+                    quantity_id,
                     point_label_id,
                     value_type_id=sd.VT_UNWEIGHTED_AVERAGE,
                 ) )
@@ -250,7 +250,7 @@ for duct_type in duct_types:
                 marker=marker_type,
                 linestyle="",
                 elinewidth=gfx.error_bar_width,
-                clip_on=( quantity == sd.Q_FANNING_FRICTION_FACTOR ),
+                clip_on=( quantity_id == sd.Q_FANNING_FRICTION_FACTOR ),
                 zorder=study_order,
             )
 
