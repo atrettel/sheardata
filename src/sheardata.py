@@ -451,6 +451,19 @@ def fetch_float( cursor ):
     result = cursor.fetchone()
     return sdfloat( result[0], result[1] )
 
+def pick_any_average_value_type( value_type_ids ):
+    assert( len(value_type_ids) != 0 )
+    if ( len(value_type_ids) == 1 ):
+        return value_type_ids[0]
+    else:
+        # Prefer density-weighted averages over unweighted averages.
+        if ( VT_DENSITY_WEIGHTED_AVERAGE in value_type_ids ):
+            return VT_DENSITY_WEIGHTED_AVERAGE
+        elif ( VT_UNWEIGHTED_AVERAGE in value_type_ids ):
+            return VT_UNWEIGHTED_AVERAGE
+        else:
+            return value_type_ids[0]
+
 def identify_study( flow_class_id, year, study_number, readable=False ):
     separator = ""
     if ( readable ):
@@ -674,13 +687,13 @@ def set_study_value( cursor, study_id, quantity_id, value,
 
 def get_study_value( cursor, study_id, quantity_id,
                      value_type_id=VT_ANY_AVERAGE, meastech_set=1, ):
+    final_value_type_id = value_type_id
     if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
         """
-        SELECT study_value, study_uncertainty
+        SELECT value_type_id
         FROM study_values
-        WHERE study_id=? AND quantity_id=? AND meastech_set=?
-        LIMIT 1;
+        WHERE study_id=? AND quantity_id=? AND meastech_set=?;
         """,
         (
             sanitize_identifier(study_id),
@@ -688,20 +701,25 @@ def get_study_value( cursor, study_id, quantity_id,
             meastech_set,
         )
         )
-    else:
-        cursor.execute(
-        """
-        SELECT study_value, study_uncertainty
-        FROM study_values
-        WHERE study_id=? AND quantity_id=? AND value_type_id=? AND meastech_set=?;
-        """,
-        (
-            sanitize_identifier(study_id),
-            str(quantity_id),
-            value_type_id,
-            meastech_set,
-        )
-        )
+        results = cursor.fetchall()
+        value_type_ids = []
+        for result in results:
+            value_type_ids.append( str(result[0]) )
+        final_value_type_id = pick_any_average_value_type( value_type_ids )
+
+    cursor.execute(
+    """
+    SELECT study_value, study_uncertainty
+    FROM study_values
+    WHERE study_id=? AND quantity_id=? AND value_type_id=? AND meastech_set=?;
+    """,
+    (
+        sanitize_identifier(study_id),
+        str(quantity_id),
+        final_value_type_id,
+        meastech_set,
+    )
+    )
     return fetch_float( cursor )
 
 def add_study_source( cursor, study_id, citation_key, source_classification ):
@@ -861,13 +879,13 @@ def set_series_value( cursor, series_id, quantity_id, value,
 
 def get_series_value( cursor, series_id, quantity_id,
                       value_type_id=VT_ANY_AVERAGE, meastech_set=1, ):
+    final_value_type_id = value_type_id
     if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
         """
-        SELECT series_value, series_uncertainty
+        SELECT value_type_id
         FROM series_values
-        WHERE series_id=? AND quantity_id=? AND meastech_set=?
-        LIMIT 1;
+        WHERE series_id=? AND quantity_id=? AND meastech_set=?;
         """,
         (
             sanitize_identifier(series_id),
@@ -875,20 +893,25 @@ def get_series_value( cursor, series_id, quantity_id,
             meastech_set,
         )
         )
-    else:
-        cursor.execute(
-        """
-        SELECT series_value, series_uncertainty
-        FROM series_values
-        WHERE series_id=? AND quantity_id=? AND value_type_id=? AND meastech_set=?;
-        """,
-        (
-            sanitize_identifier(series_id),
-            str(quantity_id),
-            value_type_id,
-            meastech_set,
-        )
-        )
+        results = cursor.fetchall()
+        value_type_ids = []
+        for result in results:
+            value_type_ids.append( str(result[0]) )
+        final_value_type_id = pick_any_average_value_type( value_type_ids )
+
+    cursor.execute(
+    """
+    SELECT series_value, series_uncertainty
+    FROM series_values
+    WHERE series_id=? AND quantity_id=? AND value_type_id=? AND meastech_set=?;
+    """,
+    (
+        sanitize_identifier(series_id),
+        str(quantity_id),
+        final_value_type_id,
+        meastech_set,
+    )
+    )
     return fetch_float( cursor )
 
 def add_station( cursor, flow_class_id, year, study_number, series_number, \
@@ -1050,13 +1073,13 @@ def set_constant_profile( cursor, station_id, quantity_id, value,
 
 def get_station_value( cursor, station_id, quantity_id,
                        value_type_id=VT_ANY_AVERAGE, meastech_set=1, ):
+    final_value_type_id = value_type_id
     if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
         """
-        SELECT station_value, station_uncertainty
+        SELECT value_type_id
         FROM station_values
-        WHERE station_id=? AND quantity_id=? AND meastech_set=?
-        LIMIT 1;
+        WHERE station_id=? AND quantity_id=? AND meastech_set=?;
         """,
         (
             sanitize_identifier(station_id),
@@ -1064,20 +1087,25 @@ def get_station_value( cursor, station_id, quantity_id,
             meastech_set,
         )
         )
-    else:
-        cursor.execute(
-        """
-        SELECT station_value, station_uncertainty
-        FROM station_values
-        WHERE station_id=? AND quantity_id=? AND value_type_id=? AND meastech_set=?;
-        """,
-        (
-            sanitize_identifier(station_id),
-            str(quantity_id),
-            value_type_id,
-            meastech_set,
-        )
-        )
+        results = cursor.fetchall()
+        value_type_ids = []
+        for result in results:
+            value_type_ids.append( str(result[0]) )
+        final_value_type_id = pick_any_average_value_type( value_type_ids )
+
+    cursor.execute(
+    """
+    SELECT station_value, station_uncertainty
+    FROM station_values
+    WHERE station_id=? AND quantity_id=? AND value_type_id=? AND meastech_set=?;
+    """,
+    (
+        sanitize_identifier(station_id),
+        str(quantity_id),
+        final_value_type_id,
+        meastech_set,
+    )
+    )
     return fetch_float( cursor )
 
 def add_point( cursor, flow_class_id, year, study_number, series_number,
@@ -1213,13 +1241,13 @@ def set_point_value( cursor, point_id, quantity_id, value,
 
 def get_point_value( cursor, point_id, quantity_id,
                      value_type_id=VT_ANY_AVERAGE, meastech_set=1, ):
+    final_value_type_id = value_type_id
     if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
         """
-        SELECT point_value, point_uncertainty
+        SELECT value_type_id
         FROM point_values
-        WHERE point_id=? AND quantity_id=? AND meastech_set=?
-        LIMIT 1;
+        WHERE point_id=? AND quantity_id=? AND meastech_set=?;
         """,
         (
             sanitize_identifier(point_id),
@@ -1227,20 +1255,25 @@ def get_point_value( cursor, point_id, quantity_id,
             meastech_set,
         )
         )
-    else:
-        cursor.execute(
-        """
-        SELECT point_value, point_uncertainty
-        FROM point_values
-        WHERE point_id=? AND quantity_id=? AND value_type_id=? AND meastech_set=?;
-        """,
-        (
-            sanitize_identifier(point_id),
-            str(quantity_id),
-            value_type_id,
-            meastech_set,
-        )
-        )
+        results = cursor.fetchall()
+        value_type_ids = []
+        for result in results:
+            value_type_ids.append( str(result[0]) )
+        final_value_type_id = pick_any_average_value_type( value_type_ids )
+
+    cursor.execute(
+    """
+    SELECT point_value, point_uncertainty
+    FROM point_values
+    WHERE point_id=? AND quantity_id=? AND value_type_id=? AND meastech_set=?;
+    """,
+    (
+        sanitize_identifier(point_id),
+        str(quantity_id),
+        final_value_type_id,
+        meastech_set,
+    )
+    )
     return fetch_float( cursor )
 
 # TODO: Change this to getting intersecting profiles.  Allow for an arbitrary
