@@ -231,7 +231,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_COORDINATE,  sd.sdfloat(0.0),        )
             sd.set_point_value( cursor, point_identifier, sd.Q_TRANSVERSE_COORDINATE,  r_reversed[i],          )
             sd.set_point_value( cursor, point_identifier, sd.Q_SPANWISE_COORDINATE,    sd.sdfloat(0.0),        )
-            sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    u_reversed[i], value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[mt_velocity], notes=current_notes, )
+            sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    u_reversed[i], value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[mt_velocity], note_ids=current_notes, )
 
             for quantity in [ sd.Q_TRANSVERSE_VELOCITY,
                               sd.Q_SPANWISE_VELOCITY, ]:

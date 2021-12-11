@@ -49,7 +49,7 @@ series_identifier = sd.add_series(
     series_number=series_number,
     number_of_dimensions=2,
     coordinate_system_id=sd.CS_RECTANGULAR,
-    notes=[galilean_transformation_note,],
+    note_ids=[galilean_transformation_note,],
 )
 
 freestream_velocity = sd.sdfloat(16.0)
@@ -127,7 +127,7 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_COORDINATE,  x, )
                 sd.set_point_value( cursor, point_identifier, sd.Q_TRANSVERSE_COORDINATE,  y, )
                 sd.set_point_value( cursor, point_identifier, sd.Q_SPANWISE_COORDINATE,    z, )
-                sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    u,                    value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_PITOT_STATIC_TUBE], notes=current_notes, )
+                sd.set_point_value( cursor, point_identifier, sd.Q_STREAMWISE_VELOCITY,    u,                    value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_PITOT_STATIC_TUBE], note_ids=current_notes, )
                 sd.set_point_value( cursor, point_identifier, sd.Q_SPANWISE_VELOCITY,      w,                    value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_ASSUMPTION],                             )
                 sd.set_point_value( cursor, point_identifier, sd.Q_OUTER_LAYER_VELOCITY,   outer_layer_velocity, value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_PITOT_STATIC_TUBE],                      )
 

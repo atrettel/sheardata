@@ -176,7 +176,7 @@ with open( globals_filename, "r" ) as globals_file:
             number_of_dimensions=2,
             coordinate_system_id=sd.CS_RECTANGULAR,
             series_external_ids={ sd.C_SELF : originators_identifier },
-            notes=[series_11_note],
+            note_ids=[series_11_note],
         )
 
         # TODO: set liquid water as the working fluid.

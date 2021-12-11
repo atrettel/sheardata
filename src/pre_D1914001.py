@@ -239,8 +239,8 @@ with open( ratio_filename, "r" ) as ratio_file:
         sd.mark_station_as_periodic( cursor, station_identifier )
 
         sd.set_station_value( cursor, station_identifier, sd.Q_HYDRAULIC_DIAMETER,                 diameter,                                                                                               )
-        sd.set_station_value( cursor, station_identifier, sd.Q_DEVELOPMENT_LENGTH,                 development_length,               meastech_ids=[sd.MT_ASSUMPTION], notes=[development_length_note], )
-        sd.set_station_value( cursor, station_identifier, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,     outer_layer_development_length,   meastech_ids=[sd.MT_ASSUMPTION], notes=[development_length_note], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_DEVELOPMENT_LENGTH,                 development_length,               meastech_ids=[sd.MT_ASSUMPTION], note_ids=[development_length_note], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,     outer_layer_development_length,   meastech_ids=[sd.MT_ASSUMPTION], note_ids=[development_length_note], )
         sd.set_station_value( cursor, station_identifier, sd.Q_ASPECT_RATIO,                       1.0,                                                                                                    )
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                      bulk_velocity,                    value_type_id=sd.VT_BOTH_AVERAGES,                                             outlier=outlier, )
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_REYNOLDS_NUMBER,               Re_bulk,                          value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_CALCULATION], outlier=outlier, )
@@ -425,8 +425,8 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
 
         sd.mark_station_as_periodic( cursor, station_identifier )
 
-        sd.set_station_value( cursor, station_identifier, sd.Q_DEVELOPMENT_LENGTH,             development_length,             meastech_ids=[sd.MT_ASSUMPTION], notes=[development_length_note], )
-        sd.set_station_value( cursor, station_identifier, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH, outer_layer_development_length, meastech_ids=[sd.MT_ASSUMPTION], notes=[development_length_note], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_DEVELOPMENT_LENGTH,             development_length,             meastech_ids=[sd.MT_ASSUMPTION], note_ids=[development_length_note], )
+        sd.set_station_value( cursor, station_identifier, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH, outer_layer_development_length, meastech_ids=[sd.MT_ASSUMPTION], note_ids=[development_length_note], )
         sd.set_station_value( cursor, station_identifier, sd.Q_HYDRAULIC_DIAMETER,             diameter,                                                                                                     outlier=outlier, )
         sd.set_station_value( cursor, station_identifier, sd.Q_ASPECT_RATIO,                   1.0,                                                                                                          outlier=outlier, )
         sd.set_station_value( cursor, station_identifier, sd.Q_BULK_VELOCITY,                  bulk_velocity,        value_type_id=sd.VT_BOTH_AVERAGES,                                             outlier=outlier, )
@@ -474,7 +474,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
         # \end{quote}
         mt_wall_shear_stress = sd.MT_MOMENTUM_BALANCE
 
-        sd.set_labeled_value( cursor, station_identifier, sd.Q_MASS_DENSITY,                        sd.PL_WALL, mass_density,                      value_type_id=sd.VT_BOTH_AVERAGES,                                                                outlier=outlier, notes=current_notes, )
+        sd.set_labeled_value( cursor, station_identifier, sd.Q_MASS_DENSITY,                        sd.PL_WALL, mass_density,                      value_type_id=sd.VT_BOTH_AVERAGES,                                                                outlier=outlier, note_ids=current_notes, )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_DYNAMIC_VISCOSITY,                   sd.PL_WALL, dynamic_viscosity,                 value_type_id=sd.VT_BOTH_AVERAGES,                                                                outlier=outlier,                    )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_KINEMATIC_VISCOSITY,                 sd.PL_WALL, kinematic_viscosity,               value_type_id=sd.VT_BOTH_AVERAGES,                                                                outlier=outlier,                    )
         sd.set_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,                         sd.PL_WALL, temperature,                       value_type_id=sd.VT_BOTH_AVERAGES,                                                                outlier=outlier,                    )

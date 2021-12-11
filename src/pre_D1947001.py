@@ -310,7 +310,7 @@ for duct in ducts:
             # p. 129
             mt_wall_shear_stress = sd.MT_MOMENTUM_BALANCE
 
-            sd.set_labeled_value( cursor, station_identifier, sd.Q_MASS_DENSITY,                        sd.PL_WALL, mass_density,            value_type_id=sd.VT_BOTH_AVERAGES, notes=current_notes,                             )
+            sd.set_labeled_value( cursor, station_identifier, sd.Q_MASS_DENSITY,                        sd.PL_WALL, mass_density,            value_type_id=sd.VT_BOTH_AVERAGES, note_ids=current_notes,                             )
             sd.set_labeled_value( cursor, station_identifier, sd.Q_KINEMATIC_VISCOSITY,                 sd.PL_WALL, kinematic_viscosity,     value_type_id=sd.VT_BOTH_AVERAGES,                                                )
             sd.set_labeled_value( cursor, station_identifier, sd.Q_DYNAMIC_VISCOSITY,                   sd.PL_WALL, dynamic_viscosity,       value_type_id=sd.VT_BOTH_AVERAGES,                                                )
             sd.set_labeled_value( cursor, station_identifier, sd.Q_TEMPERATURE,                         sd.PL_WALL, temperature,             value_type_id=sd.VT_BOTH_AVERAGES,                                                )
