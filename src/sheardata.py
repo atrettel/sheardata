@@ -128,6 +128,8 @@ MT_WALL_SHEAR_STRESS_METHOD                 = "TWL"
 MT_WEIGHING_METHOD                          = "QWM"
 MT_ZEROTH_ORDER_APPROXIMATION               = "AP0"
 
+PRIMARY_MT_SET = 1
+
 # Point labels
 PL_CENTER_LINE = "CL"
 PL_EDGE        = "E"
@@ -630,7 +632,7 @@ def create_value_types_list( value_type_id ):
 
 def set_study_value( cursor, study_id, quantity_id, value,
                      value_type_id=VT_UNAVERAGED_VALUE,
-                     meastech_ids=[], meastech_set=1,
+                     meastech_ids=[], meastech_set=PRIMARY_MT_SET,
                      outlier=False, note_ids=[] ):
     study_value, study_uncertainty = split_float( value )
     for value_type_id in create_value_types_list( value_type_id ):
@@ -686,7 +688,8 @@ def set_study_value( cursor, study_id, quantity_id, value,
             )
 
 def get_study_value( cursor, study_id, quantity_id,
-                     value_type_id=VT_ANY_AVERAGE, meastech_set=1, ):
+                     value_type_id=VT_ANY_AVERAGE,
+                     meastech_set=PRIMARY_MT_SET, ):
     final_value_type_id = value_type_id
     if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
@@ -821,7 +824,7 @@ def update_series_description( cursor, series_id, series_description ):
 
 def set_series_value( cursor, series_id, quantity_id, value,
                       value_type_id=VT_UNAVERAGED_VALUE,
-                      meastech_ids=[], meastech_set=1,
+                      meastech_ids=[], meastech_set=PRIMARY_MT_SET,
                       outlier=False, note_ids=[] ):
     series_value, series_uncertainty = split_float( value )
     for value_type_id in create_value_types_list( value_type_id ):
@@ -878,7 +881,8 @@ def set_series_value( cursor, series_id, quantity_id, value,
             )
 
 def get_series_value( cursor, series_id, quantity_id,
-                      value_type_id=VT_ANY_AVERAGE, meastech_set=1, ):
+                      value_type_id=VT_ANY_AVERAGE,
+                      meastech_set=PRIMARY_MT_SET, ):
     final_value_type_id = value_type_id
     if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
@@ -979,7 +983,7 @@ def add_station( cursor, flow_class_id, year, study_number, series_number, \
 
 def set_station_value( cursor, station_id, quantity_id, value,
                        value_type_id=VT_UNAVERAGED_VALUE,
-                       meastech_ids=[], meastech_set=1,
+                       meastech_ids=[], meastech_set=PRIMARY_MT_SET,
                        outlier=False, note_ids=[] ):
     station_value, station_uncertainty = split_float( value )
     for value_type_id in create_value_types_list( value_type_id ):
@@ -1056,7 +1060,7 @@ def get_points_at_station( cursor, station_id ):
 
 def set_constant_profile( cursor, station_id, quantity_id, value,
                           value_type_id=VT_UNAVERAGED_VALUE,
-                          meastech_ids=[], meastech_set=1,
+                          meastech_ids=[], meastech_set=PRIMARY_MT_SET,
                           outlier=False, note_ids=[] ):
     for point_id in get_points_at_station( cursor, station_id ):
         set_point_value(
@@ -1072,7 +1076,8 @@ def set_constant_profile( cursor, station_id, quantity_id, value,
         )
 
 def get_station_value( cursor, station_id, quantity_id,
-                       value_type_id=VT_ANY_AVERAGE, meastech_set=1, ):
+                       value_type_id=VT_ANY_AVERAGE,
+                       meastech_set=PRIMARY_MT_SET, ):
     final_value_type_id = value_type_id
     if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
@@ -1184,7 +1189,7 @@ def add_point( cursor, flow_class_id, year, study_number, series_number,
 
 def set_point_value( cursor, point_id, quantity_id, value,
                      value_type_id=VT_UNAVERAGED_VALUE,
-                     meastech_ids=[], meastech_set=1,
+                     meastech_ids=[], meastech_set=PRIMARY_MT_SET,
                      outlier=False, note_ids=[] ):
     point_value, point_uncertainty = split_float( value )
     for value_type_id in create_value_types_list( value_type_id ):
@@ -1240,7 +1245,8 @@ def set_point_value( cursor, point_id, quantity_id, value,
             )
 
 def get_point_value( cursor, point_id, quantity_id,
-                     value_type_id=VT_ANY_AVERAGE, meastech_set=1, ):
+                     value_type_id=VT_ANY_AVERAGE,
+                     meastech_set=PRIMARY_MT_SET, ):
     final_value_type_id = value_type_id
     if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
@@ -1286,7 +1292,7 @@ def get_intersecting_profiles( cursor, station_id, quantity_ids,
 
     if ( len(meastech_sets) == 0 ):
         for i in range(len(quantity_ids)):
-            meastech_sets.append(1)
+            meastech_sets.append(PRIMARY_MT_SET)
 
     assert( len(quantity_ids) == len(value_type_ids) )
     assert( len(quantity_ids) == len(meastech_sets) )
@@ -1407,7 +1413,7 @@ def locate_labeled_point( cursor, station_id, point_label_id ):
 
 def set_labeled_value( cursor, station_id, quantity_id, point_label_id, value,
                        value_type_id=VT_UNAVERAGED_VALUE,
-                       meastech_ids=[], meastech_set=1,
+                       meastech_ids=[], meastech_set=PRIMARY_MT_SET,
                        outlier=False, note_ids=[] ):
     set_point_value(
         cursor,
@@ -1422,7 +1428,8 @@ def set_labeled_value( cursor, station_id, quantity_id, point_label_id, value,
     )
 
 def get_labeled_value( cursor, station_id, quantity_id, point_label_id,
-                       value_type_id=VT_ANY_AVERAGE, meastech_set=1, ):
+                       value_type_id=VT_ANY_AVERAGE,
+                       meastech_set=PRIMARY_MT_SET, ):
     return get_point_value(
         cursor,
         locate_labeled_point( cursor, station_id, point_label_id ),
