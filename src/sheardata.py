@@ -636,18 +636,18 @@ def set_study_value( cursor, study_id, quantity_id, value,
     for value_type_id in create_value_types_list( value_type_id ):
         cursor.execute(
         """
-        INSERT INTO study_values( study_id, quantity_id, study_value,
-                                  study_uncertainty, value_type_id,
-                                  meastech_set, outlier )
+        INSERT INTO study_values( study_id, quantity_id,
+                                  value_type_id, meastech_set,
+                                  study_value, study_uncertainty, outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ? );
         """,
         (
             sanitize_identifier(study_id),
             str(quantity_id),
-            study_value,
-            study_uncertainty,
             value_type_id,
             meastech_set,
+            study_value,
+            study_uncertainty,
             int(outlier),
         )
         )
@@ -827,18 +827,18 @@ def set_series_value( cursor, series_id, quantity_id, value,
     for value_type_id in create_value_types_list( value_type_id ):
         cursor.execute(
         """
-        INSERT INTO series_values( series_id, quantity_id, series_value,
-                                   series_uncertainty, value_type_id,
-                                   meastech_set, outlier )
+        INSERT INTO series_values( series_id, quantity_id,
+                                   value_type_id, meastech_set,
+                                   series_value, series_uncertainty, outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ? );
         """,
         (
             sanitize_identifier(series_id),
             str(quantity_id),
-            series_value,
-            series_uncertainty,
             value_type_id,
             meastech_set,
+            series_value,
+            series_uncertainty,
             int(outlier),
         )
         )
@@ -985,18 +985,18 @@ def set_station_value( cursor, station_id, quantity_id, value,
     for value_type_id in create_value_types_list( value_type_id ):
         cursor.execute(
         """
-        INSERT INTO station_values( station_id, quantity_id, station_value,
-                                    station_uncertainty, value_type_id,
-                                    meastech_set, outlier )
+        INSERT INTO station_values( station_id, quantity_id,
+                                    value_type_id, meastech_set,
+                                    station_value, station_uncertainty, outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ? );
         """,
         (
             sanitize_identifier(station_id),
             str(quantity_id),
-            station_value,
-            station_uncertainty,
             value_type_id,
             meastech_set,
+            station_value,
+            station_uncertainty,
             int(outlier),
         )
         )
@@ -1190,18 +1190,18 @@ def set_point_value( cursor, point_id, quantity_id, value,
     for value_type_id in create_value_types_list( value_type_id ):
         cursor.execute(
         """
-        INSERT INTO point_values( point_id, quantity_id, point_value,
-                                  point_uncertainty, value_type_id,
-                                  meastech_set, outlier )
+        INSERT INTO point_values( point_id, quantity_id,
+                                  value_type_id, meastech_set,
+                                  point_value, point_uncertainty, outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ? );
         """,
         (
             sanitize_identifier(point_id),
             str(quantity_id),
-            point_value,
-            point_uncertainty,
             value_type_id,
             meastech_set,
+            point_value,
+            point_uncertainty,
             int(outlier),
         )
         )
