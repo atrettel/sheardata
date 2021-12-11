@@ -1297,9 +1297,6 @@ def get_intersecting_profiles( cursor, station_id, quantity_ids,
         query_inputs.append( sanitize_identifier(station_id) )
     query_string += "ORDER BY point_id\n"
 
-    print( query_string )
-    print( query_inputs )
-
     cursor.execute( query_string, tuple(query_inputs), )
 
     results = cursor.fetchall()
@@ -1322,21 +1319,17 @@ def get_intersecting_profiles( cursor, station_id, quantity_ids,
         if ( point_label_id not in excluded_point_label_ids ):
             point_ids.append( result[0] )
 
-    profile1 = []
-    profile2 = []
-    for point_id in point_ids:
-        profile1.append( get_point_value(
-            cursor,
-            point_id,
-            quantity_ids[0],
-        ) )
-        profile2.append( get_point_value(
-            cursor,
-            point_id,
-            quantity_ids[1],
-        ) )
-
-    return np.array(profile1), np.array(profile2)
+    profiles = []
+    for i in range(len(quantity_ids)):
+        profile = []
+        for point_id in point_ids:
+            profile.append( get_point_value(
+                cursor,
+                point_id,
+                quantity_ids[i],
+            ) )
+        profiles.append( np.array(profile) )
+    return tuple(profiles)
 
 def sanitize_point_label( point_label_id ):
     sanitized_point_label_id = str(point_label_id)
