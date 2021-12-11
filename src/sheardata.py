@@ -1338,6 +1338,8 @@ def get_intersecting_profiles( cursor, station_id, quantity_ids,
                 cursor,
                 point_id,
                 quantity_ids[i],
+                value_type_id=(VT_ANY_AVERAGE if value_type_ids[i] == None else value_type_ids[i]),
+                meastech_set=meastech_sets[i],
             ) )
         profiles.append( np.array(profile) )
     return tuple(profiles)
