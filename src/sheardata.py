@@ -1279,124 +1279,28 @@ def get_point_value( cursor, point_id, quantity_id,
 def get_intersecting_profiles( cursor, station_id, quantity_ids,
                                value_type_ids=[None,None],
                                excluded_point_label_ids=[], ):
-    if ( value_type_ids[0] == None ):
-        if ( value_type_ids[1] == None ):
-            # Both value types are unspecified.
-            cursor.execute(
-            """
-            SELECT point_id
-            FROM point_values
-            WHERE quantity_id=? AND outlier=0 AND point_id IN (
-                SELECT point_id
-                FROM points
-                WHERE station_id=?
-            )
-            INTERSECT
-            SELECT point_id
-            FROM point_values
-            WHERE quantity_id=? AND outlier=0 AND point_id IN (
-                SELECT point_id
-                FROM points
-                WHERE station_id=?
-            )
-            ORDER BY point_id;
-            """,
-            (
-                str(quantity_ids[0]),
-                sanitize_identifier(station_id),
-                str(quantity_ids[1]),
-                sanitize_identifier(station_id),
-            )
-            )
-        else:
-            # Only the second value type is specified.
-            cursor.execute(
-            """
-            SELECT point_id
-            FROM point_values
-            WHERE quantity_id=? AND outlier=0 AND point_id IN (
-                SELECT point_id
-                FROM points
-                WHERE station_id=?
-            )
-            INTERSECT
-            SELECT point_id
-            FROM point_values
-            WHERE quantity_id=? AND value_type_id=? AND outlier=0 AND point_id IN (
-                SELECT point_id
-                FROM points
-                WHERE station_id=?
-            )
-            ORDER BY point_id;
-            """,
-            (
-                str(quantity_ids[0]),
-                sanitize_identifier(station_id),
-                str(quantity_ids[1]),
-                str(value_type_ids[1]),
-                sanitize_identifier(station_id),
-            )
-            )
-    else:
-        if ( value_type_ids[1] == None ):
-            # Only the first value type is specified.
-            cursor.execute(
-            """
-            SELECT point_id
-            FROM point_values
-            WHERE quantity_id=? AND value_type_id=? AND outlier=0 AND point_id IN (
-                SELECT point_id
-                FROM points
-                WHERE station_id=?
-            )
-            INTERSECT
-            SELECT point_id
-            FROM point_values
-            WHERE quantity_id=? AND outlier=0 AND point_id IN (
-                SELECT point_id
-                FROM points
-                WHERE station_id=?
-            )
-            ORDER BY point_id;
-            """,
-            (
-                str(quantity_ids[0]),
-                str(value_type_ids[0]),
-                sanitize_identifier(station_id),
-                str(quantity_ids[1]),
-                sanitize_identifier(station_id),
-            )
-            )
-        else:
-            # Both value types are specified.
-            cursor.execute(
-            """
-            SELECT point_id
-            FROM point_values
-            WHERE quantity_id=? AND value_type_id=? AND outlier=0 AND point_id IN (
-                SELECT point_id
-                FROM points
-                WHERE station_id=?
-            )
-            INTERSECT
-            SELECT point_id
-            FROM point_values
-            WHERE quantity_id=? AND value_type_id=? AND outlier=0 AND point_id IN (
-                SELECT point_id
-                FROM points
-                WHERE station_id=?
-            )
-            ORDER BY point_id;
-            """,
-            (
-                str(quantity_ids[0]),
-                str(value_type_ids[0]),
-                sanitize_identifier(station_id),
-                str(quantity_ids[1]),
-                str(value_type_ids[1]),
-                sanitize_identifier(station_id),
-            )
-            )
+    assert( len(quantity_ids) == len(value_type_ids) )
+
+    query_string = ""
+    query_inputs = []
+    for i in range(len(quantity_ids)):
+        if ( i > 0 ):
+            query_string += "INTERSECT\n"
+        query_string += "SELECT point_id\n"
+        query_string += "FROM point_values\n"
+        query_string += "WHERE quantity_id=? AND outlier=0"
+        query_inputs.append( str(quantity_ids[i]) )
+        if ( value_type_ids[i] != None ):
+            query_string += " AND value_type_id=?"
+            query_inputs.append( str(value_type_ids[i]) )
+        query_string += " AND point_id IN ( SELECT point_id FROM points WHERE station_id=? )\n"
+        query_inputs.append( sanitize_identifier(station_id) )
+    query_string += "ORDER BY point_id\n"
+
+    print( query_string )
+    print( query_inputs )
+
+    cursor.execute( query_string, tuple(query_inputs), )
 
     results = cursor.fetchall()
     point_ids = []
