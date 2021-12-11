@@ -1278,12 +1278,18 @@ def get_point_value( cursor, point_id, quantity_id,
 
 def get_intersecting_profiles( cursor, station_id, quantity_ids,
                                value_type_ids=[],
+                               meastech_sets=[],
                                excluded_point_label_ids=[], ):
     if ( len(value_type_ids) == 0 ):
         for i in range(len(quantity_ids)):
             value_type_ids.append(None)
 
+    if ( len(meastech_sets) == 0 ):
+        for i in range(len(quantity_ids)):
+            meastech_sets.append(1)
+
     assert( len(quantity_ids) == len(value_type_ids) )
+    assert( len(quantity_ids) == len(meastech_sets) )
 
     query_string = ""
     query_inputs = []
@@ -1292,8 +1298,9 @@ def get_intersecting_profiles( cursor, station_id, quantity_ids,
             query_string += "INTERSECT\n"
         query_string += "SELECT point_id\n"
         query_string += "FROM point_values\n"
-        query_string += "WHERE quantity_id=? AND outlier=0"
+        query_string += "WHERE quantity_id=? AND meastech_set=? AND outlier=0"
         query_inputs.append( str(quantity_ids[i]) )
+        query_inputs.append( str(meastech_sets[i]) )
         if ( value_type_ids[i] != None ):
             query_string += " AND value_type_id=?"
             query_inputs.append( str(value_type_ids[i]) )
