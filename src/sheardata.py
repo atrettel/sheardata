@@ -1277,8 +1277,12 @@ def get_point_value( cursor, point_id, quantity_id,
     return fetch_float( cursor )
 
 def get_intersecting_profiles( cursor, station_id, quantity_ids,
-                               value_type_ids=[None,None],
+                               value_type_ids=[],
                                excluded_point_label_ids=[], ):
+    if ( len(value_type_ids) == 0 ):
+        for i in range(len(quantity_ids)):
+            value_type_ids.append(None)
+
     assert( len(quantity_ids) == len(value_type_ids) )
 
     query_string = ""
