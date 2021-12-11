@@ -1392,12 +1392,11 @@ def locate_labeled_points( cursor, station_id, point_label_id ):
     """
     SELECT point_id
     FROM points
-    WHERE point_id
-    LIKE ? AND point_label_id=?
+    WHERE station_id=? AND point_label_id=?
     ORDER BY point_id;
     """,
     (
-        sanitize_identifier(station_id)+'%',
+        sanitize_identifier(station_id),
         str(point_label_id),
     )
     )
