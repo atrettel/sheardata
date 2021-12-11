@@ -131,13 +131,13 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.set_point_value( cursor, point_id, sd.Q_SPANWISE_VELOCITY,      w,                    value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_ASSUMPTION],                             )
                 sd.set_point_value( cursor, point_id, sd.Q_OUTER_LAYER_VELOCITY,   outer_layer_velocity, value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_PITOT_STATIC_TUBE],                      )
 
-        for quantity in [ sd.Q_ROUGHNESS_HEIGHT,
-                          sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
-                          sd.Q_OUTER_LAYER_ROUGHNESS_HEIGHT, ]:
+        for quantity_id in [ sd.Q_ROUGHNESS_HEIGHT,
+                             sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
+                             sd.Q_OUTER_LAYER_ROUGHNESS_HEIGHT, ]:
             sd.set_labeled_value(
                 cursor,
                 station_id,
-                quantity,
+                quantity_id,
                 sd.PL_WALL,
                 sd.sdfloat(0.0),
                 meastech_ids=[sd.MT_ASSUMPTION],

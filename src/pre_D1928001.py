@@ -230,13 +230,13 @@ with open( globals_filename, "r" ) as globals_file:
 
         # In general, the surface is not well-described in this study at all.
         # The data is consistent with a smooth surface, though.
-        for quantity in [ sd.Q_ROUGHNESS_HEIGHT,
-                          sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
-                          sd.Q_OUTER_LAYER_ROUGHNESS_HEIGHT, ]:
+        for quantity_id in [ sd.Q_ROUGHNESS_HEIGHT,
+                             sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
+                             sd.Q_OUTER_LAYER_ROUGHNESS_HEIGHT, ]:
             sd.set_labeled_value(
                 cursor,
                 station_id,
-                quantity,
+                quantity_id,
                 sd.PL_WALL,
                 sd.sdfloat(0.0),
                 meastech_ids=[sd.MT_ASSUMPTION],

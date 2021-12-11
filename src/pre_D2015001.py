@@ -258,17 +258,17 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.set_point_value( cursor, point_id, sd.Q_NORMALIZED_TEMPERATURE_AUTOCOVARIANCE,             normalized_temperature_autocovariance_dw,  value_type_id=sd.VT_DENSITY_WEIGHTED_AVERAGE, )
 
         bulk_quantities = {}
-        for quantity in [ sd.Q_MASS_DENSITY,
-                          sd.Q_DYNAMIC_VISCOSITY,
-                          sd.Q_SPEED_OF_SOUND, ]:
+        for quantity_id in [ sd.Q_MASS_DENSITY,
+                             sd.Q_DYNAMIC_VISCOSITY,
+                             sd.Q_SPEED_OF_SOUND, ]:
             outer_layer_coordinate_profile, quantity_profile = sd.get_twin_profiles(
                 cursor,
                 station_id,
                 sd.Q_DISTANCE_FROM_WALL,
-                quantity,
+                quantity_id,
                 value_type_id2=sd.VT_UNWEIGHTED_AVERAGE,
             )
-            bulk_quantities[quantity] = sd.integrate_using_trapezoid_rule( outer_layer_coordinate_profile, quantity_profile )
+            bulk_quantities[quantity_id] = sd.integrate_using_trapezoid_rule( outer_layer_coordinate_profile, quantity_profile )
 
         bulk_mass_density      = bulk_quantities[sd.Q_MASS_DENSITY]
         bulk_dynamic_viscosity = bulk_quantities[sd.Q_DYNAMIC_VISCOSITY]
@@ -288,13 +288,13 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value( cursor, station_id, sd.Q_BULK_REYNOLDS_NUMBER, bulk_reynolds_number, value_type_id=sd.VT_UNWEIGHTED_AVERAGE, meastech_ids=[sd.MT_CALCULATION], )
         sd.set_station_value( cursor, station_id, sd.Q_BULK_MACH_NUMBER,     bulk_mach_number,     value_type_id=sd.VT_UNWEIGHTED_AVERAGE, meastech_ids=[sd.MT_CALCULATION], )
 
-        for quantity in [ sd.Q_ROUGHNESS_HEIGHT,
-                          sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
-                          sd.Q_OUTER_LAYER_ROUGHNESS_HEIGHT, ]:
+        for quantity_id in [ sd.Q_ROUGHNESS_HEIGHT,
+                             sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
+                             sd.Q_OUTER_LAYER_ROUGHNESS_HEIGHT, ]:
             sd.set_labeled_value(
                 cursor,
                 station_id,
-                quantity,
+                quantity_id,
                 sd.PL_WALL,
                 sd.sdfloat( 0.0, 0.0 ),
             )
