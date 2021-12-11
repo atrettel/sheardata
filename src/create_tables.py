@@ -744,9 +744,9 @@ CREATE TABLE points (
 cursor.execute(
 """
 CREATE TABLE study_sources (
-    study_id       TEXT NOT NULL,
-    citation_key   TEXT NOT NULL,
-    classification INTEGER NOT NULL DEFAULT 1 CHECK ( classification = 1 OR classification = 2 ),
+    study_id              TEXT NOT NULL,
+    citation_key          TEXT NOT NULL,
+    source_classification INTEGER NOT NULL DEFAULT 1 CHECK ( source_classification = 1 OR source_classification = 2 ),
     PRIMARY KEY(study_id, citation_key),
     FOREIGN KEY(study_id) REFERENCES studies(study_id)
 );

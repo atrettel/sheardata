@@ -705,16 +705,16 @@ def get_study_value( cursor, study_id, quantity_id,
         )
     return fetch_float( cursor )
 
-def add_study_source( cursor, study_id, citation_key, classification ):
+def add_study_source( cursor, study_id, citation_key, source_classification ):
     cursor.execute(
     """
-    INSERT INTO study_sources( study_id, citation_key, classification )
+    INSERT INTO study_sources( study_id, citation_key, source_classification )
     VALUES( ?, ?, ? );
     """,
     (
         sanitize_identifier(study_id),
         str(citation_key),
-        int(classification),
+        int(source_classification),
     )
     )
 
