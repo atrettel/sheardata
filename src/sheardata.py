@@ -1276,14 +1276,11 @@ def get_point_value( cursor, point_id, quantity_id,
     )
     return fetch_float( cursor )
 
-# TODO: Change this to getting intersecting profiles.  Allow for an arbitrary
-# number of quantities, so that requests can be made for more than 2 profiles
-# at once.
-def get_twin_profiles( cursor, station_id, quantity_id1, quantity_id2,
-                       value_type_id1=None, value_type_id2=None,
-                       excluded_point_label_ids=[], ):
-    if ( value_type_id1 == None ):
-        if ( value_type_id2 == None ):
+def get_intersecting_profiles( cursor, station_id, quantity_ids,
+                               value_type_ids=[None,None],
+                               excluded_point_label_ids=[], ):
+    if ( value_type_ids[0] == None ):
+        if ( value_type_ids[1] == None ):
             # Both value types are unspecified.
             cursor.execute(
             """
@@ -1305,9 +1302,9 @@ def get_twin_profiles( cursor, station_id, quantity_id1, quantity_id2,
             ORDER BY point_id;
             """,
             (
-                str(quantity_id1),
+                str(quantity_ids[0]),
                 sanitize_identifier(station_id),
-                str(quantity_id2),
+                str(quantity_ids[1]),
                 sanitize_identifier(station_id),
             )
             )
@@ -1333,15 +1330,15 @@ def get_twin_profiles( cursor, station_id, quantity_id1, quantity_id2,
             ORDER BY point_id;
             """,
             (
-                str(quantity_id1),
+                str(quantity_ids[0]),
                 sanitize_identifier(station_id),
-                str(quantity_id2),
-                str(value_type_id2),
+                str(quantity_ids[1]),
+                str(value_type_ids[1]),
                 sanitize_identifier(station_id),
             )
             )
     else:
-        if ( value_type_id2 == None ):
+        if ( value_type_ids[1] == None ):
             # Only the first value type is specified.
             cursor.execute(
             """
@@ -1363,10 +1360,10 @@ def get_twin_profiles( cursor, station_id, quantity_id1, quantity_id2,
             ORDER BY point_id;
             """,
             (
-                str(quantity_id1),
-                str(value_type_id1),
+                str(quantity_ids[0]),
+                str(value_type_ids[0]),
                 sanitize_identifier(station_id),
-                str(quantity_id2),
+                str(quantity_ids[1]),
                 sanitize_identifier(station_id),
             )
             )
@@ -1392,11 +1389,11 @@ def get_twin_profiles( cursor, station_id, quantity_id1, quantity_id2,
             ORDER BY point_id;
             """,
             (
-                str(quantity_id1),
-                str(value_type_id1),
+                str(quantity_ids[0]),
+                str(value_type_ids[0]),
                 sanitize_identifier(station_id),
-                str(quantity_id2),
-                str(value_type_id2),
+                str(quantity_ids[1]),
+                str(value_type_ids[1]),
                 sanitize_identifier(station_id),
             )
             )
@@ -1427,12 +1424,12 @@ def get_twin_profiles( cursor, station_id, quantity_id1, quantity_id2,
         profile1.append( get_point_value(
             cursor,
             point_id,
-            quantity_id1,
+            quantity_ids[0],
         ) )
         profile2.append( get_point_value(
             cursor,
             point_id,
-            quantity_id2,
+            quantity_ids[1],
         ) )
 
     return np.array(profile1), np.array(profile2)

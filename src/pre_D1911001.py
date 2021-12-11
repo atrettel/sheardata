@@ -266,11 +266,13 @@ with open( globals_filename, "r" ) as globals_file:
                     meastech_ids=[sd.MT_ASSUMPTION],
                 )
 
-        r_prof, u_prof = sd.get_twin_profiles(
+        r_prof, u_prof = sd.get_intersecting_profiles(
             cursor,
             station_id,
-            sd.Q_TRANSVERSE_COORDINATE,
-            sd.Q_STREAMWISE_VELOCITY,
+            [
+                sd.Q_TRANSVERSE_COORDINATE,
+                sd.Q_STREAMWISE_VELOCITY,
+            ],
         )
 
         volumetric_flow_rate = -2.0 * math.pi * sd.integrate_using_trapezoid_rule( r_prof, u_prof * r_prof )

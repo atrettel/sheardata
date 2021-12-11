@@ -261,12 +261,14 @@ with open( globals_filename, "r" ) as globals_file:
         for quantity_id in [ sd.Q_MASS_DENSITY,
                              sd.Q_DYNAMIC_VISCOSITY,
                              sd.Q_SPEED_OF_SOUND, ]:
-            outer_layer_coordinate_profile, quantity_profile = sd.get_twin_profiles(
+            outer_layer_coordinate_profile, quantity_profile = sd.get_intersecting_profiles(
                 cursor,
                 station_id,
-                sd.Q_DISTANCE_FROM_WALL,
-                quantity_id,
-                value_type_id2=sd.VT_UNWEIGHTED_AVERAGE,
+                [
+                    sd.Q_DISTANCE_FROM_WALL,
+                    quantity_id,
+                ],
+                value_type_ids=[None,sd.VT_UNWEIGHTED_AVERAGE],
             )
             bulk_quantities[quantity_id] = sd.integrate_using_trapezoid_rule( outer_layer_coordinate_profile, quantity_profile )
 
