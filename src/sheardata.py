@@ -1260,18 +1260,26 @@ def get_twin_profiles( cursor, station_id, quantity_id1, quantity_id2,
             """
             SELECT point_id
             FROM point_values
-            WHERE point_id LIKE ? AND quantity_id=? AND outlier=0
+            WHERE quantity_id=? AND outlier=0 AND point_id IN (
+                SELECT point_id
+                FROM points
+                WHERE station_id=?
+            )
             INTERSECT
             SELECT point_id
             FROM point_values
-            WHERE point_id LIKE ? AND quantity_id=? AND outlier=0
+            WHERE quantity_id=? AND outlier=0 AND point_id IN (
+                SELECT point_id
+                FROM points
+                WHERE station_id=?
+            )
             ORDER BY point_id;
             """,
             (
-                sanitize_identifier(station_id)+'%',
                 str(quantity_id1),
-                sanitize_identifier(station_id)+'%',
+                sanitize_identifier(station_id),
                 str(quantity_id2),
+                sanitize_identifier(station_id),
             )
             )
         else:
@@ -1280,19 +1288,27 @@ def get_twin_profiles( cursor, station_id, quantity_id1, quantity_id2,
             """
             SELECT point_id
             FROM point_values
-            WHERE point_id LIKE ? AND quantity_id=? AND outlier=0
+            WHERE quantity_id=? AND outlier=0 AND point_id IN (
+                SELECT point_id
+                FROM points
+                WHERE station_id=?
+            )
             INTERSECT
             SELECT point_id
             FROM point_values
-            WHERE point_id LIKE ? AND quantity_id=? AND value_type_id=? AND outlier=0
+            WHERE quantity_id=? AND value_type_id=? AND outlier=0 AND point_id IN (
+                SELECT point_id
+                FROM points
+                WHERE station_id=?
+            )
             ORDER BY point_id;
             """,
             (
-                sanitize_identifier(station_id)+'%',
                 str(quantity_id1),
-                sanitize_identifier(station_id)+'%',
+                sanitize_identifier(station_id),
                 str(quantity_id2),
                 str(value_type_id2),
+                sanitize_identifier(station_id),
             )
             )
     else:
@@ -1302,19 +1318,27 @@ def get_twin_profiles( cursor, station_id, quantity_id1, quantity_id2,
             """
             SELECT point_id
             FROM point_values
-            WHERE point_id LIKE ? AND quantity_id=? AND value_type_id=? AND outlier=0
+            WHERE quantity_id=? AND value_type_id=? AND outlier=0 AND point_id IN (
+                SELECT point_id
+                FROM points
+                WHERE station_id=?
+            )
             INTERSECT
             SELECT point_id
             FROM point_values
-            WHERE point_id LIKE ? AND quantity_id=? AND outlier=0
+            WHERE quantity_id=? AND outlier=0 AND point_id IN (
+                SELECT point_id
+                FROM points
+                WHERE station_id=?
+            )
             ORDER BY point_id;
             """,
             (
-                sanitize_identifier(station_id)+'%',
                 str(quantity_id1),
                 str(value_type_id1),
-                sanitize_identifier(station_id)+'%',
+                sanitize_identifier(station_id),
                 str(quantity_id2),
+                sanitize_identifier(station_id),
             )
             )
         else:
@@ -1323,20 +1347,28 @@ def get_twin_profiles( cursor, station_id, quantity_id1, quantity_id2,
             """
             SELECT point_id
             FROM point_values
-            WHERE point_id LIKE ? AND quantity_id=? AND value_type_id=? AND outlier=0
+            WHERE quantity_id=? AND value_type_id=? AND outlier=0 AND point_id IN (
+                SELECT point_id
+                FROM points
+                WHERE station_id=?
+            )
             INTERSECT
             SELECT point_id
             FROM point_values
-            WHERE point_id LIKE ? AND quantity_id=? AND value_type_id=? AND outlier=0
+            WHERE quantity_id=? AND value_type_id=? AND outlier=0 AND point_id IN (
+                SELECT point_id
+                FROM points
+                WHERE station_id=?
+            )
             ORDER BY point_id;
             """,
             (
-                sanitize_identifier(station_id)+'%',
                 str(quantity_id1),
                 str(value_type_id1),
-                sanitize_identifier(station_id)+'%',
+                sanitize_identifier(station_id),
                 str(quantity_id2),
                 str(value_type_id2),
+                sanitize_identifier(station_id),
             )
             )
 
