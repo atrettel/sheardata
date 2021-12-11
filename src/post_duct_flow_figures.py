@@ -64,7 +64,7 @@ for duct_type in duct_types:
         fig = plt.figure()
         ax  = fig.add_subplot( 1, 1, 1 )
 
-        all_stations = []
+        all_station_ids = []
 
         ax.set_xscale( "log", nonposx="clip" )
         if ( quantity == sd.Q_FANNING_FRICTION_FACTOR ):
@@ -116,12 +116,12 @@ for duct_type in duct_types:
             y_label
         )
 
-        point_label = sd.PL_WALL
+        point_label_id = sd.PL_WALL
         if ( quantity == sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO ):
-            point_label = sd.PL_CENTER_LINE
+            point_label_id = sd.PL_CENTER_LINE
 
-        for study_type in [ sd.ST_DIRECT_NUMERICAL_SIMULATION,
-                                           sd.ST_EXPERIMENT, ]:
+        for study_type_id in [ sd.ST_DIRECT_NUMERICAL_SIMULATION,
+                               sd.ST_EXPERIMENT, ]:
             cursor.execute(
             """
             SELECT station_id
@@ -187,7 +187,7 @@ for duct_type in duct_types:
             """,
             (
                 sd.FC_DUCT_FLOW,
-                study_type,
+                study_type_id,
                 int(2),
                 duct_types[duct_type].coordinate_system,
                 duct_types[duct_type].geometry,
@@ -206,31 +206,31 @@ for duct_type in duct_types:
                 min_wall_to_center_line_temperature_ratio,
                 max_wall_to_center_line_temperature_ratio,
                 sd.Q_BULK_REYNOLDS_NUMBER,
-                point_label,
+                point_label_id,
                 quantity,
             )
             )
 
-            stations = []
+            station_ids = []
             for result in cursor.fetchall():
-                stations.append( str(result[0]) )
-                all_stations.append( str(result[0]) )
+                station_ids.append( str(result[0]) )
+                all_station_ids.append( str(result[0]) )
 
             bulk_reynolds_number_array = []
             quantity_values_array      = []
-            for station in stations:
+            for station_id in station_ids:
                 bulk_reynolds_number_array.append( sd.get_station_value(
                     cursor,
-                    station,
+                    station_id,
                     sd.Q_BULK_REYNOLDS_NUMBER,
                     value_type_id=sd.VT_UNWEIGHTED_AVERAGE,
                 ) )
 
                 quantity_values_array.append( sd.get_labeled_value(
                     cursor,
-                    station,
+                    station_id,
                     quantity,
-                    point_label,
+                    point_label_id,
                     value_type_id=sd.VT_UNWEIGHTED_AVERAGE,
                 ) )
 
@@ -239,7 +239,7 @@ for duct_type in duct_types:
 
             study_order = 2
             marker_type = "o"
-            if ( study_type == sd.ST_DIRECT_NUMERICAL_SIMULATION ):
+            if ( study_type_id == sd.ST_DIRECT_NUMERICAL_SIMULATION ):
                 marker_type = "d"
                 study_order = 3
 
@@ -277,25 +277,25 @@ for duct_type in duct_types:
             f.write( short_caption+"  " )
 
             f.write( "{:d} series in total".format(
-                len(all_stations),
+                len(all_station_ids),
             ) )
 
-            studies = sd.count_studies( all_stations )
+            study_counts = sd.count_studies( all_station_ids )
             i_study = 0
-            if ( len(studies) != 0 ):
+            if ( len(study_counts) != 0 ):
                 f.write( ": " )
-            for key in sorted(studies.items()):
-                study = str(key[0])
+            for key in sorted(study_counts.items()):
+                study_id = str(key[0])
                 f.write( r"\texttt{" )
                 f.write( "{:s}".format(
-                    sd.make_readable_identifier( study ),
+                    sd.make_readable_identifier( study_id ),
                 ) )
                 f.write( r"}" )
                 f.write( ", {:d} series".format(
-                    studies[study],
+                    study_counts[study_id],
                 ) )
                 i_study += 1
-                if ( i_study != len(studies) ):
+                if ( i_study != len(study_counts) ):
                     f.write( "; " )
 
             f.write( r".}" )
