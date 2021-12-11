@@ -693,8 +693,7 @@ def get_study_value( cursor, study_id, quantity_id,
         """
         SELECT study_value, study_uncertainty
         FROM study_values
-        WHERE study_id=? AND quantity_id=? AND value_type_id=? AND meastech_set=?
-        LIMIT 1;
+        WHERE study_id=? AND quantity_id=? AND value_type_id=? AND meastech_set=?;
         """,
         (
             sanitize_identifier(study_id),
@@ -881,8 +880,7 @@ def get_series_value( cursor, series_id, quantity_id,
         """
         SELECT series_value, series_uncertainty
         FROM series_values
-        WHERE series_id=? AND quantity_id=? AND value_type_id=? AND meastech_set=?
-        LIMIT 1;
+        WHERE series_id=? AND quantity_id=? AND value_type_id=? AND meastech_set=?;
         """,
         (
             sanitize_identifier(series_id),
@@ -1071,8 +1069,7 @@ def get_station_value( cursor, station_id, quantity_id,
         """
         SELECT station_value, station_uncertainty
         FROM station_values
-        WHERE station_id=? AND quantity_id=? AND value_type_id=? AND meastech_set=?
-        LIMIT 1;
+        WHERE station_id=? AND quantity_id=? AND value_type_id=? AND meastech_set=?;
         """,
         (
             sanitize_identifier(station_id),
@@ -1235,8 +1232,7 @@ def get_point_value( cursor, point_id, quantity_id,
         """
         SELECT point_value, point_uncertainty
         FROM point_values
-        WHERE point_id=? AND quantity_id=? AND value_type_id=? AND meastech_set=?
-        LIMIT 1;
+        WHERE point_id=? AND quantity_id=? AND value_type_id=? AND meastech_set=?;
         """,
         (
             sanitize_identifier(point_id),
