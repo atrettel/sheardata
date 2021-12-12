@@ -13,7 +13,8 @@ Goals
       other combinations).  For example, consider the following SQL command:
       `SELECT value FROM point_values WHERE identifier LIKE 'D9999002%';`.
       This selects all values for the points that have a particular profile
-      identifier.
+      identifier.  However, I should also include additional columns for each
+      higher category for additional clarity.
 
 - Use the `uncertainties` package to handle uncertainties.  The uncertainties
   will be standard uncertainties (standard deviations of the distribution of
@@ -46,8 +47,7 @@ Goals
 
     - Specifying the measurement techniques allows for all assumptions
       underlying that data to be specified as well for each record in the
-      database.  Calculated parameters can be noted as either exact or
-      approximate, for example, and the method of calculation can be specified.
+      database.
 
 - Use assertions and other checks on the data.
 
@@ -58,109 +58,6 @@ Goals
   include additional fields for the people involved, the facilities involved,
   the organizations involved, locations of any experiments, and any contract
   numbers.
-
-- Note that for duct flows that are fully-developed, it could be possible to
-  note this by specifying that both the previous and next stations are the
-  current station.  That signifies that the flow is not developing.  Then
-  derivatives in the streamwise direction will always be zero automatically.
-
-
-Tables
-------
-
-- `studies`
-
-    - study identifier
-
-    - flow class
-
-    - year
-
-    - study number
-
-    - study type (experimental or numerical)
-
-    - description
-
-    - provenance (chain of custody for data)
-
-        - A description of how the data ended up in the collection.  Was the
-          data extracted graphically and from what references?  Was the data
-          published in tabulated form?  Was the data sent through private
-          correspondence?  Has the transmission of the data altered it in any
-          way?
-
-        - <https://en.wikipedia.org/wiki/Provenance#Data_provenance>
-
-        - <https://en.wikipedia.org/wiki/Data_lineage>
-
-    - primary reference
-
-    - additional references
-
-        - These references (and the primary reference) should all be
-          primary sources.
-
-    - notes
-
-- `series`
-
-    - series identifier
-
-    - series number
-
-    - number of dimensions (2 or 3)
-
-    - coordinate system
-
-    - working fluid
-
-    - geometry
-
-    - number of sides
-
-    - description
-
-    - notes
-
-- `profiles`
-
-    - profile identifier
-
-    - profile number
-
-    - originator's identifier
-
-    - regime
-
-        - Laminar, transitional, turbulent.  This might involve a "judgment
-          call", but it is necessary to sort through data.
-
-    - previous streamwise station
-
-    - next streamwise station
-
-    - previous spanwise station
-
-    - next spanwise station
-
-    - outlier
-
-    - description
-
-    - notes
-
-- `points`
-
-    - point identifier
-
-    - point number
-
-    - label
-
-    - outlier
-
-    - notes
 
 
 -------------------------------------------------------------------------------
