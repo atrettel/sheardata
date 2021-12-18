@@ -78,6 +78,8 @@ distributed with the reports, not as printed tables.
 
     - [WorldCat](https://www.worldcat.org/title/computation-of-turbulent-boundary-layers-1968-afosr-ifp-stanford-conference-proceedings/oclc/561999041)
 
+    - [Library of Congress](https://lccn.loc.gov/68058871)
+
     - This compilation is unavailable online.
 
 - Zwarts, F. J. 1970, "The compressible turbulent boundary layer in a pressure
@@ -104,8 +106,11 @@ distributed with the reports, not as printed tables.
 
     - [NASA](https://ntrs.nasa.gov/search.jsp?R=19730018486)
 
+    - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/N7327213.xhtml)
+
 - Fernholz, H. H. and Finley, P. J. 1977.  *A Critical Compilation of
-  Compressible Turbulent Boundary Layer Data*.  AGARD-AG-223.
+  Compressible Turbulent Boundary Layer Data*.  AGARD-AG-223.  ISBN
+  92-835-1245-6.
 
     - [DTIC](https://apps.dtic.mil/sti/citations/ADA045367)
 
@@ -114,7 +119,7 @@ distributed with the reports, not as printed tables.
     - [NTIS](https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA045367.xhtml)
 
 - AGARD Fluid Dynamics Panel Working Group 4 (1979), *Experimental Data Base
-  for Computer Program Assessment*, AGARD-AR-138.
+  for Computer Program Assessment*, AGARD-AR-138.  ISBN 92-835-1323-1.
 
     - [DTIC](https://apps.dtic.mil/sti/citations/ADA073982)
 
@@ -124,7 +129,7 @@ distributed with the reports, not as printed tables.
 
 - Fernholz, H. H. and Finley, P. J. 1980.  *A Critical Commentary on Mean Flow
   Data for Two-Dimensional Compressible Turbulent Boundary Layers*.
-  AGARD-AG-253.
+  AGARD-AG-253.  ISBN 92-835-1362-2.
 
     - [DTIC](https://apps.dtic.mil/sti/citations/ADA087704)
 
@@ -143,7 +148,7 @@ distributed with the reports, not as printed tables.
 
 - Fernholz, H. H. and Finley, P. J. and Mikulla, V. 1981.  *A Further
   Compilation of Compressible Boundary Layer Data with a Survey of Turbulence
-  Data*.  AGARD-AG-263.
+  Data*.  AGARD-AG-263.  ISBN 92-835-1404-1.
 
     - [DTIC](https://apps.dtic.mil/sti/citations/ADA111638)
 
@@ -152,7 +157,8 @@ distributed with the reports, not as printed tables.
     - [NATO](https://www.sto.nato.int/publications/AGARD/Forms/AGARD%20Document%20Set/docsethomepage.aspx?ID=9062&FolderCTID=0x0120D5200078F9E87043356C409A0D30823AFA16F60B00B8BCE98BB37EB24A8258823D6B11F157&List=03e8ea21-64e6-4d37-8235-04fb61e122e9&RootFolder=%2Fpublications%2FAGARD%2FAGARD%2DAG%2D263)
 
 - AGARD Fluid Dynamics Panel Working Group 4 (1984), *Experimental Data Base
-  for Computer Program Assessment.  Addendum*, AGARD-AR-138-ADDENDUM.
+  for Computer Program Assessment.  Addendum*, AGARD-AR-138-ADDENDUM.  ISBN
+  92-835-1475-0.
 
     - [DTIC](https://apps.dtic.mil/sti/citations/ADA147197)
 
@@ -160,7 +166,7 @@ distributed with the reports, not as printed tables.
 
 - Fernholz, H. H. and Finley, P. J. and Dussauge, J. P. and Smits, A. J. 1989.
   *Survey of Measurements and Measuring Techniques in Rapidly Distorted
-  Compressible Turbulent Boundary Layers*.  AGARD-AG-315.
+  Compressible Turbulent Boundary Layers*.  AGARD-AG-315.  ISBN 92-835-0506-9.
 
     - [DTIC](https://apps.dtic.mil/sti/citations/ADA211107)
 
@@ -188,7 +194,8 @@ distributed with the reports, not as printed tables.
     - [Internet Archive](https://archive.org/details/nasa_techdoc_19940032012)
 
 - AGARD Fluid Dynamics Panel Working Group 4 (1994), *A selection of
-  experimental test cases for the validation of CFD codes*, AGARD-AR-303.
+  experimental test cases for the validation of CFD codes*, AGARD-AR-303.  ISBN
+  92-836-1002-4 (volume 1) and ISBN 92-836-1003-2 (volume 2).
 
     - [DTIC, volume 1](https://apps.dtic.mil/sti/citations/ADA286061)
 
@@ -203,7 +210,7 @@ distributed with the reports, not as printed tables.
 
 - AGARD Fluid Dynamics Panel Working Group 21 (1998), *A selection of test
   cases for the validation of large-eddy simulations of turbulent flows*,
-  AGARD-AR-345.
+  AGARD-AR-345.  ISBN 92-836-1072-5.
 
     - [AGARD-AR-345 database](https://torroja.dmt.upm.es/turbdata/agard/)
 
