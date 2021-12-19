@@ -455,7 +455,7 @@ quantities[ sd.Q_VOLUMETRIC_FLOW_RATE           ] = quantity( "volumetric flow r
 
 # Quantities, station
 quantities[ sd.Q_ASPECT_RATIO                           ] = quantity( "aspect ratio",                                                                                           )
-quantities[ sd.Q_BULK_DYNAMIC_VISCOSITY                 ] = quantity( "bulk_dynamic viscosity",                 mass_exponent=+1.0,   length_exponent=-1.0, time_exponent=-1.0, )
+quantities[ sd.Q_BULK_DYNAMIC_VISCOSITY                 ] = quantity( "bulk dynamic viscosity",                 mass_exponent=+1.0,   length_exponent=-1.0, time_exponent=-1.0, )
 quantities[ sd.Q_BULK_KINEMATIC_VISCOSITY               ] = quantity( "bulk kinematic viscosity",               length_exponent=+2.0,   time_exponent=-1.0,                     )
 quantities[ sd.Q_BULK_MACH_NUMBER                       ] = quantity( "bulk Mach number",                                                                                       )
 quantities[ sd.Q_BULK_MASS_DENSITY                      ] = quantity( "bulk mass density",                      mass_exponent=+1.0,   length_exponent=-3.0,                     )
