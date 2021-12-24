@@ -1579,3 +1579,19 @@ def add_note( cursor, filename ):
     """
     )
     return int(cursor.fetchone()[0])
+
+def quantity_name( cursor, quantity_id ):
+    cursor.execute(
+    """
+    SELECT quantity_name
+    FROM quantities
+    WHERE quantity_id=?;
+    """,
+    ( quantity_id, ),
+    )
+
+    return str(cursor.fetchone()[0])
+
+def quantity_camel_case_name( cursor, quantity_id ):
+    name = quantity_name( cursor, quantity_id )
+    return name.replace("-"," ").title().replace(" ","")

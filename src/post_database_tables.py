@@ -66,16 +66,19 @@ with open( "list-quantities.tex.tmp", "w" ) as f:
 
     cursor.execute(
     """
-    SELECT quantity_id, quantity_name
+    SELECT quantity_id
     FROM quantities
     ORDER BY quantity_id COLLATE NOCASE;
     """
     )
     for result in cursor.fetchall():
+        quantity_id = str(result[0])
+        quantity_name = sd.quantity_name( cursor, quantity_id )
+
         line = r"\item \texttt{"+"{:s}".format(
-            str(result[0]),
+            quantity_id
         )+r"}"+" --- {:s}".format(
-            str(result[1]),
+            quantity_name,
         )+"\n"
         f.write( line.replace( "_", r"\_" ).replace( "^", r"\string^" ) )
 
