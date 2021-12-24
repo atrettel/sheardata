@@ -393,7 +393,6 @@ cursor.execute(
 CREATE TABLE quantities (
     quantity_id               TEXT PRIMARY KEY UNIQUE,
     quantity_name             TEXT NOT NULL UNIQUE,
-    quantity_camel_case_name  TEXT NOT NULL UNIQUE,
     quantity_latex_symbol     TEXT NOT NULL,
     quantity_latex_definition TEXT NOT NULL,
     length_exponent           REAL NOT NULL DEFAULT 0.0,
@@ -411,9 +410,6 @@ class quantity:
     time_exponent        = None
     temperature_exponent = None
     amount_exponent      = None
-
-    def camel_case_name( self ):
-        return self.name.replace("-"," ").title().replace(" ","")
 
     def __init__( self, name, length_exponent=0.0, mass_exponent=0.0, \
                   time_exponent=0.0, temperature_exponent=0.0,        \
@@ -621,16 +617,14 @@ for quantity_id in quantities:
     cursor.execute(
     """
     INSERT INTO quantities( quantity_id, quantity_name,
-                            quantity_camel_case_name, quantity_latex_symbol,
-                            quantity_latex_definition,
+                            quantity_latex_symbol, quantity_latex_definition,
                             length_exponent, mass_exponent,
                             time_exponent, temperature_exponent )
-    VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ? );
+    VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
     """,
     (
         quantity_id,
         quantities[quantity_id].name,
-        quantities[quantity_id].camel_case_name(),
         "",
         "",
         quantities[quantity_id].length_exponent,
