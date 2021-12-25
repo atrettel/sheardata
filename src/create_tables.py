@@ -406,16 +406,21 @@ CREATE TABLE quantities (
 
 class Quantity:
     name                 = None
+    latex_symbol         = None
+    latex_definition     = None
     length_exponent      = None
     mass_exponent        = None
     time_exponent        = None
     temperature_exponent = None
     amount_exponent      = None
 
-    def __init__( self, name, length_exponent=0.0, mass_exponent=0.0, \
-                  time_exponent=0.0, temperature_exponent=0.0,        \
+    def __init__( self, name,
+                  length_exponent=0.0, mass_exponent=0.0,
+                  time_exponent=0.0, temperature_exponent=0.0,
                   amount_exponent=0.0, ):
         self.name                 = str(name)
+        self.latex_symbol         = ""
+        self.latex_definition     = ""
         self.length_exponent      = length_exponent
         self.mass_exponent        = mass_exponent
         self.time_exponent        = time_exponent
@@ -627,8 +632,8 @@ for quantity_id in quantities:
     (
         quantity_id,
         quantities[quantity_id].name,
-        "",
-        "",
+        quantities[quantity_id].latex_symbol,
+        quantities[quantity_id].latex_definition,
         quantities[quantity_id].length_exponent,
         quantities[quantity_id].mass_exponent,
         quantities[quantity_id].time_exponent,
