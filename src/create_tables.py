@@ -73,7 +73,7 @@ CREATE TABLE flow_classes (
 """
 )
 
-class flow_class:
+class FlowClass:
     name   = None
     parent = None
 
@@ -85,22 +85,22 @@ class flow_class:
         self.parent = parent
 
 flow_classes = {}
-flow_classes[ sd.FC_BOUNDARY_LAYER       ] = flow_class( "boundary layer",            sd.FC_EXTERNAL_FLOW )
-flow_classes[ sd.FC_DUCT_FLOW            ] = flow_class( "duct flow",                 sd.FC_INTERNAL_FLOW )
-flow_classes[ sd.FC_EXTERNAL_FLOW        ] = flow_class( "external flow",         sd.FC_WALL_BOUNDED_FLOW )
-flow_classes[ sd.FC_FREE_JET             ] = flow_class( "free jet",                sd.FC_FREE_SHEAR_FLOW )
-flow_classes[ sd.FC_FREE_SHEAR_FLOW      ] = flow_class( "free shear flow",              sd.FC_SHEAR_FLOW )
-flow_classes[ sd.FC_HOMOGENEOUS_FLOW     ] = flow_class( "homogeneous flow",      sd.FC_UNCLASSIFIED_FLOW )
-flow_classes[ sd.FC_INHOMOGENEOUS_FLOW   ] = flow_class( "inhomogeneous flow",    sd.FC_UNCLASSIFIED_FLOW )
-flow_classes[ sd.FC_INTERNAL_FLOW        ] = flow_class( "internal flow",         sd.FC_WALL_BOUNDED_FLOW )
-flow_classes[ sd.FC_ISOTROPIC_FLOW       ] = flow_class( "isotropic flow",         sd.FC_HOMOGENEOUS_FLOW )
-flow_classes[ sd.FC_MIXING_LAYER         ] = flow_class( "mixing layer",            sd.FC_FREE_SHEAR_FLOW )
-flow_classes[ sd.FC_BOUNDARY_DRIVEN_FLOW ] = flow_class( "boundary-driven flow",      sd.FC_INTERNAL_FLOW )
-flow_classes[ sd.FC_SHEAR_FLOW           ] = flow_class( "shear flow",           sd.FC_INHOMOGENEOUS_FLOW )
-flow_classes[ sd.FC_UNCLASSIFIED_FLOW    ] = flow_class( "flow",                                     None )
-flow_classes[ sd.FC_WAKE                 ] = flow_class( "wake",                    sd.FC_FREE_SHEAR_FLOW )
-flow_classes[ sd.FC_WALL_BOUNDED_FLOW    ] = flow_class( "wall-bounded flow",            sd.FC_SHEAR_FLOW )
-flow_classes[ sd.FC_WALL_JET             ] = flow_class( "wall jet",                  sd.FC_EXTERNAL_FLOW )
+flow_classes[ sd.FC_BOUNDARY_LAYER       ] = FlowClass( "boundary layer",            sd.FC_EXTERNAL_FLOW )
+flow_classes[ sd.FC_DUCT_FLOW            ] = FlowClass( "duct flow",                 sd.FC_INTERNAL_FLOW )
+flow_classes[ sd.FC_EXTERNAL_FLOW        ] = FlowClass( "external flow",         sd.FC_WALL_BOUNDED_FLOW )
+flow_classes[ sd.FC_FREE_JET             ] = FlowClass( "free jet",                sd.FC_FREE_SHEAR_FLOW )
+flow_classes[ sd.FC_FREE_SHEAR_FLOW      ] = FlowClass( "free shear flow",              sd.FC_SHEAR_FLOW )
+flow_classes[ sd.FC_HOMOGENEOUS_FLOW     ] = FlowClass( "homogeneous flow",      sd.FC_UNCLASSIFIED_FLOW )
+flow_classes[ sd.FC_INHOMOGENEOUS_FLOW   ] = FlowClass( "inhomogeneous flow",    sd.FC_UNCLASSIFIED_FLOW )
+flow_classes[ sd.FC_INTERNAL_FLOW        ] = FlowClass( "internal flow",         sd.FC_WALL_BOUNDED_FLOW )
+flow_classes[ sd.FC_ISOTROPIC_FLOW       ] = FlowClass( "isotropic flow",         sd.FC_HOMOGENEOUS_FLOW )
+flow_classes[ sd.FC_MIXING_LAYER         ] = FlowClass( "mixing layer",            sd.FC_FREE_SHEAR_FLOW )
+flow_classes[ sd.FC_BOUNDARY_DRIVEN_FLOW ] = FlowClass( "boundary-driven flow",      sd.FC_INTERNAL_FLOW )
+flow_classes[ sd.FC_SHEAR_FLOW           ] = FlowClass( "shear flow",           sd.FC_INHOMOGENEOUS_FLOW )
+flow_classes[ sd.FC_UNCLASSIFIED_FLOW    ] = FlowClass( "flow",                                     None )
+flow_classes[ sd.FC_WAKE                 ] = FlowClass( "wake",                    sd.FC_FREE_SHEAR_FLOW )
+flow_classes[ sd.FC_WALL_BOUNDED_FLOW    ] = FlowClass( "wall-bounded flow",            sd.FC_SHEAR_FLOW )
+flow_classes[ sd.FC_WALL_JET             ] = FlowClass( "wall jet",                  sd.FC_EXTERNAL_FLOW )
 
 for flow_class_id in flow_classes:
     cursor.execute(
