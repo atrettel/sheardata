@@ -398,7 +398,8 @@ CREATE TABLE quantities (
     length_exponent           REAL NOT NULL DEFAULT 0.0,
     mass_exponent             REAL NOT NULL DEFAULT 0.0,
     time_exponent             REAL NOT NULL DEFAULT 0.0,
-    temperature_exponent      REAL NOT NULL DEFAULT 0.0
+    temperature_exponent      REAL NOT NULL DEFAULT 0.0,
+    amount_exponent           REAL NOT NULL DEFAULT 0.0
 );
 """
 )
@@ -619,8 +620,9 @@ for quantity_id in quantities:
     INSERT INTO quantities( quantity_id, quantity_name,
                             quantity_latex_symbol, quantity_latex_definition,
                             length_exponent, mass_exponent,
-                            time_exponent, temperature_exponent )
-    VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
+                            time_exponent, temperature_exponent,
+                            amount_exponent )
+    VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ? );
     """,
     (
         quantity_id,
@@ -631,6 +633,7 @@ for quantity_id in quantities:
         quantities[quantity_id].mass_exponent,
         quantities[quantity_id].time_exponent,
         quantities[quantity_id].temperature_exponent,
+        quantities[quantity_id].amount_exponent,
     )
     )
 
