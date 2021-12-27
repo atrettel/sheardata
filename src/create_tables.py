@@ -639,6 +639,23 @@ for quantity_id in quantities:
     )
     )
 
+
+# Latex codes for quantities
+cursor.execute(
+"""
+CREATE TABLE quantity_latex_codes (
+    quantity_id               TEXT NOT NULL,
+    value_type_id             TEXT NOT NULL,
+    quantity_latex_symbol     TEXT NOT NULL,
+    quantity_latex_definition TEXT DEFAULT NULL,
+    PRIMARY KEY(quantity_id, value_type_id),
+    FOREIGN KEY(quantity_id) REFERENCES quantities(quantity_id),
+    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
+);
+"""
+)
+
+
 # Study types
 cursor.execute(
 """
