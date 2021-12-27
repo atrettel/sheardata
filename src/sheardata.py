@@ -235,7 +235,7 @@ Q_PRESSURE_GRADIENT = {
 }
 
 # Quantities, wall point
-Q_AVERAGE_SKIN_FRICTION_COEFFICIENT     = "C_tau"
+Q_AVERAGE_SKIN_FRICTION_COEFFICIENT     = "C_f"
 Q_DARCY_FRICTION_FACTOR                 = "f_D"
 Q_FANNING_FRICTION_FACTOR               = "f"
 Q_FRICTION_MACH_NUMBER                  = "Ma_tau"
@@ -245,7 +245,7 @@ Q_FRICTION_VELOCITY                     = "U_tau"
 Q_HEAT_TRANSFER_COEFFICIENT             = "c_q"
 Q_INNER_LAYER_HEAT_FLUX                 = "B_q"
 Q_INNER_LAYER_ROUGHNESS_HEIGHT          = "eps+"
-Q_LOCAL_SKIN_FRICTION_COEFFICIENT       = "c_tau"
+Q_LOCAL_SKIN_FRICTION_COEFFICIENT       = "c_f"
 Q_OUTER_LAYER_ROUGHNESS_HEIGHT          = "eps/D_H"
 Q_PRESSURE_COEFFICIENT                  = "C_p"
 Q_ROUGHNESS_HEIGHT                      = "eps"
