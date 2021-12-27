@@ -393,9 +393,10 @@ cursor.execute(
 CREATE TABLE quantities (
     quantity_id               TEXT PRIMARY KEY UNIQUE,
     quantity_name             TEXT NOT NULL UNIQUE,
+    time_exponent             REAL NOT NULL DEFAULT 0.0,
     length_exponent           REAL NOT NULL DEFAULT 0.0,
     mass_exponent             REAL NOT NULL DEFAULT 0.0,
-    time_exponent             REAL NOT NULL DEFAULT 0.0,
+    current_exponent          REAL NOT NULL DEFAULT 0.0,
     temperature_exponent      REAL NOT NULL DEFAULT 0.0,
     amount_exponent           REAL NOT NULL DEFAULT 0.0
 );
@@ -404,20 +405,25 @@ CREATE TABLE quantities (
 
 class Quantity:
     name                 = None
-    latex_symbol         = None
-    mass_exponent        = None
     time_exponent        = None
+    length_exponent      = None
+    mass_exponent        = None
+    current_exponent     = None
     temperature_exponent = None
     amount_exponent      = None
 
     def __init__( self, name,
-                  length_exponent=0.0, mass_exponent=0.0,
-                  time_exponent=0.0, temperature_exponent=0.0,
+                  time_exponent=0.0,
+                  length_exponent=0.0,
+                  mass_exponent=0.0,
+                  current_exponent=0.0,
+                  temperature_exponent=0.0,
                   amount_exponent=0.0, ):
         self.name                 = str(name)
+        self.time_exponent        = time_exponent
         self.length_exponent      = length_exponent
         self.mass_exponent        = mass_exponent
-        self.time_exponent        = time_exponent
+        self.current_exponent     = current_exponent
         self.temperature_exponent = temperature_exponent
         self.amount_exponent      = amount_exponent
 
@@ -617,17 +623,18 @@ for quantity_id in quantities:
     cursor.execute(
     """
     INSERT INTO quantities( quantity_id, quantity_name,
-                            length_exponent, mass_exponent,
-                            time_exponent, temperature_exponent,
+                            time_exponent, length_exponent, mass_exponent,
+                            current_exponent, temperature_exponent,
                             amount_exponent )
-    VALUES( ?, ?, ?, ?, ?, ?, ? );
+    VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
     """,
     (
         quantity_id,
         quantities[quantity_id].name,
+        quantities[quantity_id].time_exponent,
         quantities[quantity_id].length_exponent,
         quantities[quantity_id].mass_exponent,
-        quantities[quantity_id].time_exponent,
+        quantities[quantity_id].current_exponent,
         quantities[quantity_id].temperature_exponent,
         quantities[quantity_id].amount_exponent,
     )
