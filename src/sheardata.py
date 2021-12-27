@@ -1594,4 +1594,4 @@ def quantity_name( cursor, quantity_id ):
 
 def quantity_camel_case_name( cursor, quantity_id ):
     name = quantity_name( cursor, quantity_id )
-    return name.replace("-"," ").title().replace(" ","")
+    return name.replace("-"," ").replace("'",' ').title().replace(" ","")
