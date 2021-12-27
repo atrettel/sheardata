@@ -393,8 +393,6 @@ cursor.execute(
 CREATE TABLE quantities (
     quantity_id               TEXT PRIMARY KEY UNIQUE,
     quantity_name             TEXT NOT NULL UNIQUE,
-    quantity_latex_symbol     TEXT NOT NULL,
-    quantity_latex_definition TEXT NOT NULL,
     length_exponent           REAL NOT NULL DEFAULT 0.0,
     mass_exponent             REAL NOT NULL DEFAULT 0.0,
     time_exponent             REAL NOT NULL DEFAULT 0.0,
@@ -407,8 +405,6 @@ CREATE TABLE quantities (
 class Quantity:
     name                 = None
     latex_symbol         = None
-    latex_definition     = None
-    length_exponent      = None
     mass_exponent        = None
     time_exponent        = None
     temperature_exponent = None
@@ -419,8 +415,6 @@ class Quantity:
                   time_exponent=0.0, temperature_exponent=0.0,
                   amount_exponent=0.0, ):
         self.name                 = str(name)
-        self.latex_symbol         = ""
-        self.latex_definition     = ""
         self.length_exponent      = length_exponent
         self.mass_exponent        = mass_exponent
         self.time_exponent        = time_exponent
@@ -623,17 +617,14 @@ for quantity_id in quantities:
     cursor.execute(
     """
     INSERT INTO quantities( quantity_id, quantity_name,
-                            quantity_latex_symbol, quantity_latex_definition,
                             length_exponent, mass_exponent,
                             time_exponent, temperature_exponent,
                             amount_exponent )
-    VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ? );
+    VALUES( ?, ?, ?, ?, ?, ?, ? );
     """,
     (
         quantity_id,
         quantities[quantity_id].name,
-        quantities[quantity_id].latex_symbol,
-        quantities[quantity_id].latex_definition,
         quantities[quantity_id].length_exponent,
         quantities[quantity_id].mass_exponent,
         quantities[quantity_id].time_exponent,
