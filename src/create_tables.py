@@ -456,7 +456,6 @@ quantities[ sd.Q_TRANSVERSE_NUMBER_OF_POINTS    ] = Quantity( "transverse number
 quantities[ sd.Q_VOLUMETRIC_FLOW_RATE           ] = Quantity( "volumetric flow rate",                time_exponent=-1.0, length_exponent=+3.0,                                                )
 
 # Quantities, station
-quantities[ sd.Q_ASPECT_RATIO                           ] = Quantity( "aspect ratio",                                                                                         )
 quantities[ sd.Q_BULK_DYNAMIC_VISCOSITY                 ] = Quantity( "bulk dynamic viscosity",                 time_exponent=-1.0, length_exponent=-1.0, mass_exponent=+1.0, )
 quantities[ sd.Q_BULK_KINEMATIC_VISCOSITY               ] = Quantity( "bulk kinematic viscosity",               time_exponent=-1.0, length_exponent=+2.0,                     )
 quantities[ sd.Q_BULK_MACH_NUMBER                       ] = Quantity( "bulk Mach number",                                                                                     )
@@ -466,13 +465,15 @@ quantities[ sd.Q_BULK_SPEED_OF_SOUND                    ] = Quantity( "bulk spee
 quantities[ sd.Q_BULK_VELOCITY                          ] = Quantity( "bulk velocity",                          time_exponent=-1.0, length_exponent=+1.0,                     )
 quantities[ sd.Q_CLAUSER_THICKNESS                      ] = Quantity( "Clauser thickness",                                          length_exponent=+1.0,                     )
 quantities[ sd.Q_CROSS_SECTIONAL_AREA                   ] = Quantity( "cross-sectional area",                                       length_exponent=+2.0,                     )
+quantities[ sd.Q_CROSS_SECTIONAL_ASPECT_RATIO           ] = Quantity( "cross-sectional aspect ratio",                                                                         )
+quantities[ sd.Q_CROSS_SECTIONAL_HALF_HEIGHT            ] = Quantity( "cross-sectional half height",                                length_exponent=+1.0,                     )
+quantities[ sd.Q_CROSS_SECTIONAL_HEIGHT                 ] = Quantity( "cross-sectional height",                                     length_exponent=+1.0,                     )
+quantities[ sd.Q_CROSS_SECTIONAL_WIDTH                  ] = Quantity( "cross-sectional width",                                      length_exponent=+1.0,                     )
 quantities[ sd.Q_DEVELOPMENT_LENGTH                     ] = Quantity( "development length",                                         length_exponent=+1.0,                     )
 quantities[ sd.Q_DISPLACEMENT_THICKNESS                 ] = Quantity( "displacement thickness",                                     length_exponent=+1.0,                     )
 quantities[ sd.Q_DISPLACEMENT_THICKNESS_REYNOLDS_NUMBER ] = Quantity( "displacement thickness Reynolds number",                                                               )
 quantities[ sd.Q_ENERGY_THICKNESS                       ] = Quantity( "energy thickness",                                           length_exponent=+1.0,                     )
 quantities[ sd.Q_EQUILIBRIUM_PARAMETER                  ] = Quantity( "equilibrium parameter",                                                                                )
-quantities[ sd.Q_HALF_HEIGHT                            ] = Quantity( "half height",                                                length_exponent=+1.0,                     )
-quantities[ sd.Q_HEIGHT                                 ] = Quantity( "height",                                                     length_exponent=+1.0,                     )
 quantities[ sd.Q_HYDRAULIC_DIAMETER                     ] = Quantity( "hydraulic diameter",                                         length_exponent=+1.0,                     )
 quantities[ sd.Q_INNER_DIAMETER                         ] = Quantity( "inner diameter",                                             length_exponent=+1.0,                     )
 quantities[ sd.Q_MOMENTUM_INTEGRAL_LHS                  ] = Quantity( "momentum integral left-hand side",                                                                     )
@@ -489,7 +490,6 @@ quantities[ sd.Q_STREAMWISE_COORDINATE_REYNOLDS_NUMBER  ] = Quantity( "streamwis
 quantities[ sd.Q_STREAMWISE_PRESSURE_GRADIENT           ] = Quantity( "streamwise pressure gradient",           time_exponent=-2.0, length_exponent=-2.0, mass_exponent=+1.0, )
 quantities[ sd.Q_TRANSVERSE_PRESSURE_GRADIENT           ] = Quantity( "transverse pressure gradient",           time_exponent=-2.0, length_exponent=-2.0, mass_exponent=+1.0, )
 quantities[ sd.Q_WETTED_PERIMETER                       ] = Quantity( "wetted perimeter",                                           length_exponent=+2.0,                     )
-quantities[ sd.Q_WIDTH                                  ] = Quantity( "width",                                                      length_exponent=+1.0,                     )
 
 # Quantities, wall point
 quantities[ sd.Q_AVERAGE_SKIN_FRICTION_COEFFICIENT     ] = Quantity( "average skin friction coefficient",                                                                        )

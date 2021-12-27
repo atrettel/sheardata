@@ -193,7 +193,6 @@ Q_NUMBER_OF_POINTS = {
 }
 
 # Quantities, station
-Q_ASPECT_RATIO                           = "AR"
 Q_BULK_DYNAMIC_VISCOSITY                 = "mu_b"
 Q_BULK_KINEMATIC_VISCOSITY               = "nu_b"
 Q_BULK_MACH_NUMBER                       = "Ma_b"
@@ -203,13 +202,15 @@ Q_BULK_SPEED_OF_SOUND                    = "a_b"
 Q_BULK_VELOCITY                          = "U_b"
 Q_CLAUSER_THICKNESS                      = "delta_C"
 Q_CROSS_SECTIONAL_AREA                   = "A"
+Q_CROSS_SECTIONAL_ASPECT_RATIO           = "AR"
+Q_CROSS_SECTIONAL_HALF_HEIGHT            = "b"
+Q_CROSS_SECTIONAL_HEIGHT                 = "h"
+Q_CROSS_SECTIONAL_WIDTH                  = "w"
 Q_DEVELOPMENT_LENGTH                     = "L_d"
 Q_DISPLACEMENT_THICKNESS                 = "delta_1"
 Q_DISPLACEMENT_THICKNESS_REYNOLDS_NUMBER = "Re_delta_1"
 Q_ENERGY_THICKNESS                       = "delta_3"
 Q_EQUILIBRIUM_PARAMETER                  = "Pi_2"
-Q_HALF_HEIGHT                            = "b"
-Q_HEIGHT                                 = "h"
 Q_HYDRAULIC_DIAMETER                     = "D_H"
 Q_INNER_DIAMETER                         = "D_i"
 Q_MOMENTUM_INTEGRAL_LHS                  = "P_l"
@@ -226,7 +227,6 @@ Q_STREAMWISE_COORDINATE_REYNOLDS_NUMBER  = "Re_{:s}".format(STREAMWISE_COORDINAT
 Q_STREAMWISE_PRESSURE_GRADIENT           = "PG_{:s}".format(STREAMWISE_COORDINATE_SYMBOL)
 Q_TRANSVERSE_PRESSURE_GRADIENT           = "PG_{:s}".format(TRANSVERSE_COORDINATE_SYMBOL)
 Q_WETTED_PERIMETER                       = "P"
-Q_WIDTH                                  = "w"
 
 Q_PRESSURE_GRADIENT = {
     D_STREAMWISE: Q_STREAMWISE_PRESSURE_GRADIENT,
