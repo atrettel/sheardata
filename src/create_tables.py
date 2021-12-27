@@ -429,7 +429,7 @@ class Quantity:
 
 quantities = {}
 
-# Quantities for series
+# Quantities, series
 quantities[ sd.Q_ANGLE_OF_ATTACK                ] = Quantity( "angle of attack",                                                                                                              )
 quantities[ sd.Q_BODY_HEIGHT                    ] = Quantity( "body height",                                             length_exponent=+1.0,                                                )
 quantities[ sd.Q_BODY_LENGTH                    ] = Quantity( "body length",                                             length_exponent=+1.0,                                                )
@@ -674,11 +674,11 @@ def define_quantity_symbol( quantity_id, value_type_id, quantity_latex_symbol,
     )
     )
 
-# Quantities for series
+# Quantities, series
 define_quantity_symbol( sd.Q_ANGLE_OF_ATTACK,                sd.VT_UNAVERAGED_VALUE, r"\alpha",                                            )
 define_quantity_symbol( sd.Q_BODY_HEIGHT,                    sd.VT_UNAVERAGED_VALUE, r"h_b",                                               )
 define_quantity_symbol( sd.Q_BODY_LENGTH,                    sd.VT_UNAVERAGED_VALUE, r"\ell_b",                                            )
-define_quantity_symbol( sd.Q_BODY_REYNOLDS_NUMBER,           sd.VT_UNAVERAGED_VALUE, r"\mathrm{Re}_b",                                     )
+define_quantity_symbol( sd.Q_BODY_REYNOLDS_NUMBER,           sd.VT_UNAVERAGED_VALUE, r"\mathrm{Re}_\infty",                                )
 define_quantity_symbol( sd.Q_BODY_STROUHAL_NUMBER,           sd.VT_UNAVERAGED_VALUE, r"\mathrm{Sr}_b",                                     )
 define_quantity_symbol( sd.Q_BODY_WIDTH,                     sd.VT_UNAVERAGED_VALUE, r"w_b",                                               )
 define_quantity_symbol( sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS, sd.VT_UNAVERAGED_VALUE, r"\ell_p",                                            )
@@ -699,6 +699,42 @@ define_quantity_symbol( sd.Q_STREAMWISE_NUMBER_OF_POINTS,    sd.VT_UNAVERAGED_VA
 define_quantity_symbol( sd.Q_TEST_LENGTH,                    sd.VT_UNAVERAGED_VALUE, r"\ell_t",                                            )
 define_quantity_symbol( sd.Q_TRANSVERSE_NUMBER_OF_POINTS,    sd.VT_UNAVERAGED_VALUE, r"n_{:s}".format(sd.TRANSVERSE_COORDINATE_SYMBOL),    )
 define_quantity_symbol( sd.Q_VOLUMETRIC_FLOW_RATE,           sd.VT_UNAVERAGED_VALUE, r"Q",                                                 )
+
+# Quantities, station
+define_quantity_symbol( sd.Q_BULK_DYNAMIC_VISCOSITY,                 sd.VT_UNAVERAGED_VALUE, r"\mu_b",                                                                       )
+define_quantity_symbol( sd.Q_BULK_KINEMATIC_VISCOSITY,               sd.VT_UNAVERAGED_VALUE, r"\nu_b",                                                                       )
+define_quantity_symbol( sd.Q_BULK_MACH_NUMBER,                       sd.VT_UNAVERAGED_VALUE, r"\mathrm{Ma}_b",                                                               )
+define_quantity_symbol( sd.Q_BULK_MASS_DENSITY,                      sd.VT_UNAVERAGED_VALUE, r"\rho_b",                                                                      )
+define_quantity_symbol( sd.Q_BULK_REYNOLDS_NUMBER,                   sd.VT_UNAVERAGED_VALUE, r"\mathrm{Re}_b",                                                               )
+define_quantity_symbol( sd.Q_BULK_SPEED_OF_SOUND,                    sd.VT_UNAVERAGED_VALUE, r"a_b",                                                                         )
+define_quantity_symbol( sd.Q_BULK_VELOCITY,                          sd.VT_UNAVERAGED_VALUE, r"{:s}_b".format(sd.STREAMWISE_VELOCITY_SYMBOL),                                )
+define_quantity_symbol( sd.Q_CLAUSER_THICKNESS,                      sd.VT_UNAVERAGED_VALUE, r"\Delta_C",                                                                    )
+define_quantity_symbol( sd.Q_CROSS_SECTIONAL_AREA,                   sd.VT_UNAVERAGED_VALUE, r"\mathrm{AR}",                                                                 )
+define_quantity_symbol( sd.Q_CROSS_SECTIONAL_ASPECT_RATIO,           sd.VT_UNAVERAGED_VALUE, r"A",                                                                           )
+define_quantity_symbol( sd.Q_CROSS_SECTIONAL_HALF_HEIGHT,            sd.VT_UNAVERAGED_VALUE, r"b",                                                                           )
+define_quantity_symbol( sd.Q_CROSS_SECTIONAL_HEIGHT,                 sd.VT_UNAVERAGED_VALUE, r"h",                                                                           )
+define_quantity_symbol( sd.Q_CROSS_SECTIONAL_WIDTH,                  sd.VT_UNAVERAGED_VALUE, r"w",                                                                           )
+define_quantity_symbol( sd.Q_DEVELOPMENT_LENGTH,                     sd.VT_UNAVERAGED_VALUE, r"\ell_d",                                                                      )
+define_quantity_symbol( sd.Q_DISPLACEMENT_THICKNESS,                 sd.VT_UNAVERAGED_VALUE, r"\delta_1",                                                                    )
+define_quantity_symbol( sd.Q_DISPLACEMENT_THICKNESS_REYNOLDS_NUMBER, sd.VT_UNAVERAGED_VALUE, r"\mathrm{Re}_{\delta_1}",                                                      )
+define_quantity_symbol( sd.Q_ENERGY_THICKNESS,                       sd.VT_UNAVERAGED_VALUE, r"\delta_3",                                                                    )
+define_quantity_symbol( sd.Q_EQUILIBRIUM_PARAMETER,                  sd.VT_UNAVERAGED_VALUE, r"\Pi_2",                                                                       )
+define_quantity_symbol( sd.Q_HYDRAULIC_DIAMETER,                     sd.VT_UNAVERAGED_VALUE, r"D_H",                                                                         )
+define_quantity_symbol( sd.Q_INNER_DIAMETER,                         sd.VT_UNAVERAGED_VALUE, r"D_i",                                                                         )
+define_quantity_symbol( sd.Q_MOMENTUM_INTEGRAL_LHS,                  sd.VT_UNAVERAGED_VALUE, r"P_l",                                                                         )
+define_quantity_symbol( sd.Q_MOMENTUM_INTEGRAL_RHS,                  sd.VT_UNAVERAGED_VALUE, r"P_r",                                                                         )
+define_quantity_symbol( sd.Q_MOMENTUM_THICKNESS,                     sd.VT_UNAVERAGED_VALUE, r"\delta_2",                                                                    )
+define_quantity_symbol( sd.Q_MOMENTUM_THICKNESS_REYNOLDS_NUMBER,     sd.VT_UNAVERAGED_VALUE, r"\mathrm{Re}_{\delta_2}",                                                      )
+define_quantity_symbol( sd.Q_OUTER_DIAMETER,                         sd.VT_UNAVERAGED_VALUE, r"D_o",                                                                         )
+define_quantity_symbol( sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,         sd.VT_UNAVERAGED_VALUE, r"(\ell_d/D_H)",                                                                )
+define_quantity_symbol( sd.Q_RECOVERY_FACTOR,                        sd.VT_UNAVERAGED_VALUE, r"r",                                                                           )
+define_quantity_symbol( sd.Q_SHAPE_FACTOR_1_TO_2,                    sd.VT_UNAVERAGED_VALUE, r"H_{12}",                                                                      )
+define_quantity_symbol( sd.Q_SHAPE_FACTOR_3_TO_2,                    sd.VT_UNAVERAGED_VALUE, r"H_{23}",                                                                      )
+define_quantity_symbol( sd.Q_SPANWISE_PRESSURE_GRADIENT,             sd.VT_UNAVERAGED_VALUE, r"(\mathrm{d} p / \mathrm{d} "+"{:s})".format(sd.SPANWISE_COORDINATE_SYMBOL),   )
+define_quantity_symbol( sd.Q_STREAMWISE_COORDINATE_REYNOLDS_NUMBER,  sd.VT_UNAVERAGED_VALUE, r"\mathrm{Re}_"+"{:s}".format(sd.STREAMWISE_COORDINATE_SYMBOL),                 )
+define_quantity_symbol( sd.Q_STREAMWISE_PRESSURE_GRADIENT,           sd.VT_UNAVERAGED_VALUE, r"(\mathrm{d} p / \mathrm{d} "+"{:s})".format(sd.STREAMWISE_COORDINATE_SYMBOL), )
+define_quantity_symbol( sd.Q_TRANSVERSE_PRESSURE_GRADIENT,           sd.VT_UNAVERAGED_VALUE, r"(\mathrm{d} p / \mathrm{d} "+"{:s})".format(sd.TRANSVERSE_COORDINATE_SYMBOL), )
+define_quantity_symbol( sd.Q_WETTED_PERIMETER,                       sd.VT_UNAVERAGED_VALUE, r"P",                                                                           )
 
 
 # Study types
