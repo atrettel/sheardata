@@ -124,7 +124,7 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value( cursor, station_id, sd.Q_HYDRAULIC_DIAMETER,             diameter,                       )
         sd.set_station_value( cursor, station_id, sd.Q_DEVELOPMENT_LENGTH,             development_length,             )
         sd.set_station_value( cursor, station_id, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH, outer_layer_development_length, )
-        sd.set_station_value( cursor, station_id, sd.Q_ASPECT_RATIO,                   1.0,                            )
+        sd.set_station_value( cursor, station_id, sd.Q_CROSS_SECTIONAL_ASPECT_RATIO,                   1.0,                            )
         
         # Pitot-static tube dimensions
         #

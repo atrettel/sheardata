@@ -193,7 +193,7 @@ for duct_type in duct_types:
                 duct_types[duct_type].geometry,
                 sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
                 max_inner_layer_roughness_height,
-                sd.Q_ASPECT_RATIO,
+                sd.Q_CROSS_SECTIONAL_ASPECT_RATIO,
                 duct_types[duct_type].min_aspect_ratio,
                 duct_types[duct_type].max_aspect_ratio,
                 sd.Q_BULK_MACH_NUMBER,

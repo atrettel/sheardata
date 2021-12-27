@@ -130,9 +130,9 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value( cursor, station_id, sd.Q_HYDRAULIC_DIAMETER,                 hydraulic_diameter,             )
         sd.set_station_value( cursor, station_id, sd.Q_DEVELOPMENT_LENGTH,                 development_length,             )
         sd.set_station_value( cursor, station_id, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,     outer_layer_development_length, )
-        sd.set_station_value( cursor, station_id, sd.Q_ASPECT_RATIO,                       aspect_ratio,                   )
-        sd.set_station_value( cursor, station_id, sd.Q_HEIGHT,                             height,                         )
-        sd.set_station_value( cursor, station_id, sd.Q_HALF_HEIGHT,                        half_height,                    )
+        sd.set_station_value( cursor, station_id, sd.Q_CROSS_SECTIONAL_ASPECT_RATIO,                       aspect_ratio,                   )
+        sd.set_station_value( cursor, station_id, sd.Q_CROSS_SECTIONAL_HEIGHT,                             height,                         )
+        sd.set_station_value( cursor, station_id, sd.Q_CROSS_SECTIONAL_HALF_HEIGHT,                        half_height,                    )
         sd.set_station_value( cursor, station_id, sd.Q_BULK_VELOCITY,                      bulk_velocity,                      value_type_id=sd.VT_UNWEIGHTED_AVERAGE, )
 
         point_number = 0

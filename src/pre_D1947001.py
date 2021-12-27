@@ -249,15 +249,15 @@ for duct in ducts:
             sd.set_station_value( cursor, station_id, sd.Q_HYDRAULIC_DIAMETER,             hydraulic_diameter,                      )
             sd.set_station_value( cursor, station_id, sd.Q_DEVELOPMENT_LENGTH,             ducts[duct].length,                      )
             sd.set_station_value( cursor, station_id, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH, ducts[duct].length / hydraulic_diameter, )
-            sd.set_station_value( cursor, station_id, sd.Q_ASPECT_RATIO,                   ducts[duct].aspect_ratio,                )
+            sd.set_station_value( cursor, station_id, sd.Q_CROSS_SECTIONAL_ASPECT_RATIO,                   ducts[duct].aspect_ratio,                )
             sd.set_station_value( cursor, station_id, sd.Q_BULK_VELOCITY,                  bulk_velocity, value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[mt_bulk_velocity],  )
             sd.set_station_value( cursor, station_id, sd.Q_BULK_REYNOLDS_NUMBER,           Re_bulk,       value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_CALCULATION], )
             sd.set_station_value( cursor, station_id, sd.Q_BULK_MACH_NUMBER,               Ma_bulk,       value_type_id=sd.VT_BOTH_AVERAGES, meastech_ids=[sd.MT_CALCULATION], )
 
             if ( duct != "Round" ):
-                sd.set_station_value( cursor, station_id, sd.Q_HEIGHT,      height,      meastech_ids=[sd.MT_CALCULATION], )
-                sd.set_station_value( cursor, station_id, sd.Q_WIDTH,       width,       meastech_ids=[sd.MT_CALCULATION], )
-                sd.set_station_value( cursor, station_id, sd.Q_HALF_HEIGHT, half_height, meastech_ids=[sd.MT_CALCULATION], )
+                sd.set_station_value( cursor, station_id, sd.Q_CROSS_SECTIONAL_HEIGHT,      height,      meastech_ids=[sd.MT_CALCULATION], )
+                sd.set_station_value( cursor, station_id, sd.Q_CROSS_SECTIONAL_WIDTH,       width,       meastech_ids=[sd.MT_CALCULATION], )
+                sd.set_station_value( cursor, station_id, sd.Q_CROSS_SECTIONAL_HALF_HEIGHT, half_height, meastech_ids=[sd.MT_CALCULATION], )
 
             # This set of data only considers wall quantities.
             point_number = 1
