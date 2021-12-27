@@ -736,6 +736,26 @@ define_quantity_symbol( sd.Q_STREAMWISE_PRESSURE_GRADIENT,           sd.VT_UNAVE
 define_quantity_symbol( sd.Q_TRANSVERSE_PRESSURE_GRADIENT,           sd.VT_UNAVERAGED_VALUE, r"(\mathrm{d} p / \mathrm{d} "+"{:s})".format(sd.TRANSVERSE_COORDINATE_SYMBOL), )
 define_quantity_symbol( sd.Q_WETTED_PERIMETER,                       sd.VT_UNAVERAGED_VALUE, r"P",                                                                           )
 
+# Quantities, wall point
+define_quantity_symbol( sd.Q_AVERAGE_SKIN_FRICTION_COEFFICIENT,   sd.VT_UNAVERAGED_VALUE, r"C_f",                                                 )
+define_quantity_symbol( sd.Q_DARCY_FRICTION_FACTOR,               sd.VT_UNAVERAGED_VALUE, r"f_D",                                                 )
+define_quantity_symbol( sd.Q_FANNING_FRICTION_FACTOR,             sd.VT_UNAVERAGED_VALUE, r"f",                                                   )
+define_quantity_symbol( sd.Q_FRICTION_MACH_NUMBER,                sd.VT_UNAVERAGED_VALUE, r"\mathrm{Ma}_\tau",                                    )
+define_quantity_symbol( sd.Q_FRICTION_REYNOLDS_NUMBER,            sd.VT_UNAVERAGED_VALUE, r"\mathrm{Re}_\tau",                                    )
+define_quantity_symbol( sd.Q_FRICTION_TEMPERATURE,                sd.VT_UNAVERAGED_VALUE, r"T_\tau",                                              )
+define_quantity_symbol( sd.Q_FRICTION_VELOCITY,                   sd.VT_UNAVERAGED_VALUE, r"{:s}_\tau".format(sd.STREAMWISE_VELOCITY_SYMBOL),     )
+define_quantity_symbol( sd.Q_HEAT_TRANSFER_COEFFICIENT,           sd.VT_UNAVERAGED_VALUE, r"c_q",                                                 )
+define_quantity_symbol( sd.Q_INNER_LAYER_HEAT_FLUX,               sd.VT_UNAVERAGED_VALUE, r"B_q",                                                 )
+define_quantity_symbol( sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,        sd.VT_UNAVERAGED_VALUE, r"\epsilon^+",                                          )
+define_quantity_symbol( sd.Q_LOCAL_SKIN_FRICTION_COEFFICIENT,     sd.VT_UNAVERAGED_VALUE, r"c_f",                                                 )
+define_quantity_symbol( sd.Q_OUTER_LAYER_ROUGHNESS_HEIGHT,        sd.VT_UNAVERAGED_VALUE, r"(\epsilon/D_H)",                                      )
+define_quantity_symbol( sd.Q_PRESSURE_COEFFICIENT,                sd.VT_UNAVERAGED_VALUE, r"C_p",                                                 )
+define_quantity_symbol( sd.Q_ROUGHNESS_HEIGHT,                    sd.VT_UNAVERAGED_VALUE, r"\epsilon",                                            )
+define_quantity_symbol( sd.Q_SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER, sd.VT_UNAVERAGED_VALUE, r"\mathrm{Re}_\tau^*",                                  )
+define_quantity_symbol( sd.Q_SPANWISE_WALL_CURVATURE,             sd.VT_UNAVERAGED_VALUE, r"\kappa_{:s}".format(sd.SPANWISE_COORDINATE_SYMBOL),   )
+define_quantity_symbol( sd.Q_STREAMWISE_WALL_CURVATURE,           sd.VT_UNAVERAGED_VALUE, r"\kappa_{:s}".format(sd.STREAMWISE_COORDINATE_SYMBOL), )
+define_quantity_symbol( sd.Q_VISCOUS_LENGTH_SCALE,                sd.VT_UNAVERAGED_VALUE, r"\ell_\nu",                                            )
+
 
 # Study types
 cursor.execute(
