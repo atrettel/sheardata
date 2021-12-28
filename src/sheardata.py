@@ -633,15 +633,16 @@ def create_value_types_list( value_type_id ):
 def set_study_value( cursor, study_id, quantity_id, value,
                      value_type_id=VT_UNAVERAGED_VALUE,
                      meastech_ids=[], meastech_set=PRIMARY_MT_SET,
-                     outlier=False, note_ids=[] ):
+                     corrected=False, outlier=False, note_ids=[] ):
     study_value, study_uncertainty = split_float( value )
     for value_type_id in create_value_types_list( value_type_id ):
         cursor.execute(
         """
         INSERT INTO study_values( study_id, quantity_id,
                                   value_type_id, meastech_set,
-                                  study_value, study_uncertainty, outlier )
-        VALUES( ?, ?, ?, ?, ?, ?, ? );
+                                  study_value, study_uncertainty,
+                                  corrected, outlier )
+        VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
         """,
         (
             sanitize_identifier(study_id),
@@ -650,6 +651,7 @@ def set_study_value( cursor, study_id, quantity_id, value,
             meastech_set,
             study_value,
             study_uncertainty,
+            int(corrected),
             int(outlier),
         )
         )
@@ -825,15 +827,16 @@ def update_series_description( cursor, series_id, series_description ):
 def set_series_value( cursor, series_id, quantity_id, value,
                       value_type_id=VT_UNAVERAGED_VALUE,
                       meastech_ids=[], meastech_set=PRIMARY_MT_SET,
-                      outlier=False, note_ids=[] ):
+                      corrected=False, outlier=False, note_ids=[] ):
     series_value, series_uncertainty = split_float( value )
     for value_type_id in create_value_types_list( value_type_id ):
         cursor.execute(
         """
         INSERT INTO series_values( series_id, quantity_id,
                                    value_type_id, meastech_set,
-                                   series_value, series_uncertainty, outlier )
-        VALUES( ?, ?, ?, ?, ?, ?, ? );
+                                   series_value, series_uncertainty,
+                                   corrected, outlier )
+        VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
         """,
         (
             sanitize_identifier(series_id),
@@ -842,6 +845,7 @@ def set_series_value( cursor, series_id, quantity_id, value,
             meastech_set,
             series_value,
             series_uncertainty,
+            int(corrected),
             int(outlier),
         )
         )
@@ -984,15 +988,16 @@ def add_station( cursor, flow_class_id, year, study_number, series_number, \
 def set_station_value( cursor, station_id, quantity_id, value,
                        value_type_id=VT_UNAVERAGED_VALUE,
                        meastech_ids=[], meastech_set=PRIMARY_MT_SET,
-                       outlier=False, note_ids=[] ):
+                       corrected=False, outlier=False, note_ids=[] ):
     station_value, station_uncertainty = split_float( value )
     for value_type_id in create_value_types_list( value_type_id ):
         cursor.execute(
         """
         INSERT INTO station_values( station_id, quantity_id,
                                     value_type_id, meastech_set,
-                                    station_value, station_uncertainty, outlier )
-        VALUES( ?, ?, ?, ?, ?, ?, ? );
+                                    station_value, station_uncertainty,
+                                    corrected, outlier )
+        VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
         """,
         (
             sanitize_identifier(station_id),
@@ -1001,6 +1006,7 @@ def set_station_value( cursor, station_id, quantity_id, value,
             meastech_set,
             station_value,
             station_uncertainty,
+            int(corrected),
             int(outlier),
         )
         )
@@ -1061,7 +1067,7 @@ def get_points_at_station( cursor, station_id ):
 def set_constant_profile( cursor, station_id, quantity_id, value,
                           value_type_id=VT_UNAVERAGED_VALUE,
                           meastech_ids=[], meastech_set=PRIMARY_MT_SET,
-                          outlier=False, note_ids=[] ):
+                          corrected=False, outlier=False, note_ids=[] ):
     for point_id in get_points_at_station( cursor, station_id ):
         set_point_value(
             cursor,
@@ -1071,6 +1077,7 @@ def set_constant_profile( cursor, station_id, quantity_id, value,
             value_type_id=value_type_id,
             meastech_ids=meastech_ids,
             meastech_set=meastech_set,
+            corrected=False,
             outlier=outlier,
             note_ids=note_ids,
         )
@@ -1190,15 +1197,16 @@ def add_point( cursor, flow_class_id, year, study_number, series_number,
 def set_point_value( cursor, point_id, quantity_id, value,
                      value_type_id=VT_UNAVERAGED_VALUE,
                      meastech_ids=[], meastech_set=PRIMARY_MT_SET,
-                     outlier=False, note_ids=[] ):
+                     corrected=False, outlier=False, note_ids=[] ):
     point_value, point_uncertainty = split_float( value )
     for value_type_id in create_value_types_list( value_type_id ):
         cursor.execute(
         """
         INSERT INTO point_values( point_id, quantity_id,
                                   value_type_id, meastech_set,
-                                  point_value, point_uncertainty, outlier )
-        VALUES( ?, ?, ?, ?, ?, ?, ? );
+                                  point_value, point_uncertainty,
+                                  corrected, outlier )
+        VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
         """,
         (
             sanitize_identifier(point_id),
@@ -1207,6 +1215,7 @@ def set_point_value( cursor, point_id, quantity_id, value,
             meastech_set,
             point_value,
             point_uncertainty,
+            int(corrected),
             int(outlier),
         )
         )
@@ -1414,7 +1423,7 @@ def locate_labeled_point( cursor, station_id, point_label_id ):
 def set_labeled_value( cursor, station_id, quantity_id, point_label_id, value,
                        value_type_id=VT_UNAVERAGED_VALUE,
                        meastech_ids=[], meastech_set=PRIMARY_MT_SET,
-                       outlier=False, note_ids=[] ):
+                       corrected=False, outlier=False, note_ids=[] ):
     set_point_value(
         cursor,
         locate_labeled_point( cursor, station_id, point_label_id ),
@@ -1423,6 +1432,7 @@ def set_labeled_value( cursor, station_id, quantity_id, point_label_id, value,
         value_type_id=value_type_id,
         meastech_ids=meastech_ids,
         meastech_set=meastech_set,
+        corrected=corrected,
         outlier=outlier,
         note_ids=note_ids,
     )
