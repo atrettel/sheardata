@@ -158,8 +158,11 @@ PL_LOWER_UPPER = [ PL_LOWER_EDGE, PL_LOWER_WALL,
 Q_ANGLE_OF_ATTACK                = "AOA"
 Q_BODY_HEIGHT                    = "h_b"
 Q_BODY_LENGTH                    = "L_b"
+Q_BODY_PROJECTED_FRONTAL_AREA    = "A_f"
 Q_BODY_REYNOLDS_NUMBER           = "Re_inf"
 Q_BODY_STROUHAL_NUMBER           = "Sr"
+Q_BODY_VOLUME                    = "V_b"
+Q_BODY_WETTED_SURFACE_AREA       = "A_s"
 Q_BODY_WIDTH                     = "w_b"
 Q_DISTANCE_BETWEEN_PRESSURE_TAPS = "L_p"
 Q_DRAG_COEFFICIENT               = "C_D"
@@ -179,6 +182,7 @@ Q_STREAMWISE_NUMBER_OF_POINTS    = "N_{:s}".format(STREAMWISE_COORDINATE_SYMBOL)
 Q_TEST_LENGTH                    = "L_t"
 Q_TRANSVERSE_NUMBER_OF_POINTS    = "N_{:s}".format(TRANSVERSE_COORDINATE_SYMBOL)
 Q_VOLUMETRIC_FLOW_RATE           = "Vdot"
+
 
 Q_BODY_DIMENSIONS = {
     D_STREAMWISE: Q_BODY_LENGTH,
