@@ -17,7 +17,7 @@ cursor.execute( "PRAGMA foreign_keys = ON;" )
 cursor.execute(
 """
 CREATE TABLE value_types (
-    value_type_id   TEXT PRIMARY KEY UNIQUE,
+    value_type_id   TEXT PRIMARY KEY,
     value_type_name TEXT NOT NULL
 );
 """
@@ -41,7 +41,7 @@ for value_type_id in value_types:
 cursor.execute(
 """
 CREATE TABLE coordinate_systems (
-    coordinate_system_id   TEXT PRIMARY KEY UNIQUE,
+    coordinate_system_id   TEXT PRIMARY KEY,
     coordinate_system_name TEXT NOT NULL
 );
 """
@@ -65,7 +65,7 @@ for coordinate_system_id in coordinate_systems:
 cursor.execute(
 """
 CREATE TABLE flow_classes (
-    flow_class_id        TEXT PRIMARY KEY UNIQUE CHECK ( length(flow_class_id) = 1 ),
+    flow_class_id        TEXT PRIMARY KEY CHECK ( length(flow_class_id) = 1 ),
     flow_class_name      TEXT NOT NULL,
     flow_class_parent_id TEXT DEFAULT NULL,
     FOREIGN KEY(flow_class_parent_id) REFERENCES flow_classes(flow_class_id)
@@ -127,7 +127,7 @@ for flow_class_id in flow_classes:
 cursor.execute(
 """
 CREATE TABLE flow_regimes (
-    flow_regime_id   TEXT PRIMARY KEY UNIQUE,
+    flow_regime_id   TEXT PRIMARY KEY,
     flow_regime_name TEXT NOT NULL
 );
 """
@@ -151,7 +151,7 @@ for flow_regime_id in flow_regimes:
 cursor.execute(
 """
 CREATE TABLE phases (
-    phase_id   TEXT PRIMARY KEY UNIQUE,
+    phase_id   TEXT PRIMARY KEY,
     phase_name TEXT NOT NULL
 );
 """
@@ -175,7 +175,7 @@ for phase_id in phases:
 cursor.execute(
 """
 CREATE TABLE elements (
-    atomic_number  INTEGER PRIMARY KEY UNIQUE,
+    atomic_number  INTEGER PRIMARY KEY,
     element_symbol TEXT UNIQUE NOT NULL,
     element_name   TEXT UNIQUE NOT NULL,
     atomic_weight  REAL NOT NULL CHECK ( atomic_weight > 0.0 )
@@ -213,7 +213,7 @@ with open( elements_filename, "r" ) as elements_file:
 cursor.execute(
 """
 CREATE TABLE fluids (
-    fluid_id   TEXT PRIMARY KEY UNIQUE,
+    fluid_id   TEXT PRIMARY KEY,
     fluid_name TEXT NOT NULL,
     phase_id   TEXT NOT NULL,
     FOREIGN KEY(phase_id) REFERENCES phases(phase_id)
@@ -231,7 +231,7 @@ CREATE TABLE fluids (
 cursor.execute(
 """
 CREATE TABLE geometries (
-    geometry_id   TEXT PRIMARY KEY UNIQUE,
+    geometry_id   TEXT PRIMARY KEY,
     geometry_name TEXT NOT NULL
 );
 """
@@ -254,7 +254,7 @@ for geometry_id in geometries:
 cursor.execute(
 """
 CREATE TABLE measurement_techniques (
-    meastech_id        TEXT PRIMARY KEY UNIQUE,
+    meastech_id        TEXT PRIMARY KEY,
     meastech_name      TEXT NOT NULL,
     intrusive          INTEGER NOT NULL DEFAULT 0 CHECK ( intrusive = 0 OR intrusive = 1 ),
     meastech_parent_id TEXT DEFAULT NULL,
@@ -350,7 +350,7 @@ CREATE TABLE notes (
 cursor.execute(
 """
 CREATE TABLE point_labels (
-    point_label_id   TEXT PRIMARY KEY UNIQUE,
+    point_label_id   TEXT PRIMARY KEY,
     point_label_name TEXT NOT NULL
 );
 """
@@ -391,7 +391,7 @@ for point_label_id in point_labels:
 cursor.execute(
 """
 CREATE TABLE quantities (
-    quantity_id               TEXT PRIMARY KEY UNIQUE,
+    quantity_id               TEXT PRIMARY KEY,
     quantity_name             TEXT NOT NULL UNIQUE,
     time_exponent             REAL NOT NULL DEFAULT 0.0,
     length_exponent           REAL NOT NULL DEFAULT 0.0,
@@ -868,7 +868,7 @@ define_quantity_symbol( sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO,                sd.
 cursor.execute(
 """
 CREATE TABLE study_types (
-    study_type_id   TEXT PRIMARY KEY UNIQUE,
+    study_type_id   TEXT PRIMARY KEY,
     study_type_name TEXT NOT NULL
 );
 """
@@ -892,7 +892,7 @@ for study_type_id in study_types:
 cursor.execute(
 """
 CREATE TABLE studies (
-    study_id          TEXT PRIMARY KEY UNIQUE,
+    study_id          TEXT PRIMARY KEY,
     flow_class_id     TEXT NOT NULL DEFAULT 'U',
     year              INTEGER NOT NULL CHECK (        year  >= 0 AND         year <= 9999 ),
     study_number      INTEGER NOT NULL CHECK ( study_number >  0 AND study_number <=  999 ),
@@ -910,7 +910,7 @@ CREATE TABLE studies (
 cursor.execute(
 """
 CREATE TABLE series (
-    series_id            TEXT PRIMARY KEY UNIQUE,
+    series_id            TEXT PRIMARY KEY,
     study_id             TEXT NOT NULL,
     series_number        INTEGER NOT NULL CHECK ( series_number > 0 AND series_number <= 999 ),
     number_of_dimensions INTEGER NOT NULL DEFAULT 2 CHECK ( number_of_dimensions > 0 AND number_of_dimensions <= 3 ),
@@ -929,7 +929,7 @@ CREATE TABLE series (
 cursor.execute(
 """
 CREATE TABLE stations (
-    station_id                     TEXT PRIMARY KEY UNIQUE,
+    station_id                     TEXT PRIMARY KEY,
     series_id                      TEXT NOT NULL,
     study_id                       TEXT NOT NULL,
     station_number                 INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <= 999 ),
@@ -955,7 +955,7 @@ CREATE TABLE stations (
 cursor.execute(
 """
 CREATE TABLE points (
-    point_id          TEXT PRIMARY KEY UNIQUE,
+    point_id          TEXT PRIMARY KEY,
     station_id        TEXT NOT NULL,
     series_id         TEXT NOT NULL,
     study_id          TEXT NOT NULL,
