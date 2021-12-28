@@ -814,6 +814,55 @@ define_quantity_symbol( sd.Q_VELOCITY_GRADIENT[sd.D_SPANWISE,  sd.D_STREAMWISE],
 define_quantity_symbol( sd.Q_VELOCITY_GRADIENT[sd.D_SPANWISE,  sd.D_TRANSVERSE], sd.VT_UNAVERAGED_VALUE, r"\mathrm{d} "+"{:s}".format(  sd.SPANWISE_COORDINATE_SYMBOL)+" / "+r"\mathrm{d} "+"{:s}".format(sd.TRANSVERSE_COORDINATE_SYMBOL)+")", )
 define_quantity_symbol( sd.Q_VELOCITY_GRADIENT[sd.D_SPANWISE,  sd.D_SPANWISE  ], sd.VT_UNAVERAGED_VALUE, r"\mathrm{d} "+"{:s}".format(  sd.SPANWISE_COORDINATE_SYMBOL)+" / "+r"\mathrm{d} "+"{:s}".format(  sd.SPANWISE_COORDINATE_SYMBOL)+")", )
 
+# Quantities, point, turbulence
+define_quantity_symbol( sd.Q_MASS_DENSITY_AUTOCOVARIANCE,                       sd.VT_UNWEIGHTED_AVERAGE, r"\overline{\rho'\rho'}", )
+define_quantity_symbol( sd.Q_NORMALIZED_MASS_DENSITY_AUTOCOVARIANCE,            sd.VT_UNWEIGHTED_AVERAGE, r"(\overline{\rho'\rho'}/\overline{\rho}^2)", )
+define_quantity_symbol( sd.Q_NORMALIZED_PRESSURE_AUTOCOVARIANCE,                sd.VT_UNWEIGHTED_AVERAGE, r"(\overline{p'p'}/\overline{p}^2)", )
+define_quantity_symbol( sd.Q_NORMALIZED_TEMPERATURE_AUTOCOVARIANCE,             sd.VT_UNWEIGHTED_AVERAGE, r"(\overline{T'T'}/\overline{T}^2)", )
+define_quantity_symbol( sd.Q_PRESSURE_AUTOCOVARIANCE,                           sd.VT_UNWEIGHTED_AVERAGE, r"\overline{p'p'}", )
+define_quantity_symbol( sd.Q_INNER_LAYER_SPECIFIC_TURBULENT_KINETIC_ENERGY,     sd.VT_UNWEIGHTED_AVERAGE, r"k^+", )
+define_quantity_symbol( sd.Q_MORKOVIN_SCALED_SPECIFIC_TURBULENT_KINETIC_ENERGY, sd.VT_UNWEIGHTED_AVERAGE, r"k^*", )
+define_quantity_symbol( sd.Q_SPECIFIC_TURBULENT_KINETIC_ENERGY,                 sd.VT_UNWEIGHTED_AVERAGE, r"k", )
+define_quantity_symbol( sd.Q_TEMPERATURE_AUTOCOVARIANCE,                        sd.VT_UNWEIGHTED_AVERAGE, r"\overline{T'T'}", )
+
+define_quantity_symbol( sd.Q_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_STREAMWISE], sd.VT_UNWEIGHTED_AVERAGE, r"\overline{"+"{:s}'{:s}'".format(sd.STREAMWISE_VELOCITY_SYMBOL,sd.STREAMWISE_VELOCITY_SYMBOL)+"}", )
+define_quantity_symbol( sd.Q_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_TRANSVERSE], sd.VT_UNWEIGHTED_AVERAGE, r"\overline{"+"{:s}'{:s}'".format(sd.STREAMWISE_VELOCITY_SYMBOL,sd.TRANSVERSE_VELOCITY_SYMBOL)+"}", )
+define_quantity_symbol( sd.Q_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_SPANWISE  ], sd.VT_UNWEIGHTED_AVERAGE, r"\overline{"+"{:s}'{:s}'".format(sd.STREAMWISE_VELOCITY_SYMBOL,  sd.SPANWISE_VELOCITY_SYMBOL)+"}", )
+define_quantity_symbol( sd.Q_VELOCITY_COVARIANCE[sd.D_TRANSVERSE,sd.D_TRANSVERSE], sd.VT_UNWEIGHTED_AVERAGE, r"\overline{"+"{:s}'{:s}'".format(sd.TRANSVERSE_VELOCITY_SYMBOL,sd.TRANSVERSE_VELOCITY_SYMBOL)+"}", )
+define_quantity_symbol( sd.Q_VELOCITY_COVARIANCE[sd.D_TRANSVERSE,sd.D_SPANWISE  ], sd.VT_UNWEIGHTED_AVERAGE, r"\overline{"+"{:s}'{:s}'".format(sd.TRANSVERSE_VELOCITY_SYMBOL,  sd.SPANWISE_VELOCITY_SYMBOL)+"}", )
+define_quantity_symbol( sd.Q_VELOCITY_COVARIANCE[sd.D_SPANWISE,  sd.D_SPANWISE  ], sd.VT_UNWEIGHTED_AVERAGE, r"\overline{"+"{:s}'{:s}'".format(  sd.SPANWISE_VELOCITY_SYMBOL,  sd.SPANWISE_VELOCITY_SYMBOL)+"}", )
+
+define_quantity_symbol( sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_STREAMWISE], sd.VT_UNWEIGHTED_AVERAGE, r"(\overline{"+"{:s}'{:s}'".format(sd.STREAMWISE_VELOCITY_SYMBOL,sd.STREAMWISE_VELOCITY_SYMBOL)+"})^+", )
+define_quantity_symbol( sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_TRANSVERSE], sd.VT_UNWEIGHTED_AVERAGE, r"(\overline{"+"{:s}'{:s}'".format(sd.STREAMWISE_VELOCITY_SYMBOL,sd.TRANSVERSE_VELOCITY_SYMBOL)+"})^+", )
+define_quantity_symbol( sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_SPANWISE  ], sd.VT_UNWEIGHTED_AVERAGE, r"(\overline{"+"{:s}'{:s}'".format(sd.STREAMWISE_VELOCITY_SYMBOL,  sd.SPANWISE_VELOCITY_SYMBOL)+"})^+", )
+define_quantity_symbol( sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[sd.D_TRANSVERSE,sd.D_TRANSVERSE], sd.VT_UNWEIGHTED_AVERAGE, r"(\overline{"+"{:s}'{:s}'".format(sd.TRANSVERSE_VELOCITY_SYMBOL,sd.TRANSVERSE_VELOCITY_SYMBOL)+"})^+", )
+define_quantity_symbol( sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[sd.D_TRANSVERSE,sd.D_SPANWISE  ], sd.VT_UNWEIGHTED_AVERAGE, r"(\overline{"+"{:s}'{:s}'".format(sd.TRANSVERSE_VELOCITY_SYMBOL,  sd.SPANWISE_VELOCITY_SYMBOL)+"})^+", )
+define_quantity_symbol( sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[sd.D_SPANWISE,  sd.D_SPANWISE  ], sd.VT_UNWEIGHTED_AVERAGE, r"(\overline{"+"{:s}'{:s}'".format(  sd.SPANWISE_VELOCITY_SYMBOL,  sd.SPANWISE_VELOCITY_SYMBOL)+"})^+", )
+
+define_quantity_symbol( sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_STREAMWISE], sd.VT_UNWEIGHTED_AVERAGE, r"(\overline{"+"{:s}'{:s}'".format(sd.STREAMWISE_VELOCITY_SYMBOL,sd.STREAMWISE_VELOCITY_SYMBOL)+"})^*", )
+define_quantity_symbol( sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_TRANSVERSE], sd.VT_UNWEIGHTED_AVERAGE, r"(\overline{"+"{:s}'{:s}'".format(sd.STREAMWISE_VELOCITY_SYMBOL,sd.TRANSVERSE_VELOCITY_SYMBOL)+"})^*", )
+define_quantity_symbol( sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_SPANWISE  ], sd.VT_UNWEIGHTED_AVERAGE, r"(\overline{"+"{:s}'{:s}'".format(sd.STREAMWISE_VELOCITY_SYMBOL,  sd.SPANWISE_VELOCITY_SYMBOL)+"})^*", )
+define_quantity_symbol( sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[sd.D_TRANSVERSE,sd.D_TRANSVERSE], sd.VT_UNWEIGHTED_AVERAGE, r"(\overline{"+"{:s}'{:s}'".format(sd.TRANSVERSE_VELOCITY_SYMBOL,sd.TRANSVERSE_VELOCITY_SYMBOL)+"})^*", )
+define_quantity_symbol( sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[sd.D_TRANSVERSE,sd.D_SPANWISE  ], sd.VT_UNWEIGHTED_AVERAGE, r"(\overline{"+"{:s}'{:s}'".format(sd.TRANSVERSE_VELOCITY_SYMBOL,  sd.SPANWISE_VELOCITY_SYMBOL)+"})^*", )
+define_quantity_symbol( sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[sd.D_SPANWISE,  sd.D_SPANWISE  ], sd.VT_UNWEIGHTED_AVERAGE, r"(\overline{"+"{:s}'{:s}'".format(  sd.SPANWISE_VELOCITY_SYMBOL,  sd.SPANWISE_VELOCITY_SYMBOL)+"})^*", )
+
+# Quantities, point, ratios
+define_quantity_symbol( sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO,        sd.VT_UNAVERAGED_VALUE, r"({:s}/{:s}_b)".format(sd.STREAMWISE_VELOCITY_SYMBOL,sd.STREAMWISE_VELOCITY_SYMBOL), )
+define_quantity_symbol( sd.Q_LOCAL_TO_BULK_TEMPERATURE_RATIO,                sd.VT_UNAVERAGED_VALUE, r"(T/T_b)",                                                                           )
+define_quantity_symbol( sd.Q_LOCAL_TO_CENTER_LINE_DYNAMIC_VISCOSITY_RATIO,   sd.VT_UNAVERAGED_VALUE, r"(\mu/\mu_c)",                                                                       )
+define_quantity_symbol( sd.Q_LOCAL_TO_CENTER_LINE_MASS_DENSITY_RATIO,        sd.VT_UNAVERAGED_VALUE, r"(\rho/\rho_c)",                                                                     )
+define_quantity_symbol( sd.Q_LOCAL_TO_CENTER_LINE_STREAMWISE_VELOCITY_RATIO, sd.VT_UNAVERAGED_VALUE, r"({:s}/{:s}_c)".format(sd.STREAMWISE_VELOCITY_SYMBOL,sd.STREAMWISE_VELOCITY_SYMBOL), )
+define_quantity_symbol( sd.Q_LOCAL_TO_CENTER_LINE_TEMPERATURE_RATIO,         sd.VT_UNAVERAGED_VALUE, r"(T/T_c)",                                                                           )
+define_quantity_symbol( sd.Q_LOCAL_TO_EDGE_DYNAMIC_VISCOSITY_RATIO,          sd.VT_UNAVERAGED_VALUE, r"(\mu/\mu_e)",                                                                       )
+define_quantity_symbol( sd.Q_LOCAL_TO_EDGE_MASS_DENSITY_RATIO,               sd.VT_UNAVERAGED_VALUE, r"(\rho/\rho_e)",                                                                     )
+define_quantity_symbol( sd.Q_LOCAL_TO_EDGE_STREAMWISE_VELOCITY_RATIO,        sd.VT_UNAVERAGED_VALUE, r"({:s}/{:s}_e)".format(sd.STREAMWISE_VELOCITY_SYMBOL,sd.STREAMWISE_VELOCITY_SYMBOL), )
+define_quantity_symbol( sd.Q_LOCAL_TO_EDGE_TEMPERATURE_RATIO,                sd.VT_UNAVERAGED_VALUE, r"(T/T_e)",                                                                           )
+define_quantity_symbol( sd.Q_LOCAL_TO_RECOVERY_TEMPERATURE_RATIO,            sd.VT_UNAVERAGED_VALUE, r"(T/T_r)",                                                                           )
+define_quantity_symbol( sd.Q_LOCAL_TO_WALL_DYNAMIC_VISCOSITY_RATIO,          sd.VT_UNAVERAGED_VALUE, r"(\mu/\mu_w)",                                                                       )
+define_quantity_symbol( sd.Q_LOCAL_TO_WALL_MASS_DENSITY_RATIO,               sd.VT_UNAVERAGED_VALUE, r"(\rho/\rho_w)",                                                                     )
+define_quantity_symbol( sd.Q_LOCAL_TO_WALL_STREAMWISE_VELOCITY_RATIO,        sd.VT_UNAVERAGED_VALUE, r"({:s}/{:s}_w)".format(sd.STREAMWISE_VELOCITY_SYMBOL,sd.STREAMWISE_VELOCITY_SYMBOL), )
+define_quantity_symbol( sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO,                sd.VT_UNAVERAGED_VALUE, r"(T/T_w)",                                                                           )
+
 
 # Study types
 cursor.execute(
