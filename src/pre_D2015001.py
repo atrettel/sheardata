@@ -287,8 +287,8 @@ with open( globals_filename, "r" ) as globals_file:
 
         bulk_to_center_line_velocity_ratio = bulk_velocity / center_line_velocity
 
-        sd.set_station_value( cursor, station_id, sd.Q_BULK_REYNOLDS_NUMBER, bulk_reynolds_number, value_type_id=sd.VT_UNWEIGHTED_AVERAGE, meastech_ids=[sd.MT_CALCULATION], )
-        sd.set_station_value( cursor, station_id, sd.Q_BULK_MACH_NUMBER,     bulk_mach_number,     value_type_id=sd.VT_UNWEIGHTED_AVERAGE, meastech_ids=[sd.MT_CALCULATION], )
+        sd.set_station_value( cursor, station_id, sd.Q_BULK_REYNOLDS_NUMBER, bulk_reynolds_number, value_type_id=sd.VT_UNWEIGHTED_AVERAGE, )
+        sd.set_station_value( cursor, station_id, sd.Q_BULK_MACH_NUMBER,     bulk_mach_number,     value_type_id=sd.VT_UNWEIGHTED_AVERAGE, )
 
         for quantity_id in [ sd.Q_ROUGHNESS_HEIGHT,
                              sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
