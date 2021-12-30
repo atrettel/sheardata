@@ -24,9 +24,11 @@ CREATE TABLE value_types (
 )
 
 value_types = {}
+value_types[ sd.VT_DENSITY_WEIGHTED_AVERAGE ] = "density-weighted averaging"
+value_types[ sd.VT_MAXIMUM_VALUE            ] = "maximum value"
+value_types[ sd.VT_MINIMUM_VALUE            ] = "minimum value"
 value_types[ sd.VT_UNAVERAGED_VALUE         ] = "unaveraged value"
 value_types[ sd.VT_UNWEIGHTED_AVERAGE       ] = "unweighted averaging"
-value_types[ sd.VT_DENSITY_WEIGHTED_AVERAGE ] = "density-weighted averaging"
 
 for value_type_id in value_types:
     cursor.execute(
