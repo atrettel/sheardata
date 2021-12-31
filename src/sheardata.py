@@ -1608,6 +1608,8 @@ def quantity_name( cursor, quantity_id ):
 
     return str(cursor.fetchone()[0])
 
-def quantity_camel_case_name( cursor, quantity_id ):
-    name = quantity_name( cursor, quantity_id )
+def camel_case( name ):
     return name.replace("-"," ").replace("'",' ').title().replace(" ","")
+
+def quantity_camel_case_name( cursor, quantity_id ):
+    return camel_case( quantity_name( cursor, quantity_id ) )
