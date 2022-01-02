@@ -16,7 +16,7 @@ Goals
   classes (for use in meta-analyses and other work).
 
 - CSV files as input files.  SQLite database file and PDF documentation file as
-  output files.
+  output files (released under `CC-BY-4.0` license).
 
 - Uncertainty quantification and data validation for as many cases as possible.
 
@@ -282,6 +282,6 @@ A copy of the Creative Commons Attribution 4.0 International license
 
 -------------------------------------------------------------------------------
 
-Copyright © 2020-2021 Andrew Trettel
+Copyright © 2020-2022 Andrew Trettel
 
 SPDX-License-Identifier: MIT
