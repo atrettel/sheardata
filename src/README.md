@@ -54,11 +54,12 @@ Additional requirements to make the documentation:
 - `create_tables.py` creates an empty database.
 
 - Python scripts that start with `pre` preprocess the data to insert it to the
-  database itself.  They also perform some additional calculations.
+  database itself.  They also perform some additional calculations needed to
+  calculate additional data from stored data.
 
 - Python scripts that start with `post` postprocess the data.  These scripts
-  are needed for the documentation and do not run when making only the
-  database.
+  are needed for the documentation and figures.  They do not run when making
+  only the database.
 
 
 -------------------------------------------------------------------------------
