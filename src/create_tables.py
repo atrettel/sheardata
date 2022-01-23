@@ -1003,11 +1003,11 @@ CREATE TABLE study_sources (
 
 # Components
 #
-# This table is vestigial at the moment until a better way to handle fluid
-# mixtures and properties is implemented.
+# This table lists all of the fluid components for a given series of
+# measurements.
 cursor.execute(
 """
-CREATE TABLE components (
+CREATE TABLE series_components (
     series_id TEXT NOT NULL,
     fluid_id  TEXT DEFAULT NULL,
     name      TEXT DEFAULT NULL CHECK (
