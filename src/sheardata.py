@@ -261,6 +261,14 @@ Q_STREAMWISE_WALL_CURVATURE             = "kappa_{:s}".format(STREAMWISE_COORDIN
 Q_VISCOUS_LENGTH_SCALE                  = "l_nu"
 
 # Quantities, point
+#
+# TODO: Consider only using the density quantities as the concentration too.
+# This reduces the complexity but may be confusing later.  This however is more
+# consistent, since some thermodynamic quantities change based on the component
+# involved, and this system does not distinguish between the total value and
+# the individual components.
+Q_AMOUNT_CONCENTRATION             = "Cc"
+Q_AMOUNT_DENSITY                   = "C"
 Q_DILATATION_RATE                  = "Thetadot"
 Q_DISTANCE_FROM_WALL               = TRANSVERSE_COORDINATE_SYMBOL
 Q_DYNAMIC_VISCOSITY                = "mu"
@@ -272,6 +280,7 @@ Q_INNER_LAYER_VELOCITY             = "{:s}+".format(STREAMWISE_VELOCITY_SYMBOL.u
 Q_INNER_LAYER_VELOCITY_DEFECT      = "delta{:s}+".format(STREAMWISE_VELOCITY_SYMBOL.upper())
 Q_KINEMATIC_VISCOSITY              = "nu"
 Q_MACH_NUMBER                      = "Ma"
+Q_MASS_CONCENTRATION               = "rhoc"
 Q_MASS_DENSITY                     = "rho"
 Q_OUTER_LAYER_COORDINATE           = "eta"
 Q_OUTER_LAYER_TEMPERATURE          = "Theta"
@@ -302,6 +311,9 @@ Q_TOTAL_TEMPERATURE                = "T_0"
 Q_TRANSVERSE_COORDINATE            = TRANSVERSE_COORDINATE_SYMBOL.upper()
 Q_TRANSVERSE_VELOCITY              = TRANSVERSE_VELOCITY_SYMBOL.upper()
 Q_VELOCITY_DEFECT                  = "deltaU"
+
+Q_AMOUNT_FRACTION = "x" if Q_STREAMWISE_COORDINATE == "X" else "X"
+Q_MASS_FRACTION   = "w" if Q_TRANSVERSE_COORDINATE == "Y" else "Y"
 
 # TODO: Consider defining the numbers 1, 2, or 3 here as D_STREAMWISE, etc.
 Q_COORDINATE = {
