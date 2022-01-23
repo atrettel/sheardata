@@ -160,9 +160,10 @@ CREATE TABLE phases (
 )
 
 phases = {}
-phases[ sd.PH_GAS    ] =    "gas"
-phases[ sd.PH_LIQUID ] = "liquid"
-phases[ sd.PH_SOLID  ] =  "solid"
+phases[ sd.PH_GAS        ] = "gas"
+phases[ sd.PH_LIQUID     ] = "liquid"
+phases[ sd.PH_SOLID      ] = "solid"
+phases[ sd.PH_MULTIPHASE ] = "multiphase"
 
 for phase_id in phases:
     cursor.execute(
@@ -210,8 +211,7 @@ with open( elements_filename, "r" ) as elements_file:
 
 # Fluids
 #
-# This table is vestigial at the moment until a better way to handle fluid
-# mixtures and properties is implemented.
+# TODO: Add chemical formulae, etc.
 cursor.execute(
 """
 CREATE TABLE fluids (
@@ -222,6 +222,26 @@ CREATE TABLE fluids (
 );
 """
 )
+
+class Fluid:
+    fluid_name = None
+    phase_id   = None
+
+    def __init__( self, fluid_name, phase_id ):
+        self.fluid_name = fluid_name
+        self.phase_id   = phase_id
+
+fluids = {}
+fluids[ sd.F_MIXTURE ] = Fluid( "mixture", sd.PH_MULTIPHASE )
+
+for fluid_id in fluids:
+    cursor.execute(
+    """
+    INSERT INTO fluids( fluid_id, fluid_name, phase_id )
+    VALUES( ?, ?, ? );
+    """,
+    ( fluid_id, fluids[fluid_id].fluid_name, fluids[fluid_id].phase_id, )
+    )
 
 # Geometries
 #
@@ -1009,11 +1029,7 @@ cursor.execute(
 """
 CREATE TABLE series_components (
     series_id TEXT NOT NULL,
-    fluid_id  TEXT DEFAULT NULL,
-    name      TEXT DEFAULT NULL CHECK (
-        fluid_id IS     NULL AND name IS NOT NULL
-        OR
-        fluid_id IS NOT NULL AND name IS NULL ),
+    fluid_id  TEXT NOT NULL,
     PRIMARY KEY(series_id, fluid_id),
     FOREIGN KEY(series_id) REFERENCES series(series_id),
     FOREIGN KEY(fluid_id)  REFERENCES fluids(fluid_id)
@@ -1030,15 +1046,17 @@ cursor.execute(
 CREATE TABLE study_values (
     study_id          TEXT NOT NULL,
     quantity_id       TEXT NOT NULL,
+    fluid_id          TEXT NOT NULL,
     value_type_id     TEXT NOT NULL,
     meastech_set      INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     study_value       REAL NOT NULL,
     study_uncertainty REAL DEFAULT NULL CHECK ( study_uncertainty >= 0.0 ),
     corrected         INTEGER NOT NULL DEFAULT 0 CHECK ( corrected = 0 OR corrected = 1 ),
     outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(study_id, quantity_id, value_type_id, meastech_set),
+    PRIMARY KEY(study_id, quantity_id, fluid_id, value_type_id, meastech_set),
     FOREIGN KEY(study_id)      REFERENCES studies(study_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
 );
 """
@@ -1050,15 +1068,17 @@ cursor.execute(
 CREATE TABLE series_values (
     series_id          TEXT NOT NULL,
     quantity_id        TEXT NOT NULL,
+    fluid_id           TEXT NOT NULL,
     value_type_id      TEXT NOT NULL,
     meastech_set       INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     series_value       REAL NOT NULL,
     series_uncertainty REAL DEFAULT NULL CHECK ( series_uncertainty >= 0.0 ),
     corrected          INTEGER NOT NULL DEFAULT 0 CHECK ( corrected = 0 OR corrected = 1 ),
     outlier            INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(series_id, quantity_id, value_type_id, meastech_set),
+    PRIMARY KEY(series_id, quantity_id, fluid_id, value_type_id, meastech_set),
     FOREIGN KEY(series_id)     REFERENCES series(series_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
 );
 """
@@ -1070,15 +1090,17 @@ cursor.execute(
 CREATE TABLE station_values (
     station_id          TEXT NOT NULL,
     quantity_id         TEXT NOT NULL,
+    fluid_id            TEXT NOT NULL,
     value_type_id       TEXT NOT NULL,
     meastech_set        INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     station_value       REAL NOT NULL,
     station_uncertainty REAL DEFAULT NULL CHECK ( station_uncertainty >= 0.0 ),
     corrected           INTEGER NOT NULL DEFAULT 0 CHECK ( corrected = 0 OR corrected = 1 ),
     outlier             INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(station_id, quantity_id, value_type_id, meastech_set),
+    PRIMARY KEY(station_id, quantity_id, fluid_id, value_type_id, meastech_set),
     FOREIGN KEY(station_id)    REFERENCES stations(station_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
 );
 """
@@ -1090,15 +1112,17 @@ cursor.execute(
 CREATE TABLE point_values (
     point_id          TEXT NOT NULL,
     quantity_id       TEXT NOT NULL,
+    fluid_id          TEXT NOT NULL,
     value_type_id     TEXT NOT NULL,
     meastech_set      INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     point_value       REAL NOT NULL,
     point_uncertainty REAL DEFAULT NULL CHECK ( point_uncertainty >= 0.0 ),
     corrected         INTEGER NOT NULL DEFAULT 0 CHECK ( corrected = 0 OR corrected = 1 ),
     outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(point_id, quantity_id, value_type_id, meastech_set),
+    PRIMARY KEY(point_id, quantity_id, fluid_id, value_type_id, meastech_set),
     FOREIGN KEY(point_id)      REFERENCES points(point_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
 );
 """
@@ -1110,12 +1134,14 @@ cursor.execute(
 CREATE TABLE study_values_mt (
     study_id      TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
+    fluid_id      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     meastech_id   TEXT NOT NULL,
-    PRIMARY KEY(study_id, quantity_id, value_type_id, meastech_set, meastech_id),
+    PRIMARY KEY(study_id, quantity_id, fluid_id, value_type_id, meastech_set, meastech_id),
     FOREIGN KEY(study_id)      REFERENCES studies(study_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
     FOREIGN KEY(meastech_id)   REFERENCES measurement_techniques(meastech_id)
 );
@@ -1126,14 +1152,16 @@ CREATE TABLE study_values_mt (
 cursor.execute(
 """
 CREATE TABLE series_values_mt (
-    series_Id     TEXT NOT NULL,
+    series_id     TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
+    fluid_id      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     meastech_id   TEXT NOT NULL,
-    PRIMARY KEY(series_id, quantity_id, value_type_id, meastech_set, meastech_id),
+    PRIMARY KEY(series_id, quantity_id, fluid_id, value_type_id, meastech_set, meastech_id),
     FOREIGN KEY(series_id)     REFERENCES series(series_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
     FOREIGN KEY(meastech_id)   REFERENCES measurement_techniques(meastech_id)
 );
@@ -1146,12 +1174,14 @@ cursor.execute(
 CREATE TABLE station_values_mt (
     station_id    TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
+    fluid_id      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     meastech_id   TEXT NOT NULL,
-    PRIMARY KEY(station_id, quantity_id, value_type_id, meastech_set, meastech_id),
+    PRIMARY KEY(station_id, quantity_id, fluid_id, value_type_id, meastech_set, meastech_id),
     FOREIGN KEY(station_id)    REFERENCES stations(station_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
     FOREIGN KEY(meastech_id)   REFERENCES measurement_techniques(meastech_id)
 );
@@ -1164,12 +1194,14 @@ cursor.execute(
 CREATE TABLE point_values_mt (
     point_id      TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
+    fluid_id      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     meastech_id   TEXT NOT NULL,
-    PRIMARY KEY(point_id, quantity_id, value_type_id, meastech_set, meastech_id),
+    PRIMARY KEY(point_id, quantity_id, fluid_id, value_type_id, meastech_set, meastech_id),
     FOREIGN KEY(point_id)      REFERENCES points(point_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
     FOREIGN KEY(meastech_id)   REFERENCES measurement_techniques(meastech_id)
 );
@@ -1195,12 +1227,14 @@ cursor.execute(
 CREATE TABLE study_value_notes (
     study_id      TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
+    fluid_id      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(study_id, quantity_id, value_type_id, meastech_set, note_id),
+    PRIMARY KEY(study_id, quantity_id, fluid_id, value_type_id, meastech_set, note_id),
     FOREIGN KEY(study_id)      REFERENCES studies(study_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
     FOREIGN KEY(note_id)       REFERENCES notes(note_id)
 );
@@ -1226,12 +1260,14 @@ cursor.execute(
 CREATE TABLE series_value_notes (
     series_id     TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
+    fluid_id      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(series_id, quantity_id, value_type_id, meastech_set, note_id),
+    PRIMARY KEY(series_id, quantity_id, fluid_id, value_type_id, meastech_set, note_id),
     FOREIGN KEY(series_id)     REFERENCES series(series_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
     FOREIGN KEY(note_id)       REFERENCES notes(note_id)
 );
@@ -1257,12 +1293,14 @@ cursor.execute(
 CREATE TABLE station_value_notes (
     station_id    TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
+    fluid_id      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(station_id, quantity_id, value_type_id, meastech_set, note_id),
+    PRIMARY KEY(station_id, quantity_id, fluid_id, value_type_id, meastech_set, note_id),
     FOREIGN KEY(station_id)    REFERENCES stations(station_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
     FOREIGN KEY(note_id)       REFERENCES notes(note_id)
 );
@@ -1288,12 +1326,14 @@ cursor.execute(
 CREATE TABLE point_value_notes (
     point_id      TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
+    fluid_id      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
     meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(point_id, quantity_id, value_type_id, meastech_set, note_id),
+    PRIMARY KEY(point_id, quantity_id, fluid_id, value_type_id, meastech_set, note_id),
     FOREIGN KEY(point_id)      REFERENCES points(point_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
     FOREIGN KEY(note_id)       REFERENCES notes(note_id)
 );
