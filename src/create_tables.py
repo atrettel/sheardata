@@ -537,7 +537,6 @@ quantities[ sd.Q_STREAMWISE_WALL_CURVATURE             ] = Quantity( "streamwise
 quantities[ sd.Q_VISCOUS_LENGTH_SCALE                  ] = Quantity( "viscous length scale",                                    length_exponent=+1.0                             )
 
 # Quantities, point
-quantities[ sd.Q_AMOUNT_CONCENTRATION                               ] = Quantity( "amount concentration",                                                     length_exponent=-3.0,                     amount_exponent=+1.0,                            )
 quantities[ sd.Q_AMOUNT_DENSITY                                     ] = Quantity( "amount density",                                                           length_exponent=-3.0,                     amount_exponent=+1.0,                            )
 quantities[ sd.Q_AMOUNT_FRACTION                                    ] = Quantity( "amount fraction",                                                                                                                                                     )
 quantities[ sd.Q_DILATATION_RATE                                    ] = Quantity( "dilatation rate",                                      time_exponent=-1.0,                                                                                            )
@@ -551,7 +550,6 @@ quantities[ sd.Q_INNER_LAYER_VELOCITY                               ] = Quantity
 quantities[ sd.Q_INNER_LAYER_VELOCITY_DEFECT                        ] = Quantity( "inner-layer velocity defect",                                                                                                                                         )
 quantities[ sd.Q_KINEMATIC_VISCOSITY                                ] = Quantity( "kinematic viscosity",                                  time_exponent=-1.0, length_exponent=+2.0,                                                                      )
 quantities[ sd.Q_MACH_NUMBER                                        ] = Quantity( "Mach number",                                                                                                                                                         )
-quantities[ sd.Q_MASS_CONCENTRATION                                 ] = Quantity( "mass concentration",                                                       length_exponent=-3.0, mass_exponent=+1.0,                                                  )
 quantities[ sd.Q_MASS_DENSITY                                       ] = Quantity( "mass density",                                                             length_exponent=-3.0, mass_exponent=+1.0,                                                  )
 quantities[ sd.Q_MASS_FRACTION                                      ] = Quantity( "mass fraction",                                                                                                                                                       )
 quantities[ sd.Q_OUTER_LAYER_COORDINATE                             ] = Quantity( "outer-layer coordinate",                                                                                                                                              )
