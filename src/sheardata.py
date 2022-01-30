@@ -86,9 +86,6 @@ FR_LAMINAR      = "L"
 FR_TRANSITIONAL = "D"
 FR_TURBULENT    = "T"
 
-# Fluids
-F_MIXTURE = "0"
-
 # Phases
 #
 # The multiphase global can be used for searching in Python functions, but it
@@ -97,6 +94,11 @@ PH_GAS        = "g"
 PH_LIQUID     = "l"
 PH_SOLID      = "s"
 PH_MULTIPHASE = "m"
+
+# Fluids
+F_MIXTURE = "0"
+F_LIQUID_WATER = "H2O(l)"
+F_WATER_VAPOR  = "H2O(g)"
 
 # Geometries
 GM_ELLIPTICAL  = "E"
