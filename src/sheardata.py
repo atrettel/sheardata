@@ -1004,6 +1004,13 @@ def get_series_components( cursor, series_id ):
 
     return fluid_ids
 
+def is_air_working_fluid( cursor, series_id ):
+    fluid_ids = get_series_components( cursor, series_id )
+    for fluid_id in fluid_ids:
+        if ( fluid_id not in MIX_AIR ):
+            return False
+    return True
+
 def add_station( cursor, flow_class_id, year, study_number, series_number, \
                 station_number, outlier=False, note_ids=[], station_external_ids={}, ):
     station_id = identify_station(
