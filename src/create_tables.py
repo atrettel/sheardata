@@ -235,9 +235,13 @@ class Fluid:
         self.chemical_formula = chemical_formula
 
 fluids = {}
-fluids[ sd.F_MIXTURE ]      = Fluid( "mixture",      sd.PH_MULTIPHASE    )
-fluids[ sd.F_LIQUID_WATER ] = Fluid( "liquid water", sd.PH_LIQUID, "H2O" )
-fluids[ sd.F_WATER_VAPOR  ] = Fluid( "water vapor",  sd.PH_GAS,    "H2O" )
+fluids[ sd.F_MIXTURE                   ] = Fluid( "mixture",                   sd.PH_MULTIPHASE    )
+fluids[ sd.F_GASEOUS_DIATOMIC_NITROGEN ] = Fluid( "gaseous diatomic nitrogen", sd.PH_GAS,    "N2"  )
+fluids[ sd.F_GASEOUS_DIATOMIC_OXYGEN   ] = Fluid( "gaseous diatomic oxygen",   sd.PH_GAS,    "O2"  )
+fluids[ sd.F_GASEOUS_ARGON             ] = Fluid( "gaseous argon",             sd.PH_GAS,    "Ar"  )
+fluids[ sd.F_GASEOUS_CARBON_DIOXIDE    ] = Fluid( "gaseous carbon dioxide",    sd.PH_GAS,    "CO2" )
+fluids[ sd.F_LIQUID_WATER              ] = Fluid( "liquid water",              sd.PH_LIQUID, "H2O" )
+fluids[ sd.F_WATER_VAPOR               ] = Fluid( "water vapor",               sd.PH_GAS,    "H2O" )
 
 for fluid_id in fluids:
     cursor.execute(
