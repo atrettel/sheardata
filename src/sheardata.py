@@ -961,6 +961,18 @@ def get_series_value( cursor, series_id, quantity_id,
     )
     return fetch_float( cursor )
 
+def add_series_component( cursor, series_id, fluid_id ):
+    cursor.execute(
+    """
+    INSERT INTO series_components( series_id, fluid_id )
+    VALUES( ?, ? );
+    """,
+    (
+        series_id,
+        fluid_id,
+    )
+    )
+
 def add_station( cursor, flow_class_id, year, study_number, series_number, \
                 station_number, outlier=False, note_ids=[], station_external_ids={}, ):
     station_id = identify_station(
