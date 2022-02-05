@@ -985,6 +985,25 @@ def add_air_components_to_series( cursor, series_id ):
     for fluid_id in MIX_AIR:
         add_series_component( cursor, series_id, fluid_id )
 
+def get_series_components( cursor, series_id ):
+    cursor.execute(
+    """
+    SELECT fluid_id
+    FROM series_components
+    WHERE series_id=?;
+    """,
+    (
+        series_id,
+    )
+    )
+
+    results = cursor.fetchall()
+    fluid_ids = []
+    for result in results:
+        fluid_ids.append( result[0] )
+
+    return fluid_ids
+
 def add_station( cursor, flow_class_id, year, study_number, series_number, \
                 station_number, outlier=False, note_ids=[], station_external_ids={}, ):
     station_id = identify_station(
