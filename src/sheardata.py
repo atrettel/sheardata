@@ -1004,6 +1004,11 @@ def get_series_components( cursor, series_id ):
 
     return fluid_ids
 
+# TODO: Consider checking the array length and for additional fluid components.
+# Additional components may not necessarily prevent it from being classified as
+# air, since it may be air with additional components, but the point for now is
+# to just confirm that it has all of the components usually associated with
+# air.
 def is_air_working_fluid( cursor, series_id ):
     fluid_ids = get_series_components( cursor, series_id )
     for fluid_id in fluid_ids:
