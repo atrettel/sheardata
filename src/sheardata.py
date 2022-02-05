@@ -104,6 +104,14 @@ F_GASEOUS_DIATOMIC_OXYGEN   = "O(g)"
 F_LIQUID_WATER = "H2O(l)"
 F_WATER_VAPOR  = "H2O(g)"
 
+MIX_AIR = [
+    F_GASEOUS_ARGON,
+    F_GASEOUS_CARBON_DIOXIDE,
+    F_GASEOUS_DIATOMIC_NITROGEN,
+    F_GASEOUS_DIATOMIC_OXYGEN,
+    F_WATER_VAPOR,
+]
+
 # Geometries
 GM_ELLIPTICAL  = "E"
 GM_RECTANGULAR = "R"
@@ -972,6 +980,10 @@ def add_series_component( cursor, series_id, fluid_id ):
         fluid_id,
     )
     )
+
+def add_air_components_to_series( cursor, series_id ):
+    for fluid_id in MIX_AIR:
+        add_series_component( cursor, series_id, fluid_id )
 
 def add_station( cursor, flow_class_id, year, study_number, series_number, \
                 station_number, outlier=False, note_ids=[], station_external_ids={}, ):
