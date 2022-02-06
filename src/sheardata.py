@@ -1633,14 +1633,18 @@ def get_molecular_formula_for_component( cursor, fluid_id ):
     return str(cursor.fetchone()[0])
 
 def calculate_molar_mass_of_mixture( cursor, amount_fractions ):
-    # TODO: assert that amount fractions add up to 1.
-    molar_mass = 0.0
+    mixture_amount_fraction = 0.0
+    mixture_molar_mass      = 0.0
     for fluid_id in amount_fractions:
-        print(fluid_id)
         molecular_formula = get_molecular_formula_for_component( cursor, fluid_id )
-        print(molecular_formula)
-        molar_mass += amount_fractions[fluid_id] * calculate_molar_mass_of_molecular_formula( cursor, molecular_formula )
-    return molar_mass
+        molar_mass        = calculate_molar_mass_of_molecular_formula( cursor, molecular_formula )
+        amount_fraction   = amount_fractions[fluid_id]
+
+        mixture_amount_fraction += amount_fraction
+        mixture_molar_mass      += amount_fraction * molar_mass
+
+    assert( mixture_amount_fraction == 1.0 )
+    return mixture_molar_mass
 
 def mark_station_as_periodic( cursor, station_id, \
                               streamwise=True, spanwise=False ):
