@@ -100,7 +100,7 @@ F_MIXTURE = "0"
 F_GASEOUS_ARGON             = "Ar(g)"
 F_GASEOUS_CARBON_DIOXIDE    = "CO2(g)"
 F_GASEOUS_DIATOMIC_NITROGEN = "N2(g)"
-F_GASEOUS_DIATOMIC_OXYGEN   = "O(g)"
+F_GASEOUS_DIATOMIC_OXYGEN   = "O2(g)"
 F_LIQUID_WATER = "H2O(l)"
 F_WATER_VAPOR  = "H2O(g)"
 
@@ -1616,6 +1616,30 @@ def calculate_molar_mass_of_molecular_formula( cursor, formula ):
         result = cursor.fetchone()
         atomic_weight = float(result[0])
         molar_mass += count * 1.0e-3 * atomic_weight
+    return molar_mass
+
+def get_molecular_formula_for_component( cursor, fluid_id ):
+    cursor.execute(
+    """
+    SELECT molecular_formula
+    FROM fluids
+    WHERE fluid_id=?;
+    """,
+    (
+        fluid_id,
+    )
+    )
+
+    return str(cursor.fetchone()[0])
+
+def calculate_molar_mass_of_mixture( cursor, amount_fractions ):
+    # TODO: assert that amount fractions add up to 1.
+    molar_mass = 0.0
+    for fluid_id in amount_fractions:
+        print(fluid_id)
+        molecular_formula = get_molecular_formula_for_component( cursor, fluid_id )
+        print(molecular_formula)
+        molar_mass += amount_fractions[fluid_id] * calculate_molar_mass_of_molecular_formula( cursor, molecular_formula )
     return molar_mass
 
 def mark_station_as_periodic( cursor, station_id, \
