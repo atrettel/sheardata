@@ -210,29 +210,27 @@ with open( elements_filename, "r" ) as elements_file:
         )
 
 # Fluids
-#
-# TODO: Add chemical formulae, etc.
 cursor.execute(
 """
 CREATE TABLE fluids (
-    fluid_id         TEXT PRIMARY KEY,
-    fluid_name       TEXT NOT NULL,
-    phase_id         TEXT NOT NULL,
-    chemical_formula TEXT DEFAULT NULL,
+    fluid_id          TEXT PRIMARY KEY,
+    fluid_name        TEXT NOT NULL,
+    phase_id          TEXT NOT NULL,
+    molecular_formula TEXT DEFAULT NULL,
     FOREIGN KEY(phase_id) REFERENCES phases(phase_id)
 );
 """
 )
 
 class Fluid:
-    fluid_name       = None
-    phase_id         = None
-    chemical_formula = None
+    fluid_name        = None
+    phase_id          = None
+    molecular_formula = None
 
-    def __init__( self, fluid_name, phase_id, chemical_formula=None ):
-        self.fluid_name       = fluid_name
-        self.phase_id         = phase_id
-        self.chemical_formula = chemical_formula
+    def __init__( self, fluid_name, phase_id, molecular_formula=None ):
+        self.fluid_name        = fluid_name
+        self.phase_id          = phase_id
+        self.molecular_formula = molecular_formula
 
 fluids = {}
 fluids[ sd.F_MIXTURE                   ] = Fluid( "mixture",                   sd.PH_MULTIPHASE    )
@@ -246,14 +244,14 @@ fluids[ sd.F_WATER_VAPOR               ] = Fluid( "water vapor",               s
 for fluid_id in fluids:
     cursor.execute(
     """
-    INSERT INTO fluids( fluid_id, fluid_name, phase_id, chemical_formula )
+    INSERT INTO fluids( fluid_id, fluid_name, phase_id, molecular_formula )
     VALUES( ?, ?, ?, ? );
     """,
     (
         fluid_id,
         fluids[fluid_id].fluid_name,
         fluids[fluid_id].phase_id,
-        fluids[fluid_id].chemical_formula,
+        fluids[fluid_id].molecular_formula,
     )
     )
 
