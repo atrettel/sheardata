@@ -1618,6 +1618,11 @@ def calculate_molar_mass_of_molecular_formula( cursor, formula ):
         molar_mass += count * 1.0e-3 * atomic_weight
     return molar_mass
 
+def calculate_molar_mass_of_component( cursor, fluid_id ):
+    molecular_formula = get_molecular_formula_for_component( cursor, fluid_id )
+    molar_mass        = calculate_molar_mass_of_molecular_formula( cursor, molecular_formula )
+    return molar_mass
+
 def get_molecular_formula_for_component( cursor, fluid_id ):
     cursor.execute(
     """
@@ -1636,9 +1641,8 @@ def calculate_molar_mass_of_mixture( cursor, amount_fractions ):
     mixture_amount_fraction = 0.0
     mixture_molar_mass      = 0.0
     for fluid_id in amount_fractions:
-        molecular_formula = get_molecular_formula_for_component( cursor, fluid_id )
-        molar_mass        = calculate_molar_mass_of_molecular_formula( cursor, molecular_formula )
-        amount_fraction   = amount_fractions[fluid_id]
+        molar_mass      = calculate_molar_mass_of_component( cursor, fluid_id )
+        amount_fraction = amount_fractions[fluid_id]
 
         mixture_amount_fraction += amount_fraction
         mixture_molar_mass      += amount_fraction * molar_mass
