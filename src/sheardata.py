@@ -1650,6 +1650,21 @@ def calculate_molar_mass_of_mixture( cursor, amount_fractions ):
     assert( mixture_amount_fraction == 1.0 )
     return mixture_molar_mass
 
+def calculate_mass_fractions_from_amount_fractions( cursor, amount_fractions ):
+    mixture_molar_mass = calculate_molar_mass_of_mixture( cursor, amount_fractions )
+
+    mixture_mass_fraction = 0.0
+    mass_fractions = {}
+    for fluid_id in amount_fractions:
+        molar_mass = calculate_molar_mass_of_component( cursor, fluid_id )
+        mass_fraction = molar_mass * amount_fractions[fluid_id] / mixture_molar_mass
+
+        mixture_mass_fraction   += mass_fraction
+        mass_fractions[fluid_id] = mass_fraction
+
+    assert( mixture_mass_fraction == 1.0 )
+    return mass_fractions
+
 def mark_station_as_periodic( cursor, station_id, \
                               streamwise=True, spanwise=False ):
     if ( streamwise ):
