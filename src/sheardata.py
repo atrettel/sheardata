@@ -16,6 +16,10 @@ DRY_AIR_SPECIFIC_GAS_CONSTANT       =    287.058
 STANDARD_ATMOSPHERIC_PRESSURE       = 101325.0
 STANDARD_GRAVITATIONAL_ACCELERATION =      9.80665
 
+AVOGADRO_CONSTANT  = 6.02214076e+23
+BOLTZMANN_CONSTANT = 1.38064900e-23
+MOLAR_GAS_CONSTANT = AVOGADRO_CONSTANT * BOLTZMANN_CONSTANT
+
 # Unit conversion factors
 INCHES_PER_FOOT         = 12.0
 KILOGRAM_PER_POUND_MASS =  0.45359237
@@ -1637,6 +1641,7 @@ def get_molecular_formula_for_component( cursor, fluid_id ):
 
     return str(cursor.fetchone()[0])
 
+# TODO: Rename this to refer to amount fractions and not mixtures.
 def calculate_molar_mass_of_mixture( cursor, amount_fractions ):
     mixture_amount_fraction = 0.0
     mixture_molar_mass      = 0.0
@@ -1664,6 +1669,20 @@ def calculate_mass_fractions_from_amount_fractions( cursor, amount_fractions ):
 
     assert( mixture_mass_fraction == 1.0 )
     return mass_fractions
+
+def calculate_specific_gas_constant_of_component( cursor, fluid_id ):
+    molar_mass = calculate_molar_mass_of_component( cursor, fluid_id )
+    return MOLAR_GAS_CONSTANT / molar_mass
+
+def calculate_specific_gas_constant_from_mass_fractions( cursor, mass_fractions ):
+    mixture_specific_gas_constant = 0.0
+    for fluid_id in mass_fractions:
+        mixture_specific_gas_constant += mass_fractions[fluid_id] * calculate_specific_gas_constant_of_component( cursor, fluid_id )
+    return mixture_specific_gas_constant
+
+def calculate_specific_gas_constant_from_amount_fractions( cursor, amount_fractions ):
+    mass_fractions = calculate_mass_fractions_from_amount_fractions( cursor, amount_fractions )
+    return calculate_specific_gas_constant_from_mass_fractions( cursor, mass_fractions )
 
 def mark_station_as_periodic( cursor, station_id, \
                               streamwise=True, spanwise=False ):
