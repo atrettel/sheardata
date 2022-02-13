@@ -1641,8 +1641,7 @@ def get_molecular_formula_for_component( cursor, fluid_id ):
 
     return str(cursor.fetchone()[0])
 
-# TODO: Rename this to refer to amount fractions and not mixtures.
-def calculate_molar_mass_of_mixture( cursor, amount_fractions ):
+def calculate_molar_mass_from_amount_fractions( cursor, amount_fractions ):
     mixture_amount_fraction = 0.0
     mixture_molar_mass      = 0.0
     for fluid_id in amount_fractions:
@@ -1656,7 +1655,7 @@ def calculate_molar_mass_of_mixture( cursor, amount_fractions ):
     return mixture_molar_mass
 
 def calculate_mass_fractions_from_amount_fractions( cursor, amount_fractions ):
-    mixture_molar_mass = calculate_molar_mass_of_mixture( cursor, amount_fractions )
+    mixture_molar_mass = calculate_molar_mass_from_amount_fractions( cursor, amount_fractions )
 
     mixture_mass_fraction = 0.0
     mass_fractions = {}
