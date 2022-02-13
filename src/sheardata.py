@@ -8,6 +8,7 @@ import math
 import numpy as np
 import sqlite3
 from uncertainties import ufloat
+import sys
 
 # Physical constants
 ABSOLUTE_ZERO                       =    273.15
@@ -1651,7 +1652,7 @@ def calculate_molar_mass_from_amount_fractions( cursor, amount_fractions ):
         mixture_amount_fraction += amount_fraction
         mixture_molar_mass      += amount_fraction * molar_mass
 
-    assert( mixture_amount_fraction == 1.0 )
+    assert( math.fabs( mixture_amount_fraction - 1.0 ) < sys.float_info.epsilon )
     return mixture_molar_mass
 
 def calculate_mass_fractions_from_amount_fractions( cursor, amount_fractions ):
@@ -1666,7 +1667,7 @@ def calculate_mass_fractions_from_amount_fractions( cursor, amount_fractions ):
         mixture_mass_fraction   += mass_fraction
         mass_fractions[fluid_id] = mass_fraction
 
-    assert( mixture_mass_fraction == 1.0 )
+    assert( math.fabs( mixture_mass_fraction - 1.0 ) < sys.float_info.epsilon )
     return mass_fractions
 
 def calculate_specific_gas_constant_of_component( cursor, fluid_id ):
