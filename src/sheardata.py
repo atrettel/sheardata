@@ -122,6 +122,10 @@ GM_ELLIPTICAL  = "E"
 GM_RECTANGULAR = "R"
 
 # Measurement techniques (and other sources of information)
+#
+# TODO: It is clear to me that the name "measurement techiques" is incorrect
+# here.  I should consider renaming it to "methods".  That keeps the same
+# prefix "MT" too and is a better description of this type of information.
 MT_APPROXIMATION                            = "APP"
 MT_ASSUMPTION                               = "ASM"
 MT_CALCULATION                              = "CLC"
