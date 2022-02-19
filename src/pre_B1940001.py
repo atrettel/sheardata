@@ -40,7 +40,7 @@ station_1_outlier_note = sd.add_note(
 
 velocity_method_note = sd.add_note(
     cursor,
-    "../data/{:s}/note_velocity_method.tex".format( study_id ),
+    "../data/{:s}/note_velocity_measurement_technique.tex".format( study_id ),
 )
 
 conn.commit()
