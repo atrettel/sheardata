@@ -500,246 +500,275 @@ CREATE TABLE quantities (
 )
 
 class Quantity:
-    name                 = None
-    time_exponent        = None
-    length_exponent      = None
-    mass_exponent        = None
-    current_exponent     = None
-    temperature_exponent = None
-    amount_exponent      = None
+    _quantity_id          = None
+    _quantity_name        = None
+    _time_exponent        = None
+    _length_exponent      = None
+    _mass_exponent        = None
+    _current_exponent     = None
+    _temperature_exponent = None
+    _amount_exponent      = None
 
-    def __init__( self, name,
+    def quantity_id( self ):
+        return self._quantity_id
+
+    def quantity_name( self ):
+        return self._quantity_name
+
+    def time_exponent( self ):
+        return self._time_exponent
+
+    def length_exponent( self ):
+        return self._length_exponent
+
+    def mass_exponent( self ):
+        return self._mass_exponent
+
+    def current_exponent( self ):
+        return self._current_exponent
+
+    def temperature_exponent( self ):
+        return self._temperature_exponent
+
+    def amount_exponent( self ):
+        return self._amount_exponent
+
+    def execute_query( self ):
+        cursor.execute(
+        """
+        INSERT INTO quantities( quantity_id, quantity_name,
+                                time_exponent, length_exponent, mass_exponent,
+                                current_exponent, temperature_exponent,
+                                amount_exponent )
+        VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
+        """,
+        (
+            self.quantity_id(),
+            self.quantity_name(),
+            self.time_exponent(),
+            self.length_exponent(),
+            self.mass_exponent(),
+            self.current_exponent(),
+            self.temperature_exponent(),
+            self.amount_exponent(),
+        )
+        )
+
+    def __init__( self, quantity_id, quantity_name,
                   time_exponent=0.0,
                   length_exponent=0.0,
                   mass_exponent=0.0,
                   current_exponent=0.0,
                   temperature_exponent=0.0,
                   amount_exponent=0.0, ):
-        self.name                 = str(name)
-        self.time_exponent        = time_exponent
-        self.length_exponent      = length_exponent
-        self.mass_exponent        = mass_exponent
-        self.current_exponent     = current_exponent
-        self.temperature_exponent = temperature_exponent
-        self.amount_exponent      = amount_exponent
+        self._quantity_id          = str(quantity_id)
+        self._quantity_name        = str(quantity_name)
+        self._time_exponent        = time_exponent
+        self._length_exponent      = length_exponent
+        self._mass_exponent        = mass_exponent
+        self._current_exponent     = current_exponent
+        self._temperature_exponent = temperature_exponent
+        self._amount_exponent      = amount_exponent
 
-quantities = {}
+quantities = []
 
 # Quantities, series
-quantities[ sd.Q_ANGLE_OF_ATTACK                ] = Quantity( "angle of attack",                                                                                                              )
-quantities[ sd.Q_BODY_HEIGHT                    ] = Quantity( "body height",                                             length_exponent=+1.0,                                                )
-quantities[ sd.Q_BODY_LENGTH                    ] = Quantity( "body length",                                             length_exponent=+1.0,                                                )
-quantities[ sd.Q_BODY_PROJECTED_FRONTAL_AREA    ] = Quantity( "body projected frontal area",                             length_exponent=+2.0,                                                )
-quantities[ sd.Q_BODY_REYNOLDS_NUMBER           ] = Quantity( "body Reynolds number",                                                                                                         )
-quantities[ sd.Q_BODY_STROUHAL_NUMBER           ] = Quantity( "body Strouhal number",                                                                                                         )
-quantities[ sd.Q_BODY_VOLUME                    ] = Quantity( "body volume",                                             length_exponent=+3.0,                                                )
-quantities[ sd.Q_BODY_WETTED_SURFACE_AREA       ] = Quantity( "body wetted surface area",                                length_exponent=+2.0,                                                )
-quantities[ sd.Q_BODY_WIDTH                     ] = Quantity( "body width",                                              length_exponent=+1.0,                                                )
-quantities[ sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS ] = Quantity( "distance between pressure taps",                          length_exponent=+1.0,                                                )
-quantities[ sd.Q_DRAG_COEFFICIENT               ] = Quantity( "drag coefficient",                                                                                                             )
-quantities[ sd.Q_DRAG_FORCE                     ] = Quantity( "drag force",                          time_exponent=-2.0, length_exponent=+1.0, mass_exponent=+1.0,                            )
-quantities[ sd.Q_FREESTREAM_MACH_NUMBER         ] = Quantity( "freestream Mach number",                                                                                                       )
-quantities[ sd.Q_FREESTREAM_SPEED_OF_SOUND      ] = Quantity( "freestream speed of sound",           time_exponent=-1.0, length_exponent=+1.0,                                                )
-quantities[ sd.Q_FREESTREAM_TEMPERATURE         ] = Quantity( "freestream temperature",                                                                            temperature_exponent=+1.0, )
-quantities[ sd.Q_FREESTREAM_VELOCITY            ] = Quantity( "freestream velocity",                 time_exponent=-1.0, length_exponent=+1.0,                                                )
-quantities[ sd.Q_LEADING_EDGE_LENGTH            ] = Quantity( "leading edge length",                                     length_exponent=+1.0,                                                )
-quantities[ sd.Q_LEADING_EDGE_RADIUS            ] = Quantity( "leading edge radius",                                     length_exponent=+1.0,                                                )
-quantities[ sd.Q_LIFT_COEFFICIENT               ] = Quantity( "lift coefficient",                                                                                                             )
-quantities[ sd.Q_LIFT_FORCE                     ] = Quantity( "lift force",                          time_exponent=-2.0, length_exponent=+1.0, mass_exponent=+1.0,                            )
-quantities[ sd.Q_LIFT_TO_DRAG_RATIO             ] = Quantity( "lift-to-drag ratio",                                                                                                           )
-quantities[ sd.Q_MASS_FLOW_RATE                 ] = Quantity( "mass flow rate",                      time_exponent=-1.0,                       mass_exponent=+1.0,                            )
-quantities[ sd.Q_SPANWISE_NUMBER_OF_POINTS      ] = Quantity( "spanwise number of points",                                                                                                    )
-quantities[ sd.Q_STREAMWISE_NUMBER_OF_POINTS    ] = Quantity( "streamwise number of points",                                                                                                  )
-quantities[ sd.Q_TEST_LENGTH                    ] = Quantity( "test length",                                             length_exponent=+1.0,                                                )
-quantities[ sd.Q_TRANSVERSE_NUMBER_OF_POINTS    ] = Quantity( "transverse number of points",                                                                                                  )
-quantities[ sd.Q_VOLUMETRIC_FLOW_RATE           ] = Quantity( "volumetric flow rate",                time_exponent=-1.0, length_exponent=+3.0,                                                )
+quantities.append( Quantity( sd.Q_ANGLE_OF_ATTACK,                "angle of attack",                                                                                                              ) )
+quantities.append( Quantity( sd.Q_BODY_HEIGHT,                    "body height",                                             length_exponent=+1.0,                                                ) )
+quantities.append( Quantity( sd.Q_BODY_LENGTH,                    "body length",                                             length_exponent=+1.0,                                                ) )
+quantities.append( Quantity( sd.Q_BODY_PROJECTED_FRONTAL_AREA,    "body projected frontal area",                             length_exponent=+2.0,                                                ) )
+quantities.append( Quantity( sd.Q_BODY_REYNOLDS_NUMBER,           "body Reynolds number",                                                                                                         ) )
+quantities.append( Quantity( sd.Q_BODY_STROUHAL_NUMBER,           "body Strouhal number",                                                                                                         ) )
+quantities.append( Quantity( sd.Q_BODY_VOLUME,                    "body volume",                                             length_exponent=+3.0,                                                ) )
+quantities.append( Quantity( sd.Q_BODY_WETTED_SURFACE_AREA,       "body wetted surface area",                                length_exponent=+2.0,                                                ) )
+quantities.append( Quantity( sd.Q_BODY_WIDTH,                     "body width",                                              length_exponent=+1.0,                                                ) )
+quantities.append( Quantity( sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS, "distance between pressure taps",                          length_exponent=+1.0,                                                ) )
+quantities.append( Quantity( sd.Q_DRAG_COEFFICIENT,               "drag coefficient",                                                                                                             ) )
+quantities.append( Quantity( sd.Q_DRAG_FORCE,                     "drag force",                          time_exponent=-2.0, length_exponent=+1.0, mass_exponent=+1.0,                            ) )
+quantities.append( Quantity( sd.Q_FREESTREAM_MACH_NUMBER,         "freestream Mach number",                                                                                                       ) )
+quantities.append( Quantity( sd.Q_FREESTREAM_SPEED_OF_SOUND,      "freestream speed of sound",           time_exponent=-1.0, length_exponent=+1.0,                                                ) )
+quantities.append( Quantity( sd.Q_FREESTREAM_TEMPERATURE,         "freestream temperature",                                                                            temperature_exponent=+1.0, ) )
+quantities.append( Quantity( sd.Q_FREESTREAM_VELOCITY,            "freestream velocity",                 time_exponent=-1.0, length_exponent=+1.0,                                                ) )
+quantities.append( Quantity( sd.Q_LEADING_EDGE_LENGTH,            "leading edge length",                                     length_exponent=+1.0,                                                ) )
+quantities.append( Quantity( sd.Q_LEADING_EDGE_RADIUS,            "leading edge radius",                                     length_exponent=+1.0,                                                ) )
+quantities.append( Quantity( sd.Q_LIFT_COEFFICIENT,               "lift coefficient",                                                                                                             ) )
+quantities.append( Quantity( sd.Q_LIFT_FORCE,                     "lift force",                          time_exponent=-2.0, length_exponent=+1.0, mass_exponent=+1.0,                            ) )
+quantities.append( Quantity( sd.Q_LIFT_TO_DRAG_RATIO,             "lift-to-drag ratio",                                                                                                           ) )
+quantities.append( Quantity( sd.Q_MASS_FLOW_RATE,                 "mass flow rate",                      time_exponent=-1.0,                       mass_exponent=+1.0,                            ) )
+quantities.append( Quantity( sd.Q_SPANWISE_NUMBER_OF_POINTS,      "spanwise number of points",                                                                                                    ) )
+quantities.append( Quantity( sd.Q_STREAMWISE_NUMBER_OF_POINTS,    "streamwise number of points",                                                                                                  ) )
+quantities.append( Quantity( sd.Q_TEST_LENGTH,                    "test length",                                             length_exponent=+1.0,                                                ) )
+quantities.append( Quantity( sd.Q_TRANSVERSE_NUMBER_OF_POINTS,    "transverse number of points",                                                                                                  ) )
+quantities.append( Quantity( sd.Q_VOLUMETRIC_FLOW_RATE,           "volumetric flow rate",                time_exponent=-1.0, length_exponent=+3.0,                                                ) )
 
 # Quantities, station
-quantities[ sd.Q_BULK_DYNAMIC_VISCOSITY                 ] = Quantity( "bulk dynamic viscosity",                 time_exponent=-1.0, length_exponent=-1.0, mass_exponent=+1.0, )
-quantities[ sd.Q_BULK_KINEMATIC_VISCOSITY               ] = Quantity( "bulk kinematic viscosity",               time_exponent=-1.0, length_exponent=+2.0,                     )
-quantities[ sd.Q_BULK_MACH_NUMBER                       ] = Quantity( "bulk Mach number",                                                                                     )
-quantities[ sd.Q_BULK_MASS_DENSITY                      ] = Quantity( "bulk mass density",                                          length_exponent=-3.0, mass_exponent=+1.0, )
-quantities[ sd.Q_BULK_REYNOLDS_NUMBER                   ] = Quantity( "bulk Reynolds number",                                                                                 )
-quantities[ sd.Q_BULK_SPEED_OF_SOUND                    ] = Quantity( "bulk speed of sound",                    time_exponent=-1.0, length_exponent=+1.0,                     )
-quantities[ sd.Q_BULK_VELOCITY                          ] = Quantity( "bulk velocity",                          time_exponent=-1.0, length_exponent=+1.0,                     )
-quantities[ sd.Q_CLAUSER_THICKNESS                      ] = Quantity( "Clauser thickness",                                          length_exponent=+1.0,                     )
-quantities[ sd.Q_CROSS_SECTIONAL_AREA                   ] = Quantity( "cross-sectional area",                                       length_exponent=+2.0,                     )
-quantities[ sd.Q_CROSS_SECTIONAL_ASPECT_RATIO           ] = Quantity( "cross-sectional aspect ratio",                                                                         )
-quantities[ sd.Q_CROSS_SECTIONAL_HALF_HEIGHT            ] = Quantity( "cross-sectional half height",                                length_exponent=+1.0,                     )
-quantities[ sd.Q_CROSS_SECTIONAL_HEIGHT                 ] = Quantity( "cross-sectional height",                                     length_exponent=+1.0,                     )
-quantities[ sd.Q_CROSS_SECTIONAL_WIDTH                  ] = Quantity( "cross-sectional width",                                      length_exponent=+1.0,                     )
-quantities[ sd.Q_DEVELOPMENT_LENGTH                     ] = Quantity( "development length",                                         length_exponent=+1.0,                     )
-quantities[ sd.Q_DISPLACEMENT_THICKNESS                 ] = Quantity( "displacement thickness",                                     length_exponent=+1.0,                     )
-quantities[ sd.Q_DISPLACEMENT_THICKNESS_REYNOLDS_NUMBER ] = Quantity( "displacement thickness Reynolds number",                                                               )
-quantities[ sd.Q_ENERGY_THICKNESS                       ] = Quantity( "energy thickness",                                           length_exponent=+1.0,                     )
-quantities[ sd.Q_EQUILIBRIUM_PARAMETER                  ] = Quantity( "equilibrium parameter",                                                                                )
-quantities[ sd.Q_HYDRAULIC_DIAMETER                     ] = Quantity( "hydraulic diameter",                                         length_exponent=+1.0,                     )
-quantities[ sd.Q_INNER_DIAMETER                         ] = Quantity( "inner diameter",                                             length_exponent=+1.0,                     )
-quantities[ sd.Q_MOMENTUM_INTEGRAL_LHS                  ] = Quantity( "momentum integral left-hand side",                                                                     )
-quantities[ sd.Q_MOMENTUM_INTEGRAL_RHS                  ] = Quantity( "momentum integral right-hand side",                                                                    )
-quantities[ sd.Q_MOMENTUM_THICKNESS                     ] = Quantity( "momentum thickness",                                         length_exponent=+1.0,                     )
-quantities[ sd.Q_MOMENTUM_THICKNESS_REYNOLDS_NUMBER     ] = Quantity( "momentum thickness Reynolds number",                                                                   )
-quantities[ sd.Q_OUTER_DIAMETER                         ] = Quantity( "outer diameter",                                             length_exponent=+1.0,                     )
-quantities[ sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH         ] = Quantity( "outer-layer development length",                                                                       )
-quantities[ sd.Q_RECOVERY_FACTOR                        ] = Quantity( "recovery factor",                                                                                      )
-quantities[ sd.Q_SHAPE_FACTOR_1_TO_2                    ] = Quantity( "shape factor 1-to-2",                                                                                  )
-quantities[ sd.Q_SHAPE_FACTOR_3_TO_2                    ] = Quantity( "shape factor 3-to-2",                                                                                  )
-quantities[ sd.Q_SPANWISE_PRESSURE_GRADIENT             ] = Quantity( "spanwise pressure gradient",             time_exponent=-2.0, length_exponent=-2.0, mass_exponent=+1.0, )
-quantities[ sd.Q_STREAMWISE_COORDINATE_REYNOLDS_NUMBER  ] = Quantity( "streamwise coordinate Reynolds number",                                                                )
-quantities[ sd.Q_STREAMWISE_PRESSURE_GRADIENT           ] = Quantity( "streamwise pressure gradient",           time_exponent=-2.0, length_exponent=-2.0, mass_exponent=+1.0, )
-quantities[ sd.Q_TRANSVERSE_PRESSURE_GRADIENT           ] = Quantity( "transverse pressure gradient",           time_exponent=-2.0, length_exponent=-2.0, mass_exponent=+1.0, )
-quantities[ sd.Q_WETTED_PERIMETER                       ] = Quantity( "wetted perimeter",                                           length_exponent=+2.0,                     )
+quantities.append( Quantity( sd.Q_BULK_DYNAMIC_VISCOSITY,                 "bulk dynamic viscosity",                 time_exponent=-1.0, length_exponent=-1.0, mass_exponent=+1.0, ) )
+quantities.append( Quantity( sd.Q_BULK_KINEMATIC_VISCOSITY,               "bulk kinematic viscosity",               time_exponent=-1.0, length_exponent=+2.0,                     ) )
+quantities.append( Quantity( sd.Q_BULK_MACH_NUMBER,                       "bulk Mach number",                                                                                     ) )
+quantities.append( Quantity( sd.Q_BULK_MASS_DENSITY,                      "bulk mass density",                                          length_exponent=-3.0, mass_exponent=+1.0, ) )
+quantities.append( Quantity( sd.Q_BULK_REYNOLDS_NUMBER,                   "bulk Reynolds number",                                                                                 ) )
+quantities.append( Quantity( sd.Q_BULK_SPEED_OF_SOUND,                    "bulk speed of sound",                    time_exponent=-1.0, length_exponent=+1.0,                     ) )
+quantities.append( Quantity( sd.Q_BULK_VELOCITY,                          "bulk velocity",                          time_exponent=-1.0, length_exponent=+1.0,                     ) )
+quantities.append( Quantity( sd.Q_CLAUSER_THICKNESS,                      "Clauser thickness",                                          length_exponent=+1.0,                     ) )
+quantities.append( Quantity( sd.Q_CROSS_SECTIONAL_AREA,                   "cross-sectional area",                                       length_exponent=+2.0,                     ) )
+quantities.append( Quantity( sd.Q_CROSS_SECTIONAL_ASPECT_RATIO,           "cross-sectional aspect ratio",                                                                         ) )
+quantities.append( Quantity( sd.Q_CROSS_SECTIONAL_HALF_HEIGHT,            "cross-sectional half height",                                length_exponent=+1.0,                     ) )
+quantities.append( Quantity( sd.Q_CROSS_SECTIONAL_HEIGHT,                 "cross-sectional height",                                     length_exponent=+1.0,                     ) )
+quantities.append( Quantity( sd.Q_CROSS_SECTIONAL_WIDTH,                  "cross-sectional width",                                      length_exponent=+1.0,                     ) )
+quantities.append( Quantity( sd.Q_DEVELOPMENT_LENGTH,                     "development length",                                         length_exponent=+1.0,                     ) )
+quantities.append( Quantity( sd.Q_DISPLACEMENT_THICKNESS,                 "displacement thickness",                                     length_exponent=+1.0,                     ) )
+quantities.append( Quantity( sd.Q_DISPLACEMENT_THICKNESS_REYNOLDS_NUMBER, "displacement thickness Reynolds number",                                                               ) )
+quantities.append( Quantity( sd.Q_ENERGY_THICKNESS,                       "energy thickness",                                           length_exponent=+1.0,                     ) )
+quantities.append( Quantity( sd.Q_EQUILIBRIUM_PARAMETER,                  "equilibrium parameter",                                                                                ) )
+quantities.append( Quantity( sd.Q_HYDRAULIC_DIAMETER,                     "hydraulic diameter",                                         length_exponent=+1.0,                     ) )
+quantities.append( Quantity( sd.Q_INNER_DIAMETER,                         "inner diameter",                                             length_exponent=+1.0,                     ) )
+quantities.append( Quantity( sd.Q_MOMENTUM_INTEGRAL_LHS,                  "momentum integral left-hand side",                                                                     ) )
+quantities.append( Quantity( sd.Q_MOMENTUM_INTEGRAL_RHS,                  "momentum integral right-hand side",                                                                    ) )
+quantities.append( Quantity( sd.Q_MOMENTUM_THICKNESS,                     "momentum thickness",                                         length_exponent=+1.0,                     ) )
+quantities.append( Quantity( sd.Q_MOMENTUM_THICKNESS_REYNOLDS_NUMBER,     "momentum thickness Reynolds number",                                                                   ) )
+quantities.append( Quantity( sd.Q_OUTER_DIAMETER,                         "outer diameter",                                             length_exponent=+1.0,                     ) )
+quantities.append( Quantity( sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH,         "outer-layer development length",                                                                       ) )
+quantities.append( Quantity( sd.Q_RECOVERY_FACTOR,                        "recovery factor",                                                                                      ) )
+quantities.append( Quantity( sd.Q_SHAPE_FACTOR_1_TO_2,                    "shape factor 1-to-2",                                                                                  ) )
+quantities.append( Quantity( sd.Q_SHAPE_FACTOR_3_TO_2,                    "shape factor 3-to-2",                                                                                  ) )
+quantities.append( Quantity( sd.Q_SPANWISE_PRESSURE_GRADIENT,             "spanwise pressure gradient",             time_exponent=-2.0, length_exponent=-2.0, mass_exponent=+1.0, ) )
+quantities.append( Quantity( sd.Q_STREAMWISE_COORDINATE_REYNOLDS_NUMBER,  "streamwise coordinate Reynolds number",                                                                ) )
+quantities.append( Quantity( sd.Q_STREAMWISE_PRESSURE_GRADIENT,           "streamwise pressure gradient",           time_exponent=-2.0, length_exponent=-2.0, mass_exponent=+1.0, ) )
+quantities.append( Quantity( sd.Q_TRANSVERSE_PRESSURE_GRADIENT,           "transverse pressure gradient",           time_exponent=-2.0, length_exponent=-2.0, mass_exponent=+1.0, ) )
+quantities.append( Quantity( sd.Q_WETTED_PERIMETER,                       "wetted perimeter",                                           length_exponent=+2.0,                     ) )
 
 # Quantities, wall point
-quantities[ sd.Q_AVERAGE_SKIN_FRICTION_COEFFICIENT     ] = Quantity( "average skin friction coefficient",                                                                        )
-quantities[ sd.Q_DARCY_FRICTION_FACTOR                 ] = Quantity( "Darcy friction factor",                                                                                    )
-quantities[ sd.Q_FANNING_FRICTION_FACTOR               ] = Quantity( "Fanning friction factor",                                                                                  )
-quantities[ sd.Q_FRICTION_MACH_NUMBER                  ] = Quantity( "friction Mach number",                                                                                     )
-quantities[ sd.Q_FRICTION_REYNOLDS_NUMBER              ] = Quantity( "friction Reynolds number",                                                                                 )
-quantities[ sd.Q_FRICTION_TEMPERATURE                  ] = Quantity( "friction temperature",                                                          temperature_exponent=+1.0, )
-quantities[ sd.Q_FRICTION_VELOCITY                     ] = Quantity( "friction velocity",                   time_exponent=-1.0, length_exponent=+1.0,                            )
-quantities[ sd.Q_HEAT_TRANSFER_COEFFICIENT             ] = Quantity( "heat transfer coefficient",                                                                                )
-quantities[ sd.Q_INNER_LAYER_HEAT_FLUX                 ] = Quantity( "inner-layer heat flux",                                                                                    )
-quantities[ sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT          ] = Quantity( "inner-layer roughness height",                                                                             )
-quantities[ sd.Q_LOCAL_SKIN_FRICTION_COEFFICIENT       ] = Quantity( "local skin friction coefficient",                                                                          )
-quantities[ sd.Q_OUTER_LAYER_ROUGHNESS_HEIGHT          ] = Quantity( "outer-layer roughness height",                                                                             )
-quantities[ sd.Q_PRESSURE_COEFFICIENT                  ] = Quantity( "pressure coefficient",                                                                                     )
-quantities[ sd.Q_ROUGHNESS_HEIGHT                      ] = Quantity( "roughness height",                                        length_exponent=+1.0,                            )
-quantities[ sd.Q_SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER   ] = Quantity( "semi-local friction Reynolds number",                                                                      )
-quantities[ sd.Q_SPANWISE_WALL_CURVATURE               ] = Quantity( "spanwise wall curvature",                                 length_exponent=-1.0,                            )
-quantities[ sd.Q_STREAMWISE_WALL_CURVATURE             ] = Quantity( "streamwise wall curvature",                               length_exponent=-1.0,                            )
-quantities[ sd.Q_VISCOUS_LENGTH_SCALE                  ] = Quantity( "viscous length scale",                                    length_exponent=+1.0                             )
+quantities.append( Quantity( sd.Q_AVERAGE_SKIN_FRICTION_COEFFICIENT,    "average skin friction coefficient",                                                                        ) )
+quantities.append( Quantity( sd.Q_DARCY_FRICTION_FACTOR,                "Darcy friction factor",                                                                                    ) )
+quantities.append( Quantity( sd.Q_FANNING_FRICTION_FACTOR,              "Fanning friction factor",                                                                                  ) )
+quantities.append( Quantity( sd.Q_FRICTION_MACH_NUMBER,                 "friction Mach number",                                                                                     ) )
+quantities.append( Quantity( sd.Q_FRICTION_REYNOLDS_NUMBER,             "friction Reynolds number",                                                                                 ) )
+quantities.append( Quantity( sd.Q_FRICTION_TEMPERATURE,                 "friction temperature",                                                          temperature_exponent=+1.0, ) )
+quantities.append( Quantity( sd.Q_FRICTION_VELOCITY,                    "friction velocity",                   time_exponent=-1.0, length_exponent=+1.0,                            ) )
+quantities.append( Quantity( sd.Q_HEAT_TRANSFER_COEFFICIENT,            "heat transfer coefficient",                                                                                ) )
+quantities.append( Quantity( sd.Q_INNER_LAYER_HEAT_FLUX,                "inner-layer heat flux",                                                                                    ) )
+quantities.append( Quantity( sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,         "inner-layer roughness height",                                                                             ) )
+quantities.append( Quantity( sd.Q_LOCAL_SKIN_FRICTION_COEFFICIENT,      "local skin friction coefficient",                                                                          ) )
+quantities.append( Quantity( sd.Q_OUTER_LAYER_ROUGHNESS_HEIGHT,         "outer-layer roughness height",                                                                             ) )
+quantities.append( Quantity( sd.Q_PRESSURE_COEFFICIENT,                 "pressure coefficient",                                                                                     ) )
+quantities.append( Quantity( sd.Q_ROUGHNESS_HEIGHT,                     "roughness height",                                        length_exponent=+1.0,                            ) )
+quantities.append( Quantity( sd.Q_SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER,  "semi-local friction Reynolds number",                                                                      ) )
+quantities.append( Quantity( sd.Q_SPANWISE_WALL_CURVATURE,              "spanwise wall curvature",                                 length_exponent=-1.0,                            ) )
+quantities.append( Quantity( sd.Q_STREAMWISE_WALL_CURVATURE,            "streamwise wall curvature",                               length_exponent=-1.0,                            ) )
+quantities.append( Quantity( sd.Q_VISCOUS_LENGTH_SCALE,                 "viscous length scale",                                    length_exponent=+1.0                             ) )
 
 # Quantities, point
-quantities[ sd.Q_AMOUNT_DENSITY                                     ] = Quantity( "amount density",                                                           length_exponent=-3.0,                     amount_exponent=+1.0,                            )
-quantities[ sd.Q_AMOUNT_FRACTION                                    ] = Quantity( "amount fraction",                                                                                                                                                     )
-quantities[ sd.Q_DILATATION_RATE                                    ] = Quantity( "dilatation rate",                                      time_exponent=-1.0,                                                                                            )
-quantities[ sd.Q_DISTANCE_FROM_WALL                                 ] = Quantity( "distance from wall",                                                       length_exponent=+1.0,                                                                      )
-quantities[ sd.Q_DYNAMIC_VISCOSITY                                  ] = Quantity( "dynamic viscosity",                                    time_exponent=-1.0, length_exponent=-1.0, mass_exponent=+1.0,                                                  )
-quantities[ sd.Q_HEAT_CAPACITY_RATIO                                ] = Quantity( "gamma",                                                                                                                                                               )
-quantities[ sd.Q_HEAT_FLUX                                          ] = Quantity( "heat flux",                                            time_exponent=-3.0,                       mass_exponent=+1.0,                                                  )
-quantities[ sd.Q_INNER_LAYER_COORDINATE                             ] = Quantity( "inner-layer coordinate",                                                                                                                                              )
-quantities[ sd.Q_INNER_LAYER_TEMPERATURE                            ] = Quantity( "inner-layer temperature",                                                                                                                                             )
-quantities[ sd.Q_INNER_LAYER_VELOCITY                               ] = Quantity( "inner-layer velocity",                                                                                                                                                )
-quantities[ sd.Q_INNER_LAYER_VELOCITY_DEFECT                        ] = Quantity( "inner-layer velocity defect",                                                                                                                                         )
-quantities[ sd.Q_KINEMATIC_VISCOSITY                                ] = Quantity( "kinematic viscosity",                                  time_exponent=-1.0, length_exponent=+2.0,                                                                      )
-quantities[ sd.Q_MACH_NUMBER                                        ] = Quantity( "Mach number",                                                                                                                                                         )
-quantities[ sd.Q_MASS_DENSITY                                       ] = Quantity( "mass density",                                                             length_exponent=-3.0, mass_exponent=+1.0,                                                  )
-quantities[ sd.Q_MASS_FRACTION                                      ] = Quantity( "mass fraction",                                                                                                                                                       )
-quantities[ sd.Q_OUTER_LAYER_COORDINATE                             ] = Quantity( "outer-layer coordinate",                                                                                                                                              )
-quantities[ sd.Q_OUTER_LAYER_TEMPERATURE                            ] = Quantity( "outer-layer temperature",                                                                                                                                             )
-quantities[ sd.Q_OUTER_LAYER_VELOCITY                               ] = Quantity( "outer-layer velocity",                                                                                                                                                )
-quantities[ sd.Q_OUTER_LAYER_VELOCITY_DEFECT                        ] = Quantity( "outer-layer velocity defect",                                                                                                                                         )
-quantities[ sd.Q_PRANDTL_NUMBER                                     ] = Quantity( "Prandtl number",                                                                                                                                                      )
-quantities[ sd.Q_PRESSURE                                           ] = Quantity( "pressure",                                             time_exponent=-2.0, length_exponent=-1.0, mass_exponent=+1.0,                                                  )
-quantities[ sd.Q_SEMI_LOCAL_COORDINATE                              ] = Quantity( "semi-local inner-layer coordinate",                                                                                                                                   )
-quantities[ sd.Q_SPANWISE_COORDINATE                                ] = Quantity( "spanwise coordinate",                                                      length_exponent=+1.0,                                                                      )
-quantities[ sd.Q_SPANWISE_VELOCITY                                  ] = Quantity( "spanwise velocity",                                    time_exponent=-1.0, length_exponent=+1.0,                                                                      )
-quantities[ sd.Q_SPECIFIC_ENTHALPY                                  ] = Quantity( "specific enthalpy",                                    time_exponent=-2.0, length_exponent=+2.0,                                                                      )
-quantities[ sd.Q_SPECIFIC_GAS_CONSTANT                              ] = Quantity( "specific gas constant",                                time_exponent=-2.0, length_exponent=+2.0,                                           temperature_exponent=-1.0, )
-quantities[ sd.Q_SPECIFIC_INTERNAL_ENERGY                           ] = Quantity( "specific internal energy",                             time_exponent=-2.0, length_exponent=+2.0,                                                                      )
-quantities[ sd.Q_SPECIFIC_ISOBARIC_HEAT_CAPACITY                    ] = Quantity( "specific isobaric heat capacity",                      time_exponent=-2.0, length_exponent=+2.0,                                           temperature_exponent=-1.0, )
-quantities[ sd.Q_SPECIFIC_ISOCHORIC_HEAT_CAPACITY                   ] = Quantity( "specific isochoric heat capacity",                     time_exponent=-2.0, length_exponent=+2.0,                                           temperature_exponent=-1.0, )
-quantities[ sd.Q_SPECIFIC_TOTAL_ENTHALPY                            ] = Quantity( "specific total enthalpy",                              time_exponent=-2.0, length_exponent=+2.0,                                                                      )
-quantities[ sd.Q_SPECIFIC_TOTAL_INTERNAL_ENERGY                     ] = Quantity( "specific total internal energy",                       time_exponent=-2.0, length_exponent=+2.0,                                                                      )
-quantities[ sd.Q_SPECIFIC_VOLUME                                    ] = Quantity( "specific volume",                                                          length_exponent=+3.0, mass_exponent=-1.0,                                                  )
-quantities[ sd.Q_SPEED                                              ] = Quantity( "speed",                                                time_exponent=-1.0, length_exponent=+1.0,                                                                      )
-quantities[ sd.Q_SPEED_OF_SOUND                                     ] = Quantity( "speed of sound",                                       time_exponent=-1.0, length_exponent=+1.0,                                                                      )
-quantities[ sd.Q_STREAMWISE_COORDINATE                              ] = Quantity( "streamwise coordinate",                                                    length_exponent=+1.0,                                                                      )
-quantities[ sd.Q_STREAMWISE_VELOCITY                                ] = Quantity( "streamwise velocity",                                  time_exponent=-1.0, length_exponent=+1.0,                                                                      )
-quantities[ sd.Q_STRESS[sd.D_STREAMWISE,sd.D_STREAMWISE]            ] = Quantity(           "streamwise normal stress",                   time_exponent=-2.0, length_exponent=-1.0, mass_exponent=+1.0,                                                  )
-quantities[ sd.Q_STRESS[sd.D_STREAMWISE,sd.D_TRANSVERSE]            ] = Quantity( "streamwise-transverse shear stress",                   time_exponent=-2.0, length_exponent=-1.0, mass_exponent=+1.0,                                                  )
-quantities[ sd.Q_STRESS[sd.D_STREAMWISE,sd.D_SPANWISE  ]            ] = Quantity(   "streamwise-spanwise shear stress",                   time_exponent=-2.0, length_exponent=-1.0, mass_exponent=+1.0,                                                  )
-quantities[ sd.Q_STRESS[sd.D_TRANSVERSE,sd.D_TRANSVERSE]            ] = Quantity(           "transverse normal stress",                   time_exponent=-2.0, length_exponent=-1.0, mass_exponent=+1.0,                                                  )
-quantities[ sd.Q_STRESS[sd.D_TRANSVERSE,sd.D_SPANWISE  ]            ] = Quantity(   "transverse-spanwise shear stress",                   time_exponent=-2.0, length_exponent=-1.0, mass_exponent=+1.0,                                                  )
-quantities[ sd.Q_STRESS[sd.D_SPANWISE,  sd.D_SPANWISE  ]            ] = Quantity(             "spanwise normal stress",                   time_exponent=-2.0, length_exponent=-1.0, mass_exponent=+1.0,                                                  )
-quantities[ sd.Q_TEMPERATURE                                        ] = Quantity( "temperature",                                                                                                                              temperature_exponent=+1.0, )
-quantities[ sd.Q_THERMAL_CONDUCTIVITY                               ] = Quantity( "thermal conductivity",                                 time_exponent=-3.0, length_exponent=+1.0, mass_exponent=+1.0,                       temperature_exponent=-1.0, )
-quantities[ sd.Q_THERMAL_DIFFUSIVITY                                ] = Quantity( "thermal diffusivity",                                  time_exponent=-1.0, length_exponent=+2.0,                                                                      )
-quantities[ sd.Q_TOTAL_PRESSURE                                     ] = Quantity( "total pressure",                                       time_exponent=-2.0, length_exponent=-1.0, mass_exponent=+1.0,                                                  )
-quantities[ sd.Q_TOTAL_TEMPERATURE                                  ] = Quantity( "total temperature",                                                                                                                        temperature_exponent=+1.0, )
-quantities[ sd.Q_TRANSVERSE_COORDINATE                              ] = Quantity( "transverse coordinate",                                                    length_exponent=+1.0,                                                                      )
-quantities[ sd.Q_TRANSVERSE_VELOCITY                                ] = Quantity( "transverse velocity",                                  time_exponent=-1.0, length_exponent=+1.0,                                                                      )
-quantities[ sd.Q_VELOCITY_DEFECT                                    ] = Quantity( "velocity defect",                                      time_exponent=-1.0, length_exponent=+1.0,                                                                      )
-quantities[ sd.Q_VELOCITY_GRADIENT[sd.D_STREAMWISE,sd.D_STREAMWISE] ] = Quantity( "streamwise velocity gradient in streamwise direction", time_exponent=-1.0,                                                                                            )
-quantities[ sd.Q_VELOCITY_GRADIENT[sd.D_STREAMWISE,sd.D_TRANSVERSE] ] = Quantity( "streamwise velocity gradient in transverse direction", time_exponent=-1.0,                                                                                            )
-quantities[ sd.Q_VELOCITY_GRADIENT[sd.D_STREAMWISE,sd.D_SPANWISE  ] ] = Quantity( "streamwise velocity gradient in spanwise direction",   time_exponent=-1.0,                                                                                            )
-quantities[ sd.Q_VELOCITY_GRADIENT[sd.D_TRANSVERSE,sd.D_STREAMWISE] ] = Quantity( "transverse velocity gradient in streamwise direction", time_exponent=-1.0,                                                                                            )
-quantities[ sd.Q_VELOCITY_GRADIENT[sd.D_TRANSVERSE,sd.D_TRANSVERSE] ] = Quantity( "transverse velocity gradient in transverse direction", time_exponent=-1.0,                                                                                            )
-quantities[ sd.Q_VELOCITY_GRADIENT[sd.D_TRANSVERSE,sd.D_SPANWISE  ] ] = Quantity( "transverse velocity gradient in spanwise direction",   time_exponent=-1.0,                                                                                            )
-quantities[ sd.Q_VELOCITY_GRADIENT[sd.D_SPANWISE,  sd.D_STREAMWISE] ] = Quantity(   "spanwise velocity gradient in streamwise direction", time_exponent=-1.0,                                                                      )
-quantities[ sd.Q_VELOCITY_GRADIENT[sd.D_SPANWISE,  sd.D_TRANSVERSE] ] = Quantity(   "spanwise velocity gradient in transverse direction", time_exponent=-1.0,                                                                      )
-quantities[ sd.Q_VELOCITY_GRADIENT[sd.D_SPANWISE,  sd.D_SPANWISE  ] ] = Quantity(   "spanwise velocity gradient in spanwise direction",   time_exponent=-1.0,                                                                      )
+quantities.append( Quantity( sd.Q_AMOUNT_DENSITY,                                     "amount density",                                                           length_exponent=-3.0,                     amount_exponent=+1.0,                            ) )
+quantities.append( Quantity( sd.Q_AMOUNT_FRACTION,                                    "amount fraction",                                                                                                                                                     ) )
+quantities.append( Quantity( sd.Q_DILATATION_RATE,                                    "dilatation rate",                                      time_exponent=-1.0,                                                                                            ) )
+quantities.append( Quantity( sd.Q_DISTANCE_FROM_WALL,                                 "distance from wall",                                                       length_exponent=+1.0,                                                                      ) )
+quantities.append( Quantity( sd.Q_DYNAMIC_VISCOSITY,                                  "dynamic viscosity",                                    time_exponent=-1.0, length_exponent=-1.0, mass_exponent=+1.0,                                                  ) )
+quantities.append( Quantity( sd.Q_HEAT_CAPACITY_RATIO,                                "gamma",                                                                                                                                                               ) )
+quantities.append( Quantity( sd.Q_HEAT_FLUX,                                          "heat flux",                                            time_exponent=-3.0,                       mass_exponent=+1.0,                                                  ) )
+quantities.append( Quantity( sd.Q_INNER_LAYER_COORDINATE,                             "inner-layer coordinate",                                                                                                                                              ) )
+quantities.append( Quantity( sd.Q_INNER_LAYER_TEMPERATURE,                            "inner-layer temperature",                                                                                                                                             ) )
+quantities.append( Quantity( sd.Q_INNER_LAYER_VELOCITY,                               "inner-layer velocity",                                                                                                                                                ) )
+quantities.append( Quantity( sd.Q_INNER_LAYER_VELOCITY_DEFECT,                        "inner-layer velocity defect",                                                                                                                                         ) )
+quantities.append( Quantity( sd.Q_KINEMATIC_VISCOSITY,                                "kinematic viscosity",                                  time_exponent=-1.0, length_exponent=+2.0,                                                                      ) )
+quantities.append( Quantity( sd.Q_MACH_NUMBER,                                        "Mach number",                                                                                                                                                         ) )
+quantities.append( Quantity( sd.Q_MASS_DENSITY,                                       "mass density",                                                             length_exponent=-3.0, mass_exponent=+1.0,                                                  ) )
+quantities.append( Quantity( sd.Q_MASS_FRACTION,                                      "mass fraction",                                                                                                                                                       ) )
+quantities.append( Quantity( sd.Q_OUTER_LAYER_COORDINATE,                             "outer-layer coordinate",                                                                                                                                              ) )
+quantities.append( Quantity( sd.Q_OUTER_LAYER_TEMPERATURE,                            "outer-layer temperature",                                                                                                                                             ) )
+quantities.append( Quantity( sd.Q_OUTER_LAYER_VELOCITY,                               "outer-layer velocity",                                                                                                                                                ) )
+quantities.append( Quantity( sd.Q_OUTER_LAYER_VELOCITY_DEFECT,                        "outer-layer velocity defect",                                                                                                                                         ) )
+quantities.append( Quantity( sd.Q_PRANDTL_NUMBER,                                     "Prandtl number",                                                                                                                                                      ) )
+quantities.append( Quantity( sd.Q_PRESSURE,                                           "pressure",                                             time_exponent=-2.0, length_exponent=-1.0, mass_exponent=+1.0,                                                  ) )
+quantities.append( Quantity( sd.Q_SEMI_LOCAL_COORDINATE,                              "semi-local inner-layer coordinate",                                                                                                                                   ) )
+quantities.append( Quantity( sd.Q_SPANWISE_COORDINATE,                                "spanwise coordinate",                                                      length_exponent=+1.0,                                                                      ) )
+quantities.append( Quantity( sd.Q_SPANWISE_VELOCITY,                                  "spanwise velocity",                                    time_exponent=-1.0, length_exponent=+1.0,                                                                      ) )
+quantities.append( Quantity( sd.Q_SPECIFIC_ENTHALPY,                                  "specific enthalpy",                                    time_exponent=-2.0, length_exponent=+2.0,                                                                      ) )
+quantities.append( Quantity( sd.Q_SPECIFIC_GAS_CONSTANT,                              "specific gas constant",                                time_exponent=-2.0, length_exponent=+2.0,                                           temperature_exponent=-1.0, ) )
+quantities.append( Quantity( sd.Q_SPECIFIC_INTERNAL_ENERGY,                           "specific internal energy",                             time_exponent=-2.0, length_exponent=+2.0,                                                                      ) )
+quantities.append( Quantity( sd.Q_SPECIFIC_ISOBARIC_HEAT_CAPACITY,                    "specific isobaric heat capacity",                      time_exponent=-2.0, length_exponent=+2.0,                                           temperature_exponent=-1.0, ) )
+quantities.append( Quantity( sd.Q_SPECIFIC_ISOCHORIC_HEAT_CAPACITY,                   "specific isochoric heat capacity",                     time_exponent=-2.0, length_exponent=+2.0,                                           temperature_exponent=-1.0, ) )
+quantities.append( Quantity( sd.Q_SPECIFIC_TOTAL_ENTHALPY,                            "specific total enthalpy",                              time_exponent=-2.0, length_exponent=+2.0,                                                                      ) )
+quantities.append( Quantity( sd.Q_SPECIFIC_TOTAL_INTERNAL_ENERGY,                     "specific total internal energy",                       time_exponent=-2.0, length_exponent=+2.0,                                                                      ) )
+quantities.append( Quantity( sd.Q_SPECIFIC_VOLUME,                                    "specific volume",                                                          length_exponent=+3.0, mass_exponent=-1.0,                                                  ) )
+quantities.append( Quantity( sd.Q_SPEED,                                              "speed",                                                time_exponent=-1.0, length_exponent=+1.0,                                                                      ) )
+quantities.append( Quantity( sd.Q_SPEED_OF_SOUND,                                     "speed of sound",                                       time_exponent=-1.0, length_exponent=+1.0,                                                                      ) )
+quantities.append( Quantity( sd.Q_STREAMWISE_COORDINATE,                              "streamwise coordinate",                                                    length_exponent=+1.0,                                                                      ) )
+quantities.append( Quantity( sd.Q_STREAMWISE_VELOCITY,                                "streamwise velocity",                                  time_exponent=-1.0, length_exponent=+1.0,                                                                      ) )
+quantities.append( Quantity( sd.Q_STRESS[sd.D_STREAMWISE,sd.D_STREAMWISE],                      "streamwise normal stress",                   time_exponent=-2.0, length_exponent=-1.0, mass_exponent=+1.0,                                                  ) )
+quantities.append( Quantity( sd.Q_STRESS[sd.D_STREAMWISE,sd.D_TRANSVERSE],            "streamwise-transverse shear stress",                   time_exponent=-2.0, length_exponent=-1.0, mass_exponent=+1.0,                                                  ) )
+quantities.append( Quantity( sd.Q_STRESS[sd.D_STREAMWISE,sd.D_SPANWISE  ],              "streamwise-spanwise shear stress",                   time_exponent=-2.0, length_exponent=-1.0, mass_exponent=+1.0,                                                  ) )
+quantities.append( Quantity( sd.Q_STRESS[sd.D_TRANSVERSE,sd.D_TRANSVERSE],                      "transverse normal stress",                   time_exponent=-2.0, length_exponent=-1.0, mass_exponent=+1.0,                                                  ) )
+quantities.append( Quantity( sd.Q_STRESS[sd.D_TRANSVERSE,sd.D_SPANWISE  ],              "transverse-spanwise shear stress",                   time_exponent=-2.0, length_exponent=-1.0, mass_exponent=+1.0,                                                  ) )
+quantities.append( Quantity( sd.Q_STRESS[sd.D_SPANWISE,  sd.D_SPANWISE  ],                        "spanwise normal stress",                   time_exponent=-2.0, length_exponent=-1.0, mass_exponent=+1.0,                                                  ) )
+quantities.append( Quantity( sd.Q_TEMPERATURE,                                        "temperature",                                                                                                                              temperature_exponent=+1.0, ) )
+quantities.append( Quantity( sd.Q_THERMAL_CONDUCTIVITY,                               "thermal conductivity",                                 time_exponent=-3.0, length_exponent=+1.0, mass_exponent=+1.0,                       temperature_exponent=-1.0, ) )
+quantities.append( Quantity( sd.Q_THERMAL_DIFFUSIVITY,                                "thermal diffusivity",                                  time_exponent=-1.0, length_exponent=+2.0,                                                                      ) )
+quantities.append( Quantity( sd.Q_TOTAL_PRESSURE,                                     "total pressure",                                       time_exponent=-2.0, length_exponent=-1.0, mass_exponent=+1.0,                                                  ) )
+quantities.append( Quantity( sd.Q_TOTAL_TEMPERATURE,                                  "total temperature",                                                                                                                        temperature_exponent=+1.0, ) )
+quantities.append( Quantity( sd.Q_TRANSVERSE_COORDINATE,                              "transverse coordinate",                                                    length_exponent=+1.0,                                                                      ) )
+quantities.append( Quantity( sd.Q_TRANSVERSE_VELOCITY,                                "transverse velocity",                                  time_exponent=-1.0, length_exponent=+1.0,                                                                      ) )
+quantities.append( Quantity( sd.Q_VELOCITY_DEFECT,                                    "velocity defect",                                      time_exponent=-1.0, length_exponent=+1.0,                                                                      ) )
+quantities.append( Quantity( sd.Q_VELOCITY_GRADIENT[sd.D_STREAMWISE,sd.D_STREAMWISE], "streamwise velocity gradient in streamwise direction", time_exponent=-1.0,                                                                                            ) )
+quantities.append( Quantity( sd.Q_VELOCITY_GRADIENT[sd.D_STREAMWISE,sd.D_TRANSVERSE], "streamwise velocity gradient in transverse direction", time_exponent=-1.0,                                                                                            ) )
+quantities.append( Quantity( sd.Q_VELOCITY_GRADIENT[sd.D_STREAMWISE,sd.D_SPANWISE  ], "streamwise velocity gradient in spanwise direction",   time_exponent=-1.0,                                                                                            ) )
+quantities.append( Quantity( sd.Q_VELOCITY_GRADIENT[sd.D_TRANSVERSE,sd.D_STREAMWISE], "transverse velocity gradient in streamwise direction", time_exponent=-1.0,                                                                                            ) )
+quantities.append( Quantity( sd.Q_VELOCITY_GRADIENT[sd.D_TRANSVERSE,sd.D_TRANSVERSE], "transverse velocity gradient in transverse direction", time_exponent=-1.0,                                                                                            ) )
+quantities.append( Quantity( sd.Q_VELOCITY_GRADIENT[sd.D_TRANSVERSE,sd.D_SPANWISE  ], "transverse velocity gradient in spanwise direction",   time_exponent=-1.0,                                                                                            ) )
+quantities.append( Quantity( sd.Q_VELOCITY_GRADIENT[sd.D_SPANWISE,  sd.D_STREAMWISE],   "spanwise velocity gradient in streamwise direction", time_exponent=-1.0,                                                                                            ) )
+quantities.append( Quantity( sd.Q_VELOCITY_GRADIENT[sd.D_SPANWISE,  sd.D_TRANSVERSE],   "spanwise velocity gradient in transverse direction", time_exponent=-1.0,                                                                                            ) )
+quantities.append( Quantity( sd.Q_VELOCITY_GRADIENT[sd.D_SPANWISE,  sd.D_SPANWISE  ],   "spanwise velocity gradient in spanwise direction",   time_exponent=-1.0,                                                                                            ) )
 
 # Quantities, point, turbulence
-quantities[ sd.Q_MASS_DENSITY_AUTOCOVARIANCE                        ] = Quantity( "mass density autocovariance",                                  length_exponent=-6.0, mass_exponent=+2.0,                            )
-quantities[ sd.Q_NORMALIZED_MASS_DENSITY_AUTOCOVARIANCE             ] = Quantity( "normalized mass density autocovariance",                                                                                            )
-quantities[ sd.Q_NORMALIZED_PRESSURE_AUTOCOVARIANCE                 ] = Quantity( "normalized pressure autocovariance",                                                                                                )
-quantities[ sd.Q_NORMALIZED_TEMPERATURE_AUTOCOVARIANCE              ] = Quantity( "normalized temperature autocovariance",                                                                                             )
-quantities[ sd.Q_PRESSURE_AUTOCOVARIANCE                            ] = Quantity( "pressure autocovariance",                  time_exponent=-4.0, length_exponent=-2.0, mass_exponent=+2.0,                            )
-quantities[ sd.Q_INNER_LAYER_SPECIFIC_TURBULENT_KINETIC_ENERGY      ] = Quantity( "inner-layer turbulent kinetic energy",                                                                                              )
-quantities[ sd.Q_MORKOVIN_SCALED_SPECIFIC_TURBULENT_KINETIC_ENERGY  ] = Quantity( "Morkovin-scaled turbulent kinetic energy",                                                                                          )
-quantities[ sd.Q_SPECIFIC_TURBULENT_KINETIC_ENERGY                  ] = Quantity( "specific turbulent kinetic energy",        time_exponent=-2.0, length_exponent=+2.0,                                                )
-quantities[ sd.Q_TEMPERATURE_AUTOCOVARIANCE                         ] = Quantity( "temperature autocovariance",                                                                             temperature_exponent=+2.0, )
+quantities.append( Quantity( sd.Q_MASS_DENSITY_AUTOCOVARIANCE,                       "mass density autocovariance",                                  length_exponent=-6.0, mass_exponent=+2.0,                            ) )
+quantities.append( Quantity( sd.Q_NORMALIZED_MASS_DENSITY_AUTOCOVARIANCE,            "normalized mass density autocovariance",                                                                                            ) )
+quantities.append( Quantity( sd.Q_NORMALIZED_PRESSURE_AUTOCOVARIANCE,                "normalized pressure autocovariance",                                                                                                ) )
+quantities.append( Quantity( sd.Q_NORMALIZED_TEMPERATURE_AUTOCOVARIANCE,             "normalized temperature autocovariance",                                                                                             ) )
+quantities.append( Quantity( sd.Q_PRESSURE_AUTOCOVARIANCE,                           "pressure autocovariance",                  time_exponent=-4.0, length_exponent=-2.0, mass_exponent=+2.0,                            ) )
+quantities.append( Quantity( sd.Q_INNER_LAYER_SPECIFIC_TURBULENT_KINETIC_ENERGY,     "inner-layer turbulent kinetic energy",                                                                                              ) )
+quantities.append( Quantity( sd.Q_MORKOVIN_SCALED_SPECIFIC_TURBULENT_KINETIC_ENERGY, "Morkovin-scaled turbulent kinetic energy",                                                                                          ) )
+quantities.append( Quantity( sd.Q_SPECIFIC_TURBULENT_KINETIC_ENERGY,                 "specific turbulent kinetic energy",        time_exponent=-2.0, length_exponent=+2.0,                                                ) )
+quantities.append( Quantity( sd.Q_TEMPERATURE_AUTOCOVARIANCE,                        "temperature autocovariance",                                                                             temperature_exponent=+2.0, ) )
 
-quantities[ sd.Q_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_STREAMWISE] ] = Quantity(              "streamwise velocity autocovariance", time_exponent=-2.0, length_exponent=+2.0, )
-quantities[ sd.Q_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_TRANSVERSE] ] = Quantity( "streamwise-transverse velocity cross covariance", time_exponent=-2.0, length_exponent=+2.0, )
-quantities[ sd.Q_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_SPANWISE  ] ] = Quantity(   "streamwise-spanwise velocity cross covariance", time_exponent=-2.0, length_exponent=+2.0, )
-quantities[ sd.Q_VELOCITY_COVARIANCE[sd.D_TRANSVERSE,sd.D_TRANSVERSE] ] = Quantity(              "transverse velocity autocovariance", time_exponent=-2.0, length_exponent=+2.0, )
-quantities[ sd.Q_VELOCITY_COVARIANCE[sd.D_TRANSVERSE,sd.D_SPANWISE  ] ] = Quantity(   "transverse-spanwise velocity cross covariance", time_exponent=-2.0, length_exponent=+2.0, )
-quantities[ sd.Q_VELOCITY_COVARIANCE[sd.D_SPANWISE,  sd.D_SPANWISE  ] ] = Quantity(                "spanwise velocity autocovariance", time_exponent=-2.0, length_exponent=+2.0, )
+quantities.append( Quantity( sd.Q_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_STREAMWISE],              "streamwise velocity autocovariance", time_exponent=-2.0, length_exponent=+2.0, ) )
+quantities.append( Quantity( sd.Q_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_TRANSVERSE], "streamwise-transverse velocity cross covariance", time_exponent=-2.0, length_exponent=+2.0, ) )
+quantities.append( Quantity( sd.Q_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_SPANWISE  ],   "streamwise-spanwise velocity cross covariance", time_exponent=-2.0, length_exponent=+2.0, ) )
+quantities.append( Quantity( sd.Q_VELOCITY_COVARIANCE[sd.D_TRANSVERSE,sd.D_TRANSVERSE],              "transverse velocity autocovariance", time_exponent=-2.0, length_exponent=+2.0, ) )
+quantities.append( Quantity( sd.Q_VELOCITY_COVARIANCE[sd.D_TRANSVERSE,sd.D_SPANWISE  ],   "transverse-spanwise velocity cross covariance", time_exponent=-2.0, length_exponent=+2.0, ) )
+quantities.append( Quantity( sd.Q_VELOCITY_COVARIANCE[sd.D_SPANWISE,  sd.D_SPANWISE  ],                "spanwise velocity autocovariance", time_exponent=-2.0, length_exponent=+2.0, ) )
 
-quantities[ sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_STREAMWISE] ] = Quantity(              "inner-layer streamwise velocity autocovariance", )
-quantities[ sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_TRANSVERSE] ] = Quantity( "inner-layer streamwise-transverse velocity cross covariance", )
-quantities[ sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_SPANWISE  ] ] = Quantity(   "inner-layer streamwise-spanwise velocity cross covariance", )
-quantities[ sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[sd.D_TRANSVERSE,sd.D_TRANSVERSE] ] = Quantity(              "inner-layer transverse velocity autocovariance", )
-quantities[ sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[sd.D_TRANSVERSE,sd.D_SPANWISE  ] ] = Quantity(   "inner-layer transverse-spanwise velocity cross covariance", )
-quantities[ sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[sd.D_SPANWISE,  sd.D_SPANWISE  ] ] = Quantity(                "inner-layer spanwise velocity autocovariance", )
+quantities.append( Quantity( sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_STREAMWISE],              "inner-layer streamwise velocity autocovariance", ) )
+quantities.append( Quantity( sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_TRANSVERSE], "inner-layer streamwise-transverse velocity cross covariance", ) )
+quantities.append( Quantity( sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_SPANWISE  ],   "inner-layer streamwise-spanwise velocity cross covariance", ) )
+quantities.append( Quantity( sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[sd.D_TRANSVERSE,sd.D_TRANSVERSE],              "inner-layer transverse velocity autocovariance", ) )
+quantities.append( Quantity( sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[sd.D_TRANSVERSE,sd.D_SPANWISE  ],   "inner-layer transverse-spanwise velocity cross covariance", ) )
+quantities.append( Quantity( sd.Q_INNER_LAYER_VELOCITY_COVARIANCE[sd.D_SPANWISE,  sd.D_SPANWISE  ],                "inner-layer spanwise velocity autocovariance", ) )
 
-quantities[ sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_STREAMWISE] ] = Quantity(              "Morkovin-scaled streamwise velocity autocovariance", )
-quantities[ sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_TRANSVERSE] ] = Quantity( "Morkovin-scaled streamwise-transverse velocity cross covariance", )
-quantities[ sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_SPANWISE  ] ] = Quantity(   "Morkovin-scaled streamwise-spanwise velocity cross covariance", )
-quantities[ sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[sd.D_TRANSVERSE,sd.D_TRANSVERSE] ] = Quantity(              "Morkovin-scaled transverse velocity autocovariance", )
-quantities[ sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[sd.D_TRANSVERSE,sd.D_SPANWISE  ] ] = Quantity(   "Morkovin-scaled transverse-spanwise velocity cross covariance", )
-quantities[ sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[sd.D_SPANWISE,  sd.D_SPANWISE  ] ] = Quantity(                "Morkovin-scaled spanwise velocity autocovariance", )
+quantities.append( Quantity( sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_STREAMWISE],              "Morkovin-scaled streamwise velocity autocovariance", ) )
+quantities.append( Quantity( sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_TRANSVERSE], "Morkovin-scaled streamwise-transverse velocity cross covariance", ) )
+quantities.append( Quantity( sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[sd.D_STREAMWISE,sd.D_SPANWISE  ],   "Morkovin-scaled streamwise-spanwise velocity cross covariance", ) )
+quantities.append( Quantity( sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[sd.D_TRANSVERSE,sd.D_TRANSVERSE],              "Morkovin-scaled transverse velocity autocovariance", ) )
+quantities.append( Quantity( sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[sd.D_TRANSVERSE,sd.D_SPANWISE  ],   "Morkovin-scaled transverse-spanwise velocity cross covariance", ) )
+quantities.append( Quantity( sd.Q_MORKOVIN_SCALED_VELOCITY_COVARIANCE[sd.D_SPANWISE,  sd.D_SPANWISE  ],                "Morkovin-scaled spanwise velocity autocovariance", ) )
 
 # Quantities, point, ratios
-quantities[ sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO        ] = Quantity( "local-to-bulk streamwise velocity ratio",        )
-quantities[ sd.Q_LOCAL_TO_BULK_TEMPERATURE_RATIO                ] = Quantity( "local-to-bulk temperature ratio",                )
-quantities[ sd.Q_LOCAL_TO_CENTER_LINE_DYNAMIC_VISCOSITY_RATIO   ] = Quantity( "local-to-center-line dynamic viscosity ratio",   )
-quantities[ sd.Q_LOCAL_TO_CENTER_LINE_MASS_DENSITY_RATIO        ] = Quantity( "local-to-center-line density ratio",             )
-quantities[ sd.Q_LOCAL_TO_CENTER_LINE_STREAMWISE_VELOCITY_RATIO ] = Quantity( "local-to-center-line streamwise velocity ratio", )
-quantities[ sd.Q_LOCAL_TO_CENTER_LINE_TEMPERATURE_RATIO         ] = Quantity( "local-to-center-line temperature ratio",         )
-quantities[ sd.Q_LOCAL_TO_EDGE_DYNAMIC_VISCOSITY_RATIO          ] = Quantity( "local-to-edge dynamic viscosity ratio",          )
-quantities[ sd.Q_LOCAL_TO_EDGE_MASS_DENSITY_RATIO               ] = Quantity( "local-to-edge density ratio",                    )
-quantities[ sd.Q_LOCAL_TO_EDGE_STREAMWISE_VELOCITY_RATIO        ] = Quantity( "local-to-edge streamwise velocity ratio",        )
-quantities[ sd.Q_LOCAL_TO_EDGE_TEMPERATURE_RATIO                ] = Quantity( "local-to-edge temperature ratio",                )
-quantities[ sd.Q_LOCAL_TO_RECOVERY_TEMPERATURE_RATIO            ] = Quantity( "local-to-recovery temperature ratio",            )
-quantities[ sd.Q_LOCAL_TO_WALL_DYNAMIC_VISCOSITY_RATIO          ] = Quantity( "local-to-wall dynamic viscosity ratio",          )
-quantities[ sd.Q_LOCAL_TO_WALL_MASS_DENSITY_RATIO               ] = Quantity( "local-to-wall density ratio",                    )
-quantities[ sd.Q_LOCAL_TO_WALL_STREAMWISE_VELOCITY_RATIO        ] = Quantity( "local-to-wall streamwise velocity ratio",        )
-quantities[ sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO                ] = Quantity( "local-to-wall temperature ratio",                )
+quantities.append( Quantity( sd.Q_LOCAL_TO_BULK_STREAMWISE_VELOCITY_RATIO,        "local-to-bulk streamwise velocity ratio",        ) )
+quantities.append( Quantity( sd.Q_LOCAL_TO_BULK_TEMPERATURE_RATIO,                "local-to-bulk temperature ratio",                ) )
+quantities.append( Quantity( sd.Q_LOCAL_TO_CENTER_LINE_DYNAMIC_VISCOSITY_RATIO,   "local-to-center-line dynamic viscosity ratio",   ) )
+quantities.append( Quantity( sd.Q_LOCAL_TO_CENTER_LINE_MASS_DENSITY_RATIO,        "local-to-center-line density ratio",             ) )
+quantities.append( Quantity( sd.Q_LOCAL_TO_CENTER_LINE_STREAMWISE_VELOCITY_RATIO, "local-to-center-line streamwise velocity ratio", ) )
+quantities.append( Quantity( sd.Q_LOCAL_TO_CENTER_LINE_TEMPERATURE_RATIO,         "local-to-center-line temperature ratio",         ) )
+quantities.append( Quantity( sd.Q_LOCAL_TO_EDGE_DYNAMIC_VISCOSITY_RATIO,          "local-to-edge dynamic viscosity ratio",          ) )
+quantities.append( Quantity( sd.Q_LOCAL_TO_EDGE_MASS_DENSITY_RATIO,               "local-to-edge density ratio",                    ) )
+quantities.append( Quantity( sd.Q_LOCAL_TO_EDGE_STREAMWISE_VELOCITY_RATIO,        "local-to-edge streamwise velocity ratio",        ) )
+quantities.append( Quantity( sd.Q_LOCAL_TO_EDGE_TEMPERATURE_RATIO,                "local-to-edge temperature ratio",                ) )
+quantities.append( Quantity( sd.Q_LOCAL_TO_RECOVERY_TEMPERATURE_RATIO,            "local-to-recovery temperature ratio",            ) )
+quantities.append( Quantity( sd.Q_LOCAL_TO_WALL_DYNAMIC_VISCOSITY_RATIO,          "local-to-wall dynamic viscosity ratio",          ) )
+quantities.append( Quantity( sd.Q_LOCAL_TO_WALL_MASS_DENSITY_RATIO,               "local-to-wall density ratio",                    ) )
+quantities.append( Quantity( sd.Q_LOCAL_TO_WALL_STREAMWISE_VELOCITY_RATIO,        "local-to-wall streamwise velocity ratio",        ) )
+quantities.append( Quantity( sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO,                "local-to-wall temperature ratio",                ) )
 
-for quantity_id in quantities:
-    cursor.execute(
-    """
-    INSERT INTO quantities( quantity_id, quantity_name,
-                            time_exponent, length_exponent, mass_exponent,
-                            current_exponent, temperature_exponent,
-                            amount_exponent )
-    VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
-    """,
-    (
-        quantity_id,
-        quantities[quantity_id].name,
-        quantities[quantity_id].time_exponent,
-        quantities[quantity_id].length_exponent,
-        quantities[quantity_id].mass_exponent,
-        quantities[quantity_id].current_exponent,
-        quantities[quantity_id].temperature_exponent,
-        quantities[quantity_id].amount_exponent,
-    )
-    )
+for quantity in quantities:
+    quantity.execute_query()
 
 
 # Latex codes for quantities
