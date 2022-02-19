@@ -243,37 +243,54 @@ CREATE TABLE fluids (
 )
 
 class Fluid:
-    fluid_name        = None
-    phase_id          = None
-    molecular_formula = None
+    _fluid_id          = None
+    _fluid_name        = None
+    _phase_id          = None
+    _molecular_formula = None
 
-    def __init__( self, fluid_name, phase_id, molecular_formula=None ):
-        self.fluid_name        = fluid_name
-        self.phase_id          = phase_id
-        self.molecular_formula = molecular_formula
+    def fluid_id( self ):
+        return self._fluid_id
 
-fluids = {}
-fluids[ sd.F_MIXTURE                   ] = Fluid( "mixture",                   sd.PH_MULTIPHASE    )
-fluids[ sd.F_GASEOUS_DIATOMIC_NITROGEN ] = Fluid( "gaseous diatomic nitrogen", sd.PH_GAS,    "N2"  )
-fluids[ sd.F_GASEOUS_DIATOMIC_OXYGEN   ] = Fluid( "gaseous diatomic oxygen",   sd.PH_GAS,    "O2"  )
-fluids[ sd.F_GASEOUS_ARGON             ] = Fluid( "gaseous argon",             sd.PH_GAS,    "Ar"  )
-fluids[ sd.F_GASEOUS_CARBON_DIOXIDE    ] = Fluid( "gaseous carbon dioxide",    sd.PH_GAS,    "CO2" )
-fluids[ sd.F_LIQUID_WATER              ] = Fluid( "liquid water",              sd.PH_LIQUID, "H2O" )
-fluids[ sd.F_WATER_VAPOR               ] = Fluid( "water vapor",               sd.PH_GAS,    "H2O" )
+    def fluid_name( self ):
+        return self._fluid_name
 
-for fluid_id in fluids:
-    cursor.execute(
-    """
-    INSERT INTO fluids( fluid_id, fluid_name, phase_id, molecular_formula )
-    VALUES( ?, ?, ?, ? );
-    """,
-    (
-        fluid_id,
-        fluids[fluid_id].fluid_name,
-        fluids[fluid_id].phase_id,
-        fluids[fluid_id].molecular_formula,
-    )
-    )
+    def phase_id( self ):
+        return self._phase_id
+
+    def molecular_formula( self ):
+        return self._molecular_formula
+
+    def execute_query( self ):
+        cursor.execute(
+        """
+        INSERT INTO fluids( fluid_id, fluid_name, phase_id, molecular_formula )
+        VALUES( ?, ?, ?, ? );
+        """,
+        (
+            self.fluid_id(),
+            self.fluid_name(),
+            self.phase_id(),
+            self.molecular_formula(),
+        )
+        )
+
+    def __init__( self, fluid_id, fluid_name, phase_id, molecular_formula=None ):
+        self._fluid_id          = fluid_id
+        self._fluid_name        = fluid_name
+        self._phase_id          = phase_id
+        self._molecular_formula = molecular_formula
+
+fluids = []
+fluids.append( Fluid( sd.F_MIXTURE,                   "mixture",                   sd.PH_MULTIPHASE,       ) )
+fluids.append( Fluid( sd.F_GASEOUS_DIATOMIC_NITROGEN, "gaseous diatomic nitrogen", sd.PH_GAS,        "N2"  ) )
+fluids.append( Fluid( sd.F_GASEOUS_DIATOMIC_OXYGEN,   "gaseous diatomic oxygen",   sd.PH_GAS,        "O2"  ) )
+fluids.append( Fluid( sd.F_GASEOUS_ARGON,             "gaseous argon",             sd.PH_GAS,        "Ar"  ) )
+fluids.append( Fluid( sd.F_GASEOUS_CARBON_DIOXIDE,    "gaseous carbon dioxide",    sd.PH_GAS,        "CO2" ) )
+fluids.append( Fluid( sd.F_LIQUID_WATER,              "liquid water",              sd.PH_LIQUID,     "H2O" ) )
+fluids.append( Fluid( sd.F_WATER_VAPOR,               "water vapor",               sd.PH_GAS,        "H2O" ) )
+
+for fluid in fluids:
+    fluid.execute_query()
 
 # Geometries
 #
