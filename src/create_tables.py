@@ -76,53 +76,73 @@ CREATE TABLE flow_classes (
 )
 
 class FlowClass:
-    name   = None
-    parent = None
+    _flow_class_id     = None
+    _flow_class_name   = None
+    _flow_class_parent = None
+
+    def flow_class_id( self ):
+        return self._flow_class_id
+
+    def flow_class_name( self ):
+        return self._flow_class_name
+
+    def flow_class_parent( self ):
+        return self._flow_class_parent
 
     def is_child( self ):
-        return self.parent != None
+        return self.flow_class_parent() != None
 
-    def __init__( self, name, parent ):
-        self.name   = name
-        self.parent = parent
+    def execute_query( self ):
+        cursor.execute(
+        """
+        INSERT INTO flow_classes( flow_class_id, flow_class_name )
+        VALUES( ?, ? );
+        """,
+        (
+            self.flow_class_id(),
+            self.flow_class_name(),
+        )
+        )
 
-flow_classes = {}
-flow_classes[ sd.FC_BOUNDARY_LAYER       ] = FlowClass( "boundary layer",            sd.FC_EXTERNAL_FLOW )
-flow_classes[ sd.FC_DUCT_FLOW            ] = FlowClass( "duct flow",                 sd.FC_INTERNAL_FLOW )
-flow_classes[ sd.FC_EXTERNAL_FLOW        ] = FlowClass( "external flow",         sd.FC_WALL_BOUNDED_FLOW )
-flow_classes[ sd.FC_FREE_JET             ] = FlowClass( "free jet",                sd.FC_FREE_SHEAR_FLOW )
-flow_classes[ sd.FC_FREE_SHEAR_FLOW      ] = FlowClass( "free shear flow",              sd.FC_SHEAR_FLOW )
-flow_classes[ sd.FC_HOMOGENEOUS_FLOW     ] = FlowClass( "homogeneous flow",      sd.FC_UNCLASSIFIED_FLOW )
-flow_classes[ sd.FC_INHOMOGENEOUS_FLOW   ] = FlowClass( "inhomogeneous flow",    sd.FC_UNCLASSIFIED_FLOW )
-flow_classes[ sd.FC_INTERNAL_FLOW        ] = FlowClass( "internal flow",         sd.FC_WALL_BOUNDED_FLOW )
-flow_classes[ sd.FC_ISOTROPIC_FLOW       ] = FlowClass( "isotropic flow",         sd.FC_HOMOGENEOUS_FLOW )
-flow_classes[ sd.FC_MIXING_LAYER         ] = FlowClass( "mixing layer",            sd.FC_FREE_SHEAR_FLOW )
-flow_classes[ sd.FC_BOUNDARY_DRIVEN_FLOW ] = FlowClass( "boundary-driven flow",      sd.FC_INTERNAL_FLOW )
-flow_classes[ sd.FC_SHEAR_FLOW           ] = FlowClass( "shear flow",           sd.FC_INHOMOGENEOUS_FLOW )
-flow_classes[ sd.FC_UNCLASSIFIED_FLOW    ] = FlowClass( "flow",                                     None )
-flow_classes[ sd.FC_WAKE                 ] = FlowClass( "wake",                    sd.FC_FREE_SHEAR_FLOW )
-flow_classes[ sd.FC_WALL_BOUNDED_FLOW    ] = FlowClass( "wall-bounded flow",            sd.FC_SHEAR_FLOW )
-flow_classes[ sd.FC_WALL_JET             ] = FlowClass( "wall jet",                  sd.FC_EXTERNAL_FLOW )
+    def __init__( self, flow_class_id, flow_class_name, flow_class_parent ):
+        self._flow_class_id     = flow_class_id
+        self._flow_class_name   = flow_class_name
+        self._flow_class_parent = flow_class_parent
 
-for flow_class_id in flow_classes:
-    cursor.execute(
-    """
-    INSERT INTO flow_classes( flow_class_id, flow_class_name )
-    VALUES( ?, ? );
-    """,
-    ( flow_class_id, flow_classes[flow_class_id].name, )
-    )
+flow_classes = []
+flow_classes.append( FlowClass( sd.FC_BOUNDARY_LAYER,       "boundary layer",            sd.FC_EXTERNAL_FLOW ) )
+flow_classes.append( FlowClass( sd.FC_DUCT_FLOW,            "duct flow",                 sd.FC_INTERNAL_FLOW ) )
+flow_classes.append( FlowClass( sd.FC_EXTERNAL_FLOW,        "external flow",         sd.FC_WALL_BOUNDED_FLOW ) )
+flow_classes.append( FlowClass( sd.FC_FREE_JET,             "free jet",                sd.FC_FREE_SHEAR_FLOW ) )
+flow_classes.append( FlowClass( sd.FC_FREE_SHEAR_FLOW,      "free shear flow",              sd.FC_SHEAR_FLOW ) )
+flow_classes.append( FlowClass( sd.FC_HOMOGENEOUS_FLOW,     "homogeneous flow",      sd.FC_UNCLASSIFIED_FLOW ) )
+flow_classes.append( FlowClass( sd.FC_INHOMOGENEOUS_FLOW,   "inhomogeneous flow",    sd.FC_UNCLASSIFIED_FLOW ) )
+flow_classes.append( FlowClass( sd.FC_INTERNAL_FLOW,        "internal flow",         sd.FC_WALL_BOUNDED_FLOW ) )
+flow_classes.append( FlowClass( sd.FC_ISOTROPIC_FLOW,       "isotropic flow",         sd.FC_HOMOGENEOUS_FLOW ) )
+flow_classes.append( FlowClass( sd.FC_MIXING_LAYER,         "mixing layer",            sd.FC_FREE_SHEAR_FLOW ) )
+flow_classes.append( FlowClass( sd.FC_BOUNDARY_DRIVEN_FLOW, "boundary-driven flow",      sd.FC_INTERNAL_FLOW ) )
+flow_classes.append( FlowClass( sd.FC_SHEAR_FLOW,           "shear flow",           sd.FC_INHOMOGENEOUS_FLOW ) )
+flow_classes.append( FlowClass( sd.FC_UNCLASSIFIED_FLOW,    "flow",                                     None ) )
+flow_classes.append( FlowClass( sd.FC_WAKE,                 "wake",                    sd.FC_FREE_SHEAR_FLOW ) )
+flow_classes.append( FlowClass( sd.FC_WALL_BOUNDED_FLOW,    "wall-bounded flow",            sd.FC_SHEAR_FLOW ) )
+flow_classes.append( FlowClass( sd.FC_WALL_JET,             "wall jet",                  sd.FC_EXTERNAL_FLOW ) )
+
+for flow_class in flow_classes:
+    flow_class.execute_query()
 
 # Two separate loops MUST occur due to foreign key constraints.
-for flow_class_id in flow_classes:
-    if ( flow_classes[flow_class_id].is_child() ):
+for flow_class in flow_classes:
+    if ( flow_class.is_child() ):
         cursor.execute(
         """
         UPDATE flow_classes
         SET flow_class_parent_id=?
         WHERE flow_class_id=?;
         """,
-        ( flow_classes[flow_class_id].parent, flow_class_id, )
+        (
+            flow_class.flow_class_parent(),
+            flow_class.flow_class_id(),
+        )
         )
 
 # Flow regimes
