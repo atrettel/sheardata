@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (C) 2020-2021 Andrew Trettel
+# Copyright (C) 2020-2022 Andrew Trettel
 #
 # SPDX-License-Identifier: MIT
 
@@ -121,11 +121,7 @@ MIX_AIR = [
 GM_ELLIPTICAL  = "E"
 GM_RECTANGULAR = "R"
 
-# Measurement techniques (and other sources of information)
-#
-# TODO: It is clear to me that the name "measurement techiques" is incorrect
-# here.  I should consider renaming it to "methods".  That keeps the same
-# prefix "MT" too and is a better description of this type of information.
+# Methods (and other sources of information)
 MT_APPROXIMATION                            = "APP"
 MT_ASSUMPTION                               = "ASM"
 MT_CALCULATION                              = "CLC"
@@ -680,7 +676,7 @@ def create_value_types_list( value_type_id ):
 
 def set_study_value( cursor, study_id, quantity_id, value,
                      value_type_id=VT_UNAVERAGED_VALUE,
-                     meastech_ids=[], meastech_set=PRIMARY_MT_SET,
+                     method_ids=[], method_set=PRIMARY_MT_SET,
                      fluid_id=F_MIXTURE, corrected=False, outlier=False,
                      note_ids=[] ):
     study_value, study_uncertainty = split_float( value )
@@ -688,7 +684,7 @@ def set_study_value( cursor, study_id, quantity_id, value,
         cursor.execute(
         """
         INSERT INTO study_values( study_id, quantity_id, fluid_id,
-                                  value_type_id, meastech_set,
+                                  value_type_id, method_set,
                                   study_value, study_uncertainty,
                                   corrected, outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ? );
@@ -698,7 +694,7 @@ def set_study_value( cursor, study_id, quantity_id, value,
             str(quantity_id),
             fluid_id,
             value_type_id,
-            meastech_set,
+            method_set,
             study_value,
             study_uncertainty,
             int(corrected),
@@ -706,12 +702,12 @@ def set_study_value( cursor, study_id, quantity_id, value,
         )
         )
 
-        for meastech_id in meastech_ids:
+        for method_id in method_ids:
             cursor.execute(
             """
             INSERT INTO study_values_mt( study_id, quantity_id, fluid_id,
-                                         value_type_id, meastech_set,
-                                         meastech_id )
+                                         value_type_id, method_set,
+                                         method_id )
             VALUES( ?, ?, ?, ?, ?, ? );
             """,
             (
@@ -719,8 +715,8 @@ def set_study_value( cursor, study_id, quantity_id, value,
                 str(quantity_id),
                 fluid_id,
                 value_type_id,
-                meastech_set,
-                meastech_id,
+                method_set,
+                method_id,
             )
             )
 
@@ -728,7 +724,7 @@ def set_study_value( cursor, study_id, quantity_id, value,
             cursor.execute(
             """
             INSERT INTO study_value_notes( study_id, quantity_id, fluid_id,
-                                           value_type_id, meastech_set,
+                                           value_type_id, method_set,
                                            note_id )
             VALUES( ?, ?, ?, ?, ?, ? );
             """,
@@ -737,27 +733,27 @@ def set_study_value( cursor, study_id, quantity_id, value,
                 str(quantity_id),
                 fluid_id,
                 value_type_id,
-                meastech_set,
+                method_set,
                 int(note_id),
             )
             )
 
 def get_study_value( cursor, study_id, quantity_id,
                      value_type_id=VT_ANY_AVERAGE,
-                     fluid_id=F_MIXTURE, meastech_set=PRIMARY_MT_SET, ):
+                     fluid_id=F_MIXTURE, method_set=PRIMARY_MT_SET, ):
     final_value_type_id = value_type_id
     if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
         """
         SELECT value_type_id
         FROM study_values
-        WHERE study_id=? AND quantity_id=? AND fluid_id=? AND meastech_set=?;
+        WHERE study_id=? AND quantity_id=? AND fluid_id=? AND method_set=?;
         """,
         (
             sanitize_identifier(study_id),
             str(quantity_id),
             fluid_id,
-            meastech_set,
+            method_set,
         )
         )
         results = cursor.fetchall()
@@ -770,14 +766,14 @@ def get_study_value( cursor, study_id, quantity_id,
     """
     SELECT study_value, study_uncertainty
     FROM study_values
-    WHERE study_id=? AND quantity_id=? AND fluid_id=? AND value_type_id=? AND meastech_set=?;
+    WHERE study_id=? AND quantity_id=? AND fluid_id=? AND value_type_id=? AND method_set=?;
     """,
     (
         sanitize_identifier(study_id),
         str(quantity_id),
         fluid_id,
         final_value_type_id,
-        meastech_set,
+        method_set,
     )
     )
     return fetch_float( cursor )
@@ -881,7 +877,7 @@ def update_series_description( cursor, series_id, series_description ):
 
 def set_series_value( cursor, series_id, quantity_id, value,
                       value_type_id=VT_UNAVERAGED_VALUE,
-                      meastech_ids=[], meastech_set=PRIMARY_MT_SET,
+                      method_ids=[], method_set=PRIMARY_MT_SET,
                       fluid_id=F_MIXTURE, corrected=False, outlier=False,
                       note_ids=[] ):
     series_value, series_uncertainty = split_float( value )
@@ -889,7 +885,7 @@ def set_series_value( cursor, series_id, quantity_id, value,
         cursor.execute(
         """
         INSERT INTO series_values( series_id, quantity_id, fluid_id,
-                                   value_type_id, meastech_set,
+                                   value_type_id, method_set,
                                    series_value, series_uncertainty,
                                    corrected, outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ? );
@@ -899,7 +895,7 @@ def set_series_value( cursor, series_id, quantity_id, value,
             str(quantity_id),
             fluid_id,
             value_type_id,
-            meastech_set,
+            method_set,
             series_value,
             series_uncertainty,
             int(corrected),
@@ -907,12 +903,12 @@ def set_series_value( cursor, series_id, quantity_id, value,
         )
         )
 
-        for meastech_id in meastech_ids:
+        for method_id in method_ids:
             cursor.execute(
             """
             INSERT INTO series_values_mt( series_id, quantity_id, fluid_id,
-                                          value_type_id, meastech_set,
-                                          meastech_id )
+                                          value_type_id, method_set,
+                                          method_id )
             VALUES( ?, ?, ?, ?, ?, ? );
             """,
             (
@@ -920,8 +916,8 @@ def set_series_value( cursor, series_id, quantity_id, value,
                 str(quantity_id),
                 fluid_id,
                 value_type_id,
-                meastech_set,
-                meastech_id,
+                method_set,
+                method_id,
             )
             )
 
@@ -929,7 +925,7 @@ def set_series_value( cursor, series_id, quantity_id, value,
             cursor.execute(
             """
             INSERT INTO series_value_notes( series_id, quantity_id, fluid_id,
-                                            value_type_id, meastech_set,
+                                            value_type_id, method_set,
                                             note_id )
             VALUES( ?, ?, ?, ?, ?, ? );
             """,
@@ -938,27 +934,27 @@ def set_series_value( cursor, series_id, quantity_id, value,
                 str(quantity_id),
                 fluid_id,
                 value_type_id,
-                meastech_set,
+                method_set,
                 int(note_id),
             )
             )
 
 def get_series_value( cursor, series_id, quantity_id,
                       value_type_id=VT_ANY_AVERAGE,
-                      fluid_id=F_MIXTURE, meastech_set=PRIMARY_MT_SET, ):
+                      fluid_id=F_MIXTURE, method_set=PRIMARY_MT_SET, ):
     final_value_type_id = value_type_id
     if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
         """
         SELECT value_type_id
         FROM series_values
-        WHERE series_id=? AND quantity_id=? AND fluid_id=? AND meastech_set=?;
+        WHERE series_id=? AND quantity_id=? AND fluid_id=? AND method_set=?;
         """,
         (
             sanitize_identifier(series_id),
             str(quantity_id),
             fluid_id,
-            meastech_set,
+            method_set,
         )
         )
         results = cursor.fetchall()
@@ -971,14 +967,14 @@ def get_series_value( cursor, series_id, quantity_id,
     """
     SELECT series_value, series_uncertainty
     FROM series_values
-    WHERE series_id=? AND quantity_id=? AND fluid_id=? AND value_type_id=? AND meastech_set=?;
+    WHERE series_id=? AND quantity_id=? AND fluid_id=? AND value_type_id=? AND method_set=?;
     """,
     (
         sanitize_identifier(series_id),
         str(quantity_id),
         fluid_id,
         final_value_type_id,
-        meastech_set,
+        method_set,
     )
     )
     return fetch_float( cursor )
@@ -1095,7 +1091,7 @@ def add_station( cursor, flow_class_id, year, study_number, series_number, \
 
 def set_station_value( cursor, station_id, quantity_id, value,
                        value_type_id=VT_UNAVERAGED_VALUE,
-                       meastech_ids=[], meastech_set=PRIMARY_MT_SET,
+                       method_ids=[], method_set=PRIMARY_MT_SET,
                        fluid_id=F_MIXTURE, corrected=False, outlier=False,
                        note_ids=[] ):
     station_value, station_uncertainty = split_float( value )
@@ -1103,7 +1099,7 @@ def set_station_value( cursor, station_id, quantity_id, value,
         cursor.execute(
         """
         INSERT INTO station_values( station_id, quantity_id, fluid_id,
-                                    value_type_id, meastech_set,
+                                    value_type_id, method_set,
                                     station_value, station_uncertainty,
                                     corrected, outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ? );
@@ -1113,7 +1109,7 @@ def set_station_value( cursor, station_id, quantity_id, value,
             str(quantity_id),
             fluid_id,
             value_type_id,
-            meastech_set,
+            method_set,
             station_value,
             station_uncertainty,
             int(corrected),
@@ -1121,12 +1117,12 @@ def set_station_value( cursor, station_id, quantity_id, value,
         )
         )
 
-        for meastech_id in meastech_ids:
+        for method_id in method_ids:
             cursor.execute(
             """
             INSERT INTO station_values_mt( station_id, quantity_id, fluid_id,
-                                           value_type_id, meastech_set,
-                                           meastech_id )
+                                           value_type_id, method_set,
+                                           method_id )
             VALUES( ?, ?, ?, ?, ?, ? );
             """,
             (
@@ -1134,8 +1130,8 @@ def set_station_value( cursor, station_id, quantity_id, value,
                 str(quantity_id),
                 fluid_id,
                 value_type_id,
-                meastech_set,
-                meastech_id,
+                method_set,
+                method_id,
             )
             )
 
@@ -1143,7 +1139,7 @@ def set_station_value( cursor, station_id, quantity_id, value,
             cursor.execute(
             """
             INSERT INTO station_value_notes( station_id, quantity_id, fluid_id,
-                                             value_type_id, meastech_set,
+                                             value_type_id, method_set,
                                              note_id )
             VALUES( ?, ?, ?, ?, ?, ? );
             """,
@@ -1152,7 +1148,7 @@ def set_station_value( cursor, station_id, quantity_id, value,
                 str(quantity_id),
                 fluid_id,
                 value_type_id,
-                meastech_set,
+                method_set,
                 int(note_id),
             )
             )
@@ -1178,7 +1174,7 @@ def get_points_at_station( cursor, station_id ):
 
 def set_constant_profile( cursor, station_id, quantity_id, value,
                           value_type_id=VT_UNAVERAGED_VALUE,
-                          meastech_ids=[], meastech_set=PRIMARY_MT_SET,
+                          method_ids=[], method_set=PRIMARY_MT_SET,
                           corrected=False, outlier=False, note_ids=[] ):
     for point_id in get_points_at_station( cursor, station_id ):
         set_point_value(
@@ -1187,8 +1183,8 @@ def set_constant_profile( cursor, station_id, quantity_id, value,
             quantity_id,
             value,
             value_type_id=value_type_id,
-            meastech_ids=meastech_ids,
-            meastech_set=meastech_set,
+            method_ids=method_ids,
+            method_set=method_set,
             corrected=False,
             outlier=outlier,
             note_ids=note_ids,
@@ -1196,20 +1192,20 @@ def set_constant_profile( cursor, station_id, quantity_id, value,
 
 def get_station_value( cursor, station_id, quantity_id,
                        value_type_id=VT_ANY_AVERAGE,
-                       fluid_id=F_MIXTURE, meastech_set=PRIMARY_MT_SET, ):
+                       fluid_id=F_MIXTURE, method_set=PRIMARY_MT_SET, ):
     final_value_type_id = value_type_id
     if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
         """
         SELECT value_type_id
         FROM station_values
-        WHERE station_id=? AND quantity_id=? AND fluid_id=? AND meastech_set=?;
+        WHERE station_id=? AND quantity_id=? AND fluid_id=? AND method_set=?;
         """,
         (
             sanitize_identifier(station_id),
             str(quantity_id),
             fluid_id,
-            meastech_set,
+            method_set,
         )
         )
         results = cursor.fetchall()
@@ -1223,14 +1219,14 @@ def get_station_value( cursor, station_id, quantity_id,
     SELECT station_value, station_uncertainty
     FROM station_values
     WHERE station_id=? AND quantity_id=? AND fluid_id=? AND value_type_id=? AND
-          meastech_set=?;
+          method_set=?;
     """,
     (
         sanitize_identifier(station_id),
         str(quantity_id),
         fluid_id,
         final_value_type_id,
-        meastech_set,
+        method_set,
     )
     )
     return fetch_float( cursor )
@@ -1311,7 +1307,7 @@ def add_point( cursor, flow_class_id, year, study_number, series_number,
 
 def set_point_value( cursor, point_id, quantity_id, value,
                      value_type_id=VT_UNAVERAGED_VALUE,
-                     meastech_ids=[], meastech_set=PRIMARY_MT_SET,
+                     method_ids=[], method_set=PRIMARY_MT_SET,
                      fluid_id=F_MIXTURE, corrected=False, outlier=False,
                      note_ids=[] ):
     point_value, point_uncertainty = split_float( value )
@@ -1319,7 +1315,7 @@ def set_point_value( cursor, point_id, quantity_id, value,
         cursor.execute(
         """
         INSERT INTO point_values( point_id, quantity_id, fluid_id,
-                                  value_type_id, meastech_set,
+                                  value_type_id, method_set,
                                   point_value, point_uncertainty,
                                   corrected, outlier )
         VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ? );
@@ -1329,7 +1325,7 @@ def set_point_value( cursor, point_id, quantity_id, value,
             str(quantity_id),
             fluid_id,
             value_type_id,
-            meastech_set,
+            method_set,
             point_value,
             point_uncertainty,
             int(corrected),
@@ -1337,12 +1333,12 @@ def set_point_value( cursor, point_id, quantity_id, value,
         )
         )
 
-        for meastech_id in meastech_ids:
+        for method_id in method_ids:
             cursor.execute(
             """
             INSERT INTO point_values_mt( point_id, quantity_id, fluid_id,
-                                         value_type_id, meastech_set,
-                                         meastech_id )
+                                         value_type_id, method_set,
+                                         method_id )
             VALUES( ?, ?, ?, ?, ?, ? );
             """,
             (
@@ -1350,8 +1346,8 @@ def set_point_value( cursor, point_id, quantity_id, value,
                 str(quantity_id),
                 fluid_id,
                 value_type_id,
-                meastech_set,
-                meastech_id,
+                method_set,
+                method_id,
             )
             )
 
@@ -1359,7 +1355,7 @@ def set_point_value( cursor, point_id, quantity_id, value,
             cursor.execute(
             """
             INSERT INTO point_value_notes( point_id, quantity_id, fluid_id,
-                                           value_type_id, meastech_set,
+                                           value_type_id, method_set,
                                            note_id )
             VALUES( ?, ?, ?, ?, ?, ? );
             """,
@@ -1368,27 +1364,27 @@ def set_point_value( cursor, point_id, quantity_id, value,
                 str(quantity_id),
                 fluid_id,
                 value_type_id,
-                meastech_set,
+                method_set,
                 int(note_id),
             )
             )
 
 def get_point_value( cursor, point_id, quantity_id,
                      value_type_id=VT_ANY_AVERAGE,
-                     fluid_id=F_MIXTURE, meastech_set=PRIMARY_MT_SET, ):
+                     fluid_id=F_MIXTURE, method_set=PRIMARY_MT_SET, ):
     final_value_type_id = value_type_id
     if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
         """
         SELECT value_type_id
         FROM point_values
-        WHERE point_id=? AND quantity_id=? AND fluid_id=? AND meastech_set=?;
+        WHERE point_id=? AND quantity_id=? AND fluid_id=? AND method_set=?;
         """,
         (
             sanitize_identifier(point_id),
             str(quantity_id),
             fluid_id,
-            meastech_set,
+            method_set,
         )
         )
         results = cursor.fetchall()
@@ -1402,14 +1398,14 @@ def get_point_value( cursor, point_id, quantity_id,
     SELECT point_value, point_uncertainty
     FROM point_values
     WHERE point_id=? AND quantity_id=? AND fluid_id=? AND value_type_id=? AND
-          meastech_set=?;
+          method_set=?;
     """,
     (
         sanitize_identifier(point_id),
         str(quantity_id),
         fluid_id,
         final_value_type_id,
-        meastech_set,
+        method_set,
     )
     )
     return fetch_float( cursor )
@@ -1417,7 +1413,7 @@ def get_point_value( cursor, point_id, quantity_id,
 def get_intersecting_profiles( cursor, station_id, quantity_ids,
                                fluid_ids=[],
                                value_type_ids=[],
-                               meastech_sets=[],
+                               method_sets=[],
                                excluded_point_label_ids=[], ):
     if ( len(fluid_ids) == 0 ):
         for i in range(len(quantity_ids)):
@@ -1428,13 +1424,13 @@ def get_intersecting_profiles( cursor, station_id, quantity_ids,
         for i in range(len(quantity_ids)):
             value_type_ids.append(None)
 
-    if ( len(meastech_sets) == 0 ):
+    if ( len(method_sets) == 0 ):
         for i in range(len(quantity_ids)):
-            meastech_sets.append(PRIMARY_MT_SET)
+            method_sets.append(PRIMARY_MT_SET)
 
     assert( len(quantity_ids) == len(fluid_ids)      )
     assert( len(quantity_ids) == len(value_type_ids) )
-    assert( len(quantity_ids) == len(meastech_sets)  )
+    assert( len(quantity_ids) == len(method_sets)  )
 
     query_string = ""
     query_inputs = []
@@ -1443,10 +1439,10 @@ def get_intersecting_profiles( cursor, station_id, quantity_ids,
             query_string += "INTERSECT\n"
         query_string += "SELECT point_id\n"
         query_string += "FROM point_values\n"
-        query_string += "WHERE quantity_id=? AND fluid_id=? AND meastech_set=? AND outlier=0"
+        query_string += "WHERE quantity_id=? AND fluid_id=? AND method_set=? AND outlier=0"
         query_inputs.append( str(quantity_ids[i]) )
         query_inputs.append( str(fluid_ids[i]) )
-        query_inputs.append( str(meastech_sets[i]) )
+        query_inputs.append( str(method_sets[i]) )
         if ( value_type_ids[i] != None ):
             query_string += " AND value_type_id=?"
             query_inputs.append( str(value_type_ids[i]) )
@@ -1486,7 +1482,7 @@ def get_intersecting_profiles( cursor, station_id, quantity_ids,
                 quantity_ids[i],
                 fluid_id=fluid_ids[i],
                 value_type_id=(VT_ANY_AVERAGE if value_type_ids[i] == None else value_type_ids[i]),
-                meastech_set=meastech_sets[i],
+                method_set=method_sets[i],
             ) )
         profiles.append( np.array(profile) )
     return tuple(profiles)
@@ -1554,7 +1550,7 @@ def locate_labeled_point( cursor, station_id, point_label_id ):
 
 def set_labeled_value( cursor, station_id, quantity_id, point_label_id, value,
                        value_type_id=VT_UNAVERAGED_VALUE,
-                       meastech_ids=[], meastech_set=PRIMARY_MT_SET,
+                       method_ids=[], method_set=PRIMARY_MT_SET,
                        corrected=False, outlier=False, note_ids=[] ):
     set_point_value(
         cursor,
@@ -1562,8 +1558,8 @@ def set_labeled_value( cursor, station_id, quantity_id, point_label_id, value,
         quantity_id,
         value,
         value_type_id=value_type_id,
-        meastech_ids=meastech_ids,
-        meastech_set=meastech_set,
+        method_ids=method_ids,
+        method_set=method_set,
         corrected=corrected,
         outlier=outlier,
         note_ids=note_ids,
@@ -1572,14 +1568,14 @@ def set_labeled_value( cursor, station_id, quantity_id, point_label_id, value,
 def get_labeled_value( cursor, station_id, quantity_id, point_label_id,
                        fluid_id=F_MIXTURE,
                        value_type_id=VT_ANY_AVERAGE,
-                       meastech_set=PRIMARY_MT_SET, ):
+                       method_set=PRIMARY_MT_SET, ):
     return get_point_value(
         cursor,
         locate_labeled_point( cursor, station_id, point_label_id ),
         quantity_id,
         fluid_id=fluid_id,
         value_type_id=value_type_id,
-        meastech_set=1,
+        method_set=1,
     )
 
 def integrate_using_trapezoid_rule( x, f, F0=sdfloat(0.0,0.0) ):

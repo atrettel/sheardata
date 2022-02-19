@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (C) 2020-2021 Andrew Trettel
+# Copyright (C) 2020-2022 Andrew Trettel
 #
 # SPDX-License-Identifier: MIT
 
@@ -284,20 +284,20 @@ for geometry_id in geometries:
     ( geometry_id, geometries[geometry_id], )
     )
 
-# Measurement techniques
+# Methods
 cursor.execute(
 """
-CREATE TABLE measurement_techniques (
-    meastech_id        TEXT PRIMARY KEY,
-    meastech_name      TEXT NOT NULL,
+CREATE TABLE methods (
+    method_id        TEXT PRIMARY KEY,
+    method_name      TEXT NOT NULL,
     intrusive          INTEGER NOT NULL DEFAULT 0 CHECK ( intrusive = 0 OR intrusive = 1 ),
-    meastech_parent_id TEXT DEFAULT NULL,
-    FOREIGN KEY(meastech_parent_id) REFERENCES measurement_techniques(meastech_id)
+    method_parent_id TEXT DEFAULT NULL,
+    FOREIGN KEY(method_parent_id) REFERENCES methods(method_id)
 );
 """
 )
 
-class MeasTech:
+class Method:
     name      = None
     intrusive = None
     parent    = None
@@ -310,69 +310,69 @@ class MeasTech:
         self.intrusive = 1 if intrusive else 0
         self.parent    = parent
 
-measurement_techniques = {}
-measurement_techniques[ sd.MT_APPROXIMATION                            ] = MeasTech( "approximation",                            sd.MT_REASONING,                                    )
-measurement_techniques[ sd.MT_ASSUMPTION                               ] = MeasTech( "assumption",                               sd.MT_REASONING,                                    )
-measurement_techniques[ sd.MT_CALCULATION                              ] = MeasTech( "calculation",                              sd.MT_REASONING,                                    )
-measurement_techniques[ sd.MT_CLAIM                                    ] = MeasTech( "claim",                                    sd.MT_REASONING,                                    )
-measurement_techniques[ sd.MT_CLAUSER_METHOD                           ] = MeasTech( "Clauser method",                           sd.MT_VELOCITY_PROFILE_METHOD,                      )
-measurement_techniques[ sd.MT_CONSTANT_CURRENT_HOT_WIRE_ANEMOMETRY     ] = MeasTech( "constant-current hot-wire anemometry",     sd.MT_HOT_WIRE_ANEMOMETRY,          intrusive=True, )
-measurement_techniques[ sd.MT_CONSTANT_TEMPERATURE_HOT_WIRE_ANEMOMETRY ] = MeasTech( "constant-temperature hot-wire anemometry", sd.MT_HOT_WIRE_ANEMOMETRY,          intrusive=True, )
-measurement_techniques[ sd.MT_DIFFERENTIAL_PRESSURE_METHOD             ] = MeasTech( "differential pressure method",             sd.MT_OBSERVATION,                                  )
-measurement_techniques[ sd.MT_DIRECT_INJECTION_METHOD                  ] = MeasTech( "direct injection method",                  sd.MT_OPTICAL_METHOD,                               )
-measurement_techniques[ sd.MT_FINITE_DIFFERENCE_METHOD                 ] = MeasTech( "finite-difference method",                 sd.MT_NUMERICAL_METHOD,                             )
-measurement_techniques[ sd.MT_FINITE_ELEMENT_METHOD                    ] = MeasTech( "finite-element method",                    sd.MT_NUMERICAL_METHOD,                             )
-measurement_techniques[ sd.MT_FINITE_VOLUME_METHOD                     ] = MeasTech( "finite-volume method",                     sd.MT_NUMERICAL_METHOD,                             )
-measurement_techniques[ sd.MT_FLOATING_ELEMENT_BALANCE                 ] = MeasTech( "floating element balance",                 sd.MT_WALL_SHEAR_STRESS_METHOD,                     )
-measurement_techniques[ sd.MT_FLOW_RATE_MEASUREMENT                    ] = MeasTech( "flow rate measurement",                    sd.MT_OBSERVATION,                                  )
-measurement_techniques[ sd.MT_HOT_WIRE_ANEMOMETRY                      ] = MeasTech( "hot-wire anemometry",                      sd.MT_THERMAL_ANEMOMETRY,           intrusive=True, )
-measurement_techniques[ sd.MT_IMPACT_TUBE                              ] = MeasTech( "impact tube",                              sd.MT_DIFFERENTIAL_PRESSURE_METHOD, intrusive=True, )
-measurement_techniques[ sd.MT_INDEX_OF_REFRACTION_METHOD               ] = MeasTech( "index-of-refraction method",               sd.MT_OPTICAL_METHOD,                               )
-measurement_techniques[ sd.MT_LASER_DOPPLER_ANEMOMETRY                 ] = MeasTech( "laser Doppler anemometry",                 sd.MT_OPTICAL_METHOD,                               )
-measurement_techniques[ sd.MT_MACH_ZEHNDER_INTERFEROMETRY              ] = MeasTech( "Mach-Zehnder interferometry",              sd.MT_INDEX_OF_REFRACTION_METHOD,                   )
-measurement_techniques[ sd.MT_MOMENTUM_BALANCE                         ] = MeasTech( "momentum balance",                         sd.MT_WALL_SHEAR_STRESS_METHOD,                     )
-measurement_techniques[ sd.MT_NUMERICAL_METHOD                         ] = MeasTech( "numerical method",                         sd.MT_CALCULATION,                                  )
-measurement_techniques[ sd.MT_OBSERVATION                              ] = MeasTech( "observation",                              sd.MT_ROOT,                                         )
-measurement_techniques[ sd.MT_OPTICAL_METHOD                           ] = MeasTech( "optical method",                           sd.MT_OBSERVATION,                                  )
-measurement_techniques[ sd.MT_PARTICLE_IMAGE_VELOCIMETRY               ] = MeasTech( "particle image velocimetry",               sd.MT_OPTICAL_METHOD,                               )
-measurement_techniques[ sd.MT_PITOT_STATIC_TUBE                        ] = MeasTech( "Pitot-static tube",                        sd.MT_DIFFERENTIAL_PRESSURE_METHOD, intrusive=True, )
-measurement_techniques[ sd.MT_PRESTON_TUBE                             ] = MeasTech( "Preston tube",                             sd.MT_WALL_SHEAR_STRESS_METHOD,     intrusive=True, )
-measurement_techniques[ sd.MT_REASONING                                ] = MeasTech( "reasoning",                                sd.MT_ROOT,                                         )
-measurement_techniques[ sd.MT_ROOT                                     ] = MeasTech( "knowledge source",                         None,                                               )
-measurement_techniques[ sd.MT_SCHLIEREN_PHOTOGRAPHY                    ] = MeasTech( "schlieren photography",                    sd.MT_INDEX_OF_REFRACTION_METHOD,                   )
-measurement_techniques[ sd.MT_SHADOWGRAPH_PHOTOGRAPHY                  ] = MeasTech( "shadowgraph photography",                  sd.MT_INDEX_OF_REFRACTION_METHOD,                   )
-measurement_techniques[ sd.MT_SPECTRAL_METHOD                          ] = MeasTech( "spectral method",                          sd.MT_NUMERICAL_METHOD,                             )
-measurement_techniques[ sd.MT_STANTON_TUBE                             ] = MeasTech( "Stanton tube",                             sd.MT_WALL_SHEAR_STRESS_METHOD,     intrusive=True, )
-measurement_techniques[ sd.MT_THERMAL_ANEMOMETRY                       ] = MeasTech( "thermal anemometry",                       sd.MT_OBSERVATION,                                  )
-measurement_techniques[ sd.MT_VELOCITY_PROFILE_METHOD                  ] = MeasTech( "velocity profile method",                  sd.MT_WALL_SHEAR_STRESS_METHOD,                     )
-measurement_techniques[ sd.MT_VISCOUS_SUBLAYER_SLOPE_METHOD            ] = MeasTech( "viscous sublayer slope method",            sd.MT_VELOCITY_PROFILE_METHOD,                      )
-measurement_techniques[ sd.MT_WALL_SHEAR_STRESS_METHOD                 ] = MeasTech( "wall shear stress method",                 sd.MT_OBSERVATION,                                  )
-measurement_techniques[ sd.MT_WEIGHING_METHOD                          ] = MeasTech( "weighing method",                          sd.MT_FLOW_RATE_MEASUREMENT,                        )
-measurement_techniques[ sd.MT_ZEROTH_ORDER_APPROXIMATION               ] = MeasTech( "zeroth-order approximation",               sd.MT_APPROXIMATION,                                )
+methods = {}
+methods[ sd.MT_APPROXIMATION                            ] = Method( "approximation",                            sd.MT_REASONING,                                    )
+methods[ sd.MT_ASSUMPTION                               ] = Method( "assumption",                               sd.MT_REASONING,                                    )
+methods[ sd.MT_CALCULATION                              ] = Method( "calculation",                              sd.MT_REASONING,                                    )
+methods[ sd.MT_CLAIM                                    ] = Method( "claim",                                    sd.MT_REASONING,                                    )
+methods[ sd.MT_CLAUSER_METHOD                           ] = Method( "Clauser method",                           sd.MT_VELOCITY_PROFILE_METHOD,                      )
+methods[ sd.MT_CONSTANT_CURRENT_HOT_WIRE_ANEMOMETRY     ] = Method( "constant-current hot-wire anemometry",     sd.MT_HOT_WIRE_ANEMOMETRY,          intrusive=True, )
+methods[ sd.MT_CONSTANT_TEMPERATURE_HOT_WIRE_ANEMOMETRY ] = Method( "constant-temperature hot-wire anemometry", sd.MT_HOT_WIRE_ANEMOMETRY,          intrusive=True, )
+methods[ sd.MT_DIFFERENTIAL_PRESSURE_METHOD             ] = Method( "differential pressure method",             sd.MT_OBSERVATION,                                  )
+methods[ sd.MT_DIRECT_INJECTION_METHOD                  ] = Method( "direct injection method",                  sd.MT_OPTICAL_METHOD,                               )
+methods[ sd.MT_FINITE_DIFFERENCE_METHOD                 ] = Method( "finite-difference method",                 sd.MT_NUMERICAL_METHOD,                             )
+methods[ sd.MT_FINITE_ELEMENT_METHOD                    ] = Method( "finite-element method",                    sd.MT_NUMERICAL_METHOD,                             )
+methods[ sd.MT_FINITE_VOLUME_METHOD                     ] = Method( "finite-volume method",                     sd.MT_NUMERICAL_METHOD,                             )
+methods[ sd.MT_FLOATING_ELEMENT_BALANCE                 ] = Method( "floating element balance",                 sd.MT_WALL_SHEAR_STRESS_METHOD,                     )
+methods[ sd.MT_FLOW_RATE_MEASUREMENT                    ] = Method( "flow rate measurement",                    sd.MT_OBSERVATION,                                  )
+methods[ sd.MT_HOT_WIRE_ANEMOMETRY                      ] = Method( "hot-wire anemometry",                      sd.MT_THERMAL_ANEMOMETRY,           intrusive=True, )
+methods[ sd.MT_IMPACT_TUBE                              ] = Method( "impact tube",                              sd.MT_DIFFERENTIAL_PRESSURE_METHOD, intrusive=True, )
+methods[ sd.MT_INDEX_OF_REFRACTION_METHOD               ] = Method( "index-of-refraction method",               sd.MT_OPTICAL_METHOD,                               )
+methods[ sd.MT_LASER_DOPPLER_ANEMOMETRY                 ] = Method( "laser Doppler anemometry",                 sd.MT_OPTICAL_METHOD,                               )
+methods[ sd.MT_MACH_ZEHNDER_INTERFEROMETRY              ] = Method( "Mach-Zehnder interferometry",              sd.MT_INDEX_OF_REFRACTION_METHOD,                   )
+methods[ sd.MT_MOMENTUM_BALANCE                         ] = Method( "momentum balance",                         sd.MT_WALL_SHEAR_STRESS_METHOD,                     )
+methods[ sd.MT_NUMERICAL_METHOD                         ] = Method( "numerical method",                         sd.MT_CALCULATION,                                  )
+methods[ sd.MT_OBSERVATION                              ] = Method( "observation",                              sd.MT_ROOT,                                         )
+methods[ sd.MT_OPTICAL_METHOD                           ] = Method( "optical method",                           sd.MT_OBSERVATION,                                  )
+methods[ sd.MT_PARTICLE_IMAGE_VELOCIMETRY               ] = Method( "particle image velocimetry",               sd.MT_OPTICAL_METHOD,                               )
+methods[ sd.MT_PITOT_STATIC_TUBE                        ] = Method( "Pitot-static tube",                        sd.MT_DIFFERENTIAL_PRESSURE_METHOD, intrusive=True, )
+methods[ sd.MT_PRESTON_TUBE                             ] = Method( "Preston tube",                             sd.MT_WALL_SHEAR_STRESS_METHOD,     intrusive=True, )
+methods[ sd.MT_REASONING                                ] = Method( "reasoning",                                sd.MT_ROOT,                                         )
+methods[ sd.MT_ROOT                                     ] = Method( "knowledge source",                         None,                                               )
+methods[ sd.MT_SCHLIEREN_PHOTOGRAPHY                    ] = Method( "schlieren photography",                    sd.MT_INDEX_OF_REFRACTION_METHOD,                   )
+methods[ sd.MT_SHADOWGRAPH_PHOTOGRAPHY                  ] = Method( "shadowgraph photography",                  sd.MT_INDEX_OF_REFRACTION_METHOD,                   )
+methods[ sd.MT_SPECTRAL_METHOD                          ] = Method( "spectral method",                          sd.MT_NUMERICAL_METHOD,                             )
+methods[ sd.MT_STANTON_TUBE                             ] = Method( "Stanton tube",                             sd.MT_WALL_SHEAR_STRESS_METHOD,     intrusive=True, )
+methods[ sd.MT_THERMAL_ANEMOMETRY                       ] = Method( "thermal anemometry",                       sd.MT_OBSERVATION,                                  )
+methods[ sd.MT_VELOCITY_PROFILE_METHOD                  ] = Method( "velocity profile method",                  sd.MT_WALL_SHEAR_STRESS_METHOD,                     )
+methods[ sd.MT_VISCOUS_SUBLAYER_SLOPE_METHOD            ] = Method( "viscous sublayer slope method",            sd.MT_VELOCITY_PROFILE_METHOD,                      )
+methods[ sd.MT_WALL_SHEAR_STRESS_METHOD                 ] = Method( "wall shear stress method",                 sd.MT_OBSERVATION,                                  )
+methods[ sd.MT_WEIGHING_METHOD                          ] = Method( "weighing method",                          sd.MT_FLOW_RATE_MEASUREMENT,                        )
+methods[ sd.MT_ZEROTH_ORDER_APPROXIMATION               ] = Method( "zeroth-order approximation",               sd.MT_APPROXIMATION,                                )
 
-for meastech_id in measurement_techniques:
+for method_id in methods:
     cursor.execute(
     """
-    INSERT INTO measurement_techniques( meastech_id, meastech_name, intrusive )
+    INSERT INTO methods( method_id, method_name, intrusive )
     VALUES( ?, ?, ? );
     """,
     (
-        meastech_id,
-        measurement_techniques[meastech_id].name,
-        measurement_techniques[meastech_id].intrusive,
+        method_id,
+        methods[method_id].name,
+        methods[method_id].intrusive,
     )
     )
 
 # Two separate loops MUST occur due to foreign key constraints.
-for meastech_id in measurement_techniques:
-    if ( measurement_techniques[meastech_id].is_child() ):
+for method_id in methods:
+    if ( methods[method_id].is_child() ):
         cursor.execute(
         """
-        UPDATE measurement_techniques
-        SET meastech_parent_id=?
-        WHERE meastech_id=?;
+        UPDATE methods
+        SET method_parent_id=?
+        WHERE method_id=?;
         """,
-        ( measurement_techniques[meastech_id].parent, meastech_id, )
+        ( methods[method_id].parent, method_id, )
         )
 
 # Notes
@@ -1063,12 +1063,12 @@ CREATE TABLE study_values (
     quantity_id       TEXT NOT NULL,
     fluid_id          TEXT NOT NULL,
     value_type_id     TEXT NOT NULL,
-    meastech_set      INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    method_set      INTEGER NOT NULL DEFAULT 1 CHECK ( method_set > 0 ),
     study_value       REAL NOT NULL,
     study_uncertainty REAL DEFAULT NULL CHECK ( study_uncertainty >= 0.0 ),
     corrected         INTEGER NOT NULL DEFAULT 0 CHECK ( corrected = 0 OR corrected = 1 ),
     outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(study_id, quantity_id, fluid_id, value_type_id, meastech_set),
+    PRIMARY KEY(study_id, quantity_id, fluid_id, value_type_id, method_set),
     FOREIGN KEY(study_id)      REFERENCES studies(study_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
@@ -1085,12 +1085,12 @@ CREATE TABLE series_values (
     quantity_id        TEXT NOT NULL,
     fluid_id           TEXT NOT NULL,
     value_type_id      TEXT NOT NULL,
-    meastech_set       INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    method_set       INTEGER NOT NULL DEFAULT 1 CHECK ( method_set > 0 ),
     series_value       REAL NOT NULL,
     series_uncertainty REAL DEFAULT NULL CHECK ( series_uncertainty >= 0.0 ),
     corrected          INTEGER NOT NULL DEFAULT 0 CHECK ( corrected = 0 OR corrected = 1 ),
     outlier            INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(series_id, quantity_id, fluid_id, value_type_id, meastech_set),
+    PRIMARY KEY(series_id, quantity_id, fluid_id, value_type_id, method_set),
     FOREIGN KEY(series_id)     REFERENCES series(series_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
@@ -1107,12 +1107,12 @@ CREATE TABLE station_values (
     quantity_id         TEXT NOT NULL,
     fluid_id            TEXT NOT NULL,
     value_type_id       TEXT NOT NULL,
-    meastech_set        INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    method_set        INTEGER NOT NULL DEFAULT 1 CHECK ( method_set > 0 ),
     station_value       REAL NOT NULL,
     station_uncertainty REAL DEFAULT NULL CHECK ( station_uncertainty >= 0.0 ),
     corrected           INTEGER NOT NULL DEFAULT 0 CHECK ( corrected = 0 OR corrected = 1 ),
     outlier             INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(station_id, quantity_id, fluid_id, value_type_id, meastech_set),
+    PRIMARY KEY(station_id, quantity_id, fluid_id, value_type_id, method_set),
     FOREIGN KEY(station_id)    REFERENCES stations(station_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
@@ -1129,12 +1129,12 @@ CREATE TABLE point_values (
     quantity_id       TEXT NOT NULL,
     fluid_id          TEXT NOT NULL,
     value_type_id     TEXT NOT NULL,
-    meastech_set      INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    method_set      INTEGER NOT NULL DEFAULT 1 CHECK ( method_set > 0 ),
     point_value       REAL NOT NULL,
     point_uncertainty REAL DEFAULT NULL CHECK ( point_uncertainty >= 0.0 ),
     corrected         INTEGER NOT NULL DEFAULT 0 CHECK ( corrected = 0 OR corrected = 1 ),
     outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(point_id, quantity_id, fluid_id, value_type_id, meastech_set),
+    PRIMARY KEY(point_id, quantity_id, fluid_id, value_type_id, method_set),
     FOREIGN KEY(point_id)      REFERENCES points(point_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
@@ -1143,7 +1143,7 @@ CREATE TABLE point_values (
 """
 )
 
-# Measurement techniques for study values
+# Methods for study values
 cursor.execute(
 """
 CREATE TABLE study_values_mt (
@@ -1151,19 +1151,19 @@ CREATE TABLE study_values_mt (
     quantity_id   TEXT NOT NULL,
     fluid_id      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
-    meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
-    meastech_id   TEXT NOT NULL,
-    PRIMARY KEY(study_id, quantity_id, fluid_id, value_type_id, meastech_set, meastech_id),
+    method_set  INTEGER NOT NULL DEFAULT 1 CHECK ( method_set > 0 ),
+    method_id   TEXT NOT NULL,
+    PRIMARY KEY(study_id, quantity_id, fluid_id, value_type_id, method_set, method_id),
     FOREIGN KEY(study_id)      REFERENCES studies(study_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
-    FOREIGN KEY(meastech_id)   REFERENCES measurement_techniques(meastech_id)
+    FOREIGN KEY(method_id)   REFERENCES methods(method_id)
 );
 """
 )
 
-# Measurement techniques for series values
+# Methods for series values
 cursor.execute(
 """
 CREATE TABLE series_values_mt (
@@ -1171,19 +1171,19 @@ CREATE TABLE series_values_mt (
     quantity_id   TEXT NOT NULL,
     fluid_id      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
-    meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
-    meastech_id   TEXT NOT NULL,
-    PRIMARY KEY(series_id, quantity_id, fluid_id, value_type_id, meastech_set, meastech_id),
+    method_set  INTEGER NOT NULL DEFAULT 1 CHECK ( method_set > 0 ),
+    method_id   TEXT NOT NULL,
+    PRIMARY KEY(series_id, quantity_id, fluid_id, value_type_id, method_set, method_id),
     FOREIGN KEY(series_id)     REFERENCES series(series_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
-    FOREIGN KEY(meastech_id)   REFERENCES measurement_techniques(meastech_id)
+    FOREIGN KEY(method_id)   REFERENCES methods(method_id)
 );
 """
 )
 
-# Measurement techniques for station values
+# Methods for station values
 cursor.execute(
 """
 CREATE TABLE station_values_mt (
@@ -1191,19 +1191,19 @@ CREATE TABLE station_values_mt (
     quantity_id   TEXT NOT NULL,
     fluid_id      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
-    meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
-    meastech_id   TEXT NOT NULL,
-    PRIMARY KEY(station_id, quantity_id, fluid_id, value_type_id, meastech_set, meastech_id),
+    method_set  INTEGER NOT NULL DEFAULT 1 CHECK ( method_set > 0 ),
+    method_id   TEXT NOT NULL,
+    PRIMARY KEY(station_id, quantity_id, fluid_id, value_type_id, method_set, method_id),
     FOREIGN KEY(station_id)    REFERENCES stations(station_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
-    FOREIGN KEY(meastech_id)   REFERENCES measurement_techniques(meastech_id)
+    FOREIGN KEY(method_id)   REFERENCES methods(method_id)
 );
 """
 )
 
-# Measurement techniques for point values
+# Methods for point values
 cursor.execute(
 """
 CREATE TABLE point_values_mt (
@@ -1211,14 +1211,14 @@ CREATE TABLE point_values_mt (
     quantity_id   TEXT NOT NULL,
     fluid_id      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
-    meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
-    meastech_id   TEXT NOT NULL,
-    PRIMARY KEY(point_id, quantity_id, fluid_id, value_type_id, meastech_set, meastech_id),
+    method_set  INTEGER NOT NULL DEFAULT 1 CHECK ( method_set > 0 ),
+    method_id   TEXT NOT NULL,
+    PRIMARY KEY(point_id, quantity_id, fluid_id, value_type_id, method_set, method_id),
     FOREIGN KEY(point_id)      REFERENCES points(point_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
-    FOREIGN KEY(meastech_id)   REFERENCES measurement_techniques(meastech_id)
+    FOREIGN KEY(method_id)   REFERENCES methods(method_id)
 );
 """
 )
@@ -1244,9 +1244,9 @@ CREATE TABLE study_value_notes (
     quantity_id   TEXT NOT NULL,
     fluid_id      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
-    meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    method_set  INTEGER NOT NULL DEFAULT 1 CHECK ( method_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(study_id, quantity_id, fluid_id, value_type_id, meastech_set, note_id),
+    PRIMARY KEY(study_id, quantity_id, fluid_id, value_type_id, method_set, note_id),
     FOREIGN KEY(study_id)      REFERENCES studies(study_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
@@ -1277,9 +1277,9 @@ CREATE TABLE series_value_notes (
     quantity_id   TEXT NOT NULL,
     fluid_id      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
-    meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    method_set  INTEGER NOT NULL DEFAULT 1 CHECK ( method_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(series_id, quantity_id, fluid_id, value_type_id, meastech_set, note_id),
+    PRIMARY KEY(series_id, quantity_id, fluid_id, value_type_id, method_set, note_id),
     FOREIGN KEY(series_id)     REFERENCES series(series_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
@@ -1310,9 +1310,9 @@ CREATE TABLE station_value_notes (
     quantity_id   TEXT NOT NULL,
     fluid_id      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
-    meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    method_set  INTEGER NOT NULL DEFAULT 1 CHECK ( method_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(station_id, quantity_id, fluid_id, value_type_id, meastech_set, note_id),
+    PRIMARY KEY(station_id, quantity_id, fluid_id, value_type_id, method_set, note_id),
     FOREIGN KEY(station_id)    REFERENCES stations(station_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
@@ -1343,9 +1343,9 @@ CREATE TABLE point_value_notes (
     quantity_id   TEXT NOT NULL,
     fluid_id      TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
-    meastech_set  INTEGER NOT NULL DEFAULT 1 CHECK ( meastech_set > 0 ),
+    method_set  INTEGER NOT NULL DEFAULT 1 CHECK ( method_set > 0 ),
     note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(point_id, quantity_id, fluid_id, value_type_id, meastech_set, note_id),
+    PRIMARY KEY(point_id, quantity_id, fluid_id, value_type_id, method_set, note_id),
     FOREIGN KEY(point_id)      REFERENCES points(point_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),

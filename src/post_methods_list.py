@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (C) 2020-2021 Andrew Trettel
+# Copyright (C) 2020-2022 Andrew Trettel
 #
 # SPDX-License-Identifier: MIT
 
@@ -12,13 +12,13 @@ conn   = sqlite3.connect( sys.argv[1] )
 cursor = conn.cursor()
 cursor.execute( "PRAGMA foreign_keys = ON;" )
 
-def create_measurement_techniques_tree( parent ):
+def create_methods_tree( parent ):
     cursor.execute(
     """
-    SELECT meastech_id, meastech_name
-    FROM measurement_techniques
-    WHERE meastech_parent_id=?
-    ORDER BY meastech_name COLLATE NOCASE;
+    SELECT method_id, method_name
+    FROM methods
+    WHERE method_parent_id=?
+    ORDER BY method_name COLLATE NOCASE;
     """,
     ( parent, )
     )
@@ -33,13 +33,13 @@ def create_measurement_techniques_tree( parent ):
             result[1],
             r"\texttt{"+result[0]+r"}",
         )
-        tree += create_measurement_techniques_tree( child )
+        tree += create_methods_tree( child )
     if ( len(results) != 0 ):
         tree += r"\end{itemize}"+"\n"
     return tree
 
-with open( "list-measurement-techniques.tex.tmp", "w" ) as f:
-    f.write( create_measurement_techniques_tree( sd.MT_ROOT ) )
+with open( "list-methods.tex.tmp", "w" ) as f:
+    f.write( create_methods_tree( sd.MT_ROOT ) )
 
 conn.commit()
 conn.close()
