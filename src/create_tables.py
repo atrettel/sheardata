@@ -335,81 +335,101 @@ CREATE TABLE methods (
 )
 
 class Method:
-    name      = None
-    intrusive = None
-    parent    = None
+    _method_id        = None
+    _method_name      = None
+    _intrusive        = None
+    _method_parent_id = None
+
+    def method_id( self ):
+        return self._method_id
+
+    def method_name( self ):
+        return self._method_name
+
+    def intrusive( self ):
+        return self._intrusive
+
+    def method_parent_id( self ):
+        return self._method_parent_id
 
     def is_child( self ):
-        return self.parent != None
+        return self.method_parent_id() != None
 
-    def __init__( self, name, parent, intrusive=False, ):
-        self.name      = str(name)
-        self.intrusive = 1 if intrusive else 0
-        self.parent    = parent
+    def execute_query( self ):
+        cursor.execute(
+        """
+        INSERT INTO methods( method_id, method_name, intrusive )
+        VALUES( ?, ?, ? );
+        """,
+        (
+            self.method_id(),
+            self.method_name(),
+            self.intrusive(),
+        )
+        )
 
-methods = {}
-methods[ sd.MT_APPROXIMATION                            ] = Method( "approximation",                            sd.MT_REASONING,                                    )
-methods[ sd.MT_ASSUMPTION                               ] = Method( "assumption",                               sd.MT_REASONING,                                    )
-methods[ sd.MT_CALCULATION                              ] = Method( "calculation",                              sd.MT_REASONING,                                    )
-methods[ sd.MT_CLAIM                                    ] = Method( "claim",                                    sd.MT_REASONING,                                    )
-methods[ sd.MT_CLAUSER_METHOD                           ] = Method( "Clauser method",                           sd.MT_VELOCITY_PROFILE_METHOD,                      )
-methods[ sd.MT_CONSTANT_CURRENT_HOT_WIRE_ANEMOMETRY     ] = Method( "constant-current hot-wire anemometry",     sd.MT_HOT_WIRE_ANEMOMETRY,          intrusive=True, )
-methods[ sd.MT_CONSTANT_TEMPERATURE_HOT_WIRE_ANEMOMETRY ] = Method( "constant-temperature hot-wire anemometry", sd.MT_HOT_WIRE_ANEMOMETRY,          intrusive=True, )
-methods[ sd.MT_DIFFERENTIAL_PRESSURE_METHOD             ] = Method( "differential pressure method",             sd.MT_OBSERVATION,                                  )
-methods[ sd.MT_DIRECT_INJECTION_METHOD                  ] = Method( "direct injection method",                  sd.MT_OPTICAL_METHOD,                               )
-methods[ sd.MT_FINITE_DIFFERENCE_METHOD                 ] = Method( "finite-difference method",                 sd.MT_NUMERICAL_METHOD,                             )
-methods[ sd.MT_FINITE_ELEMENT_METHOD                    ] = Method( "finite-element method",                    sd.MT_NUMERICAL_METHOD,                             )
-methods[ sd.MT_FINITE_VOLUME_METHOD                     ] = Method( "finite-volume method",                     sd.MT_NUMERICAL_METHOD,                             )
-methods[ sd.MT_FLOATING_ELEMENT_BALANCE                 ] = Method( "floating element balance",                 sd.MT_WALL_SHEAR_STRESS_METHOD,                     )
-methods[ sd.MT_FLOW_RATE_MEASUREMENT                    ] = Method( "flow rate measurement",                    sd.MT_OBSERVATION,                                  )
-methods[ sd.MT_HOT_WIRE_ANEMOMETRY                      ] = Method( "hot-wire anemometry",                      sd.MT_THERMAL_ANEMOMETRY,           intrusive=True, )
-methods[ sd.MT_IMPACT_TUBE                              ] = Method( "impact tube",                              sd.MT_DIFFERENTIAL_PRESSURE_METHOD, intrusive=True, )
-methods[ sd.MT_INDEX_OF_REFRACTION_METHOD               ] = Method( "index-of-refraction method",               sd.MT_OPTICAL_METHOD,                               )
-methods[ sd.MT_LASER_DOPPLER_ANEMOMETRY                 ] = Method( "laser Doppler anemometry",                 sd.MT_OPTICAL_METHOD,                               )
-methods[ sd.MT_MACH_ZEHNDER_INTERFEROMETRY              ] = Method( "Mach-Zehnder interferometry",              sd.MT_INDEX_OF_REFRACTION_METHOD,                   )
-methods[ sd.MT_MOMENTUM_BALANCE                         ] = Method( "momentum balance",                         sd.MT_WALL_SHEAR_STRESS_METHOD,                     )
-methods[ sd.MT_NUMERICAL_METHOD                         ] = Method( "numerical method",                         sd.MT_CALCULATION,                                  )
-methods[ sd.MT_OBSERVATION                              ] = Method( "observation",                              sd.MT_ROOT,                                         )
-methods[ sd.MT_OPTICAL_METHOD                           ] = Method( "optical method",                           sd.MT_OBSERVATION,                                  )
-methods[ sd.MT_PARTICLE_IMAGE_VELOCIMETRY               ] = Method( "particle image velocimetry",               sd.MT_OPTICAL_METHOD,                               )
-methods[ sd.MT_PITOT_STATIC_TUBE                        ] = Method( "Pitot-static tube",                        sd.MT_DIFFERENTIAL_PRESSURE_METHOD, intrusive=True, )
-methods[ sd.MT_PRESTON_TUBE                             ] = Method( "Preston tube",                             sd.MT_WALL_SHEAR_STRESS_METHOD,     intrusive=True, )
-methods[ sd.MT_REASONING                                ] = Method( "reasoning",                                sd.MT_ROOT,                                         )
-methods[ sd.MT_ROOT                                     ] = Method( "knowledge source",                         None,                                               )
-methods[ sd.MT_SCHLIEREN_PHOTOGRAPHY                    ] = Method( "schlieren photography",                    sd.MT_INDEX_OF_REFRACTION_METHOD,                   )
-methods[ sd.MT_SHADOWGRAPH_PHOTOGRAPHY                  ] = Method( "shadowgraph photography",                  sd.MT_INDEX_OF_REFRACTION_METHOD,                   )
-methods[ sd.MT_SPECTRAL_METHOD                          ] = Method( "spectral method",                          sd.MT_NUMERICAL_METHOD,                             )
-methods[ sd.MT_STANTON_TUBE                             ] = Method( "Stanton tube",                             sd.MT_WALL_SHEAR_STRESS_METHOD,     intrusive=True, )
-methods[ sd.MT_THERMAL_ANEMOMETRY                       ] = Method( "thermal anemometry",                       sd.MT_OBSERVATION,                                  )
-methods[ sd.MT_VELOCITY_PROFILE_METHOD                  ] = Method( "velocity profile method",                  sd.MT_WALL_SHEAR_STRESS_METHOD,                     )
-methods[ sd.MT_VISCOUS_SUBLAYER_SLOPE_METHOD            ] = Method( "viscous sublayer slope method",            sd.MT_VELOCITY_PROFILE_METHOD,                      )
-methods[ sd.MT_WALL_SHEAR_STRESS_METHOD                 ] = Method( "wall shear stress method",                 sd.MT_OBSERVATION,                                  )
-methods[ sd.MT_WEIGHING_METHOD                          ] = Method( "weighing method",                          sd.MT_FLOW_RATE_MEASUREMENT,                        )
-methods[ sd.MT_ZEROTH_ORDER_APPROXIMATION               ] = Method( "zeroth-order approximation",               sd.MT_APPROXIMATION,                                )
+    def __init__( self, method_id, method_name, method_parent_id, intrusive=False, ):
+        self._method_id        = method_id
+        self._method_name      = str(method_name)
+        self._method_parent_id = method_parent_id
+        self._intrusive        = 1 if intrusive else 0
 
-for method_id in methods:
-    cursor.execute(
-    """
-    INSERT INTO methods( method_id, method_name, intrusive )
-    VALUES( ?, ?, ? );
-    """,
-    (
-        method_id,
-        methods[method_id].name,
-        methods[method_id].intrusive,
-    )
-    )
+methods = []
+methods.append( Method( sd.MT_APPROXIMATION,                            "approximation",                            sd.MT_REASONING,                                    ) )
+methods.append( Method( sd.MT_ASSUMPTION,                               "assumption",                               sd.MT_REASONING,                                    ) )
+methods.append( Method( sd.MT_CALCULATION,                              "calculation",                              sd.MT_REASONING,                                    ) )
+methods.append( Method( sd.MT_CLAIM,                                    "claim",                                    sd.MT_REASONING,                                    ) )
+methods.append( Method( sd.MT_CLAUSER_METHOD,                           "Clauser method",                           sd.MT_VELOCITY_PROFILE_METHOD,                      ) )
+methods.append( Method( sd.MT_CONSTANT_CURRENT_HOT_WIRE_ANEMOMETRY,     "constant-current hot-wire anemometry",     sd.MT_HOT_WIRE_ANEMOMETRY,          intrusive=True, ) )
+methods.append( Method( sd.MT_CONSTANT_TEMPERATURE_HOT_WIRE_ANEMOMETRY, "constant-temperature hot-wire anemometry", sd.MT_HOT_WIRE_ANEMOMETRY,          intrusive=True, ) )
+methods.append( Method( sd.MT_DIFFERENTIAL_PRESSURE_METHOD,             "differential pressure method",             sd.MT_OBSERVATION,                                  ) )
+methods.append( Method( sd.MT_DIRECT_INJECTION_METHOD,                  "direct injection method",                  sd.MT_OPTICAL_METHOD,                               ) )
+methods.append( Method( sd.MT_FINITE_DIFFERENCE_METHOD,                 "finite-difference method",                 sd.MT_NUMERICAL_METHOD,                             ) )
+methods.append( Method( sd.MT_FINITE_ELEMENT_METHOD,                    "finite-element method",                    sd.MT_NUMERICAL_METHOD,                             ) )
+methods.append( Method( sd.MT_FINITE_VOLUME_METHOD,                     "finite-volume method",                     sd.MT_NUMERICAL_METHOD,                             ) )
+methods.append( Method( sd.MT_FLOATING_ELEMENT_BALANCE,                 "floating element balance",                 sd.MT_WALL_SHEAR_STRESS_METHOD,                     ) )
+methods.append( Method( sd.MT_FLOW_RATE_MEASUREMENT,                    "flow rate measurement",                    sd.MT_OBSERVATION,                                  ) )
+methods.append( Method( sd.MT_HOT_WIRE_ANEMOMETRY,                      "hot-wire anemometry",                      sd.MT_THERMAL_ANEMOMETRY,           intrusive=True, ) )
+methods.append( Method( sd.MT_IMPACT_TUBE,                              "impact tube",                              sd.MT_DIFFERENTIAL_PRESSURE_METHOD, intrusive=True, ) )
+methods.append( Method( sd.MT_INDEX_OF_REFRACTION_METHOD,               "index-of-refraction method",               sd.MT_OPTICAL_METHOD,                               ) )
+methods.append( Method( sd.MT_LASER_DOPPLER_ANEMOMETRY,                 "laser Doppler anemometry",                 sd.MT_OPTICAL_METHOD,                               ) )
+methods.append( Method( sd.MT_MACH_ZEHNDER_INTERFEROMETRY,              "Mach-Zehnder interferometry",              sd.MT_INDEX_OF_REFRACTION_METHOD,                   ) )
+methods.append( Method( sd.MT_MOMENTUM_BALANCE,                         "momentum balance",                         sd.MT_WALL_SHEAR_STRESS_METHOD,                     ) )
+methods.append( Method( sd.MT_NUMERICAL_METHOD,                         "numerical method",                         sd.MT_CALCULATION,                                  ) )
+methods.append( Method( sd.MT_OBSERVATION,                              "observation",                              sd.MT_ROOT,                                         ) )
+methods.append( Method( sd.MT_OPTICAL_METHOD,                           "optical method",                           sd.MT_OBSERVATION,                                  ) )
+methods.append( Method( sd.MT_PARTICLE_IMAGE_VELOCIMETRY,               "particle image velocimetry",               sd.MT_OPTICAL_METHOD,                               ) )
+methods.append( Method( sd.MT_PITOT_STATIC_TUBE,                        "Pitot-static tube",                        sd.MT_DIFFERENTIAL_PRESSURE_METHOD, intrusive=True, ) )
+methods.append( Method( sd.MT_PRESTON_TUBE,                             "Preston tube",                             sd.MT_WALL_SHEAR_STRESS_METHOD,     intrusive=True, ) )
+methods.append( Method( sd.MT_REASONING,                                "reasoning",                                sd.MT_ROOT,                                         ) )
+methods.append( Method( sd.MT_ROOT,                                     "knowledge source",                         None,                                               ) )
+methods.append( Method( sd.MT_SCHLIEREN_PHOTOGRAPHY,                    "schlieren photography",                    sd.MT_INDEX_OF_REFRACTION_METHOD,                   ) )
+methods.append( Method( sd.MT_SHADOWGRAPH_PHOTOGRAPHY,                  "shadowgraph photography",                  sd.MT_INDEX_OF_REFRACTION_METHOD,                   ) )
+methods.append( Method( sd.MT_SPECTRAL_METHOD,                          "spectral method",                          sd.MT_NUMERICAL_METHOD,                             ) )
+methods.append( Method( sd.MT_STANTON_TUBE,                             "Stanton tube",                             sd.MT_WALL_SHEAR_STRESS_METHOD,     intrusive=True, ) )
+methods.append( Method( sd.MT_THERMAL_ANEMOMETRY,                       "thermal anemometry",                       sd.MT_OBSERVATION,                                  ) )
+methods.append( Method( sd.MT_VELOCITY_PROFILE_METHOD,                  "velocity profile method",                  sd.MT_WALL_SHEAR_STRESS_METHOD,                     ) )
+methods.append( Method( sd.MT_VISCOUS_SUBLAYER_SLOPE_METHOD,            "viscous sublayer slope method",            sd.MT_VELOCITY_PROFILE_METHOD,                      ) )
+methods.append( Method( sd.MT_WALL_SHEAR_STRESS_METHOD,                 "wall shear stress method",                 sd.MT_OBSERVATION,                                  ) )
+methods.append( Method( sd.MT_WEIGHING_METHOD,                          "weighing method",                          sd.MT_FLOW_RATE_MEASUREMENT,                        ) )
+methods.append( Method( sd.MT_ZEROTH_ORDER_APPROXIMATION,               "zeroth-order approximation",               sd.MT_APPROXIMATION,                                ) )
+
+for method in methods:
+    method.execute_query()
 
 # Two separate loops MUST occur due to foreign key constraints.
-for method_id in methods:
-    if ( methods[method_id].is_child() ):
+for method in methods:
+    if ( method.is_child() ):
         cursor.execute(
         """
         UPDATE methods
         SET method_parent_id=?
         WHERE method_id=?;
         """,
-        ( methods[method_id].parent, method_id, )
+        (
+            method.method_parent_id(),
+            method.method_id(),
+        )
         )
 
 # Notes
