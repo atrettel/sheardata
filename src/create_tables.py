@@ -206,28 +206,60 @@ CREATE TABLE elements (
 """
 )
 
+class Element:
+    _atomic_number  = None
+    _element_symbol = None
+    _element_name   = None
+    _atomic_weight  = None
+
+    def atomic_number( self ):
+        return self._atomic_number
+
+    def element_symbol( self ):
+        return self._element_symbol
+
+    def element_name( self ):
+        return self._element_name
+
+    def atomic_weight( self ):
+        return self._atomic_weight
+
+    def execute_query( self ):
+        cursor.execute(
+        """
+        INSERT INTO elements VALUES( ?, ?, ?, ? );
+        """,
+        (
+            self.atomic_number(),
+            self.element_symbol(),
+            self.element_name(),
+            self.atomic_weight(),
+        )
+        )
+
+    def __init__( self, atomic_number, element_symbol, element_name,
+                  atomic_weight=0.0 ):
+        self._atomic_number  = atomic_number
+        self._element_symbol = element_symbol
+        self._element_name   = element_name
+        self._atomic_weight  = atomic_weight
+
+elements = []
 elements_filename = "../data/elements.csv"
 with open( elements_filename, "r" ) as elements_file:
     elements_reader = csv.reader( elements_file, delimiter=",", quotechar='"', \
         skipinitialspace=True )
     next(elements_reader)
     for elements_row in elements_reader:
-        atomic_number  =   int(elements_row[0])
-        element_symbol =   str(elements_row[1])
-        element_name   =   str(elements_row[2])
-        atomic_weight  = float(elements_row[3])
+        elements.append( Element(
+            int(elements_row[0]),
+            str(elements_row[1]),
+            str(elements_row[2]),
+            float(elements_row[3]),
+        ) )
 
-        cursor.execute(
-        """
-        INSERT INTO elements VALUES( ?, ?, ?, ? );
-        """,
-        (
-            atomic_number,
-            element_symbol,
-            element_name,
-            atomic_weight,
-        )
-        )
+for element in elements:
+    element.execute_query()
 
 # Fluids
 cursor.execute(
