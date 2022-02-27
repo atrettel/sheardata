@@ -492,6 +492,10 @@ def sdfloat( sql_value, sql_uncertainty=None ):
         uncertainty = float(sql_uncertainty)
     return ufloat( float(sql_value), uncertainty )
 
+def sdfloat_value( value ):
+    value, uncertainty = split_float(value)
+    return value
+
 def fetch_float( cursor ):
     result = cursor.fetchone()
     return sdfloat( result[0], result[1] )
@@ -1611,7 +1615,7 @@ def extract_element_counts( formula ):
 
 def calculate_molar_mass_of_molecular_formula( cursor, formula ):
     element_counts = extract_element_counts( formula )
-    molar_mass      = 0.0
+    molar_mass      = sdfloat(0.0,0.0)
     for element in element_counts:
         count = element_counts[element]
         cursor.execute(
@@ -1623,7 +1627,7 @@ def calculate_molar_mass_of_molecular_formula( cursor, formula ):
         ( element, )
         )
         result = cursor.fetchone()
-        atomic_weight = float(result[0])
+        atomic_weight = sdfloat(result[0],0.0)
         molar_mass += count * 1.0e-3 * atomic_weight
     return molar_mass
 
@@ -1647,8 +1651,8 @@ def get_molecular_formula_for_component( cursor, fluid_id ):
     return str(cursor.fetchone()[0])
 
 def calculate_molar_mass_from_amount_fractions( cursor, amount_fractions ):
-    mixture_amount_fraction = 0.0
-    mixture_molar_mass      = 0.0
+    mixture_amount_fraction = sdfloat(0.0,0.0)
+    mixture_molar_mass      = sdfloat(0.0,0.0)
     for fluid_id in amount_fractions:
         molar_mass      = calculate_molar_mass_of_component( cursor, fluid_id )
         amount_fraction = amount_fractions[fluid_id]
@@ -1656,13 +1660,13 @@ def calculate_molar_mass_from_amount_fractions( cursor, amount_fractions ):
         mixture_amount_fraction += amount_fraction
         mixture_molar_mass      += amount_fraction * molar_mass
 
-    assert( math.fabs( mixture_amount_fraction - 1.0 ) < sys.float_info.epsilon )
+    assert( math.fabs( sdfloat_value(mixture_amount_fraction) - 1.0 ) < sys.float_info.epsilon )
     return mixture_molar_mass
 
 def calculate_mass_fractions_from_amount_fractions( cursor, amount_fractions ):
     mixture_molar_mass = calculate_molar_mass_from_amount_fractions( cursor, amount_fractions )
 
-    mixture_mass_fraction = 0.0
+    mixture_mass_fraction = sdfloat(0.0,0.0)
     mass_fractions = {}
     for fluid_id in amount_fractions:
         molar_mass = calculate_molar_mass_of_component( cursor, fluid_id )
@@ -1671,7 +1675,7 @@ def calculate_mass_fractions_from_amount_fractions( cursor, amount_fractions ):
         mixture_mass_fraction   += mass_fraction
         mass_fractions[fluid_id] = mass_fraction
 
-    assert( math.fabs( mixture_mass_fraction - 1.0 ) < sys.float_info.epsilon )
+    assert( math.fabs( sdfloat_value(mixture_mass_fraction) - 1.0 ) < sys.float_info.epsilon )
     return mass_fractions
 
 def calculate_specific_gas_constant_of_component( cursor, fluid_id ):
@@ -1679,7 +1683,7 @@ def calculate_specific_gas_constant_of_component( cursor, fluid_id ):
     return MOLAR_GAS_CONSTANT / molar_mass
 
 def calculate_specific_gas_constant_from_mass_fractions( cursor, mass_fractions ):
-    mixture_specific_gas_constant = 0.0
+    mixture_specific_gas_constant = sdfloat(0.0,0.0)
     for fluid_id in mass_fractions:
         mixture_specific_gas_constant += mass_fractions[fluid_id] * calculate_specific_gas_constant_of_component( cursor, fluid_id )
     return mixture_specific_gas_constant
