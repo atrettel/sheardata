@@ -201,16 +201,20 @@ CREATE TABLE elements (
     atomic_number  INTEGER PRIMARY KEY,
     element_symbol TEXT UNIQUE NOT NULL,
     element_name   TEXT UNIQUE NOT NULL,
-    atomic_weight  REAL NOT NULL CHECK ( atomic_weight > 0.0 )
+    standard_atomic_weight_min REAL CHECK ( standard_atomic_weight_min > 0.0 ),
+    standard_atomic_weight_max REAL CHECK ( standard_atomic_weight_max > 0.0 ),
+    conventional_atomic_weight REAL CHECK ( conventional_atomic_weight > 0.0 )
 );
 """
 )
 
 class Element:
-    _atomic_number  = None
-    _element_symbol = None
-    _element_name   = None
-    _atomic_weight  = None
+    _atomic_number              = None
+    _element_symbol             = None
+    _element_name               = None
+    _standard_atomic_weight_min = None
+    _standard_atomic_weight_max = None
+    _conventional_atomic_weight = None
 
     def atomic_number( self ):
         return self._atomic_number
@@ -221,28 +225,41 @@ class Element:
     def element_name( self ):
         return self._element_name
 
-    def atomic_weight( self ):
-        return self._atomic_weight
+    def minimum_standard_atomic_weight( self ):
+        return self._standard_atomic_weight_min
+
+    def maximum_standard_atomic_weight( self ):
+        return self._standard_atomic_weight_max
+
+    def conventional_atomic_weight( self ):
+        return self._conventional_atomic_weight
 
     def execute_query( self ):
         cursor.execute(
         """
-        INSERT INTO elements VALUES( ?, ?, ?, ? );
+        INSERT INTO elements VALUES( ?, ?, ?, ?, ?, ? );
         """,
         (
             self.atomic_number(),
             self.element_symbol(),
             self.element_name(),
-            self.atomic_weight(),
+            self.minimum_standard_atomic_weight(),
+            self.maximum_standard_atomic_weight(),
+            self.conventional_atomic_weight(),
         )
         )
 
     def __init__( self, atomic_number, element_symbol, element_name,
-                  atomic_weight=0.0 ):
-        self._atomic_number  = atomic_number
-        self._element_symbol = element_symbol
-        self._element_name   = element_name
-        self._atomic_weight  = atomic_weight
+                  standard_atomic_weight_min,
+                  standard_atomic_weight_max,
+                  conventional_atomic_weight,
+                   ):
+        self._atomic_number              = atomic_number
+        self._element_symbol             = element_symbol
+        self._element_name               = element_name
+        self._standard_atomic_weight_min = standard_atomic_weight_min
+        self._standard_atomic_weight_max = standard_atomic_weight_max
+        self._conventional_atomic_weight = conventional_atomic_weight
 
 elements = []
 elements_filename = "../data/elements.csv"
@@ -256,6 +273,8 @@ with open( elements_filename, "r" ) as elements_file:
             str(elements_row[1]),
             str(elements_row[2]),
             float(elements_row[3]),
+            float(elements_row[4]),
+            float(elements_row[5]),
         ) )
 
 for element in elements:

@@ -1616,7 +1616,7 @@ def calculate_molar_mass_of_molecular_formula( cursor, formula ):
         count = element_counts[element]
         cursor.execute(
         """
-        SELECT atomic_weight
+        SELECT conventional_atomic_weight
         FROM elements
         WHERE element_symbol=?;
         """,
