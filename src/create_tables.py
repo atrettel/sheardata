@@ -226,13 +226,13 @@ class Element:
         return self._element_name
 
     def minimum_standard_atomic_weight( self ):
-        return self._standard_atomic_weight_min
+        return None if self._standard_atomic_weight_min == 0.0 else self._standard_atomic_weight_min
 
     def maximum_standard_atomic_weight( self ):
-        return self._standard_atomic_weight_max
+        return None if self._standard_atomic_weight_max == 0.0 else self._standard_atomic_weight_max
 
     def conventional_atomic_weight( self ):
-        return self._conventional_atomic_weight
+        return None if self._conventional_atomic_weight == 0.0 else self._conventional_atomic_weight
 
     def execute_query( self ):
         cursor.execute(
@@ -250,9 +250,9 @@ class Element:
         )
 
     def __init__( self, atomic_number, element_symbol, element_name,
-                  standard_atomic_weight_min,
-                  standard_atomic_weight_max,
-                  conventional_atomic_weight,
+                  standard_atomic_weight_min=0.0,
+                  standard_atomic_weight_max=0.0,
+                  conventional_atomic_weight=0.0,
                    ):
         self._atomic_number              = atomic_number
         self._element_symbol             = element_symbol
