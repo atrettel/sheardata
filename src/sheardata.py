@@ -118,14 +118,6 @@ F_GASEOUS_XENON             = "Xe(g)"
 F_LIQUID_WATER              = "H2O(l)"
 F_WATER_VAPOR               = "H2O(g)"
 
-MIX_AIR = [
-    F_GASEOUS_ARGON,
-    F_GASEOUS_CARBON_DIOXIDE,
-    F_GASEOUS_DIATOMIC_NITROGEN,
-    F_GASEOUS_DIATOMIC_OXYGEN,
-    F_WATER_VAPOR,
-]
-
 # Geometries
 GM_ELLIPTICAL  = "E"
 GM_RECTANGULAR = "R"
@@ -1004,7 +996,14 @@ def add_series_component( cursor, series_id, fluid_id ):
     )
 
 def add_air_components_to_series( cursor, series_id ):
-    for fluid_id in MIX_AIR:
+    air_mixture = [
+        F_GASEOUS_ARGON,
+        F_GASEOUS_CARBON_DIOXIDE,
+        F_GASEOUS_DIATOMIC_NITROGEN,
+        F_GASEOUS_DIATOMIC_OXYGEN,
+        F_WATER_VAPOR,
+    ]
+    for fluid_id in air_mixture:
         add_series_component( cursor, series_id, fluid_id )
 
 def get_series_components( cursor, series_id ):
@@ -1026,15 +1025,15 @@ def get_series_components( cursor, series_id ):
 
     return fluid_ids
 
-# TODO: Consider checking the array length and for additional fluid components.
-# Additional components may not necessarily prevent it from being classified as
-# air, since it may be air with additional components, but the point for now is
-# to just confirm that it has all of the components usually associated with
-# air.
+# TODO: There probably is a better way to do this.
 def is_air_working_fluid( cursor, series_id ):
     fluid_ids = get_series_components( cursor, series_id )
-    for fluid_id in fluid_ids:
-        if ( fluid_id not in MIX_AIR ):
+    minimum_air_components = [
+        GASEOUS_DIATOMIC_NITROGEN,
+        GASEOUS_DIATOMIC_OXYGEN,
+    ]
+    for fluid_id in minimum_air_components:
+        if ( fluid_id not in fluid_ids ):
             return False
     return True
 
