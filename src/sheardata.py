@@ -1638,6 +1638,7 @@ def get_degrees_of_freedom_for_element( formula ):
     elif ( total_atoms == 2 ):
         return 5
     elif ( total_atoms == 3 ):
+        # TODO: Check this.
         return 6
     assert( total_atoms < 4 )
     return 0
@@ -1720,6 +1721,26 @@ def calculate_specific_gas_constant_from_mass_fractions( cursor, mass_fractions 
 def calculate_specific_gas_constant_from_amount_fractions( cursor, amount_fractions ):
     mass_fractions = calculate_mass_fractions_from_amount_fractions( cursor, amount_fractions )
     return calculate_specific_gas_constant_from_mass_fractions( cursor, mass_fractions )
+
+def calculate_ideal_gas_specific_isochoric_heat_capacity_of_component( cursor, fluid_id ):
+    formula = get_molecular_formula_for_component( cursor, fluid_id )
+    degrees_of_freedom = get_degrees_of_freedom_for_element( formula )
+    specific_gas_constant = calculate_specific_gas_constant_of_component( cursor, fluid_id )
+    c_v = 0.5 * degrees_of_freedom * specific_gas_constant
+    return c_v
+
+def calculate_ideal_gas_specific_isobaric_heat_capacity_of_component( cursor, fluid_id ):
+    formula = get_molecular_formula_for_component( cursor, fluid_id )
+    degrees_of_freedom = get_degrees_of_freedom_for_element( formula )
+    specific_gas_constant = calculate_specific_gas_constant_of_component( cursor, fluid_id )
+    c_P = 0.5 * ( degrees_of_freedom + 2 ) * specific_gas_constant
+    return c_P
+
+def calculate_ideal_gas_heat_capacity_ratio_of_component( cursor, fluid_id ):
+    c_v = calculate_ideal_gas_specific_isochoric_heat_capacity_of_component( cursor, fluid_id )
+    c_P = calculate_ideal_gas_specific_isobaric_heat_capacity_of_component( cursor, fluid_id )
+    gamma = c_P / c_v
+    return gamma
 
 def mark_station_as_periodic( cursor, station_id, \
                               streamwise=True, spanwise=False ):
