@@ -1623,6 +1623,25 @@ def extract_element_counts( formula ):
 
     return element_counts
 
+def count_total_atoms( formula ):
+    element_counts = extract_element_counts( formula )
+    total_atoms = 0
+    for element in element_counts:
+        total_atoms += element_counts[element]
+    assert( total_atoms > 0 )
+    return total_atoms
+
+def get_degrees_of_freedom_for_element( formula ):
+    total_atoms = count_total_atoms( formula )
+    if ( total_atoms == 1 ):
+        return 3
+    elif ( total_atoms == 2 ):
+        return 5
+    elif ( total_atoms == 3 ):
+        return 6
+    assert( total_atoms < 4 )
+    return 0
+
 def calculate_molar_mass_of_molecular_formula( cursor, formula ):
     element_counts = extract_element_counts( formula )
     molar_mass      = sdfloat(0.0,0.0)
