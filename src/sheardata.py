@@ -1757,6 +1757,18 @@ def calculate_ideal_gas_heat_capacity_ratio_from_mass_fractions( cursor, mass_fr
     specific_isobaric_heat_capacity  = calculate_ideal_gas_specific_isobaric_heat_capacity_from_mass_fractions(  cursor, mass_fractions )
     return specific_isobaric_heat_capacity / specific_isochoric_heat_capacity
 
+def calculate_ideal_gas_specific_isochoric_heat_capacity_from_amount_fractions( cursor, amount_fractions ):
+    mass_fractions = calculate_mass_fractions_from_amount_fractions( cursor, amount_fractions )
+    return calculate_ideal_gas_specific_isochoric_heat_capacity_from_mass_fractions( cursor, mass_fractions )
+
+def calculate_ideal_gas_specific_isobaric_heat_capacity_from_amount_fractions( cursor, amount_fractions ):
+    mass_fractions = calculate_mass_fractions_from_amount_fractions( cursor, amount_fractions )
+    return calculate_ideal_gas_specific_isobaric_heat_capacity_from_mass_fractions( cursor, mass_fractions )
+
+def calculate_ideal_gas_heat_capacity_ratio_from_amount_fractions( cursor, amount_fractions ):
+    mass_fractions = calculate_mass_fractions_from_amount_fractions( cursor, amount_fractions )
+    return calculate_ideal_gas_heat_capacity_ratio_from_mass_fractions( cursor, mass_fractions )
+
 def mark_station_as_periodic( cursor, station_id, \
                               streamwise=True, spanwise=False ):
     if ( streamwise ):
