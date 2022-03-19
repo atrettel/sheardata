@@ -1814,6 +1814,14 @@ def ideal_gas_mass_density( temperature,                            \
                             specific_gas_constant=DRY_AIR_SPECIFIC_GAS_CONSTANT, ):
     return pressure / ( specific_gas_constant * temperature )
 
+def calculate_ideal_gas_mass_density_from_mass_fractions( cursor, pressure, temperature, mass_fractions ):
+    specific_gas_constant = calculate_specific_gas_constant_from_mass_fractions( cursor, mass_fractions )
+    return pressure / ( specific_gas_constant * temperature )
+
+def calculate_ideal_gas_amount_density_from_amount_fractions( cursor, pressure, temperature, amount_fractions ):
+    mass_fractions = calculate_mass_fractions_from_amount_fractions( cursor, amount_fractions )
+    return calculate_ideal_gas_mass_density_from_mass_fractions( cursor, pressure, temperature, mass_fractions )
+
 def ideal_gas_speed_of_sound( temperature, \
         heat_capacity_ratio=DRY_AIR_HEAT_CAPACITY_RATIO, \
         specific_gas_constant=DRY_AIR_SPECIFIC_GAS_CONSTANT, ):
