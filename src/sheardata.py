@@ -1808,20 +1808,25 @@ def count_studies( identifiers ):
             study_ids[study_id] += 1
     return study_ids
 
-# TODO: Later, make the pressure a required argument.
-def ideal_gas_mass_density( temperature,                            \
-                            pressure=STANDARD_ATMOSPHERIC_PRESSURE, \
-                            specific_gas_constant=DRY_AIR_SPECIFIC_GAS_CONSTANT, ):
-    return pressure / ( specific_gas_constant * temperature )
+# TODO: Add more components.  Note that for the specific heats, I need to
+# include additional information about the degrees of freedom for triatomic and
+# polyatomic molecules to return correct answers.
+def dry_air_amount_fractions():
+    return {
+        F_GASEOUS_DIATOMIC_NITROGEN: sdfloat(0.78,0.0),
+        F_GASEOUS_DIATOMIC_OXYGEN:   sdfloat(0.21,0.0),
+        F_GASEOUS_ARGON:             sdfloat(0.01,0.0),
+    }
 
 def calculate_ideal_gas_mass_density_from_mass_fractions( cursor, pressure, temperature, mass_fractions ):
     specific_gas_constant = calculate_specific_gas_constant_from_mass_fractions( cursor, mass_fractions )
     return pressure / ( specific_gas_constant * temperature )
 
-def calculate_ideal_gas_amount_density_from_amount_fractions( cursor, pressure, temperature, amount_fractions ):
+def calculate_ideal_gas_mass_density_from_amount_fractions( cursor, pressure, temperature, amount_fractions ):
     mass_fractions = calculate_mass_fractions_from_amount_fractions( cursor, amount_fractions )
     return calculate_ideal_gas_mass_density_from_mass_fractions( cursor, pressure, temperature, mass_fractions )
 
+# TODO: Write a version that works for ideal gas mixtures, as done above.
 def ideal_gas_speed_of_sound( temperature, \
         heat_capacity_ratio=DRY_AIR_HEAT_CAPACITY_RATIO, \
         specific_gas_constant=DRY_AIR_SPECIFIC_GAS_CONSTANT, ):

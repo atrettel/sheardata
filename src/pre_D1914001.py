@@ -191,7 +191,7 @@ with open( ratio_filename, "r" ) as ratio_file:
             dynamic_viscosity   = sd.liquid_water_dynamic_viscosity( temperature )
             kinematic_viscosity = dynamic_viscosity / mass_density
         elif ( working_fluid == "Air" ):
-            mass_density        = sd.ideal_gas_mass_density( temperature )
+            mass_density        = sd.calculate_ideal_gas_mass_density_from_amount_fractions( cursor, sd.STANDARD_ATMOSPHERIC_PRESSURE, temperature, sd.dry_air_amount_fractions() )
             dynamic_viscosity   = sd.sutherlands_law_dynamic_viscosity( temperature )
             kinematic_viscosity = dynamic_viscosity / mass_density
 
