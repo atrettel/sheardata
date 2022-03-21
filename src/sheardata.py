@@ -1826,11 +1826,14 @@ def calculate_ideal_gas_mass_density_from_amount_fractions( cursor, pressure, te
     mass_fractions = calculate_mass_fractions_from_amount_fractions( cursor, amount_fractions )
     return calculate_ideal_gas_mass_density_from_mass_fractions( cursor, pressure, temperature, mass_fractions )
 
-# TODO: Write a version that works for ideal gas mixtures, as done above.
-def ideal_gas_speed_of_sound( temperature, \
-        heat_capacity_ratio=DRY_AIR_HEAT_CAPACITY_RATIO, \
-        specific_gas_constant=DRY_AIR_SPECIFIC_GAS_CONSTANT, ):
+def calculate_ideal_gas_speed_of_sound_from_mass_fractions( cursor, temperature, mass_fractions ):
+    specific_gas_constant = calculate_specific_gas_constant_from_mass_fractions( cursor, mass_fractions )
+    heat_capacity_ratio   = calculate_ideal_gas_heat_capacity_ratio_from_mass_fractions( cursor, mass_fractions )
     return ( heat_capacity_ratio * specific_gas_constant * temperature )**0.5
+
+def calculate_ideal_gas_speed_of_sound_from_amount_fractions( cursor, temperature, amount_fractions ):
+    mass_fractions = calculate_mass_fractions_from_amount_fractions( cursor, amount_fractions )
+    return calculate_ideal_gas_speed_of_sound_from_mass_fractions( cursor, temperature, mass_fractions )
 
 def fahrenheit_to_kelvin( fahrenheit ):
     return ( fahrenheit - 32.0 ) / 1.8 + ABSOLUTE_ZERO
