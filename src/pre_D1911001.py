@@ -185,7 +185,7 @@ with open( globals_filename, "r" ) as globals_file:
         # This temperature is an assumption.  It is not stated in the paper.
         temperature         = sd.sdfloat( 15.0 + sd.ABSOLUTE_ZERO )
         mass_density        = sd.calculate_ideal_gas_mass_density_from_amount_fractions( cursor, sd.STANDARD_ATMOSPHERIC_PRESSURE, temperature, sd.dry_air_amount_fractions() )
-        speed_of_sound      = sd.ideal_gas_speed_of_sound( temperature )
+        speed_of_sound      = sd.calculate_ideal_gas_speed_of_sound_from_amount_fractions( cursor, temperature, sd.dry_air_amount_fractions() )
         dynamic_viscosity   = sd.sutherlands_law_dynamic_viscosity( temperature )
         kinematic_viscosity = dynamic_viscosity / mass_density
 

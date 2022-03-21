@@ -201,7 +201,7 @@ with open( ratio_filename, "r" ) as ratio_file:
 
         speed_of_sound = sd.sdfloat("inf")
         if ( working_fluid == "Air" ):
-            speed_of_sound = sd.ideal_gas_speed_of_sound( temperature )
+            speed_of_sound = sd.calculate_ideal_gas_speed_of_sound_from_amount_fractions( cursor, temperature, sd.dry_air_amount_fractions() )
         elif ( working_fluid == "Water" ):
             speed_of_sound = sd.liquid_water_speed_of_sound( temperature )
         Ma_bulk = bulk_velocity / speed_of_sound
@@ -390,7 +390,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
         speed_of_sound_method = sd.MT_ASSUMPTION
         speed_of_sound = sd.sdfloat("inf")
         if ( working_fluid == "Air" ):
-            speed_of_sound = sd.ideal_gas_speed_of_sound( temperature )
+            speed_of_sound = sd.calculate_ideal_gas_speed_of_sound_from_amount_fractions( cursor, temperature, sd.dry_air_amount_fractions() )
         elif ( working_fluid == "Water" ):
             speed_of_sound = sd.liquid_water_speed_of_sound( temperature )
         Ma_bulk = bulk_velocity     / speed_of_sound

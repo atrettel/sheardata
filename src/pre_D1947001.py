@@ -178,7 +178,7 @@ for duct in ducts:
             else:
                 Re_tau = half_height / viscous_length_scale
 
-            speed_of_sound = sd.ideal_gas_speed_of_sound( temperature )
+            speed_of_sound = sd.calculate_ideal_gas_speed_of_sound_from_amount_fractions( cursor, temperature, sd.dry_air_amount_fractions() )
             Ma_bulk        = bulk_velocity     / speed_of_sound
             Ma_tau         = friction_velocity / speed_of_sound
 
