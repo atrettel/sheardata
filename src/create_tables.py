@@ -554,7 +554,9 @@ CREATE TABLE quantities (
     mass_exponent             REAL NOT NULL DEFAULT 0.0,
     current_exponent          REAL NOT NULL DEFAULT 0.0,
     temperature_exponent      REAL NOT NULL DEFAULT 0.0,
-    amount_exponent           REAL NOT NULL DEFAULT 0.0
+    amount_exponent           REAL NOT NULL DEFAULT 0.0,
+    minimum_value             REAL DEFAULT NULL,
+    maximum_value             REAL DEFAULT NULL
 );
 """
 )
@@ -568,6 +570,8 @@ class Quantity:
     _current_exponent     = None
     _temperature_exponent = None
     _amount_exponent      = None
+    _minimum_value        = None
+    _maximum_value        = None
 
     def quantity_id( self ):
         return self._quantity_id
@@ -593,14 +597,20 @@ class Quantity:
     def amount_exponent( self ):
         return self._amount_exponent
 
+    def minimum_value( self ):
+        return self._minimum_value
+
+    def maximum_value( self ):
+        return self._maximum_value
+
     def execute_query( self ):
         cursor.execute(
         """
         INSERT INTO quantities( quantity_id, quantity_name,
                                 time_exponent, length_exponent, mass_exponent,
                                 current_exponent, temperature_exponent,
-                                amount_exponent )
-        VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
+                                amount_exponent, minimum_value, maximum_value )
+        VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );
         """,
         (
             self.quantity_id(),
@@ -611,6 +621,8 @@ class Quantity:
             self.current_exponent(),
             self.temperature_exponent(),
             self.amount_exponent(),
+            self.minimum_value(),
+            self.maximum_value(),
         )
         )
 
@@ -620,7 +632,9 @@ class Quantity:
                   mass_exponent=0.0,
                   current_exponent=0.0,
                   temperature_exponent=0.0,
-                  amount_exponent=0.0, ):
+                  amount_exponent=0.0,
+                  minimum_value=None,
+                  maximum_value=None, ):
         self._quantity_id          = str(quantity_id)
         self._quantity_name        = str(quantity_name)
         self._time_exponent        = time_exponent
@@ -629,6 +643,8 @@ class Quantity:
         self._current_exponent     = current_exponent
         self._temperature_exponent = temperature_exponent
         self._amount_exponent      = amount_exponent
+        self._minimum_value        = minimum_value
+        self._maximum_value        = maximum_value
 
 quantities = []
 
