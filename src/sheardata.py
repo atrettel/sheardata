@@ -681,6 +681,7 @@ def set_study_value( cursor, study_id, quantity_id, value,
                      method_ids=[], method_set=PRIMARY_MT_SET,
                      fluid_id=F_MIXTURE, corrected=False, outlier=False,
                      note_ids=[] ):
+    assert( check_value_within_quantity_bounds( cursor, quantity_id, value ) )
     study_value, study_uncertainty = split_float( value )
     for value_type_id in create_value_types_list( value_type_id ):
         cursor.execute(
@@ -882,6 +883,7 @@ def set_series_value( cursor, series_id, quantity_id, value,
                       method_ids=[], method_set=PRIMARY_MT_SET,
                       fluid_id=F_MIXTURE, corrected=False, outlier=False,
                       note_ids=[] ):
+    assert( check_value_within_quantity_bounds( cursor, quantity_id, value ) )
     series_value, series_uncertainty = split_float( value )
     for value_type_id in create_value_types_list( value_type_id ):
         cursor.execute(
@@ -1103,6 +1105,7 @@ def set_station_value( cursor, station_id, quantity_id, value,
                        method_ids=[], method_set=PRIMARY_MT_SET,
                        fluid_id=F_MIXTURE, corrected=False, outlier=False,
                        note_ids=[] ):
+    assert( check_value_within_quantity_bounds( cursor, quantity_id, value ) )
     station_value, station_uncertainty = split_float( value )
     for value_type_id in create_value_types_list( value_type_id ):
         cursor.execute(
@@ -1319,6 +1322,7 @@ def set_point_value( cursor, point_id, quantity_id, value,
                      method_ids=[], method_set=PRIMARY_MT_SET,
                      fluid_id=F_MIXTURE, corrected=False, outlier=False,
                      note_ids=[] ):
+    assert( check_value_within_quantity_bounds( cursor, quantity_id, value ) )
     point_value, point_uncertainty = split_float( value )
     for value_type_id in create_value_types_list( value_type_id ):
         cursor.execute(
@@ -1885,8 +1889,26 @@ def quantity_name( cursor, quantity_id ):
 
     return str(cursor.fetchone()[0])
 
+def quantity_bounds( cursor, quantity_id ):
+    cursor.execute(
+    """
+    SELECT minimum_value, maximum_value
+    FROM quantities
+    WHERE quantity_id=?;
+    """,
+    ( quantity_id, ),
+    )
+
+    return cursor.fetchone()
+
 def camel_case( name ):
     return name.replace("-"," ").replace("'",' ').title().replace(" ","")
 
 def quantity_camel_case_name( cursor, quantity_id ):
     return camel_case( quantity_name( cursor, quantity_id ) )
+
+def check_value_within_quantity_bounds( cursor, quantity_id, value ):
+    quantity_value = sdfloat_value( value )
+    bounds = quantity_bounds( cursor, quantity_id )
+    return bounds[0] <= quantity_value <= bounds[1]
+
