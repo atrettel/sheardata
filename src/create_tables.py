@@ -555,8 +555,8 @@ CREATE TABLE quantities (
     current_exponent          REAL NOT NULL DEFAULT 0.0,
     temperature_exponent      REAL NOT NULL DEFAULT 0.0,
     amount_exponent           REAL NOT NULL DEFAULT 0.0,
-    minimum_value             REAL DEFAULT NULL,
-    maximum_value             REAL DEFAULT NULL
+    minimum_value             REAL NOT NULL,
+    maximum_value             REAL NOT NULL
 );
 """
 )
@@ -633,8 +633,8 @@ class Quantity:
                   current_exponent=0.0,
                   temperature_exponent=0.0,
                   amount_exponent=0.0,
-                  minimum_value=None,
-                  maximum_value=None, ):
+                  minimum_value=float("-inf"),
+                  maximum_value=float("+inf"), ):
         self._quantity_id          = str(quantity_id)
         self._quantity_name        = str(quantity_name)
         self._time_exponent        = time_exponent
