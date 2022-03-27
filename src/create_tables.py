@@ -1239,6 +1239,21 @@ CREATE TABLE study_values (
 """
 )
 
+cursor.execute(
+"""
+CREATE TRIGGER study_values_within_quantity_bounds
+AFTER INSERT ON study_values
+WHEN EXISTS (
+    SELECT ( minimum_value <= NEW.study_value AND NEW.study_value <= maximum_value ) AS study_value_in_bounds
+    FROM quantities
+    WHERE ( NEW.quantity_id = quantities.quantity_id AND study_value_in_bounds = 0 )
+)
+BEGIN
+    SELECT RAISE( FAIL, "study value is not within the allowed bounds for the quantity" );
+END;
+"""
+)
+
 # Series values
 cursor.execute(
 """
@@ -1258,6 +1273,21 @@ CREATE TABLE series_values (
     FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
 );
+"""
+)
+
+cursor.execute(
+"""
+CREATE TRIGGER series_values_within_quantity_bounds
+AFTER INSERT ON series_values
+WHEN EXISTS (
+    SELECT ( minimum_value <= NEW.series_value AND NEW.series_value <= maximum_value ) AS series_value_in_bounds
+    FROM quantities
+    WHERE ( NEW.quantity_id = quantities.quantity_id AND series_value_in_bounds = 0 )
+)
+BEGIN
+    SELECT RAISE( FAIL, "series value is not within the allowed bounds for the quantity" );
+END;
 """
 )
 
@@ -1283,6 +1313,21 @@ CREATE TABLE station_values (
 """
 )
 
+cursor.execute(
+"""
+CREATE TRIGGER station_values_within_quantity_bounds
+AFTER INSERT ON station_values
+WHEN EXISTS (
+    SELECT ( minimum_value <= NEW.station_value AND NEW.station_value <= maximum_value ) AS station_value_in_bounds
+    FROM quantities
+    WHERE ( NEW.quantity_id = quantities.quantity_id AND station_value_in_bounds = 0 )
+)
+BEGIN
+    SELECT RAISE( FAIL, "station value is not within the allowed bounds for the quantity" );
+END;
+"""
+)
+
 # Point values
 cursor.execute(
 """
@@ -1302,6 +1347,21 @@ CREATE TABLE point_values (
     FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
 );
+"""
+)
+
+cursor.execute(
+"""
+CREATE TRIGGER point_values_within_quantity_bounds
+AFTER INSERT ON point_values
+WHEN EXISTS (
+    SELECT ( minimum_value <= NEW.point_value AND NEW.point_value <= maximum_value ) AS point_value_in_bounds
+    FROM quantities
+    WHERE ( NEW.quantity_id = quantities.quantity_id AND point_value_in_bounds = 0 )
+)
+BEGIN
+    SELECT RAISE( FAIL, "point value is not within the allowed bounds for the quantity" );
+END;
 """
 )
 
