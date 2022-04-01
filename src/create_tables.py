@@ -63,6 +63,82 @@ for coordinate_system_id in coordinate_systems:
     ( coordinate_system_id, coordinate_systems[coordinate_system_id], )
     )
 
+# Facility classes
+cursor.execute(
+"""
+CREATE TABLE facility_classes (
+    facility_class_id        TEXT PRIMARY KEY CHECK ( length(facility_class_id) = 1 ),
+    facility_class_name      TEXT NOT NULL,
+    facility_class_parent_id TEXT DEFAULT NULL,
+    FOREIGN KEY(facility_class_parent_id) REFERENCES facility_classes(facility_class_id)
+);
+"""
+)
+
+class FacilityClass:
+    _facility_class_id     = None
+    _facility_class_name   = None
+    _facility_class_parent = None
+
+    def facility_class_id( self ):
+        return self._facility_class_id
+
+    def facility_class_name( self ):
+        return self._facility_class_name
+
+    def facility_class_parent( self ):
+        return self._facility_class_parent
+
+    def is_child( self ):
+        return self.facility_class_parent() != None
+
+    def execute_query( self ):
+        cursor.execute(
+        """
+        INSERT INTO facility_classes( facility_class_id, facility_class_name )
+        VALUES( ?, ? );
+        """,
+        (
+            self.facility_class_id(),
+            self.facility_class_name(),
+        )
+        )
+
+    def __init__( self, facility_class_id, facility_class_name, facility_class_parent ):
+        self._facility_class_id     = facility_class_id
+        self._facility_class_name   = facility_class_name
+        self._facility_class_parent = facility_class_parent
+
+facility_classes = []
+facility_classes.append( FacilityClass( sd.FT_FACILITY,                   "facility",                        None                       ) )
+facility_classes.append( FacilityClass( sd.FT_TUNNEL,                     "tunnel",                          sd.FT_FACILITY             ) )
+facility_classes.append( FacilityClass( sd.FT_WIND_TUNNEL,                "wind tunnel",                     sd.FT_TUNNEL               ) )
+facility_classes.append( FacilityClass( sd.FT_OPEN_CIRCUIT_WIND_TUNNEL,   "open-circuit wind tunnel",        sd.FT_WIND_TUNNEL          ) )
+facility_classes.append( FacilityClass( sd.FT_CLOSED_CIRCUIT_WIND_TUNNEL, "closed-circuit wind tunnel",      sd.FT_WIND_TUNNEL          ) )
+facility_classes.append( FacilityClass( sd.FT_BLOWDOWN_WIND_TUNNEL,       "blowdown wind tunnel",            sd.FT_WIND_TUNNEL          ) )
+facility_classes.append( FacilityClass( sd.FT_SHOCK_TUBE,                 "shock tube",                      sd.FT_BLOWDOWN_WIND_TUNNEL ) )
+facility_classes.append( FacilityClass( sd.FT_WATER_TUNNEL,               "water tunnel",                    sd.FT_TUNNEL               ) )
+facility_classes.append( FacilityClass( sd.FT_RANGE,                      "range",                           sd.FT_FACILITY             ) )
+facility_classes.append( FacilityClass( sd.FT_TOWING_TANK,                "towing tank",                     sd.FT_FACILITY             ) )
+
+for facility_class in facility_classes:
+    facility_class.execute_query()
+
+# Two separate loops MUST occur due to foreign key constraints.
+for facility_class in facility_classes:
+    if ( facility_class.is_child() ):
+        cursor.execute(
+        """
+        UPDATE facility_classes
+        SET facility_class_parent_id=?
+        WHERE facility_class_id=?;
+        """,
+        (
+            facility_class.facility_class_parent(),
+            facility_class.facility_class_id(),
+        )
+        )
+
 # Flow classes
 cursor.execute(
 """

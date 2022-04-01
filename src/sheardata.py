@@ -66,6 +66,18 @@ STREAMWISE_VELOCITY_SYMBOL = "u"
 TRANSVERSE_VELOCITY_SYMBOL = ("v" if D_TRANSVERSE == 2 else "w")
 SPANWISE_VELOCITY_SYMBOL   = ("w" if D_TRANSVERSE == 2 else "v")
 
+# Facility classes
+FT_FACILITY                   = "F"
+FT_TUNNEL                     = "T"
+FT_WIND_TUNNEL                = "W"
+FT_OPEN_CIRCUIT_WIND_TUNNEL   = "O"
+FT_CLOSED_CIRCUIT_WIND_TUNNEL = "C"
+FT_BLOWDOWN_WIND_TUNNEL       = "B"
+FT_SHOCK_TUBE                 = "S"
+FT_WATER_TUNNEL               = "H"
+FT_RANGE                      = "R"
+FT_TOWING_TANK                = "M"
+
 # Flow classes
 FC_BOUNDARY_LAYER       = "B"
 FC_WALL_BOUNDED_FLOW    = "C"
