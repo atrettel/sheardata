@@ -1462,6 +1462,16 @@ END;
 """
 )
 
+# Facility values
+#
+# - operating time/run time/test time
+# - dimensions of the test section
+# - Mach number range
+# - Reynolds number range
+# - static and stagnation temperature ranges
+# - static and stagnation pressure ranges
+
+
 # Methods for study values
 cursor.execute(
 """
