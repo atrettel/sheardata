@@ -1271,6 +1271,7 @@ CREATE TABLE facilities (
     end_year                INTEGER DEFAULT NULL,
     predecessor_facility_id INTEGER DEFAULT NULL,
     successor_facility_id   INTEGER DEFAULT NULL,
+    open_test_section       INTEGER DEFAULT 0 CHECK ( open_test_section = 0 OR open_test_section = 1 ),
     FOREIGN KEY(facility_class_id)       REFERENCES facility_classes(facility_class_id),
     FOREIGN KEY(predecessor_facility_id) REFERENCES facilities(facility_id)
     FOREIGN KEY(successor_facility_id)   REFERENCES facilities(facility_id)
