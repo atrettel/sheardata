@@ -1279,7 +1279,7 @@ CREATE TABLE facilities (
 """
 )
 
-# Sources (literature references)
+# Study sources (literature references)
 #
 # The classification refers to whether this source (reference) is a primary
 # source (1) created during the study or whether this source is a secondary
@@ -1295,6 +1295,10 @@ CREATE TABLE study_sources (
 );
 """
 )
+
+# Facility sources
+#
+# TODO: Add this table.
 
 # Components
 #
@@ -1471,6 +1475,8 @@ END;
 # - Reynolds number range
 # - static and stagnation temperature ranges
 # - static and stagnation pressure ranges
+#
+# TODO: Add this table.
 
 
 # Methods for study values
