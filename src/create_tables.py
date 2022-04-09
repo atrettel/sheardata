@@ -110,16 +110,25 @@ class FacilityClass:
         self._facility_class_parent = facility_class_parent
 
 facility_classes = []
-facility_classes.append( FacilityClass( sd.FT_FACILITY,                   "facility",                        None                       ) )
-facility_classes.append( FacilityClass( sd.FT_TUNNEL,                     "tunnel",                          sd.FT_FACILITY             ) )
-facility_classes.append( FacilityClass( sd.FT_WIND_TUNNEL,                "wind tunnel",                     sd.FT_TUNNEL               ) )
-facility_classes.append( FacilityClass( sd.FT_OPEN_CIRCUIT_WIND_TUNNEL,   "open-circuit wind tunnel",        sd.FT_WIND_TUNNEL          ) )
-facility_classes.append( FacilityClass( sd.FT_CLOSED_CIRCUIT_WIND_TUNNEL, "closed-circuit wind tunnel",      sd.FT_WIND_TUNNEL          ) )
-facility_classes.append( FacilityClass( sd.FT_BLOWDOWN_WIND_TUNNEL,       "blowdown wind tunnel",            sd.FT_WIND_TUNNEL          ) )
-facility_classes.append( FacilityClass( sd.FT_SHOCK_TUBE,                 "shock tube",                      sd.FT_BLOWDOWN_WIND_TUNNEL ) )
-facility_classes.append( FacilityClass( sd.FT_WATER_TUNNEL,               "water tunnel",                    sd.FT_TUNNEL               ) )
-facility_classes.append( FacilityClass( sd.FT_RANGE,                      "range",                           sd.FT_FACILITY             ) )
-facility_classes.append( FacilityClass( sd.FT_TOWING_TANK,                "towing tank",                     sd.FT_FACILITY             ) )
+facility_classes.append( FacilityClass( sd.FT_FACILITY,                   "facility",                        None                        ) )
+
+facility_classes.append( FacilityClass( sd.FT_EXPERIMENTAL_FACILITY,      "experimental facility",           sd.FT_FACILITY              ) )
+facility_classes.append( FacilityClass( sd.FT_TUNNEL,                     "tunnel",                          sd.FT_EXPERIMENTAL_FACILITY ) )
+facility_classes.append( FacilityClass( sd.FT_WIND_TUNNEL,                "wind tunnel",                     sd.FT_TUNNEL                ) )
+facility_classes.append( FacilityClass( sd.FT_OPEN_CIRCUIT_WIND_TUNNEL,   "open-circuit wind tunnel",        sd.FT_WIND_TUNNEL           ) )
+facility_classes.append( FacilityClass( sd.FT_CLOSED_CIRCUIT_WIND_TUNNEL, "closed-circuit wind tunnel",      sd.FT_WIND_TUNNEL           ) )
+facility_classes.append( FacilityClass( sd.FT_BLOWDOWN_WIND_TUNNEL,       "blowdown wind tunnel",            sd.FT_WIND_TUNNEL           ) )
+facility_classes.append( FacilityClass( sd.FT_LUDWIEG_TUBE,               "Ludwieg tube",                    sd.FT_BLOWDOWN_WIND_TUNNEL  ) )
+facility_classes.append( FacilityClass( sd.FT_SHOCK_TUBE,                 "shock tube",                      sd.FT_BLOWDOWN_WIND_TUNNEL  ) )
+facility_classes.append( FacilityClass( sd.FT_WATER_TUNNEL,               "water tunnel",                    sd.FT_TUNNEL                ) )
+facility_classes.append( FacilityClass( sd.FT_RANGE,                      "range",                           sd.FT_FACILITY              ) )
+facility_classes.append( FacilityClass( sd.FT_TOWING_TANK,                "towing tank",                     sd.FT_FACILITY              ) )
+
+facility_classes.append( FacilityClass( sd.FT_NUMERICAL_FACILITY,         "numerical facility",              sd.FT_FACILITY              ) )
+facility_classes.append( FacilityClass( sd.FT_FINITE_DIFFERENCE_METHOD,   "finite-difference method",        sd.FT_NUMERICAL_FACILITY    ) )
+facility_classes.append( FacilityClass( sd.FT_FINITE_ELEMENT_METHOD,      "finite-element method",           sd.FT_NUMERICAL_FACILITY    ) )
+facility_classes.append( FacilityClass( sd.FT_FINITE_VOLUME_METHOD,       "finite-volume method",            sd.FT_NUMERICAL_FACILITY    ) )
+facility_classes.append( FacilityClass( sd.FT_SPECTRAL_METHOD,            "spectral method",                 sd.FT_NUMERICAL_FACILITY    ) )
 
 for facility_class in facility_classes:
     facility_class.execute_query()
