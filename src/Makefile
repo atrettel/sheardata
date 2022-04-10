@@ -31,8 +31,8 @@ post_%.tmp:: post_%.py $(database)
 	-sed -i "s/use as bounding box, clip/use as bounding box/g" *.pgf
 	@touch $@
 
-figure-flow-classification-tree-diagram.tex.tmp: $(postprocessing_targets)
-	dot2tex figure-flow-classification-tree-diagram.gv --output $@ --usepdflatex --figonly
+figure-%-tree-diagram.tex.tmp: $(postprocessing_targets)
+	dot2tex figure-$*-tree-diagram.gv --output $@ --usepdflatex --figonly
 	sed -i "s/article/standalone/g" $@
 	sed -i "/enlarge/d" $@
 
