@@ -121,8 +121,8 @@ facility_classes.append( FacilityClass( sd.FT_BLOWDOWN_WIND_TUNNEL,       "blowd
 facility_classes.append( FacilityClass( sd.FT_LUDWIEG_TUBE,               "Ludwieg tube",                    sd.FT_BLOWDOWN_WIND_TUNNEL  ) )
 facility_classes.append( FacilityClass( sd.FT_SHOCK_TUBE,                 "shock tube",                      sd.FT_BLOWDOWN_WIND_TUNNEL  ) )
 facility_classes.append( FacilityClass( sd.FT_WATER_TUNNEL,               "water tunnel",                    sd.FT_TUNNEL                ) )
-facility_classes.append( FacilityClass( sd.FT_RANGE,                      "range",                           sd.FT_FACILITY              ) )
-facility_classes.append( FacilityClass( sd.FT_TOWING_TANK,                "towing tank",                     sd.FT_FACILITY              ) )
+facility_classes.append( FacilityClass( sd.FT_RANGE,                      "range",                           sd.FT_EXPERIMENTAL_FACILITY ) )
+facility_classes.append( FacilityClass( sd.FT_TOWING_TANK,                "towing tank",                     sd.FT_EXPERIMENTAL_FACILITY ) )
 
 facility_classes.append( FacilityClass( sd.FT_NUMERICAL_FACILITY,         "numerical facility",              sd.FT_FACILITY              ) )
 facility_classes.append( FacilityClass( sd.FT_FINITE_DIFFERENCE_METHOD,   "finite-difference method",        sd.FT_NUMERICAL_FACILITY    ) )
