@@ -1,4 +1,4 @@
-# Copyright (C) 2020-2021 Andrew Trettel
+# Copyright (C) 2020-2022 Andrew Trettel
 #
 # SPDX-License-Identifier: MIT
 
@@ -12,7 +12,7 @@ database=$(project).db
 preprocessing_targets := $(filter-out ,$(patsubst %.py,%.tmp,$(wildcard pre_*.py)))
 postprocessing_targets := $(filter-out ,$(patsubst %.py,%.tmp,$(wildcard post_*.py)))
 
-dot_targets = figure-flow-classification-tree-diagram.tex.tmp
+dot_targets = figure-flow-classification-tree-diagram.tex.tmp figure-facility-classification-tree-diagram.tex.tmp
 tex_dependencies = $(project).tex $(wildcard ../data/*.tex) $(postprocessing_targets) $(dot_targets) $(project).bcf
 
 $(database): $(project).tmp $(preprocessing_targets)
