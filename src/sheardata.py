@@ -203,6 +203,12 @@ PL_UPPER = [ PL_UPPER_EDGE, PL_UPPER_WALL ]
 PL_LOWER_UPPER = [ PL_LOWER_EDGE, PL_LOWER_WALL,
                    PL_UPPER_EDGE, PL_UPPER_WALL, ]
 
+# Quantities, facility
+Q_RUN_TIME            = "t_run"
+Q_TEST_SECTION_HEIGHT = "h_ts"
+Q_TEST_SECTION_LENGTH = "L_ts"
+Q_TEST_SECTION_WIDTH  = "w_ts"
+
 # Quantities, series
 Q_ANGLE_OF_ATTACK                = "AOA"
 Q_BODY_HEIGHT                    = "h_b"

@@ -610,10 +610,10 @@ for point_label_id in point_labels:
 # Quantities
 #
 # I have implemented all quantities in the same table, though I divide them up
-# into categories based on whether they apply to a study, series, station, or
-# point.  Separate tables may be a better design choice in the long run because
-# it enforces the division, but for the moment I am leaving it with only one
-# table for simplicity.
+# into categories based on whether they apply to a study, series, station,
+# point, or facilities.  Separate tables may be a better design choice in the
+# long run because it enforces the division, but for the moment I am leaving it
+# with only one table for simplicity.
 #
 # The advantage of a single table is that it grants the ability to apply some
 # quantities to both a point and a station, for example.  Coordinates are
@@ -625,6 +625,11 @@ for point_label_id in point_labels:
 # violates the idea that data should only be in one particular place in the
 # database, and for that reason I have only implemented coordinates as point
 # quantities so far.
+#
+# Now that I have added quantities for the facilities too, it seems like having
+# a single table for quantities is better, since I can use point quantities as
+# corresponding facility quantities without having to add them a second time.
+# This benefit seems to favor a single table.
 cursor.execute(
 """
 CREATE TABLE quantities (
@@ -923,6 +928,16 @@ quantities.append( Quantity( sd.Q_LOCAL_TO_WALL_DYNAMIC_VISCOSITY_RATIO,        
 quantities.append( Quantity( sd.Q_LOCAL_TO_WALL_MASS_DENSITY_RATIO,               "local-to-wall density ratio",                    minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_LOCAL_TO_WALL_STREAMWISE_VELOCITY_RATIO,        "local-to-wall streamwise velocity ratio",        minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO,                "local-to-wall temperature ratio",                minimum_value=0.0, ) )
+
+# Quantities, facility
+# - Mach number range (use point quantity)
+# - Reynolds number range (TODO)
+# - static and stagnation temperature ranges (TODO)
+# - static and stagnation pressure ranges (TODO)
+quantities.append( Quantity( sd.Q_RUN_TIME,            "run time",              time_exponent=+1.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_TEST_SECTION_HEIGHT, "test-section height", length_exponent=+1.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_TEST_SECTION_LENGTH, "test-section length", length_exponent=+1.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_TEST_SECTION_WIDTH,  "test-section width",  length_exponent=+1.0, minimum_value=0.0, ) )
 
 for quantity in quantities:
     quantity.execute_query()
@@ -1479,15 +1494,36 @@ END;
 )
 
 # Facility values
-#
-# - operating time/run time/test time
-# - dimensions of the test section
-# - Mach number range
-# - Reynolds number range
-# - static and stagnation temperature ranges
-# - static and stagnation pressure ranges
-#
-# TODO: Add this table.
+cursor.execute(
+"""
+CREATE TABLE facility_values (
+    facility_id          TEXT NOT NULL,
+    quantity_id          TEXT NOT NULL,
+    value_type_id        TEXT NOT NULL,
+    facility_value       REAL NOT NULL,
+    facility_uncertainty REAL DEFAULT NULL CHECK ( facility_uncertainty >= 0.0 ),
+    PRIMARY KEY(facility_id, quantity_id, value_type_id),
+    FOREIGN KEY(facility_id)   REFERENCES facilities(facility_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
+);
+"""
+)
+
+cursor.execute(
+"""
+CREATE TRIGGER facility_values_within_quantity_bounds
+AFTER INSERT ON facility_values
+WHEN EXISTS (
+    SELECT ( minimum_value <= NEW.facility_value AND NEW.facility_value <= maximum_value ) AS facility_value_in_bounds
+    FROM quantities
+    WHERE ( NEW.quantity_id = quantities.quantity_id AND facility_value_in_bounds = 0 )
+)
+BEGIN
+    SELECT RAISE( FAIL, "facility value is not within the allowed bounds for the quantity" );
+END;
+"""
+)
 
 
 # Methods for study values
