@@ -934,10 +934,12 @@ quantities.append( Quantity( sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO,              
 # - Reynolds number range (TODO)
 # - static and stagnation temperature ranges (TODO)
 # - static and stagnation pressure ranges (TODO)
-quantities.append( Quantity( sd.Q_RUN_TIME,            "run time",              time_exponent=+1.0, minimum_value=0.0, ) )
-quantities.append( Quantity( sd.Q_TEST_SECTION_HEIGHT, "test-section height", length_exponent=+1.0, minimum_value=0.0, ) )
-quantities.append( Quantity( sd.Q_TEST_SECTION_LENGTH, "test-section length", length_exponent=+1.0, minimum_value=0.0, ) )
-quantities.append( Quantity( sd.Q_TEST_SECTION_WIDTH,  "test-section width",  length_exponent=+1.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_RUN_TIME,                   "run time",                     time_exponent=+1.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_SPATIAL_ORDER_OF_ACCURACY,  "spatial order of accuracy",                        minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_TEMPORAL_ORDER_OF_ACCURACY, "temporal order of accuracy",                       minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_TEST_SECTION_HEIGHT,        "test-section height",        length_exponent=+1.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_TEST_SECTION_LENGTH,        "test-section length",        length_exponent=+1.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_TEST_SECTION_WIDTH,         "test-section width",         length_exponent=+1.0, minimum_value=0.0, ) )
 
 for quantity in quantities:
     quantity.execute_query()
@@ -1296,8 +1298,6 @@ CREATE TABLE facilities (
     predecessor_facility_id    INTEGER DEFAULT NULL,
     successor_facility_id      INTEGER DEFAULT NULL,
     open_test_section          INTEGER DEFAULT 0 CHECK ( open_test_section = 0 OR open_test_section = 1 ),
-    temporal_order_of_accuracy INTEGER DEFAULT NULL CHECK ( temporal_order_of_accuracy >= 0 ),
-    spatial_order_of_accuracy  INTEGER DEFAULT NULL CHECK (  spatial_order_of_accuracy >= 0 ),
     FOREIGN KEY(facility_class_id)       REFERENCES facility_classes(facility_class_id),
     FOREIGN KEY(predecessor_facility_id) REFERENCES facilities(facility_id)
     FOREIGN KEY(successor_facility_id)   REFERENCES facilities(facility_id)

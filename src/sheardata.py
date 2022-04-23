@@ -204,10 +204,12 @@ PL_LOWER_UPPER = [ PL_LOWER_EDGE, PL_LOWER_WALL,
                    PL_UPPER_EDGE, PL_UPPER_WALL, ]
 
 # Quantities, facility
-Q_RUN_TIME            = "t_run"
-Q_TEST_SECTION_HEIGHT = "h_ts"
-Q_TEST_SECTION_LENGTH = "L_ts"
-Q_TEST_SECTION_WIDTH  = "w_ts"
+Q_RUN_TIME                   = "t_run"
+Q_SPATIAL_ORDER_OF_ACCURACY  = "OOA_x"
+Q_TEMPORAL_ORDER_OF_ACCURACY = "OOA_t"
+Q_TEST_SECTION_HEIGHT        = "h_ts"
+Q_TEST_SECTION_LENGTH        = "L_ts"
+Q_TEST_SECTION_WIDTH         = "w_ts"
 
 # Quantities, series
 Q_ANGLE_OF_ATTACK                = "AOA"
