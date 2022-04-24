@@ -1172,7 +1172,7 @@ define_quantity_symbol( sd.Q_LOCAL_TO_WALL_STREAMWISE_VELOCITY_RATIO,        sd.
 define_quantity_symbol( sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO,                sd.VT_UNAVERAGED_VALUE, r"(T/T_w)",                                                                           )
 
 
-# Material properties
+# Fluid property values
 #
 # TODO: Right now I use the citation key as part of the primary key.  That
 # makes it possible to have multiple sets of data for a given pressure and
@@ -1181,15 +1181,15 @@ define_quantity_symbol( sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO,                sd.
 # note so that I think about it more later.
 cursor.execute(
 """
-CREATE TABLE material_properties (
-    pressure             REAL NOT NULL CHECK (    pressure > 0.0 ),
-    temperature          REAL NOT NULL CHECK ( temperature > 0.0 ),
-    fluid_id             TEXT NOT NULL,
-    citation_key         TEXT NOT NULL,
-    quantity_id          TEXT NOT NULL,
-    property_value       REAL NOT NULL,
-    property_uncertainty REAL DEFAULT NULL CHECK ( property_uncertainty >= 0.0 ),
-    outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
+CREATE TABLE fluid_property_values (
+    pressure                   REAL NOT NULL CHECK (    pressure > 0.0 ),
+    temperature                REAL NOT NULL CHECK ( temperature > 0.0 ),
+    fluid_id                   TEXT NOT NULL,
+    citation_key               TEXT NOT NULL,
+    quantity_id                TEXT NOT NULL,
+    fluid_property_value       REAL NOT NULL,
+    fluid_property_uncertainty REAL DEFAULT NULL CHECK ( fluid_property_uncertainty >= 0.0 ),
+    outlier                    INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     PRIMARY KEY(pressure, temperature, fluid_id, citation_key, quantity_id),
     FOREIGN KEY(quantity_id) REFERENCES quantities(quantity_id),
     FOREIGN KEY(fluid_id)    REFERENCES fluids(fluid_id)
