@@ -26,7 +26,7 @@ with open( "list-flow-classes.tex.tmp", "w" ) as f:
         f.write(
             r"\item "+"Class {:s} --- {:s}\n".format(
                 r"\texttt{"+result[0]+r"}",
-                result[1]+"s"
+                result[1]
             )
         )
 
