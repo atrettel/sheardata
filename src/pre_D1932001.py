@@ -28,11 +28,15 @@ study_id = sd.add_study(
 
 sd.add_study_source( cursor, study_id, "NikuradseJ+1932+deu+JOUR",      sd.PRIMARY_SOURCE )
 sd.add_study_source( cursor, study_id, "NikuradseJ+1933+deu+JOUR",      sd.PRIMARY_SOURCE )
-sd.add_study_source( cursor, study_id, "RobertsonJM+1957+eng+CPAPER", sd.SECONDARY_SOURCE )
-sd.add_study_source( cursor, study_id, "LindgrenER+1965+eng+RPRT",    sd.SECONDARY_SOURCE )
 sd.add_study_source( cursor, study_id, "BeattieDRH+1995+eng+CPAPER",  sd.SECONDARY_SOURCE )
+sd.add_study_source( cursor, study_id, "BrownlieWR+1981+eng+JOUR",    sd.SECONDARY_SOURCE )
 sd.add_study_source( cursor, study_id, "HagerWH+2008+eng+JOUR",       sd.SECONDARY_SOURCE )
 sd.add_study_source( cursor, study_id, "LaVioletteM+2017+eng+JOUR",   sd.SECONDARY_SOURCE )
+sd.add_study_source( cursor, study_id, "LindgrenER+1965+eng+RPRT",    sd.SECONDARY_SOURCE )
+sd.add_study_source( cursor, study_id, "MillerB+1949+eng+JOUR",       sd.SECONDARY_SOURCE )
+sd.add_study_source( cursor, study_id, "RobertsonJM+1957+eng+CPAPER", sd.SECONDARY_SOURCE )
+sd.add_study_source( cursor, study_id, "RossD+1953+eng+CPAPER",       sd.SECONDARY_SOURCE )
+
 
 conn.commit()
 conn.close()
