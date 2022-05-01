@@ -14,14 +14,20 @@
     flow classes}
 \end{figure}
 
-Any practical taxonomy should organize information in a useful manner.  This
-project tries to organize a wide variety of data from different shear layers
-into a unified framework, so it requires some means to distinguish between
-different kinds of flows.  Previous classification systems have tended to be
-too complex, with too many classes and too much ambiguity.  A simpler
-classification scheme with a limited number of classes will be much easier to
-use.  To achieve this goal, this taxonomy follows 5 principles (language
-following RFC 2119):
+The most basic type of information for any database of fluid flows is the type
+of flow that they data represents --- its flow class.  The goal of flow
+classification is to develop some means to distinguish between different kinds
+of flow, and this goal usually includes representing different kinds of flows
+in some kind of hierarchy or taxonomy.  There have been many flow
+classification efforts in the past.  The earliest efforts existed for the
+purposes of document classification \citep{ZWB+1944+deu+RPRT} rather than data
+collection, but later efforts concentrated more on organizing different
+datasets \citep{KlineSJ+1982+eng+BOOK+V3,ERCOFTAC+DBASE,AGARD+1998+eng+RPRT}.
+
+Previous classification systems have tended to be too complex, with too many
+classes and too much ambiguity.  A simpler classification scheme with a limited
+number of classes will be much easier to use.  To achieve this goal, this
+taxonomy follows 5 principles (language following RFC 2119):
 
 \begin{enumerate}
 
@@ -116,19 +122,20 @@ it is more practical to divide internal flows this way.
 
 \item
 The classification system SHOULD emphasize differences in flow pattern and
-geometry over differences in flow mechanism and physics.
-
-This principle guides the large-scale structure of the classification more than
-small-scale structure.  The point is that the classification divides flows up
-more by their flow pattern (homogeneity, kinematics, and presence of
-boundaries) than by the specific physics driving the flow (the flow mechanism)
-or especially the types of additional physics in the flow (shock waves,
-separation, cavitation, free-stream turbulence, \ldots).
+geometry over differences in flow mechanism and physics.  The point is that the
+classification divides flows up more by their flow pattern (homogeneity,
+kinematics, and presence of boundaries) than by the specific physics driving
+the flow (the flow mechanism) or especially the types of additional physics in
+the flow (shock waves, separation, cavitation, free-stream turbulence, \ldots).
+Some previous classification efforts for shear flows in particular have
+concentrated on presence of boundaries in particular
+\citep{KovasznayLSG+1967+eng+JOUR,FernholzHH+1976+eng+CHAP,ERCOFTAC+DBASE}.
 
 The overall structure of the tree diagram emphasizes this principle by
 immediately considering homogeneity (geometry), then shear (kinematics), and
 then the influence of boundaries (geometry again).  Indeed, no class is defined
 exclusively by the presence of additional physics.
+
 
 
 \end{enumerate}
