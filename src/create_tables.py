@@ -418,6 +418,7 @@ class Fluid:
 
 fluids = []
 fluids.append( Fluid( sd.F_MIXTURE,                   "mixture",                   sd.PH_MULTIPHASE,       ) )
+fluids.append( Fluid( sd.F_AIR,                       "air",                       sd.PH_MULTIPHASE,       ) )
 fluids.append( Fluid( sd.F_GASEOUS_ARGON,             "gaseous argon",             sd.PH_GAS,        "Ar"  ) )
 fluids.append( Fluid( sd.F_GASEOUS_CARBON_DIOXIDE,    "gaseous carbon dioxide",    sd.PH_GAS,        "CO2" ) )
 fluids.append( Fluid( sd.F_GASEOUS_DIATOMIC_HYDROGEN, "gaseous diatomic hydrogen", sd.PH_GAS,        "H2"  ) )
