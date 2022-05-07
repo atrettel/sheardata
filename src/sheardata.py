@@ -30,6 +30,9 @@ PASCALS_PER_METER_OF_WATER  = 1000.0 * STANDARD_GRAVITATIONAL_ACCELERATION
 PASCALS_PER_INCH_OF_WATER   = PASCALS_PER_METER_OF_WATER * METERS_PER_INCH
 PASCALS_PER_INCH_OF_MERCURY = 3376.85
 
+# Uncertainties
+UNKNOWN_UNCERTAINTY = None
+
 # Value types
 VT_ANY_AVERAGE              = "A"
 VT_BOTH_AVERAGES            = "B"
@@ -501,17 +504,17 @@ SECONDARY_SOURCE = 2
 def split_float( value ):
     if ( isinstance( value, float ) ):
         sql_value       = value
-        sql_uncertainty = None
+        sql_uncertainty = UNKNOWN_UNCERTAINTY
     else:
         sql_value       = value.n
         sql_uncertainty = value.s
         if ( math.isnan(sql_uncertainty) ):
-            sql_uncertainty = None
+            sql_uncertainty = UNKNOWN_UNCERTAINTY
     return sql_value, sql_uncertainty
 
-def sdfloat( sql_value, sql_uncertainty=None ):
+def sdfloat( sql_value, sql_uncertainty=UNKNOWN_UNCERTAINTY ):
     uncertainty = float(0.0)
-    if ( sql_uncertainty == None ):
+    if ( sql_uncertainty == UNKNOWN_UNCERTAINTY ):
         uncertainty = float("nan")
     else:
         uncertainty = float(sql_uncertainty)
