@@ -27,7 +27,7 @@ scales = {
 ( sd.F_AIR, sd.Q_PRANDTL_NUMBER       ): 1.0,
 }
 
-fluid_property_filename = "../data/fluid_properties/{:s}.csv".format( citation_key )
+fluid_property_filename = "../data/fluid_property_values/{:s}.csv".format( citation_key )
 with open( fluid_property_filename, "r" ) as fluid_property_file:
     fluid_property_reader = csv.reader( fluid_property_file, delimiter=",", quotechar='"', skipinitialspace=True )
     next(fluid_property_reader)
