@@ -123,8 +123,8 @@ PH_SOLID      = "s"
 PH_MULTIPHASE = "m"
 
 # Fluids
-F_MIXTURE = "0"
-F_AIR     = "1"
+F_MIXTURE = "_mix"
+F_AIR     = "_air"
 F_GASEOUS_ARGON             = "Ar(g)"
 F_GASEOUS_CARBON_DIOXIDE    = "CO2(g)"
 F_GASEOUS_DIATOMIC_HYDROGEN = "H2(g)"
