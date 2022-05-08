@@ -59,5 +59,46 @@ with open( fluid_property_filename, "r" ) as fluid_property_file:
         )
         )
 
+
+############################
+# Wilson 1959, NAVORD-6747 #
+############################
+citation_key = "WilsonW+1959+eng+RPRT"
+
+fluid_property_filename = "../data/fluid_property_values/{:s}.csv".format( citation_key )
+with open( fluid_property_filename, "r" ) as fluid_property_file:
+    fluid_property_reader = csv.reader( fluid_property_file, delimiter=",", quotechar='"', skipinitialspace=True )
+    next(fluid_property_reader)
+    for fluid_property_row in fluid_property_reader:
+        pressure    = float(fluid_property_row[0]) * sd.PASCALS_PER_PSI
+        temperature = float(fluid_property_row[1]) + sd.ABSOLUTE_ZERO
+        fluid_id    = sd.F_LIQUID_WATER
+        quantity_id = sd.Q_SPEED_OF_SOUND
+        value       = float(fluid_property_row[2])
+
+        print( ( pressure, temperature, value ) )
+
+        cursor.execute(
+        """
+        INSERT INTO fluid_property_values( pressure, temperature, fluid_id,
+                                           citation_key, quantity_id,
+                                           fluid_property_value,
+                                           fluid_property_uncertainty,
+                                           outlier )
+        VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
+        """,
+        (
+            pressure,
+            temperature,
+            fluid_id,
+            citation_key,
+            quantity_id,
+            value,
+            sd.UNKNOWN_UNCERTAINTY,
+            False,
+        )
+        )
+
+########################################
 conn.commit()
 conn.close()
