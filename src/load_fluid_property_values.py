@@ -76,8 +76,6 @@ with open( fluid_property_filename, "r" ) as fluid_property_file:
         quantity_id = sd.Q_SPEED_OF_SOUND
         value       = float(fluid_property_row[2])
 
-        print( ( pressure, temperature, value ) )
-
         cursor.execute(
         """
         INSERT INTO fluid_property_values( pressure, temperature, fluid_id,
