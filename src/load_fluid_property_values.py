@@ -30,13 +30,32 @@ scales = {
 fluid_property_filename = "../data/fluid_property_values/{:s}.csv".format( citation_key )
 with open( fluid_property_filename, "r" ) as fluid_property_file:
     fluid_property_reader = csv.reader( fluid_property_file, delimiter=",", quotechar='"', skipinitialspace=True )
-    next(fluid_property_reader)
+
+    # Determine pressure and temperature scales
+    fluid_property_row = fluid_property_reader.__next__()
+    pressure_label    = str(fluid_property_row[0])
+    temperature_label = str(fluid_property_row[1])
+
+    pressure_scale    = 0.0
+    if ( pressure_label == "Pressure [Pa]" ):
+        pressure_scale = 1.0
+    elif ( pressure_label == "Pressure [atm]" ):
+        pressure_scale = sd.STANDARD_ATMOSPHERIC_PRESSURE
+
+    temperature_scale = 0.0
+    if ( temperature_label == "Temperature [K]" ):
+        temperature_scale = 1.0
+
+    assert( pressure_scale    != 0.0 )
+    assert( temperature_scale != 0.0 )
+
+    # Load values.
     for fluid_property_row in fluid_property_reader:
-        pressure    = float(fluid_property_row[0]) * sd.STANDARD_ATMOSPHERIC_PRESSURE
-        temperature = float(fluid_property_row[1])
+        pressure    = float(fluid_property_row[0]) * pressure_scale
+        temperature = float(fluid_property_row[1]) * temperature_scale
         fluid_id    =   str(fluid_property_row[2])
         quantity_id =   str(fluid_property_row[3])
-        value       = scales[fluid_id,quantity_id] * float(fluid_property_row[4])
+        value       = float(fluid_property_row[4]) * scales[fluid_id,quantity_id]
 
         cursor.execute(
         """
