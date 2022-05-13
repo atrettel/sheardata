@@ -20,11 +20,13 @@ cursor.execute( "PRAGMA foreign_keys = ON;" )
 citation_key = "HilsenrathJ+1955+eng+BOOK"
 
 scales = {
-( sd.F_AIR, sd.Q_MASS_DENSITY         ): 1293.04,
-( sd.F_AIR, sd.Q_SPEED_OF_SOUND       ): 331.45,
-( sd.F_AIR, sd.Q_DYNAMIC_VISCOSITY    ): 1.716e-5,
-( sd.F_AIR, sd.Q_THERMAL_CONDUCTIVITY ): 2.414e-2,
-( sd.F_AIR, sd.Q_PRANDTL_NUMBER       ): 1.0,
+    "HilsenrathJ+1955+eng+BOOK": {
+        ( sd.F_AIR, sd.Q_MASS_DENSITY         ): 1293.04,
+        ( sd.F_AIR, sd.Q_SPEED_OF_SOUND       ): 331.45,
+        ( sd.F_AIR, sd.Q_DYNAMIC_VISCOSITY    ): 1.716e-5,
+        ( sd.F_AIR, sd.Q_THERMAL_CONDUCTIVITY ): 2.414e-2,
+        ( sd.F_AIR, sd.Q_PRANDTL_NUMBER       ): 1.0,
+    },
 }
 
 fluid_property_filename = "../data/fluid_property_values/{:s}.csv".format( citation_key )
@@ -41,21 +43,31 @@ with open( fluid_property_filename, "r" ) as fluid_property_file:
         pressure_scale = 1.0
     elif ( pressure_label == "Pressure [atm]" ):
         pressure_scale = sd.STANDARD_ATMOSPHERIC_PRESSURE
+    elif ( pressure_label == "Pressure [psia]" or pressure_label == "Pressure [psig]" ):
+        pressure_scale = sd.PASCALS_PER_PSI
+
+    pressure_baseline = 0.0
+    if ( pressure_label == "Pressure [psig]" ):
+        pressure_scale = sd.STANDARD_ATMOSPHERIC_PRESSURE
 
     temperature_scale = 0.0
-    if ( temperature_label == "Temperature [K]" ):
+    if ( temperature_label == "Temperature [K]" or temperature_label == "Temperature [°C]" ):
         temperature_scale = 1.0
+
+    temperature_baseline = 0.0
+    if ( temperature_label == "Temperature [°C]" ):
+        temperature_scale = sd.ABSOLUTE_ZERO
 
     assert( pressure_scale    != 0.0 )
     assert( temperature_scale != 0.0 )
 
     # Load values.
     for fluid_property_row in fluid_property_reader:
-        pressure    = float(fluid_property_row[0]) * pressure_scale
-        temperature = float(fluid_property_row[1]) * temperature_scale
+        pressure    = float(fluid_property_row[0]) *    pressure_scale +    pressure_baseline
+        temperature = float(fluid_property_row[1]) * temperature_scale + temperature_baseline
         fluid_id    =   str(fluid_property_row[2])
         quantity_id =   str(fluid_property_row[3])
-        value       = float(fluid_property_row[4]) * scales[fluid_id,quantity_id]
+        value       = float(fluid_property_row[4]) * scales[citation_key][fluid_id,quantity_id]
 
         cursor.execute(
         """
