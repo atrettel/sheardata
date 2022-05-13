@@ -68,8 +68,6 @@ for citation_key in scales:
             quantity_id =   str(fluid_property_row[3])
             value       = float(fluid_property_row[4]) * scales[citation_key][fluid_id,quantity_id]
 
-            print( ( pressure, temperature, fluid_id, quantity_id, value ) )
-
             cursor.execute(
             """
             INSERT INTO fluid_property_values( pressure, temperature, fluid_id,
