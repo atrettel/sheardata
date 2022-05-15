@@ -22,6 +22,12 @@ scales = {
         ( sd.F_AIR, sd.Q_THERMAL_CONDUCTIVITY ): 2.414e-2,
         ( sd.F_AIR, sd.Q_PRANDTL_NUMBER       ): 1.0,
     },
+    "HaarL+1984+eng+BOOK": {
+        ( sd.F_LIQUID_WATER, sd.Q_SPEED_OF_SOUND    ): 1.0,
+        ( sd.F_LIQUID_WATER, sd.Q_DYNAMIC_VISCOSITY ): 1.0e-6,
+        ( sd.F_LIQUID_WATER, sd.Q_MASS_DENSITY      ): 1.0,
+
+    }
 }
 
 for citation_key in scales:
@@ -39,6 +45,8 @@ for citation_key in scales:
             pressure_scale = 1.0
         elif ( pressure_label == "Pressure [atm]" ):
             pressure_scale = sd.STANDARD_ATMOSPHERIC_PRESSURE
+        elif ( pressure_label == "Pressure [bar]" ):
+            pressure_scale = sd.PASCALS_PER_BAR
         elif ( pressure_label == "Pressure [psia]" or pressure_label == "Pressure [psig]" ):
             pressure_scale = sd.PASCALS_PER_PSI
 
