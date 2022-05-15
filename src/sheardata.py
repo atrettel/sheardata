@@ -1883,6 +1883,156 @@ def liquid_water_mass_density( temperature ):
 def liquid_water_dynamic_viscosity( temperature ):
     return ( 1.002e-3 - 1.792e-3 ) * ( temperature - ABSOLUTE_ZERO ) / 20.0 + 1.792e-3
 
+# TODO: Implement this with uncertainties from the database itself for the
+# interpolated values.  The un-interpolated values already have the uncertainty
+# from the database.
+def interpolate_fluid_property_value( cursor, pressure, temperature,
+                                      quantity_id, override_uncertainties=True ):
+    # Is this value in the database already?
+    cursor.execute(
+    """
+    SELECT fluid_property_value, fluid_property_uncertainty
+    FROM fluid_property_values
+    WHERE quantity_id=? AND pressure=? AND temperature=?
+    LIMIT 1;
+    """,
+    (
+    quantity_id,
+    sdfloat_value(pressure),
+    sdfloat_value(temperature),
+    )
+    )
+
+    result_0 = cursor.fetchone()
+
+    if ( result_0 != None ):
+        if ( override_uncertainties ):
+            return sdfloat( result_0[0], 0.0 )
+        else:
+            return sdfloat( result_0[0], result_0[1] )
+
+    # Southwest
+    cursor.execute(
+    """
+    SELECT ( pressure - ? ) * ( pressure - ? ) + ( temperature - ? ) * ( temperature - ? ) as measure,
+           pressure, temperature, fluid_property_value, fluid_property_uncertainty
+    FROM fluid_property_values
+    WHERE quantity_id=? AND pressure < ? AND temperature < ?
+    ORDER BY measure ASC LIMIT 1;
+    """,
+    (
+    sdfloat_value(pressure),
+    sdfloat_value(pressure),
+    sdfloat_value(temperature),
+    sdfloat_value(temperature),
+    quantity_id,
+    sdfloat_value(pressure),
+    sdfloat_value(temperature),
+    )
+    )
+
+    result_sw         = cursor.fetchone()
+    pressure_sw       = result_sw[1]
+    temperature_sw    = result_sw[2]
+    fluid_property_sw = result_sw[3]
+
+    # Southeast
+    cursor.execute(
+    """
+    SELECT ( pressure - ? ) * ( pressure - ? ) + ( temperature - ? ) * ( temperature - ? ) as measure,
+           pressure, temperature, fluid_property_value, fluid_property_uncertainty
+    FROM fluid_property_values
+    WHERE quantity_id=? AND pressure > ? AND temperature < ?
+    ORDER BY measure ASC LIMIT 1;
+    """,
+    (
+    sdfloat_value(pressure),
+    sdfloat_value(pressure),
+    sdfloat_value(temperature),
+    sdfloat_value(temperature),
+    quantity_id,
+    sdfloat_value(pressure),
+    sdfloat_value(temperature),
+    )
+    )
+
+    result_se         = cursor.fetchone()
+    pressure_se       = result_se[1]
+    temperature_se    = result_se[2]
+    fluid_property_se = result_se[3]
+
+    # Northwest
+    cursor.execute(
+    """
+    SELECT ( pressure - ? ) * ( pressure - ? ) + ( temperature - ? ) * ( temperature - ? ) as measure,
+           pressure, temperature, fluid_property_value, fluid_property_uncertainty
+    FROM fluid_property_values
+    WHERE quantity_id=? AND pressure < ? AND temperature > ?
+    ORDER BY measure ASC LIMIT 1;
+    """,
+    (
+    sdfloat_value(pressure),
+    sdfloat_value(pressure),
+    sdfloat_value(temperature),
+    sdfloat_value(temperature),
+    quantity_id,
+    sdfloat_value(pressure),
+    sdfloat_value(temperature),
+    )
+    )
+
+    result_nw         = cursor.fetchone()
+    pressure_nw       = result_nw[1]
+    temperature_nw    = result_nw[2]
+    fluid_property_nw = result_nw[3]
+
+    # Northeast
+    cursor.execute(
+    """
+    SELECT ( pressure - ? ) * ( pressure - ? ) + ( temperature - ? ) * ( temperature - ? ) as measure,
+           pressure, temperature, fluid_property_value, fluid_property_uncertainty
+    FROM fluid_property_values
+    WHERE quantity_id=? AND pressure > ? AND temperature > ?
+    ORDER BY measure ASC LIMIT 1;
+    """,
+    (
+    sdfloat_value(pressure),
+    sdfloat_value(pressure),
+    sdfloat_value(temperature),
+    sdfloat_value(temperature),
+    quantity_id,
+    sdfloat_value(pressure),
+    sdfloat_value(temperature),
+    )
+    )
+
+    result_ne         = cursor.fetchone()
+    pressure_ne       = result_ne[1]
+    temperature_ne    = result_ne[2]
+    fluid_property_ne = result_ne[3]
+
+    A = np.array( [ [ 1.0, pressure_sw, temperature_sw, pressure_sw * temperature_sw ], \
+                    [ 1.0, pressure_se, temperature_se, pressure_se * temperature_se ], \
+                    [ 1.0, pressure_nw, temperature_nw, pressure_nw * temperature_nw ], \
+                    [ 1.0, pressure_ne, temperature_ne, pressure_ne * temperature_ne ] ] )
+
+    b = np.array( [ fluid_property_sw, \
+                    fluid_property_se, \
+                    fluid_property_nw, \
+                    fluid_property_ne, ] )
+
+    coefficients = np.linalg.solve( A, b )
+
+    fluid_property_value = coefficients[0] \
+                         + coefficients[1] * pressure \
+                         + coefficients[2] * temperature \
+                         + coefficients[3] * pressure * temperature
+
+    if ( override_uncertainties ):
+        return sdfloat( sdfloat_value(fluid_property_value), 0.0 )
+    else:
+        return fluid_property_value
+
 def add_note( cursor, filename ):
     contents = None
     with open( filename, "r" ) as f:
