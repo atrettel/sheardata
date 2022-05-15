@@ -1931,7 +1931,9 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     )
     )
 
-    result_sw         = cursor.fetchone()
+    result_sw = cursor.fetchone()
+    assert( result_sw != None )
+
     pressure_sw       = result_sw[1]
     temperature_sw    = result_sw[2]
     fluid_property_sw = result_sw[3]
@@ -1956,7 +1958,9 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     )
     )
 
-    result_se         = cursor.fetchone()
+    result_se = cursor.fetchone()
+    assert( result_se != None )
+
     pressure_se       = result_se[1]
     temperature_se    = result_se[2]
     fluid_property_se = result_se[3]
@@ -1981,7 +1985,9 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     )
     )
 
-    result_nw         = cursor.fetchone()
+    result_nw = cursor.fetchone()
+    assert( result_nw != None )
+
     pressure_nw       = result_nw[1]
     temperature_nw    = result_nw[2]
     fluid_property_nw = result_nw[3]
@@ -2006,7 +2012,9 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     )
     )
 
-    result_ne         = cursor.fetchone()
+    result_ne = cursor.fetchone()
+    assert( result_ne != None )
+
     pressure_ne       = result_ne[1]
     temperature_ne    = result_ne[2]
     fluid_property_ne = result_ne[3]
