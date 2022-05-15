@@ -1887,6 +1887,13 @@ def liquid_water_dynamic_viscosity( temperature ):
 # TODO: Implement this with uncertainties from the database itself for the
 # interpolated values.  The un-interpolated values already have the uncertainty
 # from the database.
+#
+# TODO: There are a lot of edge cases here.  Consider, for example, data along
+# the edge of the available data, or alternatively, any data that is along a
+# single line of pressure or temperature that exists in the database.  It would
+# be better to linearly interpolate (in a one-dimensional manner) for that
+# answer, since the variation only exists in one direction.  But as written
+# here, this method cannot do that.
 def interpolate_fluid_property_value( cursor, pressure, temperature,
                                       quantity_id, override_uncertainties=True ):
     # Is this value in the database already?
