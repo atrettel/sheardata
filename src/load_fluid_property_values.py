@@ -22,9 +22,6 @@ scales = {
         ( sd.F_AIR, sd.Q_THERMAL_CONDUCTIVITY ): 2.414e-2,
         ( sd.F_AIR, sd.Q_PRANDTL_NUMBER       ): 1.0,
     },
-    "WilsonW+1959+eng+RPRT": {
-        ( sd.F_LIQUID_WATER, sd.Q_SPEED_OF_SOUND ): 1.0,
-    }
 }
 
 for citation_key in scales:
