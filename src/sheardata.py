@@ -1912,7 +1912,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
         else:
             return sdfloat( result_0[0], result_0[1] )
 
-    # Southwest
+    # Find closest "southwest" value.
     cursor.execute(
     """
     SELECT ( pressure - ? ) * ( pressure - ? ) + ( temperature - ? ) * ( temperature - ? ) as measure,
@@ -1939,7 +1939,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     temperature_sw    = result_sw[2]
     fluid_property_sw = result_sw[3]
 
-    # Southeast
+    # Find closest "southeast" value.
     cursor.execute(
     """
     SELECT ( pressure - ? ) * ( pressure - ? ) + ( temperature - ? ) * ( temperature - ? ) as measure,
@@ -1966,7 +1966,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     temperature_se    = result_se[2]
     fluid_property_se = result_se[3]
 
-    # Northwest
+    # Find closest "northwest" value.
     cursor.execute(
     """
     SELECT ( pressure - ? ) * ( pressure - ? ) + ( temperature - ? ) * ( temperature - ? ) as measure,
@@ -1993,7 +1993,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     temperature_nw    = result_nw[2]
     fluid_property_nw = result_nw[3]
 
-    # Northeast
+    # Find closest "northeast" value.
     cursor.execute(
     """
     SELECT ( pressure - ? ) * ( pressure - ? ) + ( temperature - ? ) * ( temperature - ? ) as measure,
@@ -2020,6 +2020,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     temperature_ne    = result_ne[2]
     fluid_property_ne = result_ne[3]
 
+    # Calculate the interpolated value using bilinear interpolation.
     A = np.array( [ [ 1.0, pressure_sw, temperature_sw, pressure_sw * temperature_sw ], \
                     [ 1.0, pressure_se, temperature_se, pressure_se * temperature_se ], \
                     [ 1.0, pressure_nw, temperature_nw, pressure_nw * temperature_nw ], \
