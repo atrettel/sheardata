@@ -210,7 +210,7 @@ with open( ratio_filename, "r" ) as ratio_file:
                 cursor,
                 pressure_tmp,
                 temperature,
-                sd.F_AIR,
+                sd.F_GASEOUS_AIR,
                 sd.Q_DYNAMIC_VISCOSITY,
             )
 
