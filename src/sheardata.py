@@ -127,8 +127,9 @@ PH_SOLID      = "s"
 PH_MULTIPHASE = "m"
 
 # Fluids
-F_MIXTURE = "_mix"
-F_AIR     = "_air"
+F_MIXTURE     = "_mixture"
+F_GASEOUS_AIR = "_gaseous_air"
+F_LIQUID_AIR  = "_liquid_air"
 F_GASEOUS_ARGON             = "Ar(g)"
 F_GASEOUS_CARBON_DIOXIDE    = "CO2(g)"
 F_GASEOUS_DIATOMIC_HYDROGEN = "H2(g)"
@@ -143,7 +144,7 @@ F_GASEOUS_NITROUS_OXIDE     = "N2O(g)"
 F_GASEOUS_OZONE             = "O3(g)"
 F_GASEOUS_XENON             = "Xe(g)"
 F_LIQUID_WATER              = "H2O(l)"
-F_WATER_VAPOR               = "H2O(g)"
+F_GASEOUS_WATER             = "H2O(g)"
 
 # Geometries
 GM_ELLIPTICAL  = "E"

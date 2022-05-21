@@ -418,7 +418,8 @@ class Fluid:
 
 fluids = []
 fluids.append( Fluid( sd.F_MIXTURE,                   "mixture",                   sd.PH_MULTIPHASE,       ) )
-fluids.append( Fluid( sd.F_AIR,                       "air",                       sd.PH_MULTIPHASE,       ) )
+fluids.append( Fluid( sd.F_GASEOUS_AIR,               "gaseous air",               sd.PH_MULTIPHASE,       ) )
+fluids.append( Fluid( sd.F_LIQUID_AIR,                "liquid air",                sd.PH_MULTIPHASE,       ) )
 fluids.append( Fluid( sd.F_GASEOUS_ARGON,             "gaseous argon",             sd.PH_GAS,        "Ar"  ) )
 fluids.append( Fluid( sd.F_GASEOUS_CARBON_DIOXIDE,    "gaseous carbon dioxide",    sd.PH_GAS,        "CO2" ) )
 fluids.append( Fluid( sd.F_GASEOUS_DIATOMIC_HYDROGEN, "gaseous diatomic hydrogen", sd.PH_GAS,        "H2"  ) )
@@ -431,9 +432,9 @@ fluids.append( Fluid( sd.F_GASEOUS_NEON,              "gaseous neon",           
 fluids.append( Fluid( sd.F_GASEOUS_NITROGEN_DIOXIDE,  "gaseous nitrogen dioxide",  sd.PH_GAS,        "NO2" ) )
 fluids.append( Fluid( sd.F_GASEOUS_NITROUS_OXIDE,     "gaseous nitrous oxide",     sd.PH_GAS,        "N2O" ) )
 fluids.append( Fluid( sd.F_GASEOUS_OZONE,             "gaseous ozone",             sd.PH_GAS,        "O3"  ) )
+fluids.append( Fluid( sd.F_GASEOUS_WATER,             "gaseous water",             sd.PH_GAS,        "H2O" ) )
 fluids.append( Fluid( sd.F_GASEOUS_XENON,             "gaseous xenon",             sd.PH_GAS,        "Xe"  ) )
 fluids.append( Fluid( sd.F_LIQUID_WATER,              "liquid water",              sd.PH_LIQUID,     "H2O" ) )
-fluids.append( Fluid( sd.F_WATER_VAPOR,               "water vapor",               sd.PH_GAS,        "H2O" ) )
 
 for fluid in fluids:
     fluid.execute_query()

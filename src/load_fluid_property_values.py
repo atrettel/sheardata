@@ -16,11 +16,11 @@ cursor.execute( "PRAGMA foreign_keys = ON;" )
 
 scales = {
     "HilsenrathJ+1955+eng+BOOK": {
-        ( sd.F_AIR, sd.Q_MASS_DENSITY         ): 1293.04,
-        ( sd.F_AIR, sd.Q_SPEED_OF_SOUND       ): 331.45,
-        ( sd.F_AIR, sd.Q_DYNAMIC_VISCOSITY    ): 1.716e-5,
-        ( sd.F_AIR, sd.Q_THERMAL_CONDUCTIVITY ): 2.414e-2,
-        ( sd.F_AIR, sd.Q_PRANDTL_NUMBER       ): 1.0,
+        ( sd.F_GASEOUS_AIR, sd.Q_MASS_DENSITY         ): 1293.04,
+        ( sd.F_GASEOUS_AIR, sd.Q_SPEED_OF_SOUND       ): 331.45,
+        ( sd.F_GASEOUS_AIR, sd.Q_DYNAMIC_VISCOSITY    ): 1.716e-5,
+        ( sd.F_GASEOUS_AIR, sd.Q_THERMAL_CONDUCTIVITY ): 2.414e-2,
+        ( sd.F_GASEOUS_AIR, sd.Q_PRANDTL_NUMBER       ): 1.0,
     },
     "HaarL+1984+eng+BOOK": {
         ( sd.F_LIQUID_WATER, sd.Q_SPEED_OF_SOUND    ): 1.0,
