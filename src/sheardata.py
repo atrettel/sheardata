@@ -1927,7 +1927,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     SELECT ( pressure - ? ) * ( pressure - ? ) + ( temperature - ? ) * ( temperature - ? ) as measure,
            pressure, temperature, fluid_property_value, fluid_property_uncertainty
     FROM fluid_property_values
-    WHERE fluid_id=? AND quantity_id=? AND pressure < ? AND temperature < ?
+    WHERE fluid_id=? AND quantity_id=? AND pressure <= ? AND temperature <= ?
     ORDER BY measure ASC LIMIT 1;
     """,
     (
@@ -1955,7 +1955,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     SELECT ( pressure - ? ) * ( pressure - ? ) + ( temperature - ? ) * ( temperature - ? ) as measure,
            pressure, temperature, fluid_property_value, fluid_property_uncertainty
     FROM fluid_property_values
-    WHERE fluid_id=? AND quantity_id=? AND pressure > ? AND temperature < ?
+    WHERE fluid_id=? AND quantity_id=? AND pressure >= ? AND temperature <= ?
     ORDER BY measure ASC LIMIT 1;
     """,
     (
@@ -1983,7 +1983,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     SELECT ( pressure - ? ) * ( pressure - ? ) + ( temperature - ? ) * ( temperature - ? ) as measure,
            pressure, temperature, fluid_property_value, fluid_property_uncertainty
     FROM fluid_property_values
-    WHERE fluid_id=? AND quantity_id=? AND pressure < ? AND temperature > ?
+    WHERE fluid_id=? AND quantity_id=? AND pressure <= ? AND temperature >= ?
     ORDER BY measure ASC LIMIT 1;
     """,
     (
@@ -2011,7 +2011,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     SELECT ( pressure - ? ) * ( pressure - ? ) + ( temperature - ? ) * ( temperature - ? ) as measure,
            pressure, temperature, fluid_property_value, fluid_property_uncertainty
     FROM fluid_property_values
-    WHERE fluid_id=? AND quantity_id=? AND pressure > ? AND temperature > ?
+    WHERE fluid_id=? AND quantity_id=? AND pressure >= ? AND temperature >= ?
     ORDER BY measure ASC LIMIT 1;
     """,
     (
@@ -2033,23 +2033,65 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     temperature_ne    = result_ne[2]
     fluid_property_ne = result_ne[3]
 
-    # Calculate the interpolated value using bilinear interpolation.
-    A = np.array( [ [ 1.0, pressure_sw, temperature_sw, pressure_sw * temperature_sw ], \
-                    [ 1.0, pressure_se, temperature_se, pressure_se * temperature_se ], \
-                    [ 1.0, pressure_nw, temperature_nw, pressure_nw * temperature_nw ], \
-                    [ 1.0, pressure_ne, temperature_ne, pressure_ne * temperature_ne ] ] )
+    # Are all pressures or temperatures  the same?
+    if ( all( element == pressure_sw for element in [
+                pressure_sw, pressure_se,
+                pressure_nw, pressure_ne
+              ] ) ):
+        # All of the pressures are the same.  Determine the different pressures
+        # and use linear interpolation.
+        temperature_1    = temperature_sw
+        fluid_property_1 = fluid_property_sw
+        temperature_2    = temperature_se
+        fluid_property_2 = fluid_property_se
 
-    b = np.array( [ fluid_property_sw, \
-                    fluid_property_se, \
-                    fluid_property_nw, \
-                    fluid_property_ne, ] )
+        if ( temperature_1 == temperature_2 ):
+            temperature_2    = temperature_nw
+            fluid_property_2 = fluid_property_nw
 
-    coefficients = np.linalg.solve( A, b )
+        if ( temperature_1 == temperature_2 ):
+            temperature_2    = temperature_ne
+            fluid_property_2 = fluid_property_ne
 
-    fluid_property_value = coefficients[0] \
-                         + coefficients[1] * pressure \
-                         + coefficients[2] * temperature \
-                         + coefficients[3] * pressure * temperature
+        fluid_property_value = fluid_property_1 + ( temperature - temperature_1 ) * ( fluid_property_2 - fluid_property_1 ) / ( temperature_2 - temperature_1 )
+    elif ( all( element == temperature_sw for element in [
+                temperature_sw, temperature_se,
+                temperature_nw, temperature_ne
+              ] ) ):
+        # All of the temperatures are the same.  Determine the different
+        # pressures and use linear interpolation.
+        pressure_1       = pressure_sw
+        fluid_property_1 = fluid_property_sw
+        pressure_2       = pressure_se
+        fluid_property_2 = fluid_property_se
+
+        if ( pressure_1 == pressure_2 ):
+            pressure_2       = pressure_nw
+            fluid_property_2 = fluid_property_nw
+
+        if ( pressure_1 == pressure_2 ):
+            pressure_2       = pressure_ne
+            fluid_property_2 = fluid_property_ne
+
+        fluid_property_value = fluid_property_1 + ( pressure - pressure_1 ) * ( fluid_property_2 - fluid_property_1 ) / ( pressure_2 - pressure_1 )
+    else:
+        # Calculate the interpolated value using bilinear interpolation.
+        A = np.array( [ [ 1.0, pressure_sw, temperature_sw, pressure_sw * temperature_sw ], \
+                        [ 1.0, pressure_se, temperature_se, pressure_se * temperature_se ], \
+                        [ 1.0, pressure_nw, temperature_nw, pressure_nw * temperature_nw ], \
+                        [ 1.0, pressure_ne, temperature_ne, pressure_ne * temperature_ne ] ] )
+
+        b = np.array( [ fluid_property_sw, \
+                        fluid_property_se, \
+                        fluid_property_nw, \
+                        fluid_property_ne, ] )
+
+        coefficients = np.linalg.solve( A, b )
+
+        fluid_property_value = coefficients[0]               \
+                             + coefficients[1] * pressure    \
+                             + coefficients[2] * temperature \
+                             + coefficients[3] * pressure * temperature
 
     if ( override_uncertainties ):
         return sdfloat( sdfloat_value(fluid_property_value), 0.0 )
