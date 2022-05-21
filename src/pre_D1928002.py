@@ -155,9 +155,15 @@ with open( globals_filename, "r" ) as globals_file:
 
         wall_shear_stress = (-1.0) * ( cross_sectional_area / wetted_perimeter ) * pressure_gradient
 
-        mass_density        =      sd.liquid_water_mass_density( temperature )
-        dynamic_viscosity   = sd.liquid_water_dynamic_viscosity( temperature )
-        speed_of_sound      =    sd.liquid_water_speed_of_sound( temperature )
+        mass_density      = sd.liquid_water_mass_density( temperature )
+        dynamic_viscosity = sd.interpolate_fluid_property_value(
+            cursor,
+            sd.STANDARD_ATMOSPHERIC_PRESSURE, # TODO: Calculate the real pressure.
+            temperature,
+            sd.F_LIQUID_WATER,
+            sd.Q_DYNAMIC_VISCOSITY,
+        )
+        speed_of_sound      = sd.liquid_water_speed_of_sound( temperature )
         kinematic_viscosity = dynamic_viscosity / mass_density
 
         bulk_reynolds_number = bulk_velocity * hydraulic_diameter / kinematic_viscosity

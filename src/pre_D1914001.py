@@ -188,13 +188,18 @@ with open( ratio_filename, "r" ) as ratio_file:
         mass_density        = None
         if ( working_fluid == "Water" ):
             mass_density        = sd.liquid_water_mass_density( temperature )
-            dynamic_viscosity   = sd.liquid_water_dynamic_viscosity( temperature )
-            kinematic_viscosity = dynamic_viscosity / mass_density
+            dynamic_viscosity   = sd.interpolate_fluid_property_value(
+                cursor,
+                sd.STANDARD_ATMOSPHERIC_PRESSURE, # TODO: Calculate the real pressure.
+                temperature,
+                sd.F_LIQUID_WATER,
+                sd.Q_DYNAMIC_VISCOSITY,
+            )
         elif ( working_fluid == "Air" ):
             mass_density        = sd.calculate_ideal_gas_mass_density_from_amount_fractions( cursor, sd.STANDARD_ATMOSPHERIC_PRESSURE, temperature, sd.dry_air_amount_fractions() )
             dynamic_viscosity   = sd.sutherlands_law_dynamic_viscosity( temperature )
-            kinematic_viscosity = dynamic_viscosity / mass_density
 
+        kinematic_viscosity = dynamic_viscosity / mass_density
         Re_bulk = bulk_velocity * diameter / kinematic_viscosity
 
         volumetric_flow_rate = 0.25 * math.pi * diameter**2.0 * bulk_velocity
