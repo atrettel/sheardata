@@ -182,22 +182,31 @@ with open( ratio_filename, "r" ) as ratio_file:
         # a single value.
         #
         # TODO: Calculate the density values rather than just assuming them.
+        #
+        # TODO: Find the real pressure.
+        pressure_tmp = sd.STANDARD_ATMOSPHERIC_PRESSURE
         temperature = sd.sdfloat( 15.0 + sd.ABSOLUTE_ZERO )
         dynamic_viscosity   = None
         kinematic_viscosity = None
         mass_density        = None
         if ( working_fluid == "Water" ):
-            mass_density        = sd.liquid_water_mass_density( temperature )
-            dynamic_viscosity   = sd.interpolate_fluid_property_value(
+            mass_density = sd.interpolate_fluid_property_value(
                 cursor,
-                sd.STANDARD_ATMOSPHERIC_PRESSURE, # TODO: Calculate the real pressure.
+                pressure_tmp,
+                temperature,
+                sd.F_LIQUID_WATER,
+                sd.Q_MASS_DENSITY,
+            )
+            dynamic_viscosity = sd.interpolate_fluid_property_value(
+                cursor,
+                pressure_tmp,
                 temperature,
                 sd.F_LIQUID_WATER,
                 sd.Q_DYNAMIC_VISCOSITY,
             )
         elif ( working_fluid == "Air" ):
-            mass_density        = sd.calculate_ideal_gas_mass_density_from_amount_fractions( cursor, sd.STANDARD_ATMOSPHERIC_PRESSURE, temperature, sd.dry_air_amount_fractions() )
-            dynamic_viscosity   = sd.sutherlands_law_dynamic_viscosity( temperature )
+            mass_density      = sd.calculate_ideal_gas_mass_density_from_amount_fractions( cursor, sd.STANDARD_ATMOSPHERIC_PRESSURE, temperature, sd.dry_air_amount_fractions() )
+            dynamic_viscosity = sd.sutherlands_law_dynamic_viscosity( temperature )
 
         kinematic_viscosity = dynamic_viscosity / mass_density
         Re_bulk = bulk_velocity * diameter / kinematic_viscosity

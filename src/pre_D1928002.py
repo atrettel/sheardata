@@ -155,7 +155,16 @@ with open( globals_filename, "r" ) as globals_file:
 
         wall_shear_stress = (-1.0) * ( cross_sectional_area / wetted_perimeter ) * pressure_gradient
 
-        mass_density      = sd.liquid_water_mass_density( temperature )
+        # TODO: Find the real pressure.
+        pressure_tmp = sd.STANDARD_ATMOSPHERIC_PRESSURE
+
+        mass_density = sd.interpolate_fluid_property_value(
+            cursor,
+            pressure_tmp,
+            temperature,
+            sd.F_LIQUID_WATER,
+            sd.Q_MASS_DENSITY,
+        )
         dynamic_viscosity = sd.interpolate_fluid_property_value(
             cursor,
             sd.STANDARD_ATMOSPHERIC_PRESSURE, # TODO: Calculate the real pressure.

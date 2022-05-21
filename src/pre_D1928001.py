@@ -151,7 +151,16 @@ with open( globals_filename, "r" ) as globals_file:
         mass_flow_rate      = sd.sdfloat( mass_flow_rate_value,      mass_flow_rate_uncertainty,      )
         pressure_difference = sd.sdfloat( pressure_difference_value, pressure_difference_uncertainty, )
 
-        mass_density            = sd.liquid_water_mass_density( temperature )
+        # TODO: Find the real pressure.
+        pressure_tmp = sd.STANDARD_ATMOSPHERIC_PRESSURE
+
+        mass_density = sd.interpolate_fluid_property_value(
+            cursor,
+            pressure_tmp,
+            temperature,
+            sd.F_LIQUID_WATER,
+            sd.Q_MASS_DENSITY,
+        )
         dynamic_viscosity       = mass_density * kinematic_viscosity
         volumetric_flow_rate    = mass_flow_rate / mass_density
         bulk_velocity           = volumetric_flow_rate / cross_sectional_area
