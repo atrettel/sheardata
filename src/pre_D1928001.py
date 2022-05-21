@@ -172,7 +172,13 @@ with open( globals_filename, "r" ) as globals_file:
         viscous_length_scale     = kinematic_viscosity / friction_velocity
         friction_reynolds_number = half_height / viscous_length_scale
 
-        speed_of_sound       = sd.liquid_water_speed_of_sound( temperature )
+        speed_of_sound = sd.interpolate_fluid_property_value(
+            cursor,
+            pressure_tmp,
+            temperature,
+            sd.F_LIQUID_WATER,
+            sd.Q_SPEED_OF_SOUND,
+        )
         bulk_mach_number     = bulk_velocity / speed_of_sound
         friction_mach_number = friction_velocity /speed_of_sound
 

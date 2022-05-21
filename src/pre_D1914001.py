@@ -217,7 +217,13 @@ with open( ratio_filename, "r" ) as ratio_file:
         if ( working_fluid == "Air" ):
             speed_of_sound = sd.calculate_ideal_gas_speed_of_sound_from_amount_fractions( cursor, temperature, sd.dry_air_amount_fractions() )
         elif ( working_fluid == "Water" ):
-            speed_of_sound = sd.liquid_water_speed_of_sound( temperature )
+            speed_of_sound = sd.interpolate_fluid_property_value(
+                cursor,
+                pressure_tmp,
+                temperature,
+                sd.F_LIQUID_WATER,
+                sd.Q_SPEED_OF_SOUND,
+            )
         Ma_bulk = bulk_velocity / speed_of_sound
 
         series_id = sd.add_series(
@@ -406,7 +412,13 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
         if ( working_fluid == "Air" ):
             speed_of_sound = sd.calculate_ideal_gas_speed_of_sound_from_amount_fractions( cursor, temperature, sd.dry_air_amount_fractions() )
         elif ( working_fluid == "Water" ):
-            speed_of_sound = sd.liquid_water_speed_of_sound( temperature )
+            speed_of_sound = sd.interpolate_fluid_property_value(
+                cursor,
+                sd.STANDARD_ATMOSPHERIC_PRESSURE, # TODO: Find the real pressure.
+                temperature,
+                sd.F_LIQUID_WATER,
+                sd.Q_SPEED_OF_SOUND,
+            )
         Ma_bulk = bulk_velocity     / speed_of_sound
         Ma_tau  = friction_velocity / speed_of_sound
 

@@ -1872,10 +1872,6 @@ def sutherlands_law_dynamic_viscosity( temperature, T_0=273.0, mu_0=1.716e-5, \
                                        S=111.0 ):
     return mu_0 * ( temperature / T_0 )**1.5 * ( T_0 + S ) / ( temperature + S )
 
-# TODO: Find a better method.
-def liquid_water_speed_of_sound( temperature ):
-    return ( 1481.0 - 1447.0 ) * ( temperature - 263.15 ) / 10.0 + 1447.0
-
 # TODO: Implement this with uncertainties from the database itself for the
 # interpolated values.  The un-interpolated values already have the uncertainty
 # from the database.

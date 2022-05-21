@@ -172,7 +172,13 @@ with open( globals_filename, "r" ) as globals_file:
             sd.F_LIQUID_WATER,
             sd.Q_DYNAMIC_VISCOSITY,
         )
-        speed_of_sound      = sd.liquid_water_speed_of_sound( temperature )
+        speed_of_sound = sd.interpolate_fluid_property_value(
+            cursor,
+            pressure_tmp,
+            temperature,
+            sd.F_LIQUID_WATER,
+            sd.Q_SPEED_OF_SOUND,
+        )
         kinematic_viscosity = dynamic_viscosity / mass_density
 
         bulk_reynolds_number = bulk_velocity * hydraulic_diameter / kinematic_viscosity
