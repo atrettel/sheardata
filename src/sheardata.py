@@ -1867,11 +1867,6 @@ def calculate_ideal_gas_speed_of_sound_from_amount_fractions( cursor, temperatur
 def fahrenheit_to_kelvin( fahrenheit ):
     return ( fahrenheit - 32.0 ) / 1.8 + ABSOLUTE_ZERO
 
-# Air is the default.
-def sutherlands_law_dynamic_viscosity( temperature, T_0=273.0, mu_0=1.716e-5, \
-                                       S=111.0 ):
-    return mu_0 * ( temperature / T_0 )**1.5 * ( T_0 + S ) / ( temperature + S )
-
 # TODO: Implement this with uncertainties from the database itself for the
 # interpolated values.  The un-interpolated values already have the uncertainty
 # from the database.

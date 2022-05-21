@@ -205,8 +205,14 @@ with open( ratio_filename, "r" ) as ratio_file:
                 sd.Q_DYNAMIC_VISCOSITY,
             )
         elif ( working_fluid == "Air" ):
-            mass_density      = sd.calculate_ideal_gas_mass_density_from_amount_fractions( cursor, sd.STANDARD_ATMOSPHERIC_PRESSURE, temperature, sd.dry_air_amount_fractions() )
-            dynamic_viscosity = sd.sutherlands_law_dynamic_viscosity( temperature )
+            mass_density      = sd.calculate_ideal_gas_mass_density_from_amount_fractions( cursor, pressure_tmp, temperature, sd.dry_air_amount_fractions() )
+            dynamic_viscosity = sd.interpolate_fluid_property_value(
+                cursor,
+                pressure_tmp,
+                temperature,
+                sd.F_AIR,
+                sd.Q_DYNAMIC_VISCOSITY,
+            )
 
         kinematic_viscosity = dynamic_viscosity / mass_density
         Re_bulk = bulk_velocity * diameter / kinematic_viscosity
