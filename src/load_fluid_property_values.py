@@ -39,6 +39,7 @@ for citation_key in scales:
         fluid_property_row = fluid_property_reader.__next__()
         pressure_label    = str(fluid_property_row[0])
         temperature_label = str(fluid_property_row[1])
+        uncertainty_label = str(fluid_property_row[5])
 
         pressure_scale    = 0.0
         if ( pressure_label == "Pressure [Pa]" ):
@@ -72,6 +73,11 @@ for citation_key in scales:
             fluid_id    =   str(fluid_property_row[2])
             quantity_id =   str(fluid_property_row[3])
             value       = float(fluid_property_row[4]) * scales[citation_key][fluid_id,quantity_id]
+            uncertainty_element = fluid_property_row[5]
+
+            combined_value = sd.sdfloat(value)
+            if ( uncertainty_label == "Uncertainty percent" and uncertainty_element != "" ):
+                combined_value = sd.uniform_distribution_sdfloat_percent( value, float(uncertainty_element) )
 
             cursor.execute(
             """
@@ -88,8 +94,8 @@ for citation_key in scales:
                 fluid_id,
                 citation_key,
                 quantity_id,
-                value,
-                sd.UNKNOWN_UNCERTAINTY,
+                sd.sdfloat_value(combined_value),
+                sd.sdfloat_uncertainty(combined_value),
                 False,
             )
             )

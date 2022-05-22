@@ -529,6 +529,10 @@ def sdfloat_value( value ):
     value, uncertainty = split_float(value)
     return value
 
+def sdfloat_uncertainty( value ):
+    value, uncertainty = split_float(value)
+    return uncertainty
+
 def fetch_float( cursor ):
     result = cursor.fetchone()
     return sdfloat( result[0], result[1] )
