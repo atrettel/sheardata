@@ -533,6 +533,18 @@ def fetch_float( cursor ):
     result = cursor.fetchone()
     return sdfloat( result[0], result[1] )
 
+def uniform_distribution_sdfloat( min_value, max_value ):
+    value = 0.5 * ( min_value + max_value )
+    uncertainty = ( max_value - min_value ) / 12.0**0.5
+    return sdfloat( value, uncertainty )
+
+def uniform_distribution_sdfloat_magnitude( value, uncertainty_magnitude ):
+    return uniform_distribution_sdfloat( value - uncertainty_magnitude,
+                                         value + uncertainty_magnitude )
+
+def uniform_distribution_sdfloat_percent( value, uncertainty_percent ):
+    return uniform_distribution_sdfloat_magnitude( value, value * uncertainty_percent / 100.0 )
+
 def pick_any_average_value_type( value_type_ids ):
     assert( len(value_type_ids) != 0 )
     if ( len(value_type_ids) == 1 ):
