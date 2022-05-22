@@ -1889,18 +1889,20 @@ def fahrenheit_to_kelvin( fahrenheit ):
 # from the database.
 def interpolate_fluid_property_value( cursor, pressure, temperature,
                                       fluid_id, quantity_id,
+                                      preferred_values_only=True,
                                       override_uncertainties=True ):
     # Is this value in the database already?
     cursor.execute(
     """
     SELECT fluid_property_value, fluid_property_uncertainty
     FROM fluid_property_values
-    WHERE fluid_id=? AND quantity_id=? AND pressure=? AND temperature=?
+    WHERE fluid_id=? AND quantity_id=? and preferred=? AND pressure=? AND temperature=?
     LIMIT 1;
     """,
     (
     fluid_id,
     quantity_id,
+    int(preferred_values_only),
     sdfloat_value(pressure),
     sdfloat_value(temperature),
     )
@@ -1920,7 +1922,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     SELECT ( pressure - ? ) * ( pressure - ? ) + ( temperature - ? ) * ( temperature - ? ) as measure,
            pressure, temperature, fluid_property_value, fluid_property_uncertainty
     FROM fluid_property_values
-    WHERE fluid_id=? AND quantity_id=? AND pressure <= ? AND temperature <= ?
+    WHERE fluid_id=? AND quantity_id=? AND preferred=? AND pressure <= ? AND temperature <= ?
     ORDER BY measure ASC LIMIT 1;
     """,
     (
@@ -1930,6 +1932,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     sdfloat_value(temperature),
     fluid_id,
     quantity_id,
+    int(preferred_values_only),
     sdfloat_value(pressure),
     sdfloat_value(temperature),
     )
@@ -1948,7 +1951,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     SELECT ( pressure - ? ) * ( pressure - ? ) + ( temperature - ? ) * ( temperature - ? ) as measure,
            pressure, temperature, fluid_property_value, fluid_property_uncertainty
     FROM fluid_property_values
-    WHERE fluid_id=? AND quantity_id=? AND pressure >= ? AND temperature <= ?
+    WHERE fluid_id=? AND quantity_id=? AND preferred=? AND pressure >= ? AND temperature <= ?
     ORDER BY measure ASC LIMIT 1;
     """,
     (
@@ -1958,6 +1961,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     sdfloat_value(temperature),
     fluid_id,
     quantity_id,
+    int(preferred_values_only),
     sdfloat_value(pressure),
     sdfloat_value(temperature),
     )
@@ -1976,7 +1980,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     SELECT ( pressure - ? ) * ( pressure - ? ) + ( temperature - ? ) * ( temperature - ? ) as measure,
            pressure, temperature, fluid_property_value, fluid_property_uncertainty
     FROM fluid_property_values
-    WHERE fluid_id=? AND quantity_id=? AND pressure <= ? AND temperature >= ?
+    WHERE fluid_id=? AND quantity_id=? AND preferred=? AND pressure <= ? AND temperature >= ?
     ORDER BY measure ASC LIMIT 1;
     """,
     (
@@ -1986,6 +1990,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     sdfloat_value(temperature),
     fluid_id,
     quantity_id,
+    int(preferred_values_only),
     sdfloat_value(pressure),
     sdfloat_value(temperature),
     )
@@ -2004,7 +2009,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     SELECT ( pressure - ? ) * ( pressure - ? ) + ( temperature - ? ) * ( temperature - ? ) as measure,
            pressure, temperature, fluid_property_value, fluid_property_uncertainty
     FROM fluid_property_values
-    WHERE fluid_id=? AND quantity_id=? AND pressure >= ? AND temperature >= ?
+    WHERE fluid_id=? AND quantity_id=? AND preferred=? AND pressure >= ? AND temperature >= ?
     ORDER BY measure ASC LIMIT 1;
     """,
     (
@@ -2014,6 +2019,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     sdfloat_value(temperature),
     fluid_id,
     quantity_id,
+    int(preferred_values_only),
     sdfloat_value(pressure),
     sdfloat_value(temperature),
     )
