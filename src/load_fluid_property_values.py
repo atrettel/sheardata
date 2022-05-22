@@ -29,10 +29,12 @@ scales = {
 
     },
     "TouloukianYS+1970+eng+BOOK+V3": {
-        ( sd.F_GASEOUS_AIR, sd.Q_THERMAL_CONDUCTIVITY ): 1.0e-1,
+        ( sd.F_GASEOUS_AIR,  sd.Q_THERMAL_CONDUCTIVITY ): 1.0e-1,
+        ( sd.F_LIQUID_WATER, sd.Q_THERMAL_CONDUCTIVITY ): 1.0e-1,
     },
     "TouloukianYS+1975+eng+BOOK+V11": {
-        ( sd.F_GASEOUS_AIR, sd.Q_DYNAMIC_VISCOSITY ): 1.0e-6,
+        ( sd.F_GASEOUS_AIR,  sd.Q_DYNAMIC_VISCOSITY ): 1.0e-6,
+        ( sd.F_LIQUID_WATER, sd.Q_DYNAMIC_VISCOSITY ): 1.0e-3,
     },
 }
 
