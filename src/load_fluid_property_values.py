@@ -68,12 +68,13 @@ for citation_key in scales:
 
         # Load values.
         for fluid_property_row in fluid_property_reader:
-            pressure    = float(fluid_property_row[0]) *    pressure_scale +    pressure_baseline
-            temperature = float(fluid_property_row[1]) * temperature_scale + temperature_baseline
-            fluid_id    =   str(fluid_property_row[2])
-            quantity_id =   str(fluid_property_row[3])
-            value       = float(fluid_property_row[4]) * scales[citation_key][fluid_id,quantity_id]
-            uncertainty_element = fluid_property_row[5]
+            pressure            = float(fluid_property_row[0]) *    pressure_scale +    pressure_baseline
+            temperature         = float(fluid_property_row[1]) * temperature_scale + temperature_baseline
+            fluid_id            =   str(fluid_property_row[2])
+            quantity_id         =   str(fluid_property_row[3])
+            value               = float(fluid_property_row[4]) * scales[citation_key][fluid_id,quantity_id]
+            uncertainty_element =       fluid_property_row[5]
+            preferred           =   int(fluid_property_row[6])
 
             combined_value = sd.sdfloat(value)
             if ( uncertainty_label == "Uncertainty percent" and uncertainty_element != "" ):
@@ -85,8 +86,8 @@ for citation_key in scales:
                                                citation_key, quantity_id,
                                                fluid_property_value,
                                                fluid_property_uncertainty,
-                                               outlier )
-            VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
+                                               preferred, outlier )
+            VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ? );
             """,
             (
                 pressure,
@@ -96,6 +97,7 @@ for citation_key in scales:
                 quantity_id,
                 sd.sdfloat_value(combined_value),
                 sd.sdfloat_uncertainty(combined_value),
+                preferred,
                 False,
             )
             )
