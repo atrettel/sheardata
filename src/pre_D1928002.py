@@ -44,15 +44,8 @@ sd.add_study_source( cursor, study_id, "ObotNT+1988+eng+JOUR",    sd.SECONDARY_S
 # 0.404 cm.  The maximum variation from these average figures was less than 0.5
 # per cent. in both cases.
 # \end{quote}
-#
-# Assume a uniform distribution.
-width_value        = 1.178e-2
-height_value       = 0.404e-2
-width_uncertainty  = 0.005 * width_value / 3.0**0.5
-height_uncertainty = 0.005 * height_value / 3.0**0.5
-
-width  = sd.sdfloat( width_value, width_uncertainty )
-height = sd.sdfloat( height_value, height_uncertainty )
+width  = sd.uniform_distribution_sdfloat_percent( 1.178e-2, 0.5 )
+height = sd.uniform_distribution_sdfloat_percent( 0.404e-2, 0.5 )
 
 half_height          = 0.5 * height
 aspect_ratio         = width / height

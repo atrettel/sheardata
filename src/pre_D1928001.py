@@ -135,21 +135,13 @@ with open( globals_filename, "r" ) as globals_file:
         # However, later on the same page:
         #
         # \begin{quote}
-        # In any particular series of observations it was found that a test could be
-        # repeated with 0.3 per cent. of the previous value.
+        # In any particular series of observations it was found that a test
+        # could be repeated with 0.3 per cent. of the previous value.
         # \end{quote}
-        #
-        # Assume a uniform distribution.  Use this larger uncertainty for
-        # everything but the temperature and kinematic viscosity.
-        temperature_uncertainty         = 0.5 / 3.0**0.5
-        kinematic_viscosity_uncertainty = kinematic_viscosity_value * 0.015 / 3.0**0.5
-        mass_flow_rate_uncertainty      = mass_flow_rate_value * 0.03 / 3.0**0.5
-        pressure_difference_uncertainty = pressure_difference_value * 0.03 / 3.0**0.5
-
-        temperature         = sd.sdfloat( temperature_value,         temperature_uncertainty,         )
-        kinematic_viscosity = sd.sdfloat( kinematic_viscosity_value, kinematic_viscosity_uncertainty, )
-        mass_flow_rate      = sd.sdfloat( mass_flow_rate_value,      mass_flow_rate_uncertainty,      )
-        pressure_difference = sd.sdfloat( pressure_difference_value, pressure_difference_uncertainty, )
+        temperature         = sd.uniform_distribution_sdfloat_magnitude( temperature_value, 0.5 )
+        kinematic_viscosity = sd.uniform_distribution_sdfloat_percent( kinematic_viscosity_value, 1.5 )
+        mass_flow_rate      = sd.uniform_distribution_sdfloat_percent( mass_flow_rate_value,      0.3 )
+        pressure_difference = sd.uniform_distribution_sdfloat_percent( pressure_difference_value, 0.3 )
 
         # TODO: Find the real pressure.
         pressure_tmp = sd.STANDARD_ATMOSPHERIC_PRESSURE
