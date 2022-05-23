@@ -2098,10 +2098,10 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
         #
         # and
         #
-        # b = [ [ sdfloat_value(fluid_property_sw) ],
-        #       [ sdfloat_value(fluid_property_se) ],
-        #       [ sdfloat_value(fluid_property_nw) ],
-        #       [ sdfloat_value(fluid_property_ne) ] ]
+        # b = [ [ fluid_property_sw ],
+        #       [ fluid_property_se ],
+        #       [ fluid_property_nw ],
+        #       [ fluid_property_ne ] ]
 
         coefficients = [None] * 4
 
