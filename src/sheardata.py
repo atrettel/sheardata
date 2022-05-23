@@ -1884,9 +1884,9 @@ def calculate_ideal_gas_speed_of_sound_from_amount_fractions( cursor, temperatur
 def fahrenheit_to_kelvin( fahrenheit ):
     return ( fahrenheit - 32.0 ) / 1.8 + ABSOLUTE_ZERO
 
-def interpolate_fluid_property_value( cursor, pressure, temperature,
-                                      fluid_id, quantity_id,
-                                      citation_key=None, ):
+def _interpolate_fluid_property_value( cursor, pressure, temperature,
+                                       fluid_id, quantity_id,
+                                       citation_key=None, ):
     # If no citation key is given, find the citation key for the closest
     # possible preferred value.
     if ( citation_key == None ):
@@ -2117,6 +2117,29 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
                        + coefficients[3] * pressure * temperature
 
     return fluid_property
+
+# This version of the method calculates some additional quantities as function
+# of other quantities.  This is easier to manage in this way and prevents some
+# duplication in the database itself.  For example, rather than storing both
+# mass density and specific volume, the database only stores mass density.
+# This choice prevents duplicated values from disagreeing with corresponding
+# values.
+#
+# To support this, the script for loading fluid property values MUST not allow
+# any quantities used in the branching of this method to enter into the
+# database.
+def interpolate_fluid_property_value( cursor, pressure, temperature,
+                                      fluid_id, quantity_id,
+                                      citation_key=None, ):
+    if ( quantity_id == Q_SPECIFIC_VOLUME ):
+        mass_density = _interpolate_fluid_property_value( cursor, pressure, temperature, fluid_id, Q_MASS_DENSITY, citation_key=citation_key )
+        return 1.0 / mass_density
+    elif ( quantity_id == Q_KINEMATIC_VISCOSITY ):
+        dynamic_viscosity = _interpolate_fluid_property_value( cursor, pressure, temperature, fluid_id, Q_DYNAMIC_VISCOSITY, citation_key=citation_key )
+        mass_density      = _interpolate_fluid_property_value( cursor, pressure, temperature, fluid_id, Q_MASS_DENSITY,      citation_key=citation_key )
+        return dynamic_viscosity / mass_density
+    else:
+        return _interpolate_fluid_property_value( cursor, pressure, temperature, fluid_id, quantity_id, citation_key=citation_key )
 
 def add_note( cursor, filename ):
     contents = None
