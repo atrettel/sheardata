@@ -1889,7 +1889,6 @@ def fahrenheit_to_kelvin( fahrenheit ):
 # from the database.
 def interpolate_fluid_property_value( cursor, pressure, temperature,
                                       fluid_id, quantity_id,
-                                      preferred_values_only=True,
                                       citation_key=None,
                                       override_uncertainties=True ):
     # Is this value in the database already?
@@ -1897,20 +1896,18 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     """
     SELECT fluid_property_value, fluid_property_uncertainty
     FROM fluid_property_values
-    WHERE fluid_id=? AND quantity_id=? and preferred=? AND pressure=? AND temperature=?
+    WHERE fluid_id=? AND quantity_id=? and preferred=1 AND pressure=? AND temperature=?
     LIMIT 1;
     """,
     (
     fluid_id,
     quantity_id,
-    int(preferred_values_only),
     sdfloat_value(pressure),
     sdfloat_value(temperature),
     )
     )
 
     result_0 = cursor.fetchone()
-
     if ( result_0 != None ):
         if ( override_uncertainties ):
             return sdfloat( result_0[0], 0.0 )
@@ -1925,7 +1922,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
         SELECT ( pressure - ? ) * ( pressure - ? ) + ( temperature - ? ) * ( temperature - ? ) as measure,
                citation_key
         FROM fluid_property_values
-        WHERE fluid_id=? AND quantity_id=? AND preferred=?
+        WHERE fluid_id=? AND quantity_id=? AND preferred=1
         ORDER BY measure ASC LIMIT 1;
         """,
         (
@@ -1935,7 +1932,6 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
         sdfloat_value(temperature),
         fluid_id,
         quantity_id,
-        int(preferred_values_only),
         )
         )
 
@@ -1943,7 +1939,6 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
         assert( result_closest != None )
 
         citation_key = result_closest[1]
-        print(citation_key)
 
     # Find closest "southwest" value.
     cursor.execute(
@@ -1954,7 +1949,6 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     WHERE fluid_id=?
       AND citation_key=?
       AND quantity_id=?
-      AND preferred=?
       AND pressure <= ?
       AND temperature <= ?
     ORDER BY measure ASC LIMIT 1;
@@ -1967,7 +1961,6 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     fluid_id,
     citation_key,
     quantity_id,
-    int(preferred_values_only),
     sdfloat_value(pressure),
     sdfloat_value(temperature),
     )
@@ -1989,7 +1982,6 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     WHERE fluid_id=?
       AND citation_key=?
       AND quantity_id=?
-      AND preferred=?
       AND pressure >= ?
       AND temperature <= ?
     ORDER BY measure ASC LIMIT 1;
@@ -2002,7 +1994,6 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     fluid_id,
     citation_key,
     quantity_id,
-    int(preferred_values_only),
     sdfloat_value(pressure),
     sdfloat_value(temperature),
     )
@@ -2024,7 +2015,6 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     WHERE fluid_id=?
       AND citation_key=?
       AND quantity_id=?
-      AND preferred=?
       AND pressure <= ?
       AND temperature >= ?
     ORDER BY measure ASC LIMIT 1;
@@ -2037,7 +2027,6 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     fluid_id,
     citation_key,
     quantity_id,
-    int(preferred_values_only),
     sdfloat_value(pressure),
     sdfloat_value(temperature),
     )
@@ -2059,7 +2048,6 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     WHERE fluid_id=?
       AND citation_key=?
       AND quantity_id=?
-      AND preferred=?
       AND pressure >= ?
       AND temperature >= ?
     ORDER BY measure ASC LIMIT 1;
@@ -2072,7 +2060,6 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
     fluid_id,
     citation_key,
     quantity_id,
-    int(preferred_values_only),
     sdfloat_value(pressure),
     sdfloat_value(temperature),
     )
