@@ -1884,13 +1884,9 @@ def calculate_ideal_gas_speed_of_sound_from_amount_fractions( cursor, temperatur
 def fahrenheit_to_kelvin( fahrenheit ):
     return ( fahrenheit - 32.0 ) / 1.8 + ABSOLUTE_ZERO
 
-# TODO: Implement this with uncertainties from the database itself for the
-# interpolated values.  The un-interpolated values already have the uncertainty
-# from the database.
 def interpolate_fluid_property_value( cursor, pressure, temperature,
                                       fluid_id, quantity_id,
-                                      citation_key=None,
-                                      override_uncertainties=True ):
+                                      citation_key=None, ):
     # If no citation key is given, find the citation key for the closest
     # possible preferred value.
     if ( citation_key == None ):
@@ -1948,7 +1944,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
 
     pressure_sw       = result_sw[1]
     temperature_sw    = result_sw[2]
-    fluid_property_sw = result_sw[3]
+    fluid_property_sw = sdfloat( result_sw[3], result_sw[4] )
 
     # Find closest "southeast" value.
     cursor.execute(
@@ -1981,7 +1977,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
 
     pressure_se       = result_se[1]
     temperature_se    = result_se[2]
-    fluid_property_se = result_se[3]
+    fluid_property_se = sdfloat( result_se[3], result_se[4] )
 
     # Find closest "northwest" value.
     cursor.execute(
@@ -2014,7 +2010,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
 
     pressure_nw       = result_nw[1]
     temperature_nw    = result_nw[2]
-    fluid_property_nw = result_nw[3]
+    fluid_property_nw = sdfloat( result_nw[3], result_nw[4] )
 
     # Find closest "northeast" value.
     cursor.execute(
@@ -2047,15 +2043,15 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
 
     pressure_ne       = result_ne[1]
     temperature_ne    = result_ne[2]
-    fluid_property_ne = result_ne[3]
+    fluid_property_ne = sdfloat( result_ne[3], result_ne[4] )
 
     # Are all pressures or temperatures  the same?
     if ( all( element == pressure_sw for element in [
                 pressure_sw, pressure_se,
                 pressure_nw, pressure_ne
               ] ) ):
-        # All of the pressures are the same.  Determine the different pressures
-        # and use linear interpolation.
+        # All of the pressures are the same.  Determine the different
+        # temperatures and use linear interpolation.
         temperature_1    = temperature_sw
         fluid_property_1 = fluid_property_sw
         temperature_2    = temperature_se
@@ -2069,7 +2065,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
             temperature_2    = temperature_ne
             fluid_property_2 = fluid_property_ne
 
-        fluid_property_value = fluid_property_1 + ( temperature - temperature_1 ) * ( fluid_property_2 - fluid_property_1 ) / ( temperature_2 - temperature_1 )
+        fluid_property = fluid_property_1 + ( temperature - temperature_1 ) * ( fluid_property_2 - fluid_property_1 ) / ( temperature_2 - temperature_1 )
     elif ( all( element == temperature_sw for element in [
                 temperature_sw, temperature_se,
                 temperature_nw, temperature_ne
@@ -2089,30 +2085,31 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
             pressure_2       = pressure_ne
             fluid_property_2 = fluid_property_ne
 
-        fluid_property_value = fluid_property_1 + ( pressure - pressure_1 ) * ( fluid_property_2 - fluid_property_1 ) / ( pressure_2 - pressure_1 )
+        fluid_property = fluid_property_1 + ( pressure - pressure_1 ) * ( fluid_property_2 - fluid_property_1 ) / ( pressure_2 - pressure_1 )
     else:
         # Calculate the interpolated value using bilinear interpolation.
+        #
+        # TODO: Re-formulate this in a way that works for uncertain floats.
+        # The coefficients need to be calculated with resorting to matrix
+        # operations.
         A = np.array( [ [ 1.0, pressure_sw, temperature_sw, pressure_sw * temperature_sw ], \
                         [ 1.0, pressure_se, temperature_se, pressure_se * temperature_se ], \
                         [ 1.0, pressure_nw, temperature_nw, pressure_nw * temperature_nw ], \
                         [ 1.0, pressure_ne, temperature_ne, pressure_ne * temperature_ne ] ] )
 
-        b = np.array( [ fluid_property_sw, \
-                        fluid_property_se, \
-                        fluid_property_nw, \
-                        fluid_property_ne, ] )
+        b = np.array( [ sdfloat_value(fluid_property_sw), \
+                        sdfloat_value(fluid_property_se), \
+                        sdfloat_value(fluid_property_nw), \
+                        sdfloat_value(fluid_property_ne), ] )
 
         coefficients = np.linalg.solve( A, b )
 
-        fluid_property_value = coefficients[0]               \
-                             + coefficients[1] * pressure    \
-                             + coefficients[2] * temperature \
-                             + coefficients[3] * pressure * temperature
+        fluid_property = coefficients[0]               \
+                       + coefficients[1] * pressure    \
+                       + coefficients[2] * temperature \
+                       + coefficients[3] * pressure * temperature
 
-    if ( override_uncertainties ):
-        return sdfloat( sdfloat_value(fluid_property_value), 0.0 )
-    else:
-        return fluid_property_value
+    return fluid_property
 
 def add_note( cursor, filename ):
     contents = None
