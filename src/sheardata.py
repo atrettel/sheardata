@@ -1892,7 +1892,7 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
                                       citation_key=None,
                                       override_uncertainties=True ):
     # If no citation key is given, find the citation key for the closest
-    # possible value.
+    # possible preferred value.
     if ( citation_key == None ):
         cursor.execute(
         """
