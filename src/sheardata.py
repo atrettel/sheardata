@@ -1891,29 +1891,6 @@ def interpolate_fluid_property_value( cursor, pressure, temperature,
                                       fluid_id, quantity_id,
                                       citation_key=None,
                                       override_uncertainties=True ):
-    # Is this value in the database already?
-    cursor.execute(
-    """
-    SELECT fluid_property_value, fluid_property_uncertainty
-    FROM fluid_property_values
-    WHERE fluid_id=? AND quantity_id=? and preferred=1 AND pressure=? AND temperature=?
-    LIMIT 1;
-    """,
-    (
-    fluid_id,
-    quantity_id,
-    sdfloat_value(pressure),
-    sdfloat_value(temperature),
-    )
-    )
-
-    result_0 = cursor.fetchone()
-    if ( result_0 != None ):
-        if ( override_uncertainties ):
-            return sdfloat( result_0[0], 0.0 )
-        else:
-            return sdfloat( result_0[0], result_0[1] )
-
     # If no citation key is given, find the citation key for the closest
     # possible value.
     if ( citation_key == None ):
