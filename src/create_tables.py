@@ -1192,7 +1192,6 @@ CREATE TABLE fluid_property_values (
     fluid_property_value       REAL NOT NULL,
     fluid_property_uncertainty REAL DEFAULT NULL CHECK ( fluid_property_uncertainty >= 0.0 ),
     preferred                  INTEGER NOT NULL DEFAULT 0 CHECK ( preferred = 0 OR preferred = 1 ),
-    outlier                    INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     PRIMARY KEY(pressure, temperature, fluid_id, citation_key, quantity_id),
     FOREIGN KEY(quantity_id) REFERENCES quantities(quantity_id),
     FOREIGN KEY(fluid_id)    REFERENCES fluids(fluid_id)

@@ -94,8 +94,8 @@ for citation_key in scales:
                                                citation_key, quantity_id,
                                                fluid_property_value,
                                                fluid_property_uncertainty,
-                                               preferred, outlier )
-            VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ? );
+                                               preferred )
+            VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
             """,
             (
                 pressure,
@@ -106,7 +106,6 @@ for citation_key in scales:
                 sd.sdfloat_value(combined_value),
                 sd.sdfloat_uncertainty(combined_value),
                 preferred,
-                False,
             )
             )
 
