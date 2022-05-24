@@ -2131,13 +2131,22 @@ def _interpolate_fluid_property_value( cursor, pressure, temperature,
 def interpolate_fluid_property_value( cursor, pressure, temperature,
                                       fluid_id, quantity_id,
                                       citation_key=None, ):
-    if ( quantity_id == Q_SPECIFIC_VOLUME ):
-        mass_density = _interpolate_fluid_property_value( cursor, pressure, temperature, fluid_id, Q_MASS_DENSITY, citation_key=citation_key )
-        return 1.0 / mass_density
-    elif ( quantity_id == Q_KINEMATIC_VISCOSITY ):
-        dynamic_viscosity = _interpolate_fluid_property_value( cursor, pressure, temperature, fluid_id, Q_DYNAMIC_VISCOSITY, citation_key=citation_key )
-        mass_density      = _interpolate_fluid_property_value( cursor, pressure, temperature, fluid_id, Q_MASS_DENSITY,      citation_key=citation_key )
+    if ( quantity_id == Q_KINEMATIC_VISCOSITY ):
+        dynamic_viscosity = interpolate_fluid_property_value( cursor, pressure, temperature, fluid_id, Q_DYNAMIC_VISCOSITY, citation_key=citation_key )
+        mass_density      = interpolate_fluid_property_value( cursor, pressure, temperature, fluid_id, Q_MASS_DENSITY,      citation_key=citation_key )
         return dynamic_viscosity / mass_density
+    elif ( quantity_id == Q_PRANDTL_NUMBER ):
+        kinematic_viscosity = interpolate_fluid_property_value( cursor, pressure, temperature, fluid_id, Q_KINEMATIC_VISCOSITY, citation_key=citation_key )
+        thermal_diffusivity = interpolate_fluid_property_value( cursor, pressure, temperature, fluid_id, Q_THERMAL_DIFFUSIVITY, citation_key=citation_key )
+        return kinematic_viscosity / thermal_diffusivity
+    elif ( quantity_id == Q_THERMAL_DIFFUSIVITY ):
+        mass_density                    = interpolate_fluid_property_value( cursor, pressure, temperature, fluid_id, Q_MASS_DENSITY,                    citation_key=citation_key )
+        specific_isobaric_heat_capacity = interpolate_fluid_property_value( cursor, pressure, temperature, fluid_id, Q_SPECIFIC_ISOBARIC_HEAT_CAPACITY, citation_key=citation_key )
+        thermal_conductivity            = interpolate_fluid_property_value( cursor, pressure, temperature, fluid_id, Q_THERMAL_CONDUCTIVITY,            citation_key=citation_key )
+        return thermal_conductivity / ( mass_density * specific_isobaric_heat_capacity )
+    elif ( quantity_id == Q_SPECIFIC_VOLUME ):
+        mass_density = interpolate_fluid_property_value( cursor, pressure, temperature, fluid_id, Q_MASS_DENSITY, citation_key=citation_key )
+        return 1.0 / mass_density
     else:
         return _interpolate_fluid_property_value( cursor, pressure, temperature, fluid_id, quantity_id, citation_key=citation_key )
 

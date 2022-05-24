@@ -84,8 +84,12 @@ for citation_key in scales:
             uncertainty_element =       fluid_property_row[5]
             preferred           =   int(fluid_property_row[6])
 
-            assert( quantity_id not in [ sd.Q_SPECIFIC_VOLUME,
-                                         sd.Q_KINEMATIC_VISCOSITY, ] )
+            assert( quantity_id not in [
+                sd.Q_KINEMATIC_VISCOSITY,
+                sd.Q_PRANDTL_NUMBER,
+                sd.Q_SPECIFIC_VOLUME,
+                sd.Q_THERMAL_DIFFUSIVITY,
+            ] )
 
             combined_value = sd.sdfloat(value)
             if ( uncertainty_label == "Uncertainty percent" and uncertainty_element != "" ):
