@@ -7,7 +7,11 @@ files.
 
 ## Compilation instructions
 
-To create the database, type
+To create an empty database, run
+
+    make sheardata.tmp
+
+To create the database with the flow data in it, run
 
     make
 
@@ -23,7 +27,7 @@ Requirements to make the database:
 
 - Uncertainties Python module
 
-To create the documentation, type
+To create the documentation, run
 
     make sheardata.pdf
 
@@ -53,17 +57,18 @@ Additional requirements to make the documentation:
 
 - `create_tables.py` creates an empty database.
 
-- Python scripts that start with `pre` preprocess the data to insert it to the
-  database itself.  They also perform some additional calculations needed to
-  calculate additional data from stored data.
+- Python scripts
 
-- Python scripts that start with `post` postprocess the data.  These scripts
-  are needed for the documentation and figures.  They do not run when making
-  only the database.
+    - `prep` - pre-processing steps to create an empty database.
+
+    - `proc` - processing steps to load flow data into the database.
+
+    - `post` - post-processing steps to use database to generate documentation
+      and figures.
 
 
 -------------------------------------------------------------------------------
 
-Copyright © 2020-2021 Andrew Trettel
+Copyright © 2020-2022 Andrew Trettel
 
 SPDX-License-Identifier: MIT
