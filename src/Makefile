@@ -9,20 +9,20 @@ bib_compiler=biber
 
 database=$(project).db
 
-preprocessing_targets := $(filter-out ,$(patsubst %.py,%.tmp,$(wildcard pre_*.py)))
+processing_targets := $(filter-out ,$(patsubst %.py,%.tmp,$(wildcard proc_*.py)))
 postprocessing_targets := $(filter-out ,$(patsubst %.py,%.tmp,$(wildcard post_*.py)))
 
 dot_targets = figure-flow-classification-tree-diagram.tex.tmp figure-facility-classification-tree-diagram.tex.tmp
 tex_dependencies = $(project).tex $(wildcard ../data/*.tex) $(postprocessing_targets) $(dot_targets) $(project).bcf
 
-$(database): $(project).tmp $(preprocessing_targets)
+$(database): $(project).tmp $(processing_targets)
 
-$(project).tmp: create_tables.py load_fluid_property_values.py
-	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B create_tables.py $(database)
-	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B load_fluid_property_values.py $(database)
+$(project).tmp: prep_*.py
+	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B prep_create_tables.py $(database)
+	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B prep_load_fluid_property_values.py $(database)
 	@touch $@
 
-pre_%.tmp:: pre_%.py $(project).tmp
+proc_%.tmp:: proc_%.py $(project).tmp
 	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B $< $(database)
 	@touch $@
 
