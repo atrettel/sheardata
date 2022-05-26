@@ -802,6 +802,12 @@ quantities.append( Quantity( sd.Q_TRANSVERSE_PRESSURE_GRADIENT,           "trans
 quantities.append( Quantity( sd.Q_WETTED_PERIMETER,                       "wetted perimeter",                                           length_exponent=+2.0,                     minimum_value=0.0,                    ) )
 
 # Quantities, wall point
+#
+# Note that some of these quantities, like the friction velocity and viscous
+# length scale, can also be defined as point variable (away from the wall)
+# using local variables.  But for both, the shear stress at the wall remains.
+# For that reason I leave these variables here, even though they can be defined
+# as point variables too.
 quantities.append( Quantity( sd.Q_AVERAGE_SKIN_FRICTION_COEFFICIENT,    "average skin friction coefficient",                                                                        minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_DARCY_FRICTION_FACTOR,                "Darcy friction factor",                                                                                    minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_FANNING_FRICTION_FACTOR,              "Fanning friction factor",                                                                                  minimum_value=0.0, ) )
