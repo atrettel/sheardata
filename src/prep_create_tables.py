@@ -1173,6 +1173,14 @@ define_quantity_symbol( sd.Q_LOCAL_TO_WALL_MASS_DENSITY_RATIO,               sd.
 define_quantity_symbol( sd.Q_LOCAL_TO_WALL_STREAMWISE_VELOCITY_RATIO,        sd.VT_UNAVERAGED_VALUE, r"({:s}/{:s}_w)".format(sd.STREAMWISE_VELOCITY_SYMBOL,sd.STREAMWISE_VELOCITY_SYMBOL), )
 define_quantity_symbol( sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO,                sd.VT_UNAVERAGED_VALUE, r"(T/T_w)",                                                                           )
 
+# Quantities, facility
+define_quantity_symbol( sd.Q_RUN_TIME,                   sd.VT_UNAVERAGED_VALUE, r"t_\mathrm{rt}",    )
+define_quantity_symbol( sd.Q_SPATIAL_ORDER_OF_ACCURACY,  sd.VT_UNAVERAGED_VALUE, r"O_s",              )
+define_quantity_symbol( sd.Q_TEMPORAL_ORDER_OF_ACCURACY, sd.VT_UNAVERAGED_VALUE, r"O_t",              )
+define_quantity_symbol( sd.Q_TEST_SECTION_HEIGHT,        sd.VT_UNAVERAGED_VALUE, r"h_\mathrm{ts}",    )
+define_quantity_symbol( sd.Q_TEST_SECTION_LENGTH,        sd.VT_UNAVERAGED_VALUE, r"\ell_\mathrm{ts}", )
+define_quantity_symbol( sd.Q_TEST_SECTION_WIDTH,         sd.VT_UNAVERAGED_VALUE, r"w_\mathrm{ts}",    )
+
 
 # Fluid property values
 #
