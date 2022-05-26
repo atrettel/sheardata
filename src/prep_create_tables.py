@@ -936,6 +936,11 @@ quantities.append( Quantity( sd.Q_LOCAL_TO_WALL_TEMPERATURE_RATIO,              
 # - Reynolds number range (TODO)
 # - static and stagnation temperature ranges (TODO)
 # - static and stagnation pressure ranges (TODO)
+#
+# Note that I may add a separate table for facility components that then
+# specifies the order of the different components (and whether they form a
+# closed loop).  The test-section dimensions would then be better defined in
+# that context to prevent duplication, but for the moment these are here.
 quantities.append( Quantity( sd.Q_RUN_TIME,                   "run time",                     time_exponent=+1.0, minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_SPATIAL_ORDER_OF_ACCURACY,  "spatial order of accuracy",                        minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_TEMPORAL_ORDER_OF_ACCURACY, "temporal order of accuracy",                       minimum_value=0.0, ) )
