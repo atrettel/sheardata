@@ -31,6 +31,14 @@
     - Reynolds numbers for identical runs LX and LXI do not match completely
       but are close.  The values were changed to match run LX.
 
+    - The velocity ratio for IX-8, p. 86, does not agree with the data given.
+      The average velocities do not match either for runs VII and IX.  The
+      value from IX is used.
+
+    - In general, whenever the average velocity disagreed between a
+      friction factor and velocity ratio test, the velocity ratio value was
+      used.
+
 - Velocity distribution data, from pages 93 to 125 of the dissertation.
 
 -------------------------------------------------------------------------------
