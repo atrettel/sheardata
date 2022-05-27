@@ -468,110 +468,110 @@ for geometry_id in geometries:
     ( geometry_id, geometries[geometry_id], )
     )
 
-# Methods
+# Instrument classes
 cursor.execute(
 """
-CREATE TABLE methods (
-    method_id        TEXT PRIMARY KEY,
-    method_name      TEXT NOT NULL,
-    intrusive          INTEGER NOT NULL DEFAULT 0 CHECK ( intrusive = 0 OR intrusive = 1 ),
-    method_parent_id TEXT DEFAULT NULL,
-    FOREIGN KEY(method_parent_id) REFERENCES methods(method_id)
+CREATE TABLE instrument_classes (
+    instrument_class_id        TEXT PRIMARY KEY,
+    instrument_class_name      TEXT NOT NULL,
+    intrusive                  INTEGER NOT NULL DEFAULT 0 CHECK ( intrusive = 0 OR intrusive = 1 ),
+    instrument_class_parent_id TEXT DEFAULT NULL,
+    FOREIGN KEY(instrument_class_parent_id) REFERENCES instrument_classes(instrument_class_id)
 );
 """
 )
 
-class Method:
-    _method_id        = None
-    _method_name      = None
-    _intrusive        = None
-    _method_parent_id = None
+class InstrumentClass:
+    _instrument_class_id        = None
+    _instrument_class_name      = None
+    _intrusive                  = None
+    _instrument_class_parent_id = None
 
-    def method_id( self ):
-        return self._method_id
+    def instrument_class_id( self ):
+        return self._instrument_class_id
 
-    def method_name( self ):
-        return self._method_name
+    def instrument_class_name( self ):
+        return self._instrument_class_name
 
     def intrusive( self ):
         return self._intrusive
 
-    def method_parent_id( self ):
-        return self._method_parent_id
+    def instrument_class_parent_id( self ):
+        return self._instrument_class_parent_id
 
     def is_child( self ):
-        return self.method_parent_id() != None
+        return self.instrument_class_parent_id() != None
 
     def execute_query( self ):
         cursor.execute(
         """
-        INSERT INTO methods( method_id, method_name, intrusive )
+        INSERT INTO instrument_classes( instrument_class_id, instrument_class_name, intrusive )
         VALUES( ?, ?, ? );
         """,
         (
-            self.method_id(),
-            self.method_name(),
+            self.instrument_class_id(),
+            self.instrument_class_name(),
             self.intrusive(),
         )
         )
 
-    def __init__( self, method_id, method_name, method_parent_id, intrusive=False, ):
-        self._method_id        = method_id
-        self._method_name      = str(method_name)
-        self._method_parent_id = method_parent_id
-        self._intrusive        = 1 if intrusive else 0
+    def __init__( self, instrument_class_id, instrument_class_name, instrument_class_parent_id, intrusive=False, ):
+        self._instrument_class_id        = instrument_class_id
+        self._instrument_class_name      = str(instrument_class_name)
+        self._instrument_class_parent_id = instrument_class_parent_id
+        self._intrusive                  = 1 if intrusive else 0
 
-methods = []
-methods.append( Method( sd.IT_APPROXIMATION,                            "approximation",                            sd.IT_REASONING,                                    ) )
-methods.append( Method( sd.IT_ASSUMPTION,                               "assumption",                               sd.IT_REASONING,                                    ) )
-methods.append( Method( sd.IT_CALCULATION,                              "calculation",                              sd.IT_REASONING,                                    ) )
-methods.append( Method( sd.IT_CLAIM,                                    "claim",                                    sd.IT_REASONING,                                    ) )
-methods.append( Method( sd.IT_CLAUSER_METHOD,                           "Clauser method",                           sd.IT_VELOCITY_PROFILE_METHOD,                      ) )
-methods.append( Method( sd.IT_CONSTANT_CURRENT_HOT_WIRE_ANEMOMETRY,     "constant-current hot-wire anemometry",     sd.IT_HOT_WIRE_ANEMOMETRY,          intrusive=True, ) )
-methods.append( Method( sd.IT_CONSTANT_TEMPERATURE_HOT_WIRE_ANEMOMETRY, "constant-temperature hot-wire anemometry", sd.IT_HOT_WIRE_ANEMOMETRY,          intrusive=True, ) )
-methods.append( Method( sd.IT_DIFFERENTIAL_PRESSURE_METHOD,             "differential pressure method",             sd.IT_OBSERVATION,                                  ) )
-methods.append( Method( sd.IT_DIRECT_INJECTION_METHOD,                  "direct injection method",                  sd.IT_OPTICAL_METHOD,                               ) )
-methods.append( Method( sd.IT_FLOATING_ELEMENT_BALANCE,                 "floating element balance",                 sd.IT_WALL_SHEAR_STRESS_METHOD,                     ) )
-methods.append( Method( sd.IT_FLOW_RATE_MEASUREMENT,                    "flow rate measurement",                    sd.IT_OBSERVATION,                                  ) )
-methods.append( Method( sd.IT_HOT_WIRE_ANEMOMETRY,                      "hot-wire anemometry",                      sd.IT_THERMAL_ANEMOMETRY,           intrusive=True, ) )
-methods.append( Method( sd.IT_IMPACT_TUBE,                              "impact tube",                              sd.IT_DIFFERENTIAL_PRESSURE_METHOD, intrusive=True, ) )
-methods.append( Method( sd.IT_INDEX_OF_REFRACTION_METHOD,               "index-of-refraction method",               sd.IT_OPTICAL_METHOD,                               ) )
-methods.append( Method( sd.IT_LASER_DOPPLER_ANEMOMETRY,                 "laser Doppler anemometry",                 sd.IT_OPTICAL_METHOD,                               ) )
-methods.append( Method( sd.IT_MACH_ZEHNDER_INTERFEROMETRY,              "Mach-Zehnder interferometry",              sd.IT_INDEX_OF_REFRACTION_METHOD,                   ) )
-methods.append( Method( sd.IT_MOMENTUM_BALANCE,                         "momentum balance",                         sd.IT_WALL_SHEAR_STRESS_METHOD,                     ) )
-methods.append( Method( sd.IT_OBSERVATION,                              "observation",                              sd.IT_ROOT,                                         ) )
-methods.append( Method( sd.IT_OPTICAL_METHOD,                           "optical method",                           sd.IT_OBSERVATION,                                  ) )
-methods.append( Method( sd.IT_PARTICLE_IMAGE_VELOCIMETRY,               "particle image velocimetry",               sd.IT_OPTICAL_METHOD,                               ) )
-methods.append( Method( sd.IT_PITOT_STATIC_TUBE,                        "Pitot-static tube",                        sd.IT_DIFFERENTIAL_PRESSURE_METHOD, intrusive=True, ) )
-methods.append( Method( sd.IT_PRESTON_TUBE,                             "Preston tube",                             sd.IT_WALL_SHEAR_STRESS_METHOD,     intrusive=True, ) )
-methods.append( Method( sd.IT_REASONING,                                "reasoning",                                sd.IT_ROOT,                                         ) )
-methods.append( Method( sd.IT_ROOT,                                     "knowledge source",                         None,                                               ) )
-methods.append( Method( sd.IT_SCHLIEREN_PHOTOGRAPHY,                    "schlieren photography",                    sd.IT_INDEX_OF_REFRACTION_METHOD,                   ) )
-methods.append( Method( sd.IT_SHADOWGRAPH_PHOTOGRAPHY,                  "shadowgraph photography",                  sd.IT_INDEX_OF_REFRACTION_METHOD,                   ) )
-methods.append( Method( sd.IT_SIMULATION,                               "simulation",                               sd.IT_REASONING,                                    ) )
-methods.append( Method( sd.IT_STANTON_TUBE,                             "Stanton tube",                             sd.IT_WALL_SHEAR_STRESS_METHOD,     intrusive=True, ) )
-methods.append( Method( sd.IT_THERMAL_ANEMOMETRY,                       "thermal anemometry",                       sd.IT_OBSERVATION,                                  ) )
-methods.append( Method( sd.IT_VELOCITY_PROFILE_METHOD,                  "velocity profile method",                  sd.IT_WALL_SHEAR_STRESS_METHOD,                     ) )
-methods.append( Method( sd.IT_VISCOUS_SUBLAYER_SLOPE_METHOD,            "viscous sublayer slope method",            sd.IT_VELOCITY_PROFILE_METHOD,                      ) )
-methods.append( Method( sd.IT_WALL_SHEAR_STRESS_METHOD,                 "wall shear stress method",                 sd.IT_OBSERVATION,                                  ) )
-methods.append( Method( sd.IT_WEIGHING_METHOD,                          "weighing method",                          sd.IT_FLOW_RATE_MEASUREMENT,                        ) )
-methods.append( Method( sd.IT_ZEROTH_ORDER_APPROXIMATION,               "zeroth-order approximation",               sd.IT_APPROXIMATION,                                ) )
+instrument_classes = []
+instrument_classes.append( InstrumentClass( sd.IT_APPROXIMATION,                            "approximation",                            sd.IT_REASONING,                                    ) )
+instrument_classes.append( InstrumentClass( sd.IT_ASSUMPTION,                               "assumption",                               sd.IT_REASONING,                                    ) )
+instrument_classes.append( InstrumentClass( sd.IT_CALCULATION,                              "calculation",                              sd.IT_REASONING,                                    ) )
+instrument_classes.append( InstrumentClass( sd.IT_CLAIM,                                    "claim",                                    sd.IT_REASONING,                                    ) )
+instrument_classes.append( InstrumentClass( sd.IT_CLAUSER_METHOD,                           "Clauser method",                           sd.IT_VELOCITY_PROFILE_METHOD,                      ) )
+instrument_classes.append( InstrumentClass( sd.IT_CONSTANT_CURRENT_HOT_WIRE_ANEMOMETRY,     "constant-current hot-wire anemometry",     sd.IT_HOT_WIRE_ANEMOMETRY,          intrusive=True, ) )
+instrument_classes.append( InstrumentClass( sd.IT_CONSTANT_TEMPERATURE_HOT_WIRE_ANEMOMETRY, "constant-temperature hot-wire anemometry", sd.IT_HOT_WIRE_ANEMOMETRY,          intrusive=True, ) )
+instrument_classes.append( InstrumentClass( sd.IT_DIFFERENTIAL_PRESSURE_METHOD,             "differential pressure method",             sd.IT_OBSERVATION,                                  ) )
+instrument_classes.append( InstrumentClass( sd.IT_DIRECT_INJECTION_METHOD,                  "direct injection method",                  sd.IT_OPTICAL_METHOD,                               ) )
+instrument_classes.append( InstrumentClass( sd.IT_FLOATING_ELEMENT_BALANCE,                 "floating element balance",                 sd.IT_WALL_SHEAR_STRESS_METHOD,                     ) )
+instrument_classes.append( InstrumentClass( sd.IT_FLOW_RATE_MEASUREMENT,                    "flow rate measurement",                    sd.IT_OBSERVATION,                                  ) )
+instrument_classes.append( InstrumentClass( sd.IT_HOT_WIRE_ANEMOMETRY,                      "hot-wire anemometry",                      sd.IT_THERMAL_ANEMOMETRY,           intrusive=True, ) )
+instrument_classes.append( InstrumentClass( sd.IT_IMPACT_TUBE,                              "impact tube",                              sd.IT_DIFFERENTIAL_PRESSURE_METHOD, intrusive=True, ) )
+instrument_classes.append( InstrumentClass( sd.IT_INDEX_OF_REFRACTION_METHOD,               "index-of-refraction method",               sd.IT_OPTICAL_METHOD,                               ) )
+instrument_classes.append( InstrumentClass( sd.IT_LASER_DOPPLER_ANEMOMETRY,                 "laser Doppler anemometry",                 sd.IT_OPTICAL_METHOD,                               ) )
+instrument_classes.append( InstrumentClass( sd.IT_MACH_ZEHNDER_INTERFEROMETRY,              "Mach-Zehnder interferometry",              sd.IT_INDEX_OF_REFRACTION_METHOD,                   ) )
+instrument_classes.append( InstrumentClass( sd.IT_MOMENTUM_BALANCE,                         "momentum balance",                         sd.IT_WALL_SHEAR_STRESS_METHOD,                     ) )
+instrument_classes.append( InstrumentClass( sd.IT_OBSERVATION,                              "observation",                              sd.IT_ROOT,                                         ) )
+instrument_classes.append( InstrumentClass( sd.IT_OPTICAL_METHOD,                           "optical method",                           sd.IT_OBSERVATION,                                  ) )
+instrument_classes.append( InstrumentClass( sd.IT_PARTICLE_IMAGE_VELOCIMETRY,               "particle image velocimetry",               sd.IT_OPTICAL_METHOD,                               ) )
+instrument_classes.append( InstrumentClass( sd.IT_PITOT_STATIC_TUBE,                        "Pitot-static tube",                        sd.IT_DIFFERENTIAL_PRESSURE_METHOD, intrusive=True, ) )
+instrument_classes.append( InstrumentClass( sd.IT_PRESTON_TUBE,                             "Preston tube",                             sd.IT_WALL_SHEAR_STRESS_METHOD,     intrusive=True, ) )
+instrument_classes.append( InstrumentClass( sd.IT_REASONING,                                "reasoning",                                sd.IT_ROOT,                                         ) )
+instrument_classes.append( InstrumentClass( sd.IT_ROOT,                                     "knowledge source",                         None,                                               ) )
+instrument_classes.append( InstrumentClass( sd.IT_SCHLIEREN_PHOTOGRAPHY,                    "schlieren photography",                    sd.IT_INDEX_OF_REFRACTION_METHOD,                   ) )
+instrument_classes.append( InstrumentClass( sd.IT_SHADOWGRAPH_PHOTOGRAPHY,                  "shadowgraph photography",                  sd.IT_INDEX_OF_REFRACTION_METHOD,                   ) )
+instrument_classes.append( InstrumentClass( sd.IT_SIMULATION,                               "simulation",                               sd.IT_REASONING,                                    ) )
+instrument_classes.append( InstrumentClass( sd.IT_STANTON_TUBE,                             "Stanton tube",                             sd.IT_WALL_SHEAR_STRESS_METHOD,     intrusive=True, ) )
+instrument_classes.append( InstrumentClass( sd.IT_THERMAL_ANEMOMETRY,                       "thermal anemometry",                       sd.IT_OBSERVATION,                                  ) )
+instrument_classes.append( InstrumentClass( sd.IT_VELOCITY_PROFILE_METHOD,                  "velocity profile method",                  sd.IT_WALL_SHEAR_STRESS_METHOD,                     ) )
+instrument_classes.append( InstrumentClass( sd.IT_VISCOUS_SUBLAYER_SLOPE_METHOD,            "viscous sublayer slope method",            sd.IT_VELOCITY_PROFILE_METHOD,                      ) )
+instrument_classes.append( InstrumentClass( sd.IT_WALL_SHEAR_STRESS_METHOD,                 "wall shear stress method",                 sd.IT_OBSERVATION,                                  ) )
+instrument_classes.append( InstrumentClass( sd.IT_WEIGHING_METHOD,                          "weighing method",                          sd.IT_FLOW_RATE_MEASUREMENT,                        ) )
+instrument_classes.append( InstrumentClass( sd.IT_ZEROTH_ORDER_APPROXIMATION,               "zeroth-order approximation",               sd.IT_APPROXIMATION,                                ) )
 
-for method in methods:
-    method.execute_query()
+for instrument_class in instrument_classes:
+    instrument_class.execute_query()
 
 # Two separate loops MUST occur due to foreign key constraints.
-for method in methods:
-    if ( method.is_child() ):
+for instrument_class in instrument_classes:
+    if ( instrument_class.is_child() ):
         cursor.execute(
         """
-        UPDATE methods
-        SET method_parent_id=?
-        WHERE method_id=?;
+        UPDATE instrument_classes
+        SET instrument_class_parent_id=?
+        WHERE instrument_class_id=?;
         """,
         (
-            method.method_parent_id(),
-            method.method_id(),
+            instrument_class.instrument_class_parent_id(),
+            instrument_class.instrument_class_id(),
         )
         )
 
