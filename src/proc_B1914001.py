@@ -127,9 +127,9 @@ with open( globals_filename, "r" ) as globals_file:
                 sd.set_point_value( cursor, point_id, sd.Q_STREAMWISE_COORDINATE,  x, )
                 sd.set_point_value( cursor, point_id, sd.Q_TRANSVERSE_COORDINATE,  y, )
                 sd.set_point_value( cursor, point_id, sd.Q_SPANWISE_COORDINATE,    z, )
-                sd.set_point_value( cursor, point_id, sd.Q_STREAMWISE_VELOCITY,    u,                    value_type_id=sd.VT_BOTH_AVERAGES, method_ids=[sd.IT_PITOT_STATIC_TUBE], note_ids=current_notes, )
-                sd.set_point_value( cursor, point_id, sd.Q_SPANWISE_VELOCITY,      w,                    value_type_id=sd.VT_BOTH_AVERAGES, method_ids=[sd.IT_ASSUMPTION],                             )
-                sd.set_point_value( cursor, point_id, sd.Q_OUTER_LAYER_VELOCITY,   outer_layer_velocity, value_type_id=sd.VT_BOTH_AVERAGES, method_ids=[sd.IT_PITOT_STATIC_TUBE],                      )
+                sd.set_point_value( cursor, point_id, sd.Q_STREAMWISE_VELOCITY,    u,                    value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_PITOT_STATIC_TUBE], note_ids=current_notes, )
+                sd.set_point_value( cursor, point_id, sd.Q_SPANWISE_VELOCITY,      w,                    value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_ASSUMPTION],                             )
+                sd.set_point_value( cursor, point_id, sd.Q_OUTER_LAYER_VELOCITY,   outer_layer_velocity, value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_PITOT_STATIC_TUBE],                      )
 
         for quantity_id in [ sd.Q_ROUGHNESS_HEIGHT,
                              sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
@@ -140,7 +140,7 @@ with open( globals_filename, "r" ) as globals_file:
                 quantity_id,
                 sd.PL_WALL,
                 sd.sdfloat(0.0),
-                method_ids=[sd.IT_ASSUMPTION],
+                instrument_class_ids=[sd.IT_ASSUMPTION],
             )
 
 conn.commit()
