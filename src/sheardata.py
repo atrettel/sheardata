@@ -150,7 +150,7 @@ F_GASEOUS_WATER             = "H2O(g)"
 GM_ELLIPTICAL  = "E"
 GM_RECTANGULAR = "R"
 
-# Methods (and other sources of information)
+# Instruments and methods (and other sources of information)
 IT_APPROXIMATION                            = "APP"
 IT_ASSUMPTION                               = "ASM"
 IT_CALCULATION                              = "CLC"
