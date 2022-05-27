@@ -12,7 +12,7 @@ conn   = sqlite3.connect( sys.argv[1] )
 cursor = conn.cursor()
 cursor.execute( "PRAGMA foreign_keys = ON;" )
 
-def create_methods_tree( parent ):
+def create_instruments_tree( parent ):
     cursor.execute(
     """
     SELECT method_id, method_name
@@ -33,13 +33,13 @@ def create_methods_tree( parent ):
             result[1],
             r"\texttt{"+result[0]+r"}",
         )
-        tree += create_methods_tree( child )
+        tree += create_instruments_tree( child )
     if ( len(results) != 0 ):
         tree += r"\end{itemize}"+"\n"
     return tree
 
-with open( "list-methods.tex.tmp", "w" ) as f:
-    f.write( create_methods_tree( sd.IT_ROOT ) )
+with open( "list-instruments.tex.tmp", "w" ) as f:
+    f.write( create_instruments_tree( sd.IT_ROOT ) )
 
 conn.commit()
 conn.close()
