@@ -230,7 +230,7 @@ with open( globals_filename, "r" ) as globals_file:
             # the pressure in a small Pitot tube facing the current and that in
             # a small orifice in the side of the pipe.
             # \end{quote}
-            mt_velocity = sd.MT_PITOT_STATIC_TUBE
+            mt_velocity = sd.IT_PITOT_STATIC_TUBE
 
             current_notes = []
             if ( series_number == 1 and point_number == n_points ):
@@ -251,14 +251,14 @@ with open( globals_filename, "r" ) as globals_file:
                     quantity_id,
                     sd.sdfloat(0.0),
                     value_type_id=sd.VT_BOTH_AVERAGES,
-                    method_ids=[sd.MT_ASSUMPTION],
+                    method_ids=[sd.IT_ASSUMPTION],
                 )
 
             # Assumed constant profiles
-            sd.set_point_value( cursor, point_id, sd.Q_TEMPERATURE,         temperature,         value_type_id=sd.VT_BOTH_AVERAGES, method_ids=[sd.MT_ASSUMPTION], )
-            sd.set_point_value( cursor, point_id, sd.Q_MASS_DENSITY,        mass_density,        value_type_id=sd.VT_BOTH_AVERAGES, method_ids=[sd.MT_ASSUMPTION], )
-            sd.set_point_value( cursor, point_id, sd.Q_KINEMATIC_VISCOSITY, kinematic_viscosity, value_type_id=sd.VT_BOTH_AVERAGES, method_ids=[sd.MT_ASSUMPTION], )
-            sd.set_point_value( cursor, point_id, sd.Q_DYNAMIC_VISCOSITY,   dynamic_viscosity,   value_type_id=sd.VT_BOTH_AVERAGES, method_ids=[sd.MT_ASSUMPTION], )
+            sd.set_point_value( cursor, point_id, sd.Q_TEMPERATURE,         temperature,         value_type_id=sd.VT_BOTH_AVERAGES, method_ids=[sd.IT_ASSUMPTION], )
+            sd.set_point_value( cursor, point_id, sd.Q_MASS_DENSITY,        mass_density,        value_type_id=sd.VT_BOTH_AVERAGES, method_ids=[sd.IT_ASSUMPTION], )
+            sd.set_point_value( cursor, point_id, sd.Q_KINEMATIC_VISCOSITY, kinematic_viscosity, value_type_id=sd.VT_BOTH_AVERAGES, method_ids=[sd.IT_ASSUMPTION], )
+            sd.set_point_value( cursor, point_id, sd.Q_DYNAMIC_VISCOSITY,   dynamic_viscosity,   value_type_id=sd.VT_BOTH_AVERAGES, method_ids=[sd.IT_ASSUMPTION], )
             sd.set_point_value( cursor, point_id, sd.Q_SPEED_OF_SOUND,      speed_of_sound,      value_type_id=sd.VT_BOTH_AVERAGES,                                  )
 
             i += 1
@@ -273,7 +273,7 @@ with open( globals_filename, "r" ) as globals_file:
                     quantity_id,
                     sd.PL_WALL,
                     sd.sdfloat(0.0),
-                    method_ids=[sd.MT_ASSUMPTION],
+                    method_ids=[sd.IT_ASSUMPTION],
                 )
 
         r_prof, u_prof = sd.get_intersecting_profiles(
@@ -306,10 +306,10 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value( cursor, station_id, sd.Q_BULK_REYNOLDS_NUMBER,               Re_bulk,                          value_type_id=sd.VT_BOTH_AVERAGES, )
         sd.set_station_value( cursor, station_id, sd.Q_BULK_MACH_NUMBER,                   Ma_bulk,                          value_type_id=sd.VT_BOTH_AVERAGES, )
 
-        sd.set_labeled_value( cursor, station_id, sd.Q_HEAT_FLUX, sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ), value_type_id=sd.VT_BOTH_AVERAGES, method_ids=[sd.MT_ASSUMPTION], )
+        sd.set_labeled_value( cursor, station_id, sd.Q_HEAT_FLUX, sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ), value_type_id=sd.VT_BOTH_AVERAGES, method_ids=[sd.IT_ASSUMPTION], )
 
         for quantity_id in sd.INCOMPRESSIBLE_RATIO_PROFILES:
-            sd.set_constant_profile( cursor, station_id, quantity_id, sd.sdfloat( 1.0, 0.0 ), value_type_id=sd.VT_BOTH_AVERAGES, method_ids=[sd.MT_ASSUMPTION], )
+            sd.set_constant_profile( cursor, station_id, quantity_id, sd.sdfloat( 1.0, 0.0 ), value_type_id=sd.VT_BOTH_AVERAGES, method_ids=[sd.IT_ASSUMPTION], )
 
         for point_id in sd.get_points_at_station( cursor, station_id ):
             streamwise_velocity = sd.get_point_value( cursor, point_id, sd.Q_STREAMWISE_VELOCITY )

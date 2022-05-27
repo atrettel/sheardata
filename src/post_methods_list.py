@@ -39,7 +39,7 @@ def create_methods_tree( parent ):
     return tree
 
 with open( "list-methods.tex.tmp", "w" ) as f:
-    f.write( create_methods_tree( sd.MT_ROOT ) )
+    f.write( create_methods_tree( sd.IT_ROOT ) )
 
 conn.commit()
 conn.close()

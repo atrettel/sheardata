@@ -151,42 +151,42 @@ GM_ELLIPTICAL  = "E"
 GM_RECTANGULAR = "R"
 
 # Methods (and other sources of information)
-MT_APPROXIMATION                            = "APP"
-MT_ASSUMPTION                               = "ASM"
-MT_CALCULATION                              = "CLC"
-MT_CLAIM                                    = "CLM"
-MT_CLAUSER_METHOD                           = "TCC"
-MT_CONSTANT_CURRENT_HOT_WIRE_ANEMOMETRY     = "HWC"
-MT_CONSTANT_TEMPERATURE_HOT_WIRE_ANEMOMETRY = "HWT"
-MT_DIFFERENTIAL_PRESSURE_METHOD             = "PTA"
-MT_DIRECT_INJECTION_METHOD                  = "DIJ"
-MT_FLOATING_ELEMENT_BALANCE                 = "FEB"
-MT_FLOW_RATE_MEASUREMENT                    = "FQM"
-MT_HOT_WIRE_ANEMOMETRY                      = "HWA"
-MT_IMPACT_TUBE                              = "PTI"
-MT_INDEX_OF_REFRACTION_METHOD               = "ORI"
-MT_LASER_DOPPLER_ANEMOMETRY                 = "LDA"
-MT_MACH_ZEHNDER_INTERFEROMETRY              = "MZI"
-MT_MOMENTUM_BALANCE                         = "TMB"
-MT_OBSERVATION                              = "OBS"
-MT_OPTICAL_METHOD                           = "OPT"
-MT_PARTICLE_IMAGE_VELOCIMETRY               = "PIV"
-MT_PITOT_STATIC_TUBE                        = "PST"
-MT_PRESTON_TUBE                             = "TPT"
-MT_REASONING                                = "RSN"
-MT_ROOT                                     = "RTX"
-MT_SCHLIEREN_PHOTOGRAPHY                    = "SCH"
-MT_SHADOWGRAPH_PHOTOGRAPHY                  = "SHD"
-MT_SIMULATION                               = "SIM"
-MT_STANTON_TUBE                             = "TST"
-MT_THERMAL_ANEMOMETRY                       = "TAN"
-MT_VELOCITY_PROFILE_METHOD                  = "TVP"
-MT_VISCOUS_SUBLAYER_SLOPE_METHOD            = "TVS"
-MT_WALL_SHEAR_STRESS_METHOD                 = "TWL"
-MT_WEIGHING_METHOD                          = "QWM"
-MT_ZEROTH_ORDER_APPROXIMATION               = "AP0"
+IT_APPROXIMATION                            = "APP"
+IT_ASSUMPTION                               = "ASM"
+IT_CALCULATION                              = "CLC"
+IT_CLAIM                                    = "CLM"
+IT_CLAUSER_METHOD                           = "TCC"
+IT_CONSTANT_CURRENT_HOT_WIRE_ANEMOMETRY     = "HWC"
+IT_CONSTANT_TEMPERATURE_HOT_WIRE_ANEMOMETRY = "HWT"
+IT_DIFFERENTIAL_PRESSURE_METHOD             = "PTA"
+IT_DIRECT_INJECTION_METHOD                  = "DIJ"
+IT_FLOATING_ELEMENT_BALANCE                 = "FEB"
+IT_FLOW_RATE_MEASUREMENT                    = "FQM"
+IT_HOT_WIRE_ANEMOMETRY                      = "HWA"
+IT_IMPACT_TUBE                              = "PTI"
+IT_INDEX_OF_REFRACTION_METHOD               = "ORI"
+IT_LASER_DOPPLER_ANEMOMETRY                 = "LDA"
+IT_MACH_ZEHNDER_INTERFEROMETRY              = "MZI"
+IT_MOMENTUM_BALANCE                         = "TMB"
+IT_OBSERVATION                              = "OBS"
+IT_OPTICAL_METHOD                           = "OPT"
+IT_PARTICLE_IMAGE_VELOCIMETRY               = "PIV"
+IT_PITOT_STATIC_TUBE                        = "PST"
+IT_PRESTON_TUBE                             = "TPT"
+IT_REASONING                                = "RSN"
+IT_ROOT                                     = "RTX"
+IT_SCHLIEREN_PHOTOGRAPHY                    = "SCH"
+IT_SHADOWGRAPH_PHOTOGRAPHY                  = "SHD"
+IT_SIMULATION                               = "SIM"
+IT_STANTON_TUBE                             = "TST"
+IT_THERMAL_ANEMOMETRY                       = "TAN"
+IT_VELOCITY_PROFILE_METHOD                  = "TVP"
+IT_VISCOUS_SUBLAYER_SLOPE_METHOD            = "TVS"
+IT_WALL_SHEAR_STRESS_METHOD                 = "TWL"
+IT_WEIGHING_METHOD                          = "QWM"
+IT_ZEROTH_ORDER_APPROXIMATION               = "AP0"
 
-PRIMARY_MT_SET = 1
+PRIMARY_IT_SET = 1
 
 # Point labels
 PL_CENTER_LINE = "CL"
@@ -728,7 +728,7 @@ def create_value_types_list( value_type_id ):
 
 def set_study_value( cursor, study_id, quantity_id, value,
                      value_type_id=VT_UNAVERAGED_VALUE,
-                     method_ids=[], method_set=PRIMARY_MT_SET,
+                     method_ids=[], method_set=PRIMARY_IT_SET,
                      fluid_id=F_MIXTURE, corrected=False, outlier=False,
                      note_ids=[] ):
     study_value, study_uncertainty = split_float( value )
@@ -792,7 +792,7 @@ def set_study_value( cursor, study_id, quantity_id, value,
 
 def get_study_value( cursor, study_id, quantity_id,
                      value_type_id=VT_ANY_AVERAGE,
-                     fluid_id=F_MIXTURE, method_set=PRIMARY_MT_SET, ):
+                     fluid_id=F_MIXTURE, method_set=PRIMARY_IT_SET, ):
     final_value_type_id = value_type_id
     if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
@@ -929,7 +929,7 @@ def update_series_description( cursor, series_id, series_description ):
 
 def set_series_value( cursor, series_id, quantity_id, value,
                       value_type_id=VT_UNAVERAGED_VALUE,
-                      method_ids=[], method_set=PRIMARY_MT_SET,
+                      method_ids=[], method_set=PRIMARY_IT_SET,
                       fluid_id=F_MIXTURE, corrected=False, outlier=False,
                       note_ids=[] ):
     series_value, series_uncertainty = split_float( value )
@@ -993,7 +993,7 @@ def set_series_value( cursor, series_id, quantity_id, value,
 
 def get_series_value( cursor, series_id, quantity_id,
                       value_type_id=VT_ANY_AVERAGE,
-                      fluid_id=F_MIXTURE, method_set=PRIMARY_MT_SET, ):
+                      fluid_id=F_MIXTURE, method_set=PRIMARY_IT_SET, ):
     final_value_type_id = value_type_id
     if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
@@ -1150,7 +1150,7 @@ def add_station( cursor, flow_class_id, year, study_number, series_number, \
 
 def set_station_value( cursor, station_id, quantity_id, value,
                        value_type_id=VT_UNAVERAGED_VALUE,
-                       method_ids=[], method_set=PRIMARY_MT_SET,
+                       method_ids=[], method_set=PRIMARY_IT_SET,
                        fluid_id=F_MIXTURE, corrected=False, outlier=False,
                        note_ids=[] ):
     station_value, station_uncertainty = split_float( value )
@@ -1233,7 +1233,7 @@ def get_points_at_station( cursor, station_id ):
 
 def set_constant_profile( cursor, station_id, quantity_id, value,
                           value_type_id=VT_UNAVERAGED_VALUE,
-                          method_ids=[], method_set=PRIMARY_MT_SET,
+                          method_ids=[], method_set=PRIMARY_IT_SET,
                           corrected=False, outlier=False, note_ids=[] ):
     for point_id in get_points_at_station( cursor, station_id ):
         set_point_value(
@@ -1251,7 +1251,7 @@ def set_constant_profile( cursor, station_id, quantity_id, value,
 
 def get_station_value( cursor, station_id, quantity_id,
                        value_type_id=VT_ANY_AVERAGE,
-                       fluid_id=F_MIXTURE, method_set=PRIMARY_MT_SET, ):
+                       fluid_id=F_MIXTURE, method_set=PRIMARY_IT_SET, ):
     final_value_type_id = value_type_id
     if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
@@ -1366,7 +1366,7 @@ def add_point( cursor, flow_class_id, year, study_number, series_number,
 
 def set_point_value( cursor, point_id, quantity_id, value,
                      value_type_id=VT_UNAVERAGED_VALUE,
-                     method_ids=[], method_set=PRIMARY_MT_SET,
+                     method_ids=[], method_set=PRIMARY_IT_SET,
                      fluid_id=F_MIXTURE, corrected=False, outlier=False,
                      note_ids=[] ):
     point_value, point_uncertainty = split_float( value )
@@ -1430,7 +1430,7 @@ def set_point_value( cursor, point_id, quantity_id, value,
 
 def get_point_value( cursor, point_id, quantity_id,
                      value_type_id=VT_ANY_AVERAGE,
-                     fluid_id=F_MIXTURE, method_set=PRIMARY_MT_SET, ):
+                     fluid_id=F_MIXTURE, method_set=PRIMARY_IT_SET, ):
     final_value_type_id = value_type_id
     if ( value_type_id == VT_ANY_AVERAGE ):
         cursor.execute(
@@ -1485,7 +1485,7 @@ def get_intersecting_profiles( cursor, station_id, quantity_ids,
 
     if ( len(method_sets) == 0 ):
         for i in range(len(quantity_ids)):
-            method_sets.append(PRIMARY_MT_SET)
+            method_sets.append(PRIMARY_IT_SET)
 
     assert( len(quantity_ids) == len(fluid_ids)      )
     assert( len(quantity_ids) == len(value_type_ids) )
@@ -1609,7 +1609,7 @@ def locate_labeled_point( cursor, station_id, point_label_id ):
 
 def set_labeled_value( cursor, station_id, quantity_id, point_label_id, value,
                        value_type_id=VT_UNAVERAGED_VALUE,
-                       method_ids=[], method_set=PRIMARY_MT_SET,
+                       method_ids=[], method_set=PRIMARY_IT_SET,
                        corrected=False, outlier=False, note_ids=[] ):
     set_point_value(
         cursor,
@@ -1627,7 +1627,7 @@ def set_labeled_value( cursor, station_id, quantity_id, point_label_id, value,
 def get_labeled_value( cursor, station_id, quantity_id, point_label_id,
                        fluid_id=F_MIXTURE,
                        value_type_id=VT_ANY_AVERAGE,
-                       method_set=PRIMARY_MT_SET, ):
+                       method_set=PRIMARY_IT_SET, ):
     return get_point_value(
         cursor,
         locate_labeled_point( cursor, station_id, point_label_id ),
