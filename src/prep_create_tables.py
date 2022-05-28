@@ -1339,7 +1339,7 @@ CREATE TABLE points (
 cursor.execute(
 """
 CREATE TABLE facilities (
-    facility_id                INTEGER PRIMARY KEY CHECK ( facility_id > 0 ),
+    facility_id                INTEGER PRIMARY KEY AUTOINCREMENT CHECK ( facility_id > 0 ),
     facility_class_id          TEXT NOT NULL,
     facility_name              TEXT NOT NULL,
     iso_country_code           TEXT NOT NULL CHECK ( length(iso_country_code) = 3 ),
@@ -1361,7 +1361,7 @@ CREATE TABLE facilities (
 cursor.execute(
 """
 CREATE TABLE instruments (
-    instrument_id       INTEGER PRIMARY KEY CHECK ( instrument_id > 0 ),
+    instrument_id       INTEGER PRIMARY KEY AUTOINCREMENT CHECK ( instrument_id > 0 ),
     instrument_class_id TEXT NOT NULL,
     FOREIGN KEY(instrument_class_id) REFERENCES instrument_classes(instrument_class_id)
 );
