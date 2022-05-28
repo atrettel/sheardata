@@ -1352,6 +1352,17 @@ CREATE TABLE facilities (
 """
 )
 
+# Instruments (used for measurements in studies)
+cursor.execute(
+"""
+CREATE TABLE instruments (
+    instrument_id       INTEGER PRIMARY KEY CHECK ( instrument_id > 0 ),
+    instrument_class_id TEXT NOT NULL,
+    FOREIGN KEY(instrument_class_id) REFERENCES instrument_classes(instrument_class_id)
+);
+"""
+)
+
 # Study sources (literature references)
 #
 # The classification refers to whether this source (reference) is a primary
@@ -1370,6 +1381,10 @@ CREATE TABLE study_sources (
 )
 
 # Facility sources
+#
+# TODO: Add this table.
+
+# Instrument sources
 #
 # TODO: Add this table.
 
@@ -1572,6 +1587,37 @@ END;
 """
 )
 
+# Instrument values
+cursor.execute(
+"""
+CREATE TABLE instrument_values (
+    instrument_id          TEXT NOT NULL,
+    quantity_id            TEXT NOT NULL,
+    value_type_id          TEXT NOT NULL,
+    instrument_value       REAL NOT NULL,
+    instrument_uncertainty REAL DEFAULT NULL CHECK ( instrument_uncertainty >= 0.0 ),
+    PRIMARY KEY(instrument_id, quantity_id, value_type_id),
+    FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
+);
+"""
+)
+
+cursor.execute(
+"""
+CREATE TRIGGER instrument_values_within_quantity_bounds
+AFTER INSERT ON instrument_values
+WHEN EXISTS (
+    SELECT ( minimum_value <= NEW.instrument_value AND NEW.instrument_value <= maximum_value ) AS instrument_value_in_bounds
+    FROM quantities
+    WHERE ( NEW.quantity_id = quantities.quantity_id AND instrument_value_in_bounds = 0 )
+)
+BEGIN
+    SELECT RAISE( FAIL, "instrument value is not within the allowed bounds for the quantity" );
+END;
+"""
+)
 
 # Instruments for study values
 cursor.execute(
