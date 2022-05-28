@@ -954,6 +954,11 @@ quantities.append( Quantity( sd.Q_TEST_SECTION_HEIGHT,        "test-section heig
 quantities.append( Quantity( sd.Q_TEST_SECTION_LENGTH,        "test-section length",        length_exponent=+1.0, minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_TEST_SECTION_WIDTH,         "test-section width",         length_exponent=+1.0, minimum_value=0.0, ) )
 
+# Quantities, facility
+#
+# TODO: Come up with more, or just create them as needed incrementally.
+quantities.append( Quantity( sd.Q_PROBE_INTERNAL_DIAMETER, "probe internal diameter", length_exponent=+1.0, minimum_value=0.0, ) )
+
 for quantity in quantities:
     quantity.execute_query()
 

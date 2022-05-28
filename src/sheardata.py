@@ -220,6 +220,9 @@ Q_TEST_SECTION_HEIGHT        = "h_ts"
 Q_TEST_SECTION_LENGTH        = "L_ts"
 Q_TEST_SECTION_WIDTH         = "w_ts"
 
+# Quantities, instrument
+Q_PROBE_INTERNAL_DIAMETER    = "d_pi"
+
 # Quantities, series
 Q_ANGLE_OF_ATTACK                = "AOA"
 Q_BODY_HEIGHT                    = "h_b"
