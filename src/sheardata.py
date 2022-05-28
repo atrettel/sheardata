@@ -1640,6 +1640,24 @@ def get_labeled_value( cursor, station_id, quantity_id, point_label_id,
         instrument_set=1,
     )
 
+def add_instrument( cursor, instrument_class_id ):
+    cursor.execute(
+    """
+    INSERT INTO instruments( instrument_class_id )
+    VALUES( ? );
+    """,
+    (
+        str(instrument_class_id),
+    )
+    )
+
+    cursor.execute(
+    """
+    SELECT last_insert_rowid();
+    """
+    )
+    return int(cursor.fetchone()[0])
+
 def integrate_using_trapezoid_rule( x, f, F0=sdfloat(0.0,0.0) ):
     F = F0
     for i in range(len(x)-1):
