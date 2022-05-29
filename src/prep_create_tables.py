@@ -1343,6 +1343,12 @@ CREATE TABLE points (
 # TODO: Certains fields should only be allowed if the facility is an
 # experimental facility, etc.  I need to add triggers or more advanced checks
 # for these.
+#
+# TODO: Columns to add later:
+# - operational status
+# - open test section: yes or no?  This would be easier to manage if the
+# sequence of parts of a facility is specified, at which point there would be
+# two kinds of test sections (open and closed).
 cursor.execute(
 """
 CREATE TABLE facilities (
@@ -1351,12 +1357,10 @@ CREATE TABLE facilities (
     facility_name              TEXT NOT NULL,
     iso_country_code           TEXT NOT NULL CHECK ( length(iso_country_code) = 3 ),
     organization_name          TEXT DEFAULT NULL,
-    operational_status         INTEGER DEFAULT NULL CHECK ( operational_status > 0 ),
     start_year                 INTEGER DEFAULT NULL,
     end_year                   INTEGER DEFAULT NULL,
     predecessor_facility_id    INTEGER DEFAULT NULL,
     successor_facility_id      INTEGER DEFAULT NULL,
-    open_test_section          INTEGER DEFAULT 0 CHECK ( open_test_section = 0 OR open_test_section = 1 ),
     FOREIGN KEY(facility_class_id)       REFERENCES facility_classes(facility_class_id),
     FOREIGN KEY(predecessor_facility_id) REFERENCES facilities(facility_id)
     FOREIGN KEY(successor_facility_id)   REFERENCES facilities(facility_id)
