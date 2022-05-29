@@ -1641,6 +1641,119 @@ def get_labeled_value( cursor, station_id, quantity_id, point_label_id,
         instrument_set=1,
     )
 
+def add_facility( cursor, facility_class_id, facility_name, iso_country_code,
+                  organization_name=None, start_year=None, end_year=None,
+                  predecessor_facility_id=None, successor_facility_id=None,
+                  note_ids=[] ):
+    cursor.execute(
+    """
+    INSERT INTO facilities( facility_class_id, facility_name, iso_country_code,
+                            organization_name, start_year, end_year,
+                            predecessor_facility_id, successor_facility_id )
+    VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
+    """,
+    (
+        str(facility_class_id),
+        str(facility_name),
+        str(iso_country_code),
+        organization_name,
+        start_year,
+        end_year,
+        predecessor_facility_id,
+        successor_facility_id,
+    )
+    )
+
+    cursor.execute(
+    """
+    SELECT last_insert_rowid();
+    """
+    )
+    facility_id = int(cursor.fetchone()[0])
+
+    for note_id in note_ids:
+        cursor.execute(
+        """
+        INSERT INTO facility_notes( facility_id, note_id )
+        VALUES( ?, ? );
+        """,
+        (
+            int(facility_id),
+            int(note_id),
+        )
+        )
+
+    return facility_id
+
+def set_facility_value( cursor, facility_id, quantity_id, value,
+                        value_type_id=VT_UNAVERAGED_VALUE, note_ids=[] ):
+    facility_value, facility_uncertainty = split_float( value )
+    for value_type_id in create_value_types_list( value_type_id ):
+        cursor.execute(
+        """
+        INSERT INTO facility_values( facility_id, quantity_id, value_type_id,
+                                     facility_value, facility_uncertainty )
+        VALUES( ?, ?, ?, ?, ? );
+        """,
+        (
+            int(facility_id),
+            str(quantity_id),
+            value_type_id,
+            facility_value,
+            facility_uncertainty,
+        )
+        )
+
+        for note_id in note_ids:
+            cursor.execute(
+            """
+            INSERT INTO facility_value_notes( facility_id, quantity_id,
+                                              value_type_id, note_id )
+            VALUES( ?, ?, ?, ? );
+            """,
+            (
+                int(facility_id),
+                str(quantity_id),
+                value_type_id,
+                int(note_id),
+            )
+            )
+
+def get_facility_value( cursor, facility_id, quantity_id,
+                        value_type_id=VT_ANY_AVERAGE, ):
+    final_value_type_id = value_type_id
+    if ( value_type_id == VT_ANY_AVERAGE ):
+        cursor.execute(
+        """
+        SELECT value_type_id
+        FROM facility_values
+        WHERE facility_id=? AND quantity_id=?;
+        """,
+        (
+            int(facility_id),
+            str(quantity_id),
+        )
+        )
+        results = cursor.fetchall()
+        value_type_ids = []
+        for result in results:
+            value_type_ids.append( str(result[0]) )
+        final_value_type_id = pick_any_average_value_type( value_type_ids )
+
+    cursor.execute(
+    """
+    SELECT facility_value, facility_uncertainty
+    FROM facility_values
+    WHERE facility_id=? AND quantity_id=? AND value_type_id=?;
+    """,
+    (
+        int(facility_id),
+        str(quantity_id),
+        final_value_type_id,
+    )
+    )
+    return fetch_float( cursor )
+
 def add_instrument( cursor, instrument_class_id, instrument_name=None,
                     note_ids=[] ):
     cursor.execute(
