@@ -42,7 +42,7 @@ assumption_id = sd.add_instrument( cursor, sd.IT_ASSUMPTION, )
 impact_tube_id = sd.add_instrument( cursor, sd.IT_IMPACT_TUBE, )
 
 # p. 129
-wall_shear_stress_id = sd.add_instrument( cursor, sd.IT_MOMENTUM_BALANCE, )
+momentum_balance_id = sd.add_instrument( cursor, sd.IT_MOMENTUM_BALANCE, )
 
 mass_density_note = sd.add_note(
     cursor,
@@ -249,13 +249,13 @@ for duct in ducts:
 
             sd.mark_station_as_periodic( cursor, station_id )
 
-            sd.set_station_value( cursor, station_id, sd.Q_HYDRAULIC_DIAMETER,             hydraulic_diameter,                                                                         )
-            sd.set_station_value( cursor, station_id, sd.Q_DEVELOPMENT_LENGTH,             ducts[duct].length,                                                                         )
-            sd.set_station_value( cursor, station_id, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH, ducts[duct].length / hydraulic_diameter,                                                    )
-            sd.set_station_value( cursor, station_id, sd.Q_CROSS_SECTIONAL_ASPECT_RATIO,   ducts[duct].aspect_ratio,                                                                   )
-            sd.set_station_value( cursor, station_id, sd.Q_BULK_VELOCITY,                  bulk_velocity, value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_IMPACT_TUBE], )
-            sd.set_station_value( cursor, station_id, sd.Q_BULK_REYNOLDS_NUMBER,           Re_bulk,       value_type_id=sd.VT_BOTH_AVERAGES,                                           )
-            sd.set_station_value( cursor, station_id, sd.Q_BULK_MACH_NUMBER,               Ma_bulk,       value_type_id=sd.VT_BOTH_AVERAGES,                                           )
+            sd.set_station_value( cursor, station_id, sd.Q_HYDRAULIC_DIAMETER,             hydraulic_diameter,                                                                )
+            sd.set_station_value( cursor, station_id, sd.Q_DEVELOPMENT_LENGTH,             ducts[duct].length,                                                                )
+            sd.set_station_value( cursor, station_id, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH, ducts[duct].length / hydraulic_diameter,                                           )
+            sd.set_station_value( cursor, station_id, sd.Q_CROSS_SECTIONAL_ASPECT_RATIO,   ducts[duct].aspect_ratio,                                                          )
+            sd.set_station_value( cursor, station_id, sd.Q_BULK_VELOCITY,                  bulk_velocity, value_type_id=sd.VT_BOTH_AVERAGES, instrument_ids=[impact_tube_id], )
+            sd.set_station_value( cursor, station_id, sd.Q_BULK_REYNOLDS_NUMBER,           Re_bulk,       value_type_id=sd.VT_BOTH_AVERAGES,                                  )
+            sd.set_station_value( cursor, station_id, sd.Q_BULK_MACH_NUMBER,               Ma_bulk,       value_type_id=sd.VT_BOTH_AVERAGES,                                  )
 
             if ( duct != "Round" ):
                 sd.set_station_value( cursor, station_id, sd.Q_CROSS_SECTIONAL_HEIGHT,      height,      )
@@ -303,34 +303,34 @@ for duct in ducts:
                     quantity_id,
                     sd.PL_WALL,
                     sd.sdfloat(0.0),
-                    instrument_class_ids=[sd.IT_ASSUMPTION],
+                    instrument_ids=[assumption_id],
                 )
 
             current_notes = []
             if ( test_number == 17 and duct == "Square" ):
                 current_notes = [mass_density_note]
 
-            sd.set_labeled_value( cursor, station_id, sd.Q_MASS_DENSITY,                        sd.PL_WALL, mass_density,            value_type_id=sd.VT_BOTH_AVERAGES, note_ids=current_notes,                        )
-            sd.set_labeled_value( cursor, station_id, sd.Q_KINEMATIC_VISCOSITY,                 sd.PL_WALL, kinematic_viscosity,     value_type_id=sd.VT_BOTH_AVERAGES,                                                )
-            sd.set_labeled_value( cursor, station_id, sd.Q_DYNAMIC_VISCOSITY,                   sd.PL_WALL, dynamic_viscosity,       value_type_id=sd.VT_BOTH_AVERAGES,                                                )
-            sd.set_labeled_value( cursor, station_id, sd.Q_TEMPERATURE,                         sd.PL_WALL, temperature,             value_type_id=sd.VT_BOTH_AVERAGES,                                                )
-            sd.set_labeled_value( cursor, station_id, sd.Q_STREAMWISE_VELOCITY,                 sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ),  value_type_id=sd.VT_BOTH_AVERAGES,                                                )
-            sd.set_labeled_value( cursor, station_id, sd.Q_DISTANCE_FROM_WALL,                  sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ),  value_type_id=sd.VT_BOTH_AVERAGES,                                                )
-            sd.set_labeled_value( cursor, station_id, sd.Q_OUTER_LAYER_COORDINATE,              sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ),  value_type_id=sd.VT_BOTH_AVERAGES,                                                )
-            sd.set_labeled_value( cursor, station_id, sd.Q_SPEED_OF_SOUND,                      sd.PL_WALL, speed_of_sound,          value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_ASSUMPTION],       )
-            sd.set_labeled_value( cursor, station_id, sd.Q_SHEAR_STRESS,                        sd.PL_WALL, wall_shear_stress,       value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_MOMENTUM_BALANCE], )
-            sd.set_labeled_value( cursor, station_id, sd.Q_FANNING_FRICTION_FACTOR,             sd.PL_WALL, fanning_friction_factor, value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_MOMENTUM_BALANCE], )
-            sd.set_labeled_value( cursor, station_id, sd.Q_FRICTION_VELOCITY,                   sd.PL_WALL, friction_velocity,       value_type_id=sd.VT_BOTH_AVERAGES,                                                )
-            sd.set_labeled_value( cursor, station_id, sd.Q_VISCOUS_LENGTH_SCALE,                sd.PL_WALL, viscous_length_scale,    value_type_id=sd.VT_BOTH_AVERAGES,                                                )
-            sd.set_labeled_value( cursor, station_id, sd.Q_FRICTION_REYNOLDS_NUMBER,            sd.PL_WALL, Re_tau,                  value_type_id=sd.VT_BOTH_AVERAGES,                                                )
-            sd.set_labeled_value( cursor, station_id, sd.Q_SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER, sd.PL_WALL, Re_tau,                  value_type_id=sd.VT_BOTH_AVERAGES,                                                )
-            sd.set_labeled_value( cursor, station_id, sd.Q_FRICTION_MACH_NUMBER,                sd.PL_WALL, Ma_tau,                  value_type_id=sd.VT_BOTH_AVERAGES,                                                )
-            sd.set_labeled_value( cursor, station_id, sd.Q_HEAT_FLUX,                           sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ),  value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_ASSUMPTION],       )
-            sd.set_labeled_value( cursor, station_id, sd.Q_INNER_LAYER_HEAT_FLUX,               sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ),  value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_ASSUMPTION],       )
-            sd.set_labeled_value( cursor, station_id, sd.Q_FRICTION_TEMPERATURE,                sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ),  value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_ASSUMPTION],       )
+            sd.set_labeled_value( cursor, station_id, sd.Q_MASS_DENSITY,                        sd.PL_WALL, mass_density,            value_type_id=sd.VT_BOTH_AVERAGES, note_ids=current_notes,               )
+            sd.set_labeled_value( cursor, station_id, sd.Q_KINEMATIC_VISCOSITY,                 sd.PL_WALL, kinematic_viscosity,     value_type_id=sd.VT_BOTH_AVERAGES,                                       )
+            sd.set_labeled_value( cursor, station_id, sd.Q_DYNAMIC_VISCOSITY,                   sd.PL_WALL, dynamic_viscosity,       value_type_id=sd.VT_BOTH_AVERAGES,                                       )
+            sd.set_labeled_value( cursor, station_id, sd.Q_TEMPERATURE,                         sd.PL_WALL, temperature,             value_type_id=sd.VT_BOTH_AVERAGES,                                       )
+            sd.set_labeled_value( cursor, station_id, sd.Q_STREAMWISE_VELOCITY,                 sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ),  value_type_id=sd.VT_BOTH_AVERAGES,                                       )
+            sd.set_labeled_value( cursor, station_id, sd.Q_DISTANCE_FROM_WALL,                  sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ),  value_type_id=sd.VT_BOTH_AVERAGES,                                       )
+            sd.set_labeled_value( cursor, station_id, sd.Q_OUTER_LAYER_COORDINATE,              sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ),  value_type_id=sd.VT_BOTH_AVERAGES,                                       )
+            sd.set_labeled_value( cursor, station_id, sd.Q_SPEED_OF_SOUND,                      sd.PL_WALL, speed_of_sound,          value_type_id=sd.VT_BOTH_AVERAGES, instrument_ids=[assumption_id],       )
+            sd.set_labeled_value( cursor, station_id, sd.Q_SHEAR_STRESS,                        sd.PL_WALL, wall_shear_stress,       value_type_id=sd.VT_BOTH_AVERAGES, instrument_ids=[momentum_balance_id], )
+            sd.set_labeled_value( cursor, station_id, sd.Q_FANNING_FRICTION_FACTOR,             sd.PL_WALL, fanning_friction_factor, value_type_id=sd.VT_BOTH_AVERAGES, instrument_ids=[momentum_balance_id], )
+            sd.set_labeled_value( cursor, station_id, sd.Q_FRICTION_VELOCITY,                   sd.PL_WALL, friction_velocity,       value_type_id=sd.VT_BOTH_AVERAGES,                                       )
+            sd.set_labeled_value( cursor, station_id, sd.Q_VISCOUS_LENGTH_SCALE,                sd.PL_WALL, viscous_length_scale,    value_type_id=sd.VT_BOTH_AVERAGES,                                       )
+            sd.set_labeled_value( cursor, station_id, sd.Q_FRICTION_REYNOLDS_NUMBER,            sd.PL_WALL, Re_tau,                  value_type_id=sd.VT_BOTH_AVERAGES,                                       )
+            sd.set_labeled_value( cursor, station_id, sd.Q_SEMI_LOCAL_FRICTION_REYNOLDS_NUMBER, sd.PL_WALL, Re_tau,                  value_type_id=sd.VT_BOTH_AVERAGES,                                       )
+            sd.set_labeled_value( cursor, station_id, sd.Q_FRICTION_MACH_NUMBER,                sd.PL_WALL, Ma_tau,                  value_type_id=sd.VT_BOTH_AVERAGES,                                       )
+            sd.set_labeled_value( cursor, station_id, sd.Q_HEAT_FLUX,                           sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ),  value_type_id=sd.VT_BOTH_AVERAGES, instrument_ids=[assumption_id],       )
+            sd.set_labeled_value( cursor, station_id, sd.Q_INNER_LAYER_HEAT_FLUX,               sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ),  value_type_id=sd.VT_BOTH_AVERAGES, instrument_ids=[assumption_id],       )
+            sd.set_labeled_value( cursor, station_id, sd.Q_FRICTION_TEMPERATURE,                sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ),  value_type_id=sd.VT_BOTH_AVERAGES, instrument_ids=[assumption_id],       )
 
             for quantity_id in sd.INCOMPRESSIBLE_RATIO_PROFILES:
-                sd.set_constant_profile( cursor, station_id, quantity_id, sd.sdfloat( 1.0, 0.0 ), value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_ASSUMPTION], )
+                sd.set_constant_profile( cursor, station_id, quantity_id, sd.sdfloat( 1.0, 0.0 ), value_type_id=sd.VT_BOTH_AVERAGES, instrument_ids=[assumption_id], )
 
 conn.commit()
 conn.close()

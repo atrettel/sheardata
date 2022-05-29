@@ -29,7 +29,7 @@ study_id = sd.add_study(
 sd.add_study_source( cursor, study_id, "StantonTE+1911+eng+JOUR",   sd.PRIMARY_SOURCE )
 sd.add_study_source( cursor, study_id, "KooEC+1932+eng+THES",     sd.SECONDARY_SOURCE )
 
-approximation_id = sd.add_instrument( cursor, sd.IT_APPROXIMATION, )
+assumption_id = sd.add_instrument( cursor, sd.IT_ASSUMPTION, )
 
 # Velocity method
 #
@@ -238,12 +238,12 @@ with open( globals_filename, "r" ) as globals_file:
             if ( series_number == 1 and point_number == n_points ):
                 current_notes = [center_line_velocity_note]
 
-            sd.set_point_value( cursor, point_id, sd.Q_DISTANCE_FROM_WALL,     distance_from_wall,     )
-            sd.set_point_value( cursor, point_id, sd.Q_OUTER_LAYER_COORDINATE, outer_layer_coordinate, )
-            sd.set_point_value( cursor, point_id, sd.Q_STREAMWISE_COORDINATE,  sd.sdfloat(0.0),        )
-            sd.set_point_value( cursor, point_id, sd.Q_TRANSVERSE_COORDINATE,  r_reversed[i],          )
-            sd.set_point_value( cursor, point_id, sd.Q_SPANWISE_COORDINATE,    sd.sdfloat(0.0),        )
-            sd.set_point_value( cursor, point_id, sd.Q_STREAMWISE_VELOCITY,    u_reversed[i], value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_PITOT_STATIC_TUBE], note_ids=current_notes, )
+            sd.set_point_value( cursor, point_id, sd.Q_DISTANCE_FROM_WALL,     distance_from_wall,                                                                                              )
+            sd.set_point_value( cursor, point_id, sd.Q_OUTER_LAYER_COORDINATE, outer_layer_coordinate,                                                                                          )
+            sd.set_point_value( cursor, point_id, sd.Q_STREAMWISE_COORDINATE,  sd.sdfloat(0.0),                                                                                                 )
+            sd.set_point_value( cursor, point_id, sd.Q_TRANSVERSE_COORDINATE,  r_reversed[i],                                                                                                   )
+            sd.set_point_value( cursor, point_id, sd.Q_SPANWISE_COORDINATE,    sd.sdfloat(0.0),                                                                                                 )
+            sd.set_point_value( cursor, point_id, sd.Q_STREAMWISE_VELOCITY,    u_reversed[i], value_type_id=sd.VT_BOTH_AVERAGES, instrument_ids=[pitot_static_tube_id], note_ids=current_notes, )
 
             for quantity_id in [ sd.Q_TRANSVERSE_VELOCITY,
                                  sd.Q_SPANWISE_VELOCITY, ]:
@@ -253,15 +253,15 @@ with open( globals_filename, "r" ) as globals_file:
                     quantity_id,
                     sd.sdfloat(0.0),
                     value_type_id=sd.VT_BOTH_AVERAGES,
-                    instrument_class_ids=[sd.IT_ASSUMPTION],
+                    instrument_ids=[assumption_id],
                 )
 
             # Assumed constant profiles
-            sd.set_point_value( cursor, point_id, sd.Q_TEMPERATURE,         temperature,         value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_ASSUMPTION], )
-            sd.set_point_value( cursor, point_id, sd.Q_MASS_DENSITY,        mass_density,        value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_ASSUMPTION], )
-            sd.set_point_value( cursor, point_id, sd.Q_KINEMATIC_VISCOSITY, kinematic_viscosity, value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_ASSUMPTION], )
-            sd.set_point_value( cursor, point_id, sd.Q_DYNAMIC_VISCOSITY,   dynamic_viscosity,   value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_ASSUMPTION], )
-            sd.set_point_value( cursor, point_id, sd.Q_SPEED_OF_SOUND,      speed_of_sound,      value_type_id=sd.VT_BOTH_AVERAGES,                                  )
+            sd.set_point_value( cursor, point_id, sd.Q_TEMPERATURE,         temperature,         value_type_id=sd.VT_BOTH_AVERAGES, instrument_ids=[assumption_id], )
+            sd.set_point_value( cursor, point_id, sd.Q_MASS_DENSITY,        mass_density,        value_type_id=sd.VT_BOTH_AVERAGES, instrument_ids=[assumption_id], )
+            sd.set_point_value( cursor, point_id, sd.Q_KINEMATIC_VISCOSITY, kinematic_viscosity, value_type_id=sd.VT_BOTH_AVERAGES, instrument_ids=[assumption_id], )
+            sd.set_point_value( cursor, point_id, sd.Q_DYNAMIC_VISCOSITY,   dynamic_viscosity,   value_type_id=sd.VT_BOTH_AVERAGES, instrument_ids=[assumption_id], )
+            sd.set_point_value( cursor, point_id, sd.Q_SPEED_OF_SOUND,      speed_of_sound,      value_type_id=sd.VT_BOTH_AVERAGES,                                 )
 
             i += 1
 
@@ -275,7 +275,7 @@ with open( globals_filename, "r" ) as globals_file:
                     quantity_id,
                     sd.PL_WALL,
                     sd.sdfloat(0.0),
-                    instrument_class_ids=[sd.IT_ASSUMPTION],
+                    instrument_ids=[assumption_id],
                 )
 
         r_prof, u_prof = sd.get_intersecting_profiles(
@@ -308,10 +308,10 @@ with open( globals_filename, "r" ) as globals_file:
         sd.set_station_value( cursor, station_id, sd.Q_BULK_REYNOLDS_NUMBER,               Re_bulk,                          value_type_id=sd.VT_BOTH_AVERAGES, )
         sd.set_station_value( cursor, station_id, sd.Q_BULK_MACH_NUMBER,                   Ma_bulk,                          value_type_id=sd.VT_BOTH_AVERAGES, )
 
-        sd.set_labeled_value( cursor, station_id, sd.Q_HEAT_FLUX, sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ), value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_ASSUMPTION], )
+        sd.set_labeled_value( cursor, station_id, sd.Q_HEAT_FLUX, sd.PL_WALL, sd.sdfloat( 0.0, 0.0 ), value_type_id=sd.VT_BOTH_AVERAGES, instrument_ids=[assumption_id], )
 
         for quantity_id in sd.INCOMPRESSIBLE_RATIO_PROFILES:
-            sd.set_constant_profile( cursor, station_id, quantity_id, sd.sdfloat( 1.0, 0.0 ), value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_ASSUMPTION], )
+            sd.set_constant_profile( cursor, station_id, quantity_id, sd.sdfloat( 1.0, 0.0 ), value_type_id=sd.VT_BOTH_AVERAGES, instrument_ids=[assumption_id], )
 
         for point_id in sd.get_points_at_station( cursor, station_id ):
             streamwise_velocity = sd.get_point_value( cursor, point_id, sd.Q_STREAMWISE_VELOCITY )

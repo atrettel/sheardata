@@ -732,7 +732,7 @@ def create_value_types_list( value_type_id ):
 
 def set_study_value( cursor, study_id, quantity_id, value,
                      value_type_id=VT_UNAVERAGED_VALUE,
-                     instrument_class_ids=[], instrument_set=PRIMARY_IT_SET,
+                     instrument_ids=[], instrument_set=PRIMARY_IT_SET,
                      fluid_id=F_MIXTURE, corrected=False, outlier=False,
                      note_ids=[] ):
     study_value, study_uncertainty = split_float( value )
@@ -758,12 +758,12 @@ def set_study_value( cursor, study_id, quantity_id, value,
         )
         )
 
-        for instrument_class_id in instrument_class_ids:
+        for instrument_id in instrument_ids:
             cursor.execute(
             """
             INSERT INTO study_values_it( study_id, quantity_id, fluid_id,
                                          value_type_id, instrument_set,
-                                         instrument_class_id )
+                                         instrument_id )
             VALUES( ?, ?, ?, ?, ?, ? );
             """,
             (
@@ -771,8 +771,8 @@ def set_study_value( cursor, study_id, quantity_id, value,
                 str(quantity_id),
                 fluid_id,
                 value_type_id,
-                instrument_set,
-                instrument_class_id,
+                int(instrument_set),
+                int(instrument_id),
             )
             )
 
@@ -933,7 +933,7 @@ def update_series_description( cursor, series_id, series_description ):
 
 def set_series_value( cursor, series_id, quantity_id, value,
                       value_type_id=VT_UNAVERAGED_VALUE,
-                      instrument_class_ids=[], instrument_set=PRIMARY_IT_SET,
+                      instrument_ids=[], instrument_set=PRIMARY_IT_SET,
                       fluid_id=F_MIXTURE, corrected=False, outlier=False,
                       note_ids=[] ):
     series_value, series_uncertainty = split_float( value )
@@ -959,12 +959,12 @@ def set_series_value( cursor, series_id, quantity_id, value,
         )
         )
 
-        for instrument_class_id in instrument_class_ids:
+        for instrument_id in instrument_ids:
             cursor.execute(
             """
             INSERT INTO series_values_it( series_id, quantity_id, fluid_id,
                                           value_type_id, instrument_set,
-                                          instrument_class_id )
+                                          instrument_id )
             VALUES( ?, ?, ?, ?, ?, ? );
             """,
             (
@@ -972,8 +972,8 @@ def set_series_value( cursor, series_id, quantity_id, value,
                 str(quantity_id),
                 fluid_id,
                 value_type_id,
-                instrument_set,
-                instrument_class_id,
+                int(instrument_set),
+                int(instrument_id),
             )
             )
 
@@ -1154,7 +1154,7 @@ def add_station( cursor, flow_class_id, year, study_number, series_number, \
 
 def set_station_value( cursor, station_id, quantity_id, value,
                        value_type_id=VT_UNAVERAGED_VALUE,
-                       instrument_class_ids=[], instrument_set=PRIMARY_IT_SET,
+                       instrument_ids=[], instrument_set=PRIMARY_IT_SET,
                        fluid_id=F_MIXTURE, corrected=False, outlier=False,
                        note_ids=[] ):
     station_value, station_uncertainty = split_float( value )
@@ -1180,12 +1180,12 @@ def set_station_value( cursor, station_id, quantity_id, value,
         )
         )
 
-        for instrument_class_id in instrument_class_ids:
+        for instrument_id in instrument_ids:
             cursor.execute(
             """
             INSERT INTO station_values_it( station_id, quantity_id, fluid_id,
                                            value_type_id, instrument_set,
-                                           instrument_class_id )
+                                           instrument_id )
             VALUES( ?, ?, ?, ?, ?, ? );
             """,
             (
@@ -1193,8 +1193,8 @@ def set_station_value( cursor, station_id, quantity_id, value,
                 str(quantity_id),
                 fluid_id,
                 value_type_id,
-                instrument_set,
-                instrument_class_id,
+                int(instrument_set),
+                int(instrument_id),
             )
             )
 
@@ -1237,7 +1237,7 @@ def get_points_at_station( cursor, station_id ):
 
 def set_constant_profile( cursor, station_id, quantity_id, value,
                           value_type_id=VT_UNAVERAGED_VALUE,
-                          instrument_class_ids=[], instrument_set=PRIMARY_IT_SET,
+                          instrument_ids=[], instrument_set=PRIMARY_IT_SET,
                           corrected=False, outlier=False, note_ids=[] ):
     for point_id in get_points_at_station( cursor, station_id ):
         set_point_value(
@@ -1246,7 +1246,7 @@ def set_constant_profile( cursor, station_id, quantity_id, value,
             quantity_id,
             value,
             value_type_id=value_type_id,
-            instrument_class_ids=instrument_class_ids,
+            instrument_ids=instrument_ids,
             instrument_set=instrument_set,
             corrected=False,
             outlier=outlier,
@@ -1370,7 +1370,7 @@ def add_point( cursor, flow_class_id, year, study_number, series_number,
 
 def set_point_value( cursor, point_id, quantity_id, value,
                      value_type_id=VT_UNAVERAGED_VALUE,
-                     instrument_class_ids=[], instrument_set=PRIMARY_IT_SET,
+                     instrument_ids=[], instrument_set=PRIMARY_IT_SET,
                      fluid_id=F_MIXTURE, corrected=False, outlier=False,
                      note_ids=[] ):
     point_value, point_uncertainty = split_float( value )
@@ -1396,12 +1396,12 @@ def set_point_value( cursor, point_id, quantity_id, value,
         )
         )
 
-        for instrument_class_id in instrument_class_ids:
+        for instrument_id in instrument_ids:
             cursor.execute(
             """
             INSERT INTO point_values_it( point_id, quantity_id, fluid_id,
                                          value_type_id, instrument_set,
-                                         instrument_class_id )
+                                         instrument_id )
             VALUES( ?, ?, ?, ?, ?, ? );
             """,
             (
@@ -1409,8 +1409,8 @@ def set_point_value( cursor, point_id, quantity_id, value,
                 str(quantity_id),
                 fluid_id,
                 value_type_id,
-                instrument_set,
-                instrument_class_id,
+                int(instrument_set),
+                int(instrument_id),
             )
             )
 
@@ -1613,7 +1613,7 @@ def locate_labeled_point( cursor, station_id, point_label_id ):
 
 def set_labeled_value( cursor, station_id, quantity_id, point_label_id, value,
                        value_type_id=VT_UNAVERAGED_VALUE,
-                       instrument_class_ids=[], instrument_set=PRIMARY_IT_SET,
+                       instrument_ids=[], instrument_set=PRIMARY_IT_SET,
                        corrected=False, outlier=False, note_ids=[] ):
     set_point_value(
         cursor,
@@ -1621,7 +1621,7 @@ def set_labeled_value( cursor, station_id, quantity_id, point_label_id, value,
         quantity_id,
         value,
         value_type_id=value_type_id,
-        instrument_class_ids=instrument_class_ids,
+        instrument_ids=instrument_ids,
         instrument_set=instrument_set,
         corrected=corrected,
         outlier=outlier,
