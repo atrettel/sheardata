@@ -1641,14 +1641,15 @@ def get_labeled_value( cursor, station_id, quantity_id, point_label_id,
         instrument_set=1,
     )
 
-def add_instrument( cursor, instrument_class_id ):
+def add_instrument( cursor, instrument_class_id, instrument_name=None ):
     cursor.execute(
     """
-    INSERT INTO instruments( instrument_class_id )
-    VALUES( ? );
+    INSERT INTO instruments( instrument_class_id, instrument_name )
+    VALUES( ?, ? );
     """,
     (
         str(instrument_class_id),
+        instrument_name,
     )
     )
 

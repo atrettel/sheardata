@@ -1370,6 +1370,7 @@ cursor.execute(
 CREATE TABLE instruments (
     instrument_id       INTEGER PRIMARY KEY AUTOINCREMENT CHECK ( instrument_id > 0 ),
     instrument_class_id TEXT NOT NULL,
+    instrument_name     TEXT DEFAULT NULL,
     FOREIGN KEY(instrument_class_id) REFERENCES instrument_classes(instrument_class_id)
 );
 """
