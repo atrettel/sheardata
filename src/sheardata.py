@@ -1641,7 +1641,8 @@ def get_labeled_value( cursor, station_id, quantity_id, point_label_id,
         instrument_set=1,
     )
 
-def add_instrument( cursor, instrument_class_id, instrument_name=None ):
+def add_instrument( cursor, instrument_class_id, instrument_name=None,
+                    note_ids=[] ):
     cursor.execute(
     """
     INSERT INTO instruments( instrument_class_id, instrument_name )
@@ -1658,7 +1659,55 @@ def add_instrument( cursor, instrument_class_id, instrument_name=None ):
     SELECT last_insert_rowid();
     """
     )
-    return int(cursor.fetchone()[0])
+    instrument_id = int(cursor.fetchone()[0])
+
+    for note_id in note_ids:
+        cursor.execute(
+        """
+        INSERT INTO instrument_notes( instrument_id, note_id )
+        VALUES( ?, ? );
+        """,
+        (
+            int(instrument_id),
+            int(note_id),
+        )
+        )
+
+    return instrument_id
+
+def set_instrument_value( cursor, instrument_id, quantity_id, value,
+                          value_type_id=VT_UNAVERAGED_VALUE, note_ids=[] ):
+    instrument_value, instrument_uncertainty = split_float( value )
+    for value_type_id in create_value_types_list( value_type_id ):
+        cursor.execute(
+        """
+        INSERT INTO instrument_values( instrument_id, quantity_id, value_type_id,
+                                       instrument_value, instrument_uncertainty )
+        VALUES( ?, ?, ?, ?, ? );
+        """,
+        (
+            int(instrument_id),
+            str(quantity_id),
+            value_type_id,
+            instrument_value,
+            instrument_uncertainty,
+        )
+        )
+
+        for note_id in note_ids:
+            cursor.execute(
+            """
+            INSERT INTO instrument_value_notes( instrument_id, quantity_id,
+                                                value_type_id, note_id )
+            VALUES( ?, ?, ?, ? );
+            """,
+            (
+                int(instrument_id),
+                str(quantity_id),
+                value_type_id,
+                int(note_id),
+            )
+            )
 
 def integrate_using_trapezoid_rule( x, f, F0=sdfloat(0.0,0.0) ):
     F = F0
