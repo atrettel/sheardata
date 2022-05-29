@@ -49,6 +49,10 @@ assumption_id       = sd.add_instrument( cursor, sd.IT_ASSUMPTION,       )
 weighing_method_id  = sd.add_instrument( cursor, sd.IT_WEIGHING_METHOD,  )
 momentum_balance_id = sd.add_instrument( cursor, sd.IT_MOMENTUM_BALANCE, )
 
+# p. 107
+distance_between_pressure_taps = sd.sdfloat( 0.780e-2 )
+sd.set_instrument_value( cursor, momentum_balance_id, sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS, distance_between_pressure_taps, )
+
 n   = 0
 SSE = 0.0
 series_filename = "../data/{:s}/series.csv".format( study_id, )
@@ -85,9 +89,8 @@ with open( globals_filename, "r" ) as globals_file:
         series_number += 1
 
         # p. 107
-        width                          = sd.sdfloat( 2.540e-2 )
-        development_length             = sd.sdfloat( 0.100e-2 )
-        distance_between_pressure_taps = sd.sdfloat( 0.780e-2 )
+        width              = sd.sdfloat( 2.540e-2 )
+        development_length = sd.sdfloat( 0.100e-2 )
 
         # p. 107
         #
@@ -194,8 +197,6 @@ with open( globals_filename, "r" ) as globals_file:
             series_id,
             sd.GM_RECTANGULAR
         )
-
-        sd.set_series_value( cursor, series_id, sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS, distance_between_pressure_taps, )
 
         station_number = 1
         station_id = sd.add_station(

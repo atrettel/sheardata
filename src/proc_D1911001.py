@@ -62,7 +62,7 @@ with open( globals_filename, "r" ) as globals_file:
         # The arrangement of one of the experimental pipes and the air fan used
         # to set up the current is shown in fig. I. The air fan discharges into
         # a horizontal pipe 3.5 metres in length.  This pipe is connected by a
-        # bendto a vertical pipe 5.5 metres high.  The experimental portion, 61
+        # bend to a vertical pipe 5.5 metres high.  The experimental portion, 61
         # cm. long, is at the upper extremity of the vertical pipe.
         # \end{quote}
         #
@@ -70,8 +70,7 @@ with open( globals_filename, "r" ) as globals_file:
         # in length.  Assume that the development section is the
         # difference between the quoted measurements and that the precision of
         # the value in the figure is too low.
-        distance_between_pressure_taps = sd.sdfloat(61.0e-2)
-        development_length             = sd.sdfloat(5.5) - distance_between_pressure_taps
+        development_length             = sd.sdfloat(5.5) - sd.sdfloat(61.0e-2)
         outer_layer_development_length = development_length / diameter
 
         # The rough pipe measurements are in the fully-rough regime.
@@ -98,8 +97,6 @@ with open( globals_filename, "r" ) as globals_file:
             number_of_dimensions=2,
             coordinate_system_id=sd.CS_CYLINDRICAL,
         )
-
-        sd.set_series_value( cursor, series_id, sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS, distance_between_pressure_taps, )
 
         # Working fluid
         #
