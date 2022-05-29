@@ -1844,6 +1844,66 @@ CREATE TABLE point_value_notes (
 """
 )
 
+# Notes for facilities
+cursor.execute(
+"""
+CREATE TABLE facility_notes (
+    facility_id TEXT NOT NULL,
+    note_id     INTEGER NOT NULL CHECK ( note_id > 0 ),
+    PRIMARY KEY(facility_id, note_id),
+    FOREIGN KEY(facility_id) REFERENCES facilities(facility_id),
+    FOREIGN KEY(note_id)     REFERENCES notes(note_id)
+);
+"""
+)
+
+# Notes for facility values
+cursor.execute(
+"""
+CREATE TABLE facility_value_notes (
+    facility_id   TEXT NOT NULL,
+    quantity_id   TEXT NOT NULL,
+    value_type_id TEXT NOT NULL,
+    note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
+    PRIMARY KEY(facility_id, quantity_id, value_type_id, note_id),
+    FOREIGN KEY(facility_id)   REFERENCES facilities(facility_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
+    FOREIGN KEY(note_id)       REFERENCES notes(note_id)
+);
+"""
+)
+
+# Notes for instruments
+cursor.execute(
+"""
+CREATE TABLE instrument_notes (
+    instrument_id TEXT NOT NULL,
+    note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
+    PRIMARY KEY(instrument_id, note_id),
+    FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id),
+    FOREIGN KEY(note_id)       REFERENCES notes(note_id)
+);
+"""
+)
+
+# Notes for instrument values
+cursor.execute(
+"""
+CREATE TABLE instrument_value_notes (
+    instrument_id TEXT NOT NULL,
+    quantity_id   TEXT NOT NULL,
+    value_type_id TEXT NOT NULL,
+    note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
+    PRIMARY KEY(instrument_id, quantity_id, value_type_id, note_id),
+    FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
+    FOREIGN KEY(note_id)       REFERENCES notes(note_id)
+);
+"""
+)
+
 # Compilations
 cursor.execute(
 """
