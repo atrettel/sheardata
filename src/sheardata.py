@@ -212,17 +212,6 @@ PL_UPPER = [ PL_UPPER_EDGE, PL_UPPER_WALL ]
 PL_LOWER_UPPER = [ PL_LOWER_EDGE, PL_LOWER_WALL,
                    PL_UPPER_EDGE, PL_UPPER_WALL, ]
 
-# Quantities, facility
-Q_RUN_TIME                   = "t_run"
-Q_SPATIAL_ORDER_OF_ACCURACY  = "OOA_x"
-Q_TEMPORAL_ORDER_OF_ACCURACY = "OOA_t"
-Q_TEST_SECTION_HEIGHT        = "h_ts"
-Q_TEST_SECTION_LENGTH        = "L_ts"
-Q_TEST_SECTION_WIDTH         = "w_ts"
-
-# Quantities, instrument
-Q_PROBE_INTERNAL_DIAMETER    = "d_pi"
-
 # Quantities, series
 Q_ANGLE_OF_ATTACK                = "AOA"
 Q_BODY_HEIGHT                    = "h_b"
@@ -233,7 +222,6 @@ Q_BODY_STROUHAL_NUMBER           = "Sr"
 Q_BODY_VOLUME                    = "V_b"
 Q_BODY_WETTED_SURFACE_AREA       = "A_s"
 Q_BODY_WIDTH                     = "w_b"
-Q_DISTANCE_BETWEEN_PRESSURE_TAPS = "L_p"
 Q_DRAG_COEFFICIENT               = "C_D"
 Q_DRAG_FORCE                     = "F_D"
 Q_FREESTREAM_MACH_NUMBER         = "Ma_inf"
@@ -251,7 +239,6 @@ Q_STREAMWISE_NUMBER_OF_POINTS    = "N_{:s}".format(STREAMWISE_COORDINATE_SYMBOL)
 Q_TEST_LENGTH                    = "L_t"
 Q_TRANSVERSE_NUMBER_OF_POINTS    = "N_{:s}".format(TRANSVERSE_COORDINATE_SYMBOL)
 Q_VOLUMETRIC_FLOW_RATE           = "Vdot"
-
 
 Q_BODY_DIMENSIONS = {
     D_STREAMWISE: Q_BODY_LENGTH,
@@ -491,6 +478,20 @@ INCOMPRESSIBLE_RATIO_PROFILES = [
     Q_LOCAL_TO_WALL_MASS_DENSITY_RATIO,
     Q_LOCAL_TO_WALL_TEMPERATURE_RATIO,
 ]
+
+# Quantities, facility
+Q_RUN_TIME                   = "t_run"
+Q_SPATIAL_ORDER_OF_ACCURACY  = "O_x"
+Q_TEMPORAL_ORDER_OF_ACCURACY = "O_t"
+Q_TEST_SECTION_HEIGHT        = "h_ts"
+Q_TEST_SECTION_LENGTH        = "L_ts"
+Q_TEST_SECTION_WIDTH         = "w_ts"
+
+# Quantities, instrument
+Q_DISTANCE_BETWEEN_PRESSURE_TAPS = "L_p"
+Q_ORDER_OF_APPROXIMATION         = "O_a"
+Q_PROBE_INNER_DIAMETER           = "d_pi"
+Q_PROBE_OUTER_DIAMETER           = "d_po"
 
 # Study types
 ST_DIRECT_NUMERICAL_SIMULATION = "DNS"

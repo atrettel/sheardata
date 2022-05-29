@@ -746,7 +746,6 @@ quantities.append( Quantity( sd.Q_BODY_STROUHAL_NUMBER,           "body Strouhal
 quantities.append( Quantity( sd.Q_BODY_VOLUME,                    "body volume",                                             length_exponent=+3.0,                                                minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_BODY_WETTED_SURFACE_AREA,       "body wetted surface area",                                length_exponent=+2.0,                                                minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_BODY_WIDTH,                     "body width",                                              length_exponent=+1.0,                                                minimum_value=0.0, ) )
-quantities.append( Quantity( sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS, "distance between pressure taps",                          length_exponent=+1.0,                                                minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_DRAG_COEFFICIENT,               "drag coefficient",                                                                                                                                ) )
 quantities.append( Quantity( sd.Q_DRAG_FORCE,                     "drag force",                          time_exponent=-2.0, length_exponent=+1.0, mass_exponent=+1.0,                                               ) )
 quantities.append( Quantity( sd.Q_FREESTREAM_MACH_NUMBER,         "freestream Mach number",                                                                                                       minimum_value=0.0, ) )
@@ -954,10 +953,13 @@ quantities.append( Quantity( sd.Q_TEST_SECTION_HEIGHT,        "test-section heig
 quantities.append( Quantity( sd.Q_TEST_SECTION_LENGTH,        "test-section length",        length_exponent=+1.0, minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_TEST_SECTION_WIDTH,         "test-section width",         length_exponent=+1.0, minimum_value=0.0, ) )
 
-# Quantities, facility
+# Quantities, instrument
 #
 # TODO: Come up with more, or just create them as needed incrementally.
-quantities.append( Quantity( sd.Q_PROBE_INTERNAL_DIAMETER, "probe internal diameter", length_exponent=+1.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS, "distance between pressure taps", length_exponent=+1.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_ORDER_OF_APPROXIMATION,         "order of approximation",                               minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_PROBE_INNER_DIAMETER,           "probe inner diameter",           length_exponent=+1.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_PROBE_OUTER_DIAMETER,           "probe outer diameter",           length_exponent=+1.0, minimum_value=0.0, ) )
 
 for quantity in quantities:
     quantity.execute_query()
@@ -1007,7 +1009,6 @@ define_quantity_symbol( sd.Q_BODY_STROUHAL_NUMBER,           sd.VT_UNAVERAGED_VA
 define_quantity_symbol( sd.Q_BODY_VOLUME,                    sd.VT_UNAVERAGED_VALUE, r"V_b",                                               )
 define_quantity_symbol( sd.Q_BODY_WETTED_SURFACE_AREA,       sd.VT_UNAVERAGED_VALUE, r"A_s",                                               )
 define_quantity_symbol( sd.Q_BODY_WIDTH,                     sd.VT_UNAVERAGED_VALUE, r"w_b",                                               )
-define_quantity_symbol( sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS, sd.VT_UNAVERAGED_VALUE, r"\ell_p",                                            )
 define_quantity_symbol( sd.Q_DRAG_COEFFICIENT,               sd.VT_UNAVERAGED_VALUE, r"C_D",                                               )
 define_quantity_symbol( sd.Q_DRAG_FORCE,                     sd.VT_UNAVERAGED_VALUE, r"F_D",                                               )
 define_quantity_symbol( sd.Q_FREESTREAM_MACH_NUMBER,         sd.VT_UNAVERAGED_VALUE, r"\mathrm{Ma}_\infty",                                )
@@ -1196,6 +1197,12 @@ define_quantity_symbol( sd.Q_TEMPORAL_ORDER_OF_ACCURACY, sd.VT_UNAVERAGED_VALUE,
 define_quantity_symbol( sd.Q_TEST_SECTION_HEIGHT,        sd.VT_UNAVERAGED_VALUE, r"h_\mathrm{ts}",    )
 define_quantity_symbol( sd.Q_TEST_SECTION_LENGTH,        sd.VT_UNAVERAGED_VALUE, r"\ell_\mathrm{ts}", )
 define_quantity_symbol( sd.Q_TEST_SECTION_WIDTH,         sd.VT_UNAVERAGED_VALUE, r"w_\mathrm{ts}",    )
+
+# Quantities, instrument
+define_quantity_symbol( sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS, sd.VT_UNAVERAGED_VALUE, r"\ell_p",         )
+define_quantity_symbol( sd.Q_ORDER_OF_APPROXIMATION,         sd.VT_UNAVERAGED_VALUE, r"O_a",            )
+define_quantity_symbol( sd.Q_PROBE_INNER_DIAMETER,        sd.VT_UNAVERAGED_VALUE, r"d_\mathrm{p,i}", )
+define_quantity_symbol( sd.Q_PROBE_OUTER_DIAMETER,        sd.VT_UNAVERAGED_VALUE, r"d_\mathrm{p,i}", )
 
 
 # Fluid property values
