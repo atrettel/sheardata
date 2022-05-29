@@ -1709,6 +1709,41 @@ def set_instrument_value( cursor, instrument_id, quantity_id, value,
             )
             )
 
+def get_instrument_value( cursor, instrument_id, quantity_id,
+                          value_type_id=VT_ANY_AVERAGE, ):
+    final_value_type_id = value_type_id
+    if ( value_type_id == VT_ANY_AVERAGE ):
+        cursor.execute(
+        """
+        SELECT value_type_id
+        FROM instrument_values
+        WHERE instrument_id=? AND quantity_id=?;
+        """,
+        (
+            int(instrument_id),
+            str(quantity_id),
+        )
+        )
+        results = cursor.fetchall()
+        value_type_ids = []
+        for result in results:
+            value_type_ids.append( str(result[0]) )
+        final_value_type_id = pick_any_average_value_type( value_type_ids )
+
+    cursor.execute(
+    """
+    SELECT instrument_value, instrument_uncertainty
+    FROM instrument_values
+    WHERE instrument_id=? AND quantity_id=? AND value_type_id=?;
+    """,
+    (
+        int(instrument_id),
+        str(quantity_id),
+        final_value_type_id,
+    )
+    )
+    return fetch_float( cursor )
+
 def integrate_using_trapezoid_rule( x, f, F0=sdfloat(0.0,0.0) ):
     F = F0
     for i in range(len(x)-1):
