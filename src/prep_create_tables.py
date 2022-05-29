@@ -555,7 +555,6 @@ instrument_classes.append( InstrumentClass( sd.IT_VELOCITY_PROFILE_METHOD,      
 instrument_classes.append( InstrumentClass( sd.IT_VISCOUS_SUBLAYER_SLOPE_METHOD,            "viscous sublayer slope method",            sd.IT_VELOCITY_PROFILE_METHOD,                      ) )
 instrument_classes.append( InstrumentClass( sd.IT_WALL_SHEAR_STRESS_METHOD,                 "wall shear stress method",                 sd.IT_OBSERVATION,                                  ) )
 instrument_classes.append( InstrumentClass( sd.IT_WEIGHING_METHOD,                          "weighing method",                          sd.IT_FLOW_RATE_MEASUREMENT,                        ) )
-instrument_classes.append( InstrumentClass( sd.IT_ZEROTH_ORDER_APPROXIMATION,               "zeroth-order approximation",               sd.IT_APPROXIMATION,                                ) )
 
 for instrument_class in instrument_classes:
     instrument_class.execute_query()

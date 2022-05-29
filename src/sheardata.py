@@ -184,7 +184,6 @@ IT_VELOCITY_PROFILE_METHOD                  = "TVP"
 IT_VISCOUS_SUBLAYER_SLOPE_METHOD            = "TVS"
 IT_WALL_SHEAR_STRESS_METHOD                 = "TWL"
 IT_WEIGHING_METHOD                          = "QWM"
-IT_ZEROTH_ORDER_APPROXIMATION               = "AP0"
 
 PRIMARY_IT_SET = 1
 
