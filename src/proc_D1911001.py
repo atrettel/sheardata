@@ -29,6 +29,19 @@ study_id = sd.add_study(
 sd.add_study_source( cursor, study_id, "StantonTE+1911+eng+JOUR",   sd.PRIMARY_SOURCE )
 sd.add_study_source( cursor, study_id, "KooEC+1932+eng+THES",     sd.SECONDARY_SOURCE )
 
+approximation_id = sd.add_instrument( cursor, sd.IT_APPROXIMATION, )
+
+# Velocity method
+#
+# p. 367
+#
+# \begin{quote}
+# The values of $v$ where determined from the difference between the pressure
+# in a small Pitot tube facing the current and that in a small orifice in the
+# side of the pipe.
+# \end{quote}
+pitot_static_tube_id = sd.add_instrument( cursor, sd.IT_PITOT_STATIC_TUBE, )
+
 center_line_velocity_note = sd.add_note(
     cursor,
     "../data/{:s}/note_series_1_center_line_velocity.tex".format( study_id ),
@@ -221,17 +234,6 @@ with open( globals_filename, "r" ) as globals_file:
             distance_from_wall = 0.5 * diameter - r_reversed[i]
             outer_layer_coordinate = 2.0 * distance_from_wall / diameter
 
-            # Velocity method
-            #
-            # p. 367
-            #
-            # \begin{quote}
-            # The values of $v$ where determined from the difference between
-            # the pressure in a small Pitot tube facing the current and that in
-            # a small orifice in the side of the pipe.
-            # \end{quote}
-            mt_velocity = sd.IT_PITOT_STATIC_TUBE
-
             current_notes = []
             if ( series_number == 1 and point_number == n_points ):
                 current_notes = [center_line_velocity_note]
@@ -241,7 +243,7 @@ with open( globals_filename, "r" ) as globals_file:
             sd.set_point_value( cursor, point_id, sd.Q_STREAMWISE_COORDINATE,  sd.sdfloat(0.0),        )
             sd.set_point_value( cursor, point_id, sd.Q_TRANSVERSE_COORDINATE,  r_reversed[i],          )
             sd.set_point_value( cursor, point_id, sd.Q_SPANWISE_COORDINATE,    sd.sdfloat(0.0),        )
-            sd.set_point_value( cursor, point_id, sd.Q_STREAMWISE_VELOCITY,    u_reversed[i], value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[mt_velocity], note_ids=current_notes, )
+            sd.set_point_value( cursor, point_id, sd.Q_STREAMWISE_VELOCITY,    u_reversed[i], value_type_id=sd.VT_BOTH_AVERAGES, instrument_class_ids=[sd.IT_PITOT_STATIC_TUBE], note_ids=current_notes, )
 
             for quantity_id in [ sd.Q_TRANSVERSE_VELOCITY,
                                  sd.Q_SPANWISE_VELOCITY, ]:
