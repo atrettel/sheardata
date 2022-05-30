@@ -1397,12 +1397,30 @@ CREATE TABLE study_sources (
 )
 
 # Facility sources
-#
-# TODO: Add this table.
+cursor.execute(
+"""
+CREATE TABLE facility_sources (
+    facility_id           TEXT NOT NULL,
+    citation_key          TEXT NOT NULL,
+    source_classification INTEGER NOT NULL DEFAULT 1 CHECK ( source_classification = 1 OR source_classification = 2 ),
+    PRIMARY KEY(facility_id, citation_key),
+    FOREIGN KEY(facility_id) REFERENCES facilities(facility_id)
+);
+"""
+)
 
 # Instrument sources
-#
-# TODO: Add this table.
+cursor.execute(
+"""
+CREATE TABLE instrument_sources (
+    instrument_id         TEXT NOT NULL,
+    citation_key          TEXT NOT NULL,
+    source_classification INTEGER NOT NULL DEFAULT 1 CHECK ( source_classification = 1 OR source_classification = 2 ),
+    PRIMARY KEY(instrument_id, citation_key),
+    FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id)
+);
+"""
+)
 
 # Components
 #

@@ -1753,6 +1753,19 @@ def get_facility_value( cursor, facility_id, quantity_id,
     )
     return fetch_float( cursor )
 
+def add_facility_source( cursor, facility_id, citation_key, source_classification ):
+    cursor.execute(
+    """
+    INSERT INTO facility_sources( facility_id, citation_key, source_classification )
+    VALUES( ?, ?, ? );
+    """,
+    (
+        int(facility_id),
+        str(citation_key),
+        int(source_classification),
+    )
+    )
+
 def add_instrument( cursor, instrument_class_id, instrument_name=None,
                     note_ids=[] ):
     cursor.execute(
@@ -1855,6 +1868,19 @@ def get_instrument_value( cursor, instrument_id, quantity_id,
     )
     )
     return fetch_float( cursor )
+
+def add_instrument_source( cursor, instrument_id, citation_key, source_classification ):
+    cursor.execute(
+    """
+    INSERT INTO instrument_sources( instrument_id, citation_key, source_classification )
+    VALUES( ?, ?, ? );
+    """,
+    (
+        int(instrument_id),
+        str(citation_key),
+        int(source_classification),
+    )
+    )
 
 def integrate_using_trapezoid_rule( x, f, F0=sdfloat(0.0,0.0) ):
     F = F0
