@@ -38,7 +38,7 @@ def create_instruments_tree( parent ):
         tree += r"\end{itemize}"+"\n"
     return tree
 
-with open( "list-instruments.tex.tmp", "w" ) as f:
+with open( "list-instrument-classification.tex.tmp", "w" ) as f:
     f.write( create_instruments_tree( sd.IT_ROOT ) )
 
 conn.commit()

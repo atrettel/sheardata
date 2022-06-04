@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (C) 2022 Andrew Trettel
+# Copyright (C) 2020-2021 Andrew Trettel
 #
 # SPDX-License-Identifier: MIT
 
@@ -12,14 +12,14 @@ conn   = sqlite3.connect( sys.argv[1] )
 cursor = conn.cursor()
 cursor.execute( "PRAGMA foreign_keys = ON;" )
 
-with open( "list-facility-classes.tex.tmp", "w" ) as f:
+with open( "list-flow-classification.tex.tmp", "w" ) as f:
     f.write( r"\begin{itemize}"+"\n" )
 
     cursor.execute(
     """
-    SELECT facility_class_id, facility_class_name
-    FROM facility_classes
-    ORDER BY facility_class_id;
+    SELECT flow_class_id, flow_class_name
+    FROM flow_classes
+    ORDER BY flow_class_id;
     """
     )
     for result in cursor.fetchall():
