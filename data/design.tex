@@ -21,6 +21,67 @@ knowledge, to inform new directions for research.  Lastly, the database would
 be valuable for the validation of new theories and numerical codes.
 
 
+\section{Design goals}
+
+\begin{itemize}
+
+\item The database MUST use SQLite as the database backend.  The primary goal
+here is to ensure that it is possible to use SQL commands to select and find
+data.  The secondary goal is to emphasize achival quality and long-term access
+to the data.  SQLite acts as an open standard that should be supported for
+decades.
+
+\item The database MUST include some form of uncertainty quantification (at
+least standard uncertainties).
+
+\item The database MUST store the data as generic records, with each data point
+in a flow merely being a record in a particular table depending on the category
+of the data.  This choice contrasts with a more typical ``spreadsheet''-style
+design, which creates new columns for each relevant quantity or averaging
+system.  This choice offers much more flexiblity, since it allows for
+scalability, since the database can then support the addition of many different
+quantities and averaging systems without having to change the database schema.
+
+\item Similarly, the database SHOULD data over structure, since data is mutable
+(or at least more easily mutable).  It is important to realize that much of
+what can be considered ``structure'' here really is ``data''.  For example, a
+quantity is not just a column name or some hard-coded location for certain
+types of data.  It is data itself, with associated bounds, symbols, and
+definitions.
+
+\item The database SHOULD group flow data into 4 main categories:
+
+    \begin{enumerate}
+
+    \item study data (data that applies to an entire case or study),
+
+    \item series data (data that applies to a series of profiles, like drag
+    coefficients, etc.),
+
+    \item station data (data that applies to a single profile, like the
+    momentum thickness), and
+
+    \item point data (data that applies to a single point in a flow, like the
+    local unweighted averaged velocity).
+
+    \end{enumerate}
+
+\item The database SHOULD eliminate redundancy in the tables as much as
+possible.  Each data point SHOULD have one and only one location.  The goal
+here is to reduce or possibly eliminate any potential contradictions in the
+data.  Database normalization practices help achieve this goal.
+
+\item Similarly, the database MUST validate the data.  SQL \texttt{CHECK}
+contraints and assertions in any Python code are only a start.
+
+\item The database MUST include any supplemental data that may affect the flow
+results.  This supplemental data includes information about the experimental or
+numerical facilities, the instrumentation or methods used to measure or
+calculate values, and any relevant literature sources or documentation.
+
+\end{itemize}
+
+
 \section{Database organization}
 
 Unlike previous databases, this database does not store data as profiles or as
@@ -60,70 +121,4 @@ the identifiers are systematic: the point identifier specifies the study,
 series, and station it belongs to.
 
 The flow classes are described in an appendix.
-
-
-\section{Design goals}
-
-\begin{itemize}
-
-\item
-
-Use SQLite as the database backend.  The goal here is to ensure that it
-is possible to use SQL commands to select and find data.
-
-The identifiers are intentionally simple and systematic so that it is possible
-to extract information about profiles from the points (and in other
-combinations).
-
-\item
-
-Use the Python package called \texttt{uncertainties} to handle uncertainties.
-The uncertainties will be standard uncertainties (standard deviations of the
-distribution of ``reasonable'' values from the measurements).
-
-\item
-
-Store the data as generic records.  This means that each data point in a flow
-is merely a record in a particular table depending on its type.  This design is
-flexible; it can store different data for the same variable easily, including
-data for different averaging systems and measurement techniques.
-
-Group data into 4 main categories:
-
-    \begin{enumerate}
-
-    \item Study data (data that applies to an entire study).
-
-    \item Series data (data that applies to a series of profiles, like drag
-    coefficients, etc.).
-
-    \item Station data (data that applies to a single profile, like the
-    momentum thickness)
-
-    \item Point data (data that applies to a single point in a flow, like the
-    local unweighted averaged velocity)
-
-    \end{enumerate}
-
-\item Eliminate redundancy in the tables.  Each data point MUST have one and
-only one location.
-
-Remember that at least some of the ``structure'' here really is ``data''.
-Prefer data over structure, since data is mutable (or at least more easily
-mutable).
-
-Specifying the measurement techniques allows for all assumptions underlying
-that data to be specified as well for each record in the database.
-
-\item
-
-Use assertions and other checks on the data.
-
-\item
-
-Include additional fields for commentary (likely editorial commentary).  Also
-include additional fields for the people involved, the facilities involved, the
-organizations involved, locations of any experiments, and any contract numbers.
-
-\end{itemize}
 
