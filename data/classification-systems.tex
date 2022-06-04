@@ -5,7 +5,7 @@
 
 \section{Flow classification}
 
-\input{list-flow-classes.tex.tmp}
+\input{list-flow-classification.tex.tmp}
 
 \begin{figure}
     \centering
@@ -143,7 +143,7 @@ exclusively by the presence of additional physics.
 
 \section{Facility classification}
 
-\input{list-facility-classes.tex.tmp}
+\input{list-facility-classification.tex.tmp}
 
 \begin{figure}
     \centering
@@ -151,4 +151,21 @@ exclusively by the presence of additional physics.
     \caption{Tree diagram of facility classification system using codes for the
     facility classes}
 \end{figure}
+
+
+\section{Instruments and methods}
+
+The database stores instruments and methods to gather data (experimental
+measurement techniques or numerical methods) in a classification scheme to
+allow researchers the option to select entire classes of instruments easily.
+For example, using the classification, it is possible to form SQL queries to
+find all hot wire measurements without specifying the type of hot wire
+measurement (constant-current or constant-temperature).
+
+That said, the current classification scheme is both ad hoc and temporary.  I
+would prefer an existing standard but have been unable to find one fit for this
+purpose.  Researchers should be warned that the current scheme may change over
+time.
+
+\input{list-instrument-classification.tex.tmp}
 
