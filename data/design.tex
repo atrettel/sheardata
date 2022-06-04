@@ -36,11 +36,12 @@ least standard uncertainties).
 
 \item The database MUST store the data as generic records with identifiers,
 with each data point in a flow merely being a record in a particular table
-depending on the category of the data.  This choice contrasts with a
-``spreadsheet''-style design, with separate columns for each relevant quantity
-or averaging system.  This choice offers much more flexiblity, since it allows
-for scalability.  The database can then support the addition of many different
-quantities and averaging systems without having to change the database schema.
+depending on the category of the data.  This choice keeps the database scheme
+static and it differs with a ``spreadsheet''-style design, with separate
+columns for each relevant quantity or averaging system.  This choice offers
+much more flexiblity, since it allows for scalability.  The database can then
+support the addition of many different quantities and averaging systems without
+having to change the database schema.
 
 \item Similarly, the database SHOULD data over structure, since data is mutable
 (or at least more easily mutable).  It is important to realize that much of
@@ -67,9 +68,18 @@ definitions.
     \end{enumerate}
 
 \item The database SHOULD eliminate redundancy in the tables as much as
-possible.  Each data point SHOULD have one and only one location.  The goal
-here is to reduce or possibly eliminate any potential contradictions in the
-data.  Database normalization practices help achieve this goal.
+possible.  Each data point SHOULD have one and only one location whenever
+possible.  The goal here is to reduce or possibly eliminate any potential
+contradictions in the data.  Database normalization practices help achieve this
+goal.
+
+Note that there is some difficulty in achieving the goal absolutely.  For
+example, the database can include both mass density and specific volume, and it
+is possible that the corresponding entries may not be inverses, though this can
+be checked.  Also, for some flow types, like Couette flow, the flow
+classification scheme offers some redundancy, since the flow class already
+specifies the wall velocity and therefore the flow classification itself offers
+redundant information.
 
 \item Similarly, the database MUST validate the data.  SQL \texttt{CHECK}
 contraints and assertions in any Python code are only a start.
@@ -82,8 +92,13 @@ calculate values, and any relevant literature sources or documentation.
 \end{itemize}
 
 
-
 \section{Low-level details}
+
+As discussed above, the database does not represent the data as it would appear
+in a spreadsheet or CSV file, where each column represents a different
+quantity.  Instead, the database presents the data as a series of ``records'',
+with the number of columns being static.  A different column identifies the
+quantity being used for a given record.
 
 \begin{table}[p]
     \centering
@@ -98,6 +113,7 @@ calculate values, and any relevant literature sources or documentation.
                          6 &        5.0 &        1.0
     \end{tabular}
     \caption{Flow data presented as a spreadsheet}
+    \label{tab:flow-data-spreadsheet}
 \end{table}
 
 \begin{table}[p]
@@ -119,9 +135,17 @@ calculate values, and any relevant literature sources or documentation.
                          6 & \texttt{U}            &                   1.0
     \end{tabular}
     \caption{Flow data presented as records}
+    \label{tab:flow-data-records}
 \end{table}
 
-
+Table \ref{tab:flow-data-spreadsheet} depicts some made-up shear flow data as a
+spreadsheet and table \ref{tab:flow-data-records} depicts the same data as a
+series of records.  Admitted, the spreadsheet-like representation is more
+compact and easier to read --- especially since so much data in fluid dynamics
+is represented in a columnar manner, including profile data --- but the
+record-like representation is scalable and more flexible.  It is also possible
+to recover a spreadsheet-like representation using the following SQL query:
+%
 \begin{lstlisting}[language=SQL]
 SELECT y.point_id, y.point_value, u.point_value
 FROM (
@@ -136,6 +160,37 @@ FROM (
 WHERE y.point_id = u.point_id
 ORDER BY y.point_id;
 \end{lstlisting}
+
+The scalability problem emerges when attempting to add additional data.
+Suppose that additional temperature data is also available.  Adding this data
+to the database is simple in both cases, though the different operations made
+have different costs.  In the spreadsheet-like representation, only another
+column must be added.  In the record-like representation, only some additional
+entries must be added.  However, adding columns is a more difficult operation
+than adding entries.  Now consider having to differentiate between unaveraged
+values, averaged values, and density-weighted averaged values for \texttt{y}
+and \texttt{U}.  That addition would require many additional columns in a
+spreadsheet-like representation but only one more column in the record-like
+representation.  Lastly, consider keeping track of what instrument was used to
+measure each value and for each averaging system.  For the spreadsheet-like
+record, this requires doubling the number of columns, but for the record-like
+representation it requires only adding more one column.  Therefore a
+record-like representation scales better: it is easier to re-factor and
+maintain as the database grows, the requirements change, or the granularity of
+the data increases.
+
+The flexibility problem emerges when there are missing values.  Consider, for
+example, that the temperature and velocity are not measured at the same points.
+For the spreadsheet-like representation, there would need to be many null
+values added, but for the record-like representation, there would be no null
+values needed, since only the existence of data needs to be recorded, not its
+absense.
+
+Lastly, the record-like representation allows for additional parameters for a
+given quantity, like its bounds, to be data in the database itself, rather than
+hardcoded as SQL \texttt{CHECK} constraints.  This choice makes more data
+available to the user, in other words, and allows these values to be changed
+without changing the database schema.
 
 
 \section{Database organization}
