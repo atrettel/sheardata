@@ -41,6 +41,33 @@
 ]{biblatex}
 \addbibresource{sheardata.bib}
 
+\usepackage{listings}
+\definecolor{black}{gray}{0.0}
+\definecolor{white}{gray}{1.0}
+\lstset{
+    frame=tb,
+	backgroundcolor=\color{white},
+	basicstyle=\ttfamily,
+	breakatwhitespace=false,
+	breaklines=true,
+	commentstyle=\color{black},
+	escapeinside={\%*}{*)},
+	extendedchars=true,
+	keepspaces=true,
+	%keywordstyle=\color{black},
+	keywordstyle=\textbf,
+	numbers=none,
+	numbersep=10pt,
+	numberstyle=\tiny\color{black},
+	rulecolor=\color{black},
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	stepnumber=2,
+	stringstyle=\color{black},
+	tabsize=4,
+}
+
 \pagenumbering{arabic}
 
 \title{Shear layer data compilation}

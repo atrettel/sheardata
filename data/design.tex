@@ -18,7 +18,7 @@ Using this database, it should be possible to ask many different questions
 about various kinds of flows directly, without requiring additional
 experimentation or simulation.  It also should reveal gaps in current
 knowledge, to inform new directions for research.  Lastly, the database would
-be valuable for the validation of new theories and numerical codes.
+be valuable for the validation of new models, theories, and numerical codes.
 
 
 \section{Design goals}
@@ -34,12 +34,12 @@ decades.
 \item The database MUST include some form of uncertainty quantification (at
 least standard uncertainties).
 
-\item The database MUST store the data as generic records, with each data point
-in a flow merely being a record in a particular table depending on the category
-of the data.  This choice contrasts with a more typical ``spreadsheet''-style
-design, which creates new columns for each relevant quantity or averaging
-system.  This choice offers much more flexiblity, since it allows for
-scalability, since the database can then support the addition of many different
+\item The database MUST store the data as generic records with identifiers,
+with each data point in a flow merely being a record in a particular table
+depending on the category of the data.  This choice contrasts with a
+``spreadsheet''-style design, with separate columns for each relevant quantity
+or averaging system.  This choice offers much more flexiblity, since it allows
+for scalability.  The database can then support the addition of many different
 quantities and averaging systems without having to change the database schema.
 
 \item Similarly, the database SHOULD data over structure, since data is mutable
@@ -80,6 +80,62 @@ numerical facilities, the instrumentation or methods used to measure or
 calculate values, and any relevant literature sources or documentation.
 
 \end{itemize}
+
+
+
+\section{Low-level details}
+
+\begin{table}[p]
+    \centering
+    \begin{tabular}{ r | r r }
+        \texttt{point\_id} & \texttt{y} & \texttt{U} \\
+        \hline
+                         1 &        0.0 &        0.0 \\
+                         2 &        1.0 &        0.5 \\
+                         3 &        2.0 &        0.7 \\
+                         4 &        3.0 &        0.8 \\
+                         5 &        4.0 &        0.9 \\
+                         6 &        5.0 &        1.0
+    \end{tabular}
+    \caption{Flow data presented as a spreadsheet}
+\end{table}
+
+\begin{table}[p]
+    \centering
+    \begin{tabular}{ r r | r r }
+        \texttt{point\_id} & \texttt{quantity\_id} & \texttt{point\_value} \\
+        \hline
+                         1 & \texttt{y}            &                   0.0 \\
+                         2 & \texttt{y}            &                   1.0 \\
+                         3 & \texttt{y}            &                   2.0 \\
+                         4 & \texttt{y}            &                   3.0 \\
+                         5 & \texttt{y}            &                   4.0 \\
+                         6 & \texttt{y}            &                   5.0 \\
+                         1 & \texttt{U}            &                   0.0 \\
+                         2 & \texttt{U}            &                   0.5 \\
+                         3 & \texttt{U}            &                   0.7 \\
+                         4 & \texttt{U}            &                   0.8 \\
+                         5 & \texttt{U}            &                   0.9 \\
+                         6 & \texttt{U}            &                   1.0
+    \end{tabular}
+    \caption{Flow data presented as records}
+\end{table}
+
+
+\begin{lstlisting}[language=SQL]
+SELECT y.point_id, y.point_value, u.point_value
+FROM (
+    SELECT point_id, point_value
+    FROM point_values
+    WHERE quantity_id='y'
+) as y, (
+    SELECT point_id, point_value
+    FROM point_values
+    WHERE quantity_id='U'
+) as u
+WHERE y.point_id = u.point_id
+ORDER BY y.point_id;
+\end{lstlisting}
 
 
 \section{Database organization}
