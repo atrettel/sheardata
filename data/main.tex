@@ -17,9 +17,13 @@
 \usepackage{siunitx}
 \usepackage{tikz}
 
-\usepackage{mathptmx}
-\usepackage{tgheros}
-\usepackage{tgcursor}
+%\usepackage{mathptmx}
+%\usepackage{tgheros}
+%\usepackage{tgcursor}
+
+\usepackage{fourier}
+\usepackage{opensans}
+\usepackage[zerostyle=c]{newtxtt}
 
 \usepackage[T1]{fontenc}
 \ifLuaTeX
@@ -39,6 +43,7 @@
     mincitenames=1,
     backend=biber
 ]{biblatex}
+\let\emph\textnormal
 \addbibresource{sheardata.bib}
 
 \usepackage{listings}
@@ -68,6 +73,7 @@
 	tabsize=4,
 }
 
+\linespread{1.0}
 \pagenumbering{arabic}
 
 \title{Shear layer data compilation}
