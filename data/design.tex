@@ -193,7 +193,7 @@ available to the user, in other words, and allows these values to be changed
 without changing the database schema.
 
 
-\section{Database organization}
+\section{High-level details}
 
 Unlike previous databases, this database does not store data as profiles or as
 ``header'' data.  Instead, it organizes data into four categories: study data,
@@ -232,4 +232,20 @@ the identifiers are systematic: the point identifier specifies the study,
 series, and station it belongs to.
 
 The flow classes are described in an appendix.
+
+\begin{table}[p]
+    \centering
+    \begin{tabular}{ l | l l }
+        Category              & Classification              & Values \\
+        \hline
+        \texttt{fluids}      & \texttt{phases}              & \texttt{fluid\_property\_values} \\
+        \texttt{facilities}  & \texttt{facility\_classes}   & \texttt{facility\_values} \\
+        \texttt{instruments} & \texttt{instrument\_classes} & \texttt{instrument\_values} \\
+        \texttt{studies}     & \texttt{flow\_classes}       & \texttt{study\_values} \\
+        \texttt{series}      & None                         & \texttt{series\_values} \\
+        \texttt{stations}    & None                         & \texttt{station\_values} \\
+        \texttt{points}      & None                         & \texttt{point\_values} \\
+    \end{tabular}
+    \caption{Database tables organized by purpose}
+\end{table}
 
