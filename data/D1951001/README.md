@@ -41,6 +41,9 @@
 
 - Velocity distribution data, from pages 93 to 125 of the dissertation.
 
+    - Runs 21, 25, 29 to 49, and 76 to 89 only have velocity distribution data,
+      so they lack the centerline.
+
 -------------------------------------------------------------------------------
 
 Copyright © 2022 Andrew Trettel
