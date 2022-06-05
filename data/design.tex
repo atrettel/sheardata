@@ -73,7 +73,7 @@ possible.  The goal here is to reduce or possibly eliminate any potential
 contradictions in the data.  Database normalization practices help achieve this
 goal.
 
-Note that there is some difficulty in achieving the goal absolutely.  For
+Note that there is some difficulty in achieving this goal absolutely.  For
 example, the database can include both mass density and specific volume, and it
 is possible that the corresponding entries may not be inverses, though this can
 be checked.  Also, for some flow types, like Couette flow, the flow
@@ -100,8 +100,9 @@ quantity.  Instead, the database presents the data as a series of ``records'',
 with the number of columns being static.  A different column identifies the
 quantity being used for a given record.
 
-\begin{table}[p]
+\begin{table}[htb]
     \centering
+    \footnotesize
     \begin{tabular}{ r | r r }
         \texttt{point\_id} & \texttt{y} & \texttt{U} \\
         \hline
@@ -116,8 +117,9 @@ quantity being used for a given record.
     \label{tab:flow-data-spreadsheet}
 \end{table}
 
-\begin{table}[p]
+\begin{table}[htp]
     \centering
+    \footnotesize
     \begin{tabular}{ r r | r r }
         \texttt{point\_id} & \texttt{quantity\_id} & \texttt{point\_value} \\
         \hline
@@ -184,7 +186,11 @@ example, that the temperature and velocity are not measured at the same points.
 For the spreadsheet-like representation, there would need to be many null
 values added, but for the record-like representation, there would be no null
 values needed, since only the existence of data needs to be recorded, not its
-absense.
+absense.  Conversely, the flexibility allows for multiple values for a given
+quantity as well.  For example, consider a study that measures the flow
+velocity using different instruments.  A record-like representation allows for
+all of this data to be used rather than having to shoehorn in a single
+quantity.
 
 Lastly, the record-like representation allows for additional parameters for a
 given quantity, like its bounds, to be data in the database itself, rather than
@@ -195,13 +201,11 @@ without changing the database schema.
 
 \section{High-level details}
 
-Unlike previous databases, this database does not store data as profiles or as
-``header'' data.  Instead, it organizes data into four categories: study data,
-series data, station data, and point data.  Each piece of data is stored as a
-single record in one of those four categories, and this design allows for
-greater flexibility and even redundancy at times, since the same variable can
-be stored multiple times as different values, which could occur if different
-measurement techniques or averaging systems were used.
+Unlike previous databases, this database does not store flow data as profiles
+(like a spreadsheet) or as ``header'' data.  Instead, it organizes flow data
+into four categories: study data, series data, station data, and point data.
+Each piece of data is stored as a single record in one of those four
+categories.
 
 Studies are the primary level of categorization.  Each study is a series of
 observations by a research group, like a paper or a set of related papers.
@@ -221,31 +225,40 @@ in internal flows) these quantities are stored as point data, though in many
 cases they can be identified uniquely by specifying the station.
 
 To locate records in the database, each category of data is assigned a unique
-identifier of the following form: flow class (1 letter), year (4 digits), study
-number (3 digits), series number (3 digits), station number (3 digits), and
-point number (4 digits).  Only the first three are needed to identify a study.
-For example, \texttt{D-1914-001} is a study identifier.  The dashes are used
-for readability but not stored in the database.
-\texttt{D-1911-001-005-001-0013} is a point identifier.  Using these kind of
-identifiers, it is possible to uniquely find data in the database.  Note that
-the identifiers are systematic: the point identifier specifies the study,
-series, and station it belongs to.
+identifier of the following form: flow class (1 letter, described in section
+\ref{sec:flow-classification}), year (4 digits), study number (3 digits),
+series number (3 digits), station number (3 digits), and point number (4
+digits).  Only the first three are needed to identify a study.  For example,
+\texttt{D-1914-001} is a study identifier.  \texttt{D-1911-001-005-001-0013} is
+a point identifier.  The dashes are used for readability but not stored in the
+database.  Using these kind of identifiers, it is possible to uniquely find
+data in the database.  Note that the identifiers are systematic: the point
+identifier specifies the study, series, and station it belongs to.
 
-The flow classes are described in an appendix.
-
-\begin{table}[p]
+\begin{table}[htb]
     \centering
-    \begin{tabular}{ l | l l }
-        Category              & Classification              & Values \\
+    \footnotesize
+    \begin{tabular}{ l | l l l }
+        Category              & Classification              & Values                           & Overview chapter \\
         \hline
-        \texttt{fluids}      & \texttt{phases}              & \texttt{fluid\_property\_values} \\
-        \texttt{facilities}  & \texttt{facility\_classes}   & \texttt{facility\_values} \\
-        \texttt{instruments} & \texttt{instrument\_classes} & \texttt{instrument\_values} \\
-        \texttt{studies}     & \texttt{flow\_classes}       & \texttt{study\_values} \\
-        \texttt{series}      & None                         & \texttt{series\_values} \\
-        \texttt{stations}    & None                         & \texttt{station\_values} \\
-        \texttt{points}      & None                         & \texttt{point\_values} \\
+        \texttt{fluids}      & \texttt{phases}              & \texttt{fluid\_property\_values} & \ref{chp:overview-fluids} \\
+        \texttt{facilities}  & \texttt{facility\_classes}   & \texttt{facility\_values}        & \ref{chp:overview-facilities} \\
+        \texttt{instruments} & \texttt{instrument\_classes} & \texttt{instrument\_values}      & \ref{chp:overview-instruments} \\
+        \texttt{studies}     & \texttt{flow\_classes}       & \texttt{study\_values}           & \ref{chp:overview-studies} \\
+        \texttt{series}      & None                         & \texttt{series\_values}          & \ref{chp:overview-studies} \\
+        \texttt{stations}    & None                         & \texttt{station\_values}         & \ref{chp:overview-studies} \\
+        \texttt{points}      & None                         & \texttt{point\_values}           & \ref{chp:overview-studies}
     \end{tabular}
-    \caption{Database tables organized by purpose}
+    \caption{Database tables organized by data category}
+    \label{tab:database-tables}
 \end{table}
+
+But the database does not store only flow data.  Table
+\ref{tab:database-tables} lists all of the categories of data that the database
+stores.  Other tables store supplemental data on the fluids, facilities and
+instruments used in the studies.  Facilities are the ``venues'' used for the
+creation of data, like the wind tunnel or numerical code used.  Instruments are
+the means to gather data, like a Pitot tube or a calculation procedure.  For
+the sake of completeness, the database can include data on these when
+available.
 
