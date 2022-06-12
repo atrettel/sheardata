@@ -852,8 +852,9 @@ def add_study_source( cursor, study_id, citation_key, source_classification ):
     )
 
 def add_series( cursor, flow_class_id, year, study_number, series_number,  \
-                number_of_dimensions, coordinate_system_id, outlier=False, \
-                note_ids=[], series_external_ids={}, ):
+                number_of_dimensions, coordinate_system_id, facility_id=None,
+                model_id=None, outlier=False, note_ids=[],
+                series_external_ids={}, ):
     series_id = identify_series(
         flow_class_id,
         year,
@@ -868,8 +869,8 @@ def add_series( cursor, flow_class_id, year, study_number, series_number,  \
     cursor.execute(
     """
     INSERT INTO series( series_id, study_id, series_number, number_of_dimensions,
-                        coordinate_system_id, outlier )
-    VALUES( ?, ?, ?, ?, ?, ? );
+                        coordinate_system_id, facility_id, model_id, outlier )
+    VALUES( ?, ?, ?, ?, ?, ?, ?, ? );
     """,
     (
         series_id,
@@ -877,6 +878,8 @@ def add_series( cursor, flow_class_id, year, study_number, series_number,  \
         int(series_number),
         int(number_of_dimensions),
         str(coordinate_system_id),
+        facility_id,
+        model_id,
         int(outlier),
     )
     )

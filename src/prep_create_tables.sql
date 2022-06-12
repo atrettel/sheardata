@@ -160,63 +160,6 @@ CREATE TABLE study_types (
     study_type_name TEXT NOT NULL
 );
 
-CREATE TABLE studies (
-    study_id          TEXT PRIMARY KEY,
-    flow_class_id     TEXT NOT NULL DEFAULT 'U',
-    year              INTEGER NOT NULL CHECK (        year  >= 0 AND         year <= 9999 ),
-    study_number      INTEGER NOT NULL CHECK ( study_number >  0 AND study_number <=  999 ),
-    study_type_id     TEXT NOT NULL,
-    outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    study_description TEXT DEFAULT NULL,
-    study_provenance  TEXT DEFAULT NULL,
-    FOREIGN KEY(flow_class_id) REFERENCES flow_classes(flow_class_id),
-    FOREIGN KEY(study_type_id) REFERENCES study_types(study_type_id)
-);
-
-CREATE TABLE series (
-    series_id            TEXT PRIMARY KEY,
-    study_id             TEXT NOT NULL,
-    series_number        INTEGER NOT NULL CHECK ( series_number > 0 AND series_number <= 999 ),
-    number_of_dimensions INTEGER NOT NULL DEFAULT 2 CHECK ( number_of_dimensions > 0 AND number_of_dimensions <= 3 ),
-    coordinate_system_id TEXT NOT NULL DEFAULT 'XYZ',
-    geometry_id          TEXT DEFAULT NULL,
-    outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    series_description   TEXT DEFAULT NULL,
-    FOREIGN KEY(study_id)             REFERENCES studies(study_id),
-    FOREIGN KEY(coordinate_system_id) REFERENCES coordinate_systems(coordinate_system_id),
-    FOREIGN KEY(geometry_id)          REFERENCES geometries(geometry_id)
-);
-
-CREATE TABLE stations (
-    station_id                     TEXT PRIMARY KEY,
-    series_id                      TEXT NOT NULL,
-    station_number                 INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <= 999 ),
-    flow_regime_id                 TEXT DEFAULT NULL,
-    previous_streamwise_station_id TEXT DEFAULT NULL,
-    next_streamwise_station_id     TEXT DEFAULT NULL,
-    previous_spanwise_station_id   TEXT DEFAULT NULL,
-    next_spanwise_station_id       TEXT DEFAULT NULL,
-    outlier                        INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    station_description            TEXT DEFAULT NULL,
-    FOREIGN KEY(series_id)                      REFERENCES series(series_id),
-    FOREIGN KEY(flow_regime_id)                 REFERENCES flow_regimes(flow_regime_id),
-    FOREIGN KEY(previous_streamwise_station_id) REFERENCES stations(station_id),
-    FOREIGN KEY(next_streamwise_station_id)     REFERENCES stations(station_id),
-    FOREIGN KEY(previous_spanwise_station_id)   REFERENCES stations(station_id),
-    FOREIGN KEY(next_spanwise_station_id)       REFERENCES stations(station_id)
-);
-
-CREATE TABLE points (
-    point_id          TEXT PRIMARY KEY,
-    station_id        TEXT NOT NULL,
-    point_number      INTEGER NOT NULL CHECK ( point_number > 0 AND point_number <= 9999 ),
-    point_label_id    TEXT DEFAULT NULL,
-    outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    point_description TEXT DEFAULT NULL,
-    FOREIGN KEY(station_id)     REFERENCES stations(station_id),
-    FOREIGN KEY(point_label_id) REFERENCES point_labels(point_label_id)
-);
-
 /*
 TODO: Certains fields should only be allowed if the facility is an experimental
 facility, etc.  I need to add triggers or more advanced checks for these.
@@ -252,6 +195,68 @@ CREATE TABLE instruments (
 CREATE TABLE models (
     model_id   INTEGER PRIMARY KEY AUTOINCREMENT CHECK ( model_id > 0 ),
     model_name TEXT DEFAULT NULL
+);
+
+CREATE TABLE studies (
+    study_id          TEXT PRIMARY KEY,
+    flow_class_id     TEXT NOT NULL DEFAULT 'U',
+    year              INTEGER NOT NULL CHECK (        year  >= 0 AND         year <= 9999 ),
+    study_number      INTEGER NOT NULL CHECK ( study_number >  0 AND study_number <=  999 ),
+    study_type_id     TEXT NOT NULL,
+    outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
+    study_description TEXT DEFAULT NULL,
+    study_provenance  TEXT DEFAULT NULL,
+    FOREIGN KEY(flow_class_id) REFERENCES flow_classes(flow_class_id),
+    FOREIGN KEY(study_type_id) REFERENCES study_types(study_type_id)
+);
+
+-- TODO: Should facilities be a series property?
+CREATE TABLE series (
+    series_id            TEXT PRIMARY KEY,
+    study_id             TEXT NOT NULL,
+    series_number        INTEGER NOT NULL CHECK ( series_number > 0 AND series_number <= 999 ),
+    number_of_dimensions INTEGER NOT NULL DEFAULT 2 CHECK ( number_of_dimensions > 0 AND number_of_dimensions <= 3 ),
+    coordinate_system_id TEXT NOT NULL DEFAULT 'XYZ',
+    geometry_id          TEXT DEFAULT NULL,
+    facility_id          INTEGER DEFAULT NULL,
+    model_id             INTEGER DEFAULT NULL,
+    outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
+    series_description   TEXT DEFAULT NULL,
+    FOREIGN KEY(study_id)             REFERENCES studies(study_id),
+    FOREIGN KEY(coordinate_system_id) REFERENCES coordinate_systems(coordinate_system_id),
+    FOREIGN KEY(geometry_id)          REFERENCES geometries(geometry_id),
+    FOREIGN KEY(facility_id)          REFERENCES facilities(facility_id),
+    FOREIGN KEY(model_id)             REFERENCES models(model_id)
+);
+
+CREATE TABLE stations (
+    station_id                     TEXT PRIMARY KEY,
+    series_id                      TEXT NOT NULL,
+    station_number                 INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <= 999 ),
+    flow_regime_id                 TEXT DEFAULT NULL,
+    previous_streamwise_station_id TEXT DEFAULT NULL,
+    next_streamwise_station_id     TEXT DEFAULT NULL,
+    previous_spanwise_station_id   TEXT DEFAULT NULL,
+    next_spanwise_station_id       TEXT DEFAULT NULL,
+    outlier                        INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
+    station_description            TEXT DEFAULT NULL,
+    FOREIGN KEY(series_id)                      REFERENCES series(series_id),
+    FOREIGN KEY(flow_regime_id)                 REFERENCES flow_regimes(flow_regime_id),
+    FOREIGN KEY(previous_streamwise_station_id) REFERENCES stations(station_id),
+    FOREIGN KEY(next_streamwise_station_id)     REFERENCES stations(station_id),
+    FOREIGN KEY(previous_spanwise_station_id)   REFERENCES stations(station_id),
+    FOREIGN KEY(next_spanwise_station_id)       REFERENCES stations(station_id)
+);
+
+CREATE TABLE points (
+    point_id          TEXT PRIMARY KEY,
+    station_id        TEXT NOT NULL,
+    point_number      INTEGER NOT NULL CHECK ( point_number > 0 AND point_number <= 9999 ),
+    point_label_id    TEXT DEFAULT NULL,
+    outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
+    point_description TEXT DEFAULT NULL,
+    FOREIGN KEY(station_id)     REFERENCES stations(station_id),
+    FOREIGN KEY(point_label_id) REFERENCES point_labels(point_label_id)
 );
 
 /*
