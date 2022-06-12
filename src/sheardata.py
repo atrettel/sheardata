@@ -1867,6 +1867,120 @@ def add_instrument_source( cursor, instrument_id, citation_key, source_classific
     )
     )
 
+def add_model( cursor, model_name=None, note_ids=[] ):
+    cursor.execute(
+    """
+    INSERT INTO models( model_name )
+    VALUES( ? );
+    """,
+    (
+        model_name,
+    )
+    )
+
+    cursor.execute(
+    """
+    SELECT last_insert_rowid();
+    """
+    )
+    model_id = int(cursor.fetchone()[0])
+
+    for note_id in note_ids:
+        cursor.execute(
+        """
+        INSERT INTO model_notes( model_id, note_id )
+        VALUES( ?, ? );
+        """,
+        (
+            int(model_id),
+            int(note_id),
+        )
+        )
+
+    return model_id
+
+def set_model_value( cursor, model_id, quantity_id, value,
+                          value_type_id=VT_UNAVERAGED_VALUE, note_ids=[] ):
+    model_value, model_uncertainty = split_float( value )
+    for value_type_id in create_value_types_list( value_type_id ):
+        cursor.execute(
+        """
+        INSERT INTO model_values( model_id, quantity_id, value_type_id,
+                                       model_value, model_uncertainty )
+        VALUES( ?, ?, ?, ?, ? );
+        """,
+        (
+            int(model_id),
+            str(quantity_id),
+            value_type_id,
+            model_value,
+            model_uncertainty,
+        )
+        )
+
+        for note_id in note_ids:
+            cursor.execute(
+            """
+            INSERT INTO model_value_notes( model_id, quantity_id,
+                                                value_type_id, note_id )
+            VALUES( ?, ?, ?, ? );
+            """,
+            (
+                int(model_id),
+                str(quantity_id),
+                value_type_id,
+                int(note_id),
+            )
+            )
+
+def get_model_value( cursor, model_id, quantity_id,
+                          value_type_id=VT_ANY_AVERAGE, ):
+    final_value_type_id = value_type_id
+    if ( value_type_id == VT_ANY_AVERAGE ):
+        cursor.execute(
+        """
+        SELECT value_type_id
+        FROM model_values
+        WHERE model_id=? AND quantity_id=?;
+        """,
+        (
+            int(model_id),
+            str(quantity_id),
+        )
+        )
+        results = cursor.fetchall()
+        value_type_ids = []
+        for result in results:
+            value_type_ids.append( str(result[0]) )
+        final_value_type_id = pick_any_average_value_type( value_type_ids )
+
+    cursor.execute(
+    """
+    SELECT model_value, model_uncertainty
+    FROM model_values
+    WHERE model_id=? AND quantity_id=? AND value_type_id=?;
+    """,
+    (
+        int(model_id),
+        str(quantity_id),
+        final_value_type_id,
+    )
+    )
+    return fetch_float( cursor )
+
+def add_model_source( cursor, model_id, citation_key, source_classification ):
+    cursor.execute(
+    """
+    INSERT INTO model_sources( model_id, citation_key, source_classification )
+    VALUES( ?, ?, ? );
+    """,
+    (
+        int(model_id),
+        str(citation_key),
+        int(source_classification),
+    )
+    )
+
 def integrate_using_trapezoid_rule( x, f, F0=sdfloat(0.0,0.0) ):
     F = F0
     for i in range(len(x)-1):
