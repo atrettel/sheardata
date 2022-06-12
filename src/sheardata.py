@@ -1103,21 +1103,14 @@ def add_station( cursor, flow_class_id, year, study_number, series_number, \
         study_number,
         series_number,
     )
-    study_id = identify_study(
-        flow_class_id,
-        year,
-        study_number,
-    )
     cursor.execute(
     """
-    INSERT INTO stations( station_id, series_id, study_id, station_number, 
-                          outlier )
-    VALUES( ?, ?, ?, ?, ? );
+    INSERT INTO stations( station_id, series_id, station_number, outlier )
+    VALUES( ?, ?, ?, ? );
     """,
     (
         station_id,
         series_id,
-        study_id,
         int(station_number),
         int(outlier),
     )
@@ -1311,28 +1304,15 @@ def add_point( cursor, flow_class_id, year, study_number, series_number,
         series_number,
         station_number,
     )
-    series_id = identify_series(
-        flow_class_id,
-        year,
-        study_number,
-        series_number,
-    )
-    study_id = identify_study(
-        flow_class_id,
-        year,
-        study_number,
-    )
     cursor.execute(
     """
-    INSERT INTO points( point_id, station_id, series_id, study_id,
-                        point_number, point_label_id, outlier )
-    VALUES( ?, ?, ?, ?, ?, ?, ? );
+    INSERT INTO points( point_id, station_id, point_number, point_label_id,
+                        outlier )
+    VALUES( ?, ?, ?, ?, ? );
     """,
     (
         point_id,
         station_id,
-        series_id,
-        study_id,
         int(point_number),
         point_label_id,
         int(outlier),

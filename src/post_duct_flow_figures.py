@@ -124,9 +124,9 @@ for duct_type in duct_types:
                                sd.ST_EXPERIMENT, ]:
             cursor.execute(
             """
-            SELECT station_id
-            FROM stations
-            WHERE study_id IN (
+            SELECT stations.station_id
+            FROM series, stations
+            WHERE series.series_id = stations.series_id AND series.study_id IN (
                 SELECT study_id
                 FROM studies
                 WHERE flow_class_id=? AND study_type_id=?

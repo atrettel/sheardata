@@ -71,8 +71,8 @@ with open( "table-all-studies.tex.tmp", "w" ) as f:
         cursor.execute(
         """
         SELECT COUNT(*)
-        FROM stations
-        WHERE study_id=?;
+        FROM series, stations
+        WHERE series.study_id=? AND series.series_id = stations.series_id;
         """,
         ( study, )
         )
@@ -81,8 +81,8 @@ with open( "table-all-studies.tex.tmp", "w" ) as f:
         cursor.execute(
         """
         SELECT COUNT(*)
-        FROM points
-        WHERE study_id=?;
+        FROM series, stations, points
+        WHERE series.study_id=? AND series.series_id = stations.series_id AND stations.station_id = points.station_id;
         """,
         ( study, )
         )

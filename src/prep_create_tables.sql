@@ -190,7 +190,6 @@ CREATE TABLE series (
 CREATE TABLE stations (
     station_id                     TEXT PRIMARY KEY,
     series_id                      TEXT NOT NULL,
-    study_id                       TEXT NOT NULL,
     station_number                 INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <= 999 ),
     flow_regime_id                 TEXT DEFAULT NULL,
     previous_streamwise_station_id TEXT DEFAULT NULL,
@@ -200,7 +199,6 @@ CREATE TABLE stations (
     outlier                        INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     station_description            TEXT DEFAULT NULL,
     FOREIGN KEY(series_id)                      REFERENCES series(series_id),
-    FOREIGN KEY(study_id)                       REFERENCES studies(study_id),
     FOREIGN KEY(flow_regime_id)                 REFERENCES flow_regimes(flow_regime_id),
     FOREIGN KEY(previous_streamwise_station_id) REFERENCES stations(station_id),
     FOREIGN KEY(next_streamwise_station_id)     REFERENCES stations(station_id),
@@ -209,17 +207,13 @@ CREATE TABLE stations (
 );
 
 CREATE TABLE points (
-    point_id       TEXT PRIMARY KEY,
-    station_id     TEXT NOT NULL,
-    series_id      TEXT NOT NULL,
-    study_id       TEXT NOT NULL,
-    point_number   INTEGER NOT NULL CHECK ( point_number > 0 AND point_number <= 9999 ),
-    point_label_id TEXT DEFAULT NULL,
-    outlier        INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
+    point_id          TEXT PRIMARY KEY,
+    station_id        TEXT NOT NULL,
+    point_number      INTEGER NOT NULL CHECK ( point_number > 0 AND point_number <= 9999 ),
+    point_label_id    TEXT DEFAULT NULL,
+    outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
     point_description TEXT DEFAULT NULL,
     FOREIGN KEY(station_id)     REFERENCES stations(station_id),
-    FOREIGN KEY(series_id)      REFERENCES series(series_id),
-    FOREIGN KEY(study_id)       REFERENCES studies(study_id),
     FOREIGN KEY(point_label_id) REFERENCES point_labels(point_label_id)
 );
 
