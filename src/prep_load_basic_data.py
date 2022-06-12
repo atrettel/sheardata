@@ -14,15 +14,6 @@ cursor =  conn.cursor()
 cursor.execute( "PRAGMA foreign_keys = ON;" )
 
 # Value types
-cursor.execute(
-"""
-CREATE TABLE value_types (
-    value_type_id   TEXT PRIMARY KEY,
-    value_type_name TEXT NOT NULL
-);
-"""
-)
-
 value_types = {}
 value_types[ sd.VT_DENSITY_WEIGHTED_AVERAGE ] = "density-weighted averaging"
 value_types[ sd.VT_MAXIMUM_VALUE            ] = "maximum value"
@@ -40,15 +31,6 @@ for value_type_id in value_types:
     )
 
 # Coordinate systems
-cursor.execute(
-"""
-CREATE TABLE coordinate_systems (
-    coordinate_system_id   TEXT PRIMARY KEY,
-    coordinate_system_name TEXT NOT NULL
-);
-"""
-)
-
 coordinate_systems = {}
 coordinate_systems[ sd.CS_RECTANGULAR ] = "rectangular coordinates"
 coordinate_systems[ sd.CS_CYLINDRICAL ] = "cylindrical coordinates"
@@ -64,17 +46,6 @@ for coordinate_system_id in coordinate_systems:
     )
 
 # Facility classes
-cursor.execute(
-"""
-CREATE TABLE facility_classes (
-    facility_class_id        TEXT PRIMARY KEY CHECK ( length(facility_class_id) = 1 ),
-    facility_class_name      TEXT NOT NULL,
-    facility_class_parent_id TEXT DEFAULT NULL,
-    FOREIGN KEY(facility_class_parent_id) REFERENCES facility_classes(facility_class_id)
-);
-"""
-)
-
 class FacilityClass:
     _facility_class_id     = None
     _facility_class_name   = None
@@ -149,17 +120,6 @@ for facility_class in facility_classes:
         )
 
 # Flow classes
-cursor.execute(
-"""
-CREATE TABLE flow_classes (
-    flow_class_id        TEXT PRIMARY KEY CHECK ( length(flow_class_id) = 1 ),
-    flow_class_name      TEXT NOT NULL,
-    flow_class_parent_id TEXT DEFAULT NULL,
-    FOREIGN KEY(flow_class_parent_id) REFERENCES flow_classes(flow_class_id)
-);
-"""
-)
-
 class FlowClass:
     _flow_class_id     = None
     _flow_class_name   = None
@@ -231,15 +191,6 @@ for flow_class in flow_classes:
         )
 
 # Flow regimes
-cursor.execute(
-"""
-CREATE TABLE flow_regimes (
-    flow_regime_id   TEXT PRIMARY KEY,
-    flow_regime_name TEXT NOT NULL
-);
-"""
-)
-
 flow_regimes = {}
 flow_regimes[      sd.FR_LAMINAR ] =      "laminar flow"
 flow_regimes[ sd.FR_TRANSITIONAL ] = "transitional flow"
@@ -255,15 +206,6 @@ for flow_regime_id in flow_regimes:
     )
 
 # Phases
-cursor.execute(
-"""
-CREATE TABLE phases (
-    phase_id   TEXT PRIMARY KEY,
-    phase_name TEXT NOT NULL
-);
-"""
-)
-
 phases = {}
 phases[ sd.PH_GAS        ] = "gas"
 phases[ sd.PH_LIQUID     ] = "liquid"
@@ -280,19 +222,6 @@ for phase_id in phases:
     )
 
 # Elements
-cursor.execute(
-"""
-CREATE TABLE elements (
-    atomic_number  INTEGER PRIMARY KEY,
-    element_symbol TEXT UNIQUE NOT NULL,
-    element_name   TEXT UNIQUE NOT NULL,
-    standard_atomic_weight_min REAL CHECK ( standard_atomic_weight_min > 0.0 ),
-    standard_atomic_weight_max REAL CHECK ( standard_atomic_weight_max > 0.0 ),
-    conventional_atomic_weight REAL CHECK ( conventional_atomic_weight > 0.0 )
-);
-"""
-)
-
 class Element:
     _atomic_number              = None
     _element_symbol             = None
@@ -366,18 +295,6 @@ for element in elements:
     element.execute_query()
 
 # Fluids
-cursor.execute(
-"""
-CREATE TABLE fluids (
-    fluid_id          TEXT PRIMARY KEY,
-    fluid_name        TEXT NOT NULL,
-    phase_id          TEXT NOT NULL,
-    molecular_formula TEXT DEFAULT NULL,
-    FOREIGN KEY(phase_id) REFERENCES phases(phase_id)
-);
-"""
-)
-
 class Fluid:
     _fluid_id          = None
     _fluid_name        = None
@@ -440,21 +357,6 @@ for fluid in fluids:
     fluid.execute_query()
 
 # Geometries
-#
-# TODO: consider creating a hierarchy of geometries organized by the number of
-# sides an object has.  For example, rectangles are a particular form of
-# quadrilaterals, and circles are a particular form of ellipses, etc.  The
-# point of this is to be able to select different duct flow cross sections or
-# airfoil sections in a useful manner.  I still need to think about this more.
-cursor.execute(
-"""
-CREATE TABLE geometries (
-    geometry_id   TEXT PRIMARY KEY,
-    geometry_name TEXT NOT NULL
-);
-"""
-)
-
 geometries = {}
 geometries[ sd.GM_ELLIPTICAL  ] =  "elliptical geometry"
 geometries[ sd.GM_RECTANGULAR ] = "rectangular geometry"
@@ -469,18 +371,6 @@ for geometry_id in geometries:
     )
 
 # Instrument classes
-cursor.execute(
-"""
-CREATE TABLE instrument_classes (
-    instrument_class_id        TEXT PRIMARY KEY,
-    instrument_class_name      TEXT NOT NULL,
-    intrusive                  INTEGER NOT NULL DEFAULT 0 CHECK ( intrusive = 0 OR intrusive = 1 ),
-    instrument_class_parent_id TEXT DEFAULT NULL,
-    FOREIGN KEY(instrument_class_parent_id) REFERENCES instrument_classes(instrument_class_id)
-);
-"""
-)
-
 class InstrumentClass:
     _instrument_class_id        = None
     _instrument_class_name      = None
@@ -574,26 +464,7 @@ for instrument_class in instrument_classes:
         )
         )
 
-# Notes
-cursor.execute(
-"""
-CREATE TABLE notes (
-    note_id       INTEGER PRIMARY KEY CHECK ( note_id > 0 ),
-    note_contents TEXT NOT NULL
-);
-"""
-)
-
 # Point labels
-cursor.execute(
-"""
-CREATE TABLE point_labels (
-    point_label_id   TEXT PRIMARY KEY,
-    point_label_name TEXT NOT NULL
-);
-"""
-)
-
 point_labels = {}
 point_labels[ sd.PL_CENTER_LINE ] = "center-line"
 point_labels[ sd.PL_EDGE        ] = "edge"
@@ -609,45 +480,6 @@ for point_label_id in point_labels:
     )
 
 # Quantities
-#
-# I have implemented all quantities in the same table, though I divide them up
-# into categories based on whether they apply to a study, series, station,
-# point, or facilities.  Separate tables may be a better design choice in the
-# long run because it enforces the division, but for the moment I am leaving it
-# with only one table for simplicity.
-#
-# The advantage of a single table is that it grants the ability to apply some
-# quantities to both a point and a station, for example.  Coordinates are
-# nominally point quantities, but it may also be a good idea to specify the x
-# and z coordinates at the station level too if those coordinates are in fact
-# constant for an entire station (they most likely will be).  That would allow
-# for `SELECT` statements at the station level while also retaining the
-# relevant data at another level.  The problem is that this duplication
-# violates the idea that data should only be in one particular place in the
-# database, and for that reason I have only implemented coordinates as point
-# quantities so far.
-#
-# Now that I have added quantities for the facilities too, it seems like having
-# a single table for quantities is better, since I can use point quantities as
-# corresponding facility quantities without having to add them a second time.
-# This benefit seems to favor a single table.
-cursor.execute(
-"""
-CREATE TABLE quantities (
-    quantity_id               TEXT PRIMARY KEY,
-    quantity_name             TEXT NOT NULL UNIQUE,
-    time_exponent             REAL NOT NULL DEFAULT 0.0,
-    length_exponent           REAL NOT NULL DEFAULT 0.0,
-    mass_exponent             REAL NOT NULL DEFAULT 0.0,
-    current_exponent          REAL NOT NULL DEFAULT 0.0,
-    temperature_exponent      REAL NOT NULL DEFAULT 0.0,
-    amount_exponent           REAL NOT NULL DEFAULT 0.0,
-    minimum_value             REAL NOT NULL,
-    maximum_value             REAL NOT NULL
-);
-"""
-)
-
 class Quantity:
     _quantity_id          = None
     _quantity_name        = None
@@ -965,21 +797,6 @@ for quantity in quantities:
 
 
 # Latex codes for quantities
-cursor.execute(
-"""
-CREATE TABLE quantity_latex_codes (
-    quantity_id               TEXT NOT NULL,
-    value_type_id             TEXT NOT NULL,
-    quantity_latex_symbol     TEXT NOT NULL,
-    quantity_latex_definition TEXT DEFAULT NULL,
-    notes                     TEXT DEFAULT NULL,
-    PRIMARY KEY(quantity_id, value_type_id),
-    FOREIGN KEY(quantity_id) REFERENCES quantities(quantity_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
-);
-"""
-)
-
 def define_quantity_symbol( quantity_id, value_type_id, quantity_latex_symbol,
                             quantity_latex_definition=None, notes=None ):
     cursor.execute(
@@ -1204,42 +1021,7 @@ define_quantity_symbol( sd.Q_PROBE_INNER_DIAMETER,        sd.VT_UNAVERAGED_VALUE
 define_quantity_symbol( sd.Q_PROBE_OUTER_DIAMETER,        sd.VT_UNAVERAGED_VALUE, r"d_\mathrm{p,i}", )
 
 
-# Fluid property values
-#
-# TODO: Right now I use the citation key as part of the primary key.  That
-# makes it possible to have multiple sets of data for a given pressure and
-# temperature and fluid, and I am torn at the moment as to whether or not I
-# want to allow that.  For the moment, I will allow it, but I am writing this
-# note so that I think about it more later.
-cursor.execute(
-"""
-CREATE TABLE fluid_property_values (
-    pressure                   REAL NOT NULL CHECK (    pressure > 0.0 ),
-    temperature                REAL NOT NULL CHECK ( temperature > 0.0 ),
-    fluid_id                   TEXT NOT NULL,
-    citation_key               TEXT NOT NULL,
-    quantity_id                TEXT NOT NULL,
-    fluid_property_value       REAL NOT NULL,
-    fluid_property_uncertainty REAL DEFAULT NULL CHECK ( fluid_property_uncertainty >= 0.0 ),
-    preferred                  INTEGER NOT NULL DEFAULT 0 CHECK ( preferred = 0 OR preferred = 1 ),
-    PRIMARY KEY(pressure, temperature, fluid_id, citation_key, quantity_id),
-    FOREIGN KEY(quantity_id) REFERENCES quantities(quantity_id),
-    FOREIGN KEY(fluid_id)    REFERENCES fluids(fluid_id)
-);
-"""
-)
-
-
 # Study types
-cursor.execute(
-"""
-CREATE TABLE study_types (
-    study_type_id   TEXT PRIMARY KEY,
-    study_type_name TEXT NOT NULL
-);
-"""
-)
-
 study_types = {}
 study_types[ sd.ST_DIRECT_NUMERICAL_SIMULATION ] = "direct numerical simulation"
 study_types[ sd.ST_EXPERIMENT                  ] = "experiment"
@@ -1254,687 +1036,8 @@ for study_type_id in study_types:
     ( study_type_id, study_types[study_type_id], )
     )
 
-# Studies
-cursor.execute(
-"""
-CREATE TABLE studies (
-    study_id          TEXT PRIMARY KEY,
-    flow_class_id     TEXT NOT NULL DEFAULT 'U',
-    year              INTEGER NOT NULL CHECK (        year  >= 0 AND         year <= 9999 ),
-    study_number      INTEGER NOT NULL CHECK ( study_number >  0 AND study_number <=  999 ),
-    study_type_id     TEXT NOT NULL,
-    outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    study_description TEXT DEFAULT NULL,
-    study_provenance  TEXT DEFAULT NULL,
-    FOREIGN KEY(flow_class_id) REFERENCES flow_classes(flow_class_id),
-    FOREIGN KEY(study_type_id) REFERENCES study_types(study_type_id)
-);
-"""
-)
-
-# Series
-cursor.execute(
-"""
-CREATE TABLE series (
-    series_id            TEXT PRIMARY KEY,
-    study_id             TEXT NOT NULL,
-    series_number        INTEGER NOT NULL CHECK ( series_number > 0 AND series_number <= 999 ),
-    number_of_dimensions INTEGER NOT NULL DEFAULT 2 CHECK ( number_of_dimensions > 0 AND number_of_dimensions <= 3 ),
-    coordinate_system_id TEXT NOT NULL DEFAULT 'XYZ',
-    geometry_id          TEXT DEFAULT NULL,
-    outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    series_description   TEXT DEFAULT NULL,
-    FOREIGN KEY(study_id)             REFERENCES studies(study_id),
-    FOREIGN KEY(coordinate_system_id) REFERENCES coordinate_systems(coordinate_system_id),
-    FOREIGN KEY(geometry_id)          REFERENCES geometries(geometry_id)
-);
-"""
-)
-
-# Stations
-cursor.execute(
-"""
-CREATE TABLE stations (
-    station_id                     TEXT PRIMARY KEY,
-    series_id                      TEXT NOT NULL,
-    study_id                       TEXT NOT NULL,
-    station_number                 INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <= 999 ),
-    flow_regime_id                 TEXT DEFAULT NULL,
-    previous_streamwise_station_id TEXT DEFAULT NULL,
-    next_streamwise_station_id     TEXT DEFAULT NULL,
-    previous_spanwise_station_id   TEXT DEFAULT NULL,
-    next_spanwise_station_id       TEXT DEFAULT NULL,
-    outlier                        INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    station_description            TEXT DEFAULT NULL,
-    FOREIGN KEY(series_id)                      REFERENCES series(series_id),
-    FOREIGN KEY(study_id)                       REFERENCES studies(study_id),
-    FOREIGN KEY(flow_regime_id)                 REFERENCES flow_regimes(flow_regime_id),
-    FOREIGN KEY(previous_streamwise_station_id) REFERENCES stations(station_id),
-    FOREIGN KEY(next_streamwise_station_id)     REFERENCES stations(station_id),
-    FOREIGN KEY(previous_spanwise_station_id)   REFERENCES stations(station_id),
-    FOREIGN KEY(next_spanwise_station_id)       REFERENCES stations(station_id)
-);
-"""
-)
-
-# Points
-cursor.execute(
-"""
-CREATE TABLE points (
-    point_id          TEXT PRIMARY KEY,
-    station_id        TEXT NOT NULL,
-    series_id         TEXT NOT NULL,
-    study_id          TEXT NOT NULL,
-    point_number      INTEGER NOT NULL CHECK ( point_number > 0 AND point_number <= 9999 ),
-    point_label_id    TEXT DEFAULT NULL,
-    outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    point_description TEXT DEFAULT NULL,
-    FOREIGN KEY(station_id)     REFERENCES stations(station_id),
-    FOREIGN KEY(series_id)      REFERENCES series(series_id),
-    FOREIGN KEY(study_id)       REFERENCES studies(study_id),
-    FOREIGN KEY(point_label_id) REFERENCES point_labels(point_label_id)
-);
-"""
-)
-
-# Facilities
-#
-# TODO: Certains fields should only be allowed if the facility is an
-# experimental facility, etc.  I need to add triggers or more advanced checks
-# for these.
-#
-# TODO: Columns to add later:
-# - operational status
-# - open test section: yes or no?  This would be easier to manage if the
-# sequence of parts of a facility is specified, at which point there would be
-# two kinds of test sections (open and closed).
-cursor.execute(
-"""
-CREATE TABLE facilities (
-    facility_id                INTEGER PRIMARY KEY AUTOINCREMENT CHECK ( facility_id > 0 ),
-    facility_class_id          TEXT NOT NULL,
-    facility_name              TEXT NOT NULL,
-    iso_country_code           TEXT NOT NULL CHECK ( length(iso_country_code) = 3 ),
-    organization_name          TEXT DEFAULT NULL,
-    start_year                 INTEGER DEFAULT NULL,
-    end_year                   INTEGER DEFAULT NULL,
-    predecessor_facility_id    INTEGER DEFAULT NULL,
-    successor_facility_id      INTEGER DEFAULT NULL,
-    FOREIGN KEY(facility_class_id)       REFERENCES facility_classes(facility_class_id),
-    FOREIGN KEY(predecessor_facility_id) REFERENCES facilities(facility_id)
-    FOREIGN KEY(successor_facility_id)   REFERENCES facilities(facility_id)
-);
-"""
-)
-
-# Instruments (used for measurements in studies)
-cursor.execute(
-"""
-CREATE TABLE instruments (
-    instrument_id       INTEGER PRIMARY KEY AUTOINCREMENT CHECK ( instrument_id > 0 ),
-    instrument_class_id TEXT NOT NULL,
-    instrument_name     TEXT DEFAULT NULL,
-    FOREIGN KEY(instrument_class_id) REFERENCES instrument_classes(instrument_class_id)
-);
-"""
-)
-
-# Study sources (literature references)
-#
-# The classification refers to whether this source (reference) is a primary
-# source (1) created during the study or whether this source is a secondary
-# source (2) created later.
-cursor.execute(
-"""
-CREATE TABLE study_sources (
-    study_id              TEXT NOT NULL,
-    citation_key          TEXT NOT NULL,
-    source_classification INTEGER NOT NULL DEFAULT 1 CHECK ( source_classification = 1 OR source_classification = 2 ),
-    PRIMARY KEY(study_id, citation_key),
-    FOREIGN KEY(study_id) REFERENCES studies(study_id)
-);
-"""
-)
-
-# Facility sources
-cursor.execute(
-"""
-CREATE TABLE facility_sources (
-    facility_id           TEXT NOT NULL,
-    citation_key          TEXT NOT NULL,
-    source_classification INTEGER NOT NULL DEFAULT 1 CHECK ( source_classification = 1 OR source_classification = 2 ),
-    PRIMARY KEY(facility_id, citation_key),
-    FOREIGN KEY(facility_id) REFERENCES facilities(facility_id)
-);
-"""
-)
-
-# Instrument sources
-cursor.execute(
-"""
-CREATE TABLE instrument_sources (
-    instrument_id         TEXT NOT NULL,
-    citation_key          TEXT NOT NULL,
-    source_classification INTEGER NOT NULL DEFAULT 1 CHECK ( source_classification = 1 OR source_classification = 2 ),
-    PRIMARY KEY(instrument_id, citation_key),
-    FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id)
-);
-"""
-)
-
-# Components
-#
-# This table lists all of the fluid components for a given series of
-# measurements.
-cursor.execute(
-"""
-CREATE TABLE series_components (
-    series_id TEXT NOT NULL,
-    fluid_id  TEXT NOT NULL,
-    PRIMARY KEY(series_id, fluid_id),
-    FOREIGN KEY(series_id) REFERENCES series(series_id),
-    FOREIGN KEY(fluid_id)  REFERENCES fluids(fluid_id)
-);
-"""
-)
-
-# Study values
-#
-# Technically, there are no quantities that could be study values, but the
-# table is included here for the sake of completeness.
-cursor.execute(
-"""
-CREATE TABLE study_values (
-    study_id          TEXT NOT NULL,
-    quantity_id       TEXT NOT NULL,
-    fluid_id          TEXT NOT NULL,
-    value_type_id     TEXT NOT NULL,
-    instrument_set    INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
-    study_value       REAL NOT NULL,
-    study_uncertainty REAL DEFAULT NULL CHECK ( study_uncertainty >= 0.0 ),
-    corrected         INTEGER NOT NULL DEFAULT 0 CHECK ( corrected = 0 OR corrected = 1 ),
-    outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(study_id, quantity_id, fluid_id, value_type_id, instrument_set),
-    FOREIGN KEY(study_id)      REFERENCES studies(study_id),
-    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
-    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
-);
-"""
-)
-
-cursor.execute(
-"""
-CREATE TRIGGER study_values_within_quantity_bounds
-AFTER INSERT ON study_values
-WHEN EXISTS (
-    SELECT ( minimum_value <= NEW.study_value AND NEW.study_value <= maximum_value ) AS study_value_in_bounds
-    FROM quantities
-    WHERE ( NEW.quantity_id = quantities.quantity_id AND study_value_in_bounds = 0 )
-)
-BEGIN
-    SELECT RAISE( FAIL, "study value is not within the allowed bounds for the quantity" );
-END;
-"""
-)
-
-# Series values
-cursor.execute(
-"""
-CREATE TABLE series_values (
-    series_id          TEXT NOT NULL,
-    quantity_id        TEXT NOT NULL,
-    fluid_id           TEXT NOT NULL,
-    value_type_id      TEXT NOT NULL,
-    instrument_set     INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
-    series_value       REAL NOT NULL,
-    series_uncertainty REAL DEFAULT NULL CHECK ( series_uncertainty >= 0.0 ),
-    corrected          INTEGER NOT NULL DEFAULT 0 CHECK ( corrected = 0 OR corrected = 1 ),
-    outlier            INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(series_id, quantity_id, fluid_id, value_type_id, instrument_set),
-    FOREIGN KEY(series_id)     REFERENCES series(series_id),
-    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
-    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
-);
-"""
-)
-
-cursor.execute(
-"""
-CREATE TRIGGER series_values_within_quantity_bounds
-AFTER INSERT ON series_values
-WHEN EXISTS (
-    SELECT ( minimum_value <= NEW.series_value AND NEW.series_value <= maximum_value ) AS series_value_in_bounds
-    FROM quantities
-    WHERE ( NEW.quantity_id = quantities.quantity_id AND series_value_in_bounds = 0 )
-)
-BEGIN
-    SELECT RAISE( FAIL, "series value is not within the allowed bounds for the quantity" );
-END;
-"""
-)
-
-# Station values
-cursor.execute(
-"""
-CREATE TABLE station_values (
-    station_id          TEXT NOT NULL,
-    quantity_id         TEXT NOT NULL,
-    fluid_id            TEXT NOT NULL,
-    value_type_id       TEXT NOT NULL,
-    instrument_set      INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
-    station_value       REAL NOT NULL,
-    station_uncertainty REAL DEFAULT NULL CHECK ( station_uncertainty >= 0.0 ),
-    corrected           INTEGER NOT NULL DEFAULT 0 CHECK ( corrected = 0 OR corrected = 1 ),
-    outlier             INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(station_id, quantity_id, fluid_id, value_type_id, instrument_set),
-    FOREIGN KEY(station_id)    REFERENCES stations(station_id),
-    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
-    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
-);
-"""
-)
-
-cursor.execute(
-"""
-CREATE TRIGGER station_values_within_quantity_bounds
-AFTER INSERT ON station_values
-WHEN EXISTS (
-    SELECT ( minimum_value <= NEW.station_value AND NEW.station_value <= maximum_value ) AS station_value_in_bounds
-    FROM quantities
-    WHERE ( NEW.quantity_id = quantities.quantity_id AND station_value_in_bounds = 0 )
-)
-BEGIN
-    SELECT RAISE( FAIL, "station value is not within the allowed bounds for the quantity" );
-END;
-"""
-)
-
-# Point values
-cursor.execute(
-"""
-CREATE TABLE point_values (
-    point_id          TEXT NOT NULL,
-    quantity_id       TEXT NOT NULL,
-    fluid_id          TEXT NOT NULL,
-    value_type_id     TEXT NOT NULL,
-    instrument_set    INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
-    point_value       REAL NOT NULL,
-    point_uncertainty REAL DEFAULT NULL CHECK ( point_uncertainty >= 0.0 ),
-    corrected         INTEGER NOT NULL DEFAULT 0 CHECK ( corrected = 0 OR corrected = 1 ),
-    outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
-    PRIMARY KEY(point_id, quantity_id, fluid_id, value_type_id, instrument_set),
-    FOREIGN KEY(point_id)      REFERENCES points(point_id),
-    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
-    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
-);
-"""
-)
-
-cursor.execute(
-"""
-CREATE TRIGGER point_values_within_quantity_bounds
-AFTER INSERT ON point_values
-WHEN EXISTS (
-    SELECT ( minimum_value <= NEW.point_value AND NEW.point_value <= maximum_value ) AS point_value_in_bounds
-    FROM quantities
-    WHERE ( NEW.quantity_id = quantities.quantity_id AND point_value_in_bounds = 0 )
-)
-BEGIN
-    SELECT RAISE( FAIL, "point value is not within the allowed bounds for the quantity" );
-END;
-"""
-)
-
-# Facility values
-cursor.execute(
-"""
-CREATE TABLE facility_values (
-    facility_id          TEXT NOT NULL,
-    quantity_id          TEXT NOT NULL,
-    value_type_id        TEXT NOT NULL,
-    facility_value       REAL NOT NULL,
-    facility_uncertainty REAL DEFAULT NULL CHECK ( facility_uncertainty >= 0.0 ),
-    PRIMARY KEY(facility_id, quantity_id, value_type_id),
-    FOREIGN KEY(facility_id)   REFERENCES facilities(facility_id),
-    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
-);
-"""
-)
-
-cursor.execute(
-"""
-CREATE TRIGGER facility_values_within_quantity_bounds
-AFTER INSERT ON facility_values
-WHEN EXISTS (
-    SELECT ( minimum_value <= NEW.facility_value AND NEW.facility_value <= maximum_value ) AS facility_value_in_bounds
-    FROM quantities
-    WHERE ( NEW.quantity_id = quantities.quantity_id AND facility_value_in_bounds = 0 )
-)
-BEGIN
-    SELECT RAISE( FAIL, "facility value is not within the allowed bounds for the quantity" );
-END;
-"""
-)
-
-# Instrument values
-cursor.execute(
-"""
-CREATE TABLE instrument_values (
-    instrument_id          TEXT NOT NULL,
-    quantity_id            TEXT NOT NULL,
-    value_type_id          TEXT NOT NULL,
-    instrument_value       REAL NOT NULL,
-    instrument_uncertainty REAL DEFAULT NULL CHECK ( instrument_uncertainty >= 0.0 ),
-    PRIMARY KEY(instrument_id, quantity_id, value_type_id),
-    FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id),
-    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
-);
-"""
-)
-
-cursor.execute(
-"""
-CREATE TRIGGER instrument_values_within_quantity_bounds
-AFTER INSERT ON instrument_values
-WHEN EXISTS (
-    SELECT ( minimum_value <= NEW.instrument_value AND NEW.instrument_value <= maximum_value ) AS instrument_value_in_bounds
-    FROM quantities
-    WHERE ( NEW.quantity_id = quantities.quantity_id AND instrument_value_in_bounds = 0 )
-)
-BEGIN
-    SELECT RAISE( FAIL, "instrument value is not within the allowed bounds for the quantity" );
-END;
-"""
-)
-
-# Instruments for study values
-cursor.execute(
-"""
-CREATE TABLE study_values_it (
-    study_id       TEXT NOT NULL,
-    quantity_id    TEXT NOT NULL,
-    fluid_id       TEXT NOT NULL,
-    value_type_id  TEXT NOT NULL,
-    instrument_set INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
-    instrument_id  INTEGER NOT NULL,
-    PRIMARY KEY(study_id, quantity_id, fluid_id, value_type_id, instrument_set, instrument_id),
-    FOREIGN KEY(study_id)      REFERENCES studies(study_id),
-    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
-    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
-    FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id)
-);
-"""
-)
-
-# Instruments for series values
-cursor.execute(
-"""
-CREATE TABLE series_values_it (
-    series_id      TEXT NOT NULL,
-    quantity_id    TEXT NOT NULL,
-    fluid_id       TEXT NOT NULL,
-    value_type_id  TEXT NOT NULL,
-    instrument_set INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
-    instrument_id  TEXT NOT NULL,
-    PRIMARY KEY(series_id, quantity_id, fluid_id, value_type_id, instrument_set, instrument_id),
-    FOREIGN KEY(series_id)     REFERENCES series(series_id),
-    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
-    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
-    FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id)
-);
-"""
-)
-
-# Instruments for station values
-cursor.execute(
-"""
-CREATE TABLE station_values_it (
-    station_id     TEXT NOT NULL,
-    quantity_id    TEXT NOT NULL,
-    fluid_id       TEXT NOT NULL,
-    value_type_id  TEXT NOT NULL,
-    instrument_set INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
-    instrument_id  TEXT NOT NULL,
-    PRIMARY KEY(station_id, quantity_id, fluid_id, value_type_id, instrument_set, instrument_id),
-    FOREIGN KEY(station_id)    REFERENCES stations(station_id),
-    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
-    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
-    FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id)
-);
-"""
-)
-
-# Instruments for point values
-cursor.execute(
-"""
-CREATE TABLE point_values_it (
-    point_id       TEXT NOT NULL,
-    quantity_id    TEXT NOT NULL,
-    fluid_id       TEXT NOT NULL,
-    value_type_id  TEXT NOT NULL,
-    instrument_set INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
-    instrument_id  TEXT NOT NULL,
-    PRIMARY KEY(point_id, quantity_id, fluid_id, value_type_id, instrument_set, instrument_id),
-    FOREIGN KEY(point_id)      REFERENCES points(point_id),
-    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
-    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
-    FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id)
-);
-"""
-)
-
-# Notes for studies
-cursor.execute(
-"""
-CREATE TABLE study_notes (
-    study_id TEXT NOT NULL,
-    note_id  INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(study_id, note_id),
-    FOREIGN KEY(study_id) REFERENCES studies(study_id),
-    FOREIGN KEY(note_id)  REFERENCES notes(note_id)
-);
-"""
-)
-
-# Notes for study values
-cursor.execute(
-"""
-CREATE TABLE study_value_notes (
-    study_id      TEXT NOT NULL,
-    quantity_id   TEXT NOT NULL,
-    fluid_id      TEXT NOT NULL,
-    value_type_id TEXT NOT NULL,
-    instrument_set  INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
-    note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(study_id, quantity_id, fluid_id, value_type_id, instrument_set, note_id),
-    FOREIGN KEY(study_id)      REFERENCES studies(study_id),
-    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
-    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
-    FOREIGN KEY(note_id)       REFERENCES notes(note_id)
-);
-"""
-)
-
-# Notes for series
-cursor.execute(
-"""
-CREATE TABLE series_notes (
-    series_id TEXT NOT NULL,
-    note_id   INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(series_id, note_id),
-    FOREIGN KEY(series_id) REFERENCES series(series_id),
-    FOREIGN KEY(note_id)   REFERENCES notes(note_id)
-);
-"""
-)
-
-# Notes for series values
-cursor.execute(
-"""
-CREATE TABLE series_value_notes (
-    series_id     TEXT NOT NULL,
-    quantity_id   TEXT NOT NULL,
-    fluid_id      TEXT NOT NULL,
-    value_type_id TEXT NOT NULL,
-    instrument_set  INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
-    note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(series_id, quantity_id, fluid_id, value_type_id, instrument_set, note_id),
-    FOREIGN KEY(series_id)     REFERENCES series(series_id),
-    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
-    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
-    FOREIGN KEY(note_id)       REFERENCES notes(note_id)
-);
-"""
-)
-
-# Notes for stations
-cursor.execute(
-"""
-CREATE TABLE station_notes (
-    station_id TEXT NOT NULL,
-    note_id    INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(station_id, note_id),
-    FOREIGN KEY(station_id) REFERENCES stations(station_id),
-    FOREIGN KEY(note_id)    REFERENCES notes(note_id)
-);
-"""
-)
-
-# Notes for station values
-cursor.execute(
-"""
-CREATE TABLE station_value_notes (
-    station_id    TEXT NOT NULL,
-    quantity_id   TEXT NOT NULL,
-    fluid_id      TEXT NOT NULL,
-    value_type_id TEXT NOT NULL,
-    instrument_set  INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
-    note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(station_id, quantity_id, fluid_id, value_type_id, instrument_set, note_id),
-    FOREIGN KEY(station_id)    REFERENCES stations(station_id),
-    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
-    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
-    FOREIGN KEY(note_id)       REFERENCES notes(note_id)
-);
-"""
-)
-
-# Notes for points
-cursor.execute(
-"""
-CREATE TABLE point_notes (
-    point_id TEXT NOT NULL,
-    note_id  INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(point_id, note_id),
-    FOREIGN KEY(point_id) REFERENCES points(point_id),
-    FOREIGN KEY(note_id)  REFERENCES notes(note_id)
-);
-"""
-)
-
-# Notes for point values
-cursor.execute(
-"""
-CREATE TABLE point_value_notes (
-    point_id      TEXT NOT NULL,
-    quantity_id   TEXT NOT NULL,
-    fluid_id      TEXT NOT NULL,
-    value_type_id TEXT NOT NULL,
-    instrument_set  INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
-    note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(point_id, quantity_id, fluid_id, value_type_id, instrument_set, note_id),
-    FOREIGN KEY(point_id)      REFERENCES points(point_id),
-    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
-    FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
-    FOREIGN KEY(note_id)       REFERENCES notes(note_id)
-);
-"""
-)
-
-# Notes for facilities
-cursor.execute(
-"""
-CREATE TABLE facility_notes (
-    facility_id TEXT NOT NULL,
-    note_id     INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(facility_id, note_id),
-    FOREIGN KEY(facility_id) REFERENCES facilities(facility_id),
-    FOREIGN KEY(note_id)     REFERENCES notes(note_id)
-);
-"""
-)
-
-# Notes for facility values
-cursor.execute(
-"""
-CREATE TABLE facility_value_notes (
-    facility_id   TEXT NOT NULL,
-    quantity_id   TEXT NOT NULL,
-    value_type_id TEXT NOT NULL,
-    note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(facility_id, quantity_id, value_type_id, note_id),
-    FOREIGN KEY(facility_id)   REFERENCES facilities(facility_id),
-    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
-    FOREIGN KEY(note_id)       REFERENCES notes(note_id)
-);
-"""
-)
-
-# Notes for instruments
-cursor.execute(
-"""
-CREATE TABLE instrument_notes (
-    instrument_id TEXT NOT NULL,
-    note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(instrument_id, note_id),
-    FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id),
-    FOREIGN KEY(note_id)       REFERENCES notes(note_id)
-);
-"""
-)
-
-# Notes for instrument values
-cursor.execute(
-"""
-CREATE TABLE instrument_value_notes (
-    instrument_id TEXT NOT NULL,
-    quantity_id   TEXT NOT NULL,
-    value_type_id TEXT NOT NULL,
-    note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
-    PRIMARY KEY(instrument_id, quantity_id, value_type_id, note_id),
-    FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id),
-    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
-    FOREIGN KEY(note_id)       REFERENCES notes(note_id)
-);
-"""
-)
 
 # Compilations
-cursor.execute(
-"""
-CREATE TABLE compilations (
-    compilation_id   INTEGER PRIMARY KEY CHECK ( compilation_id >= 0 ),
-    compilation_name TEXT NOT NULL
-);
-"""
-)
-
 compilations = {}
 compilations[ sd.C_SELF         ] = "Originator"
 compilations[ sd.C_CH_1969      ] = "Coles and Hirst"
@@ -1953,17 +1056,6 @@ for compilation_id in compilations:
     )
 
 # Compilation sources
-cursor.execute(
-"""
-CREATE TABLE compilation_sources (
-    compilation_id INTEGER NOT NULL,
-    citation_key   TEXT NOT NULL,
-    PRIMARY KEY(compilation_id, citation_key),
-    FOREIGN KEY(compilation_id) REFERENCES compilations(compilation_id)
-);
-"""
-)
-
 compilation_sources = {}
 compilation_sources[ sd.C_CH_1969      ] = [ "ColesDE+1969+eng+BOOK" ]
 compilation_sources[ sd.C_BE_1973      ] = [ "BirchSF+1973+eng+BOOK" ]
@@ -1983,62 +1075,6 @@ for compilation_id in compilation_sources:
         """,
         ( compilation_id, citation_key, )
         )
-
-# Study external identifiers
-cursor.execute(
-"""
-CREATE TABLE study_external_ids (
-    study_id          TEXT NOT NULL,
-    compilation_id    INTEGER NOT NULL,
-    study_external_id TEXT NOT NULL,
-    PRIMARY KEY(study_id, compilation_id),
-    FOREIGN KEY(study_id)       REFERENCES studies(study_id),
-    FOREIGN KEY(compilation_id) REFERENCES compilations(compilation_id)
-);
-"""
-)
-
-# Series external identifiers
-cursor.execute(
-"""
-CREATE TABLE series_external_ids (
-    series_id          TEXT NOT NULL,
-    compilation_id     INTEGER NOT NULL,
-    series_external_id TEXT NOT NULL,
-    PRIMARY KEY(series_id, compilation_id),
-    FOREIGN KEY(series_id)      REFERENCES series(series_id),
-    FOREIGN KEY(compilation_id) REFERENCES compilations(compilation_id)
-);
-"""
-)
-
-# Station external identifiers
-cursor.execute(
-"""
-CREATE TABLE station_external_ids (
-    station_id          TEXT NOT NULL,
-    compilation_id      INTEGER NOT NULL,
-    station_external_id TEXT NOT NULL,
-    PRIMARY KEY(station_id, compilation_id),
-    FOREIGN KEY(station_id)     REFERENCES stations(station_id),
-    FOREIGN KEY(compilation_id) REFERENCES compilations(compilation_id)
-);
-"""
-)
-
-# Point external identifiers
-cursor.execute(
-"""
-CREATE TABLE point_external_ids (
-    point_id          TEXT NOT NULL,
-    compilation_id    INTEGER NOT NULL,
-    point_external_id TEXT NOT NULL,
-    PRIMARY KEY(point_id, compilation_id),
-    FOREIGN KEY(point_id)       REFERENCES points(point_id),
-    FOREIGN KEY(compilation_id) REFERENCES compilations(compilation_id)
-);
-"""
-)
 
 conn.commit()
 conn.close()

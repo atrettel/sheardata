@@ -17,8 +17,9 @@ tex_dependencies = $(project).tex $(wildcard ../data/*.tex) $(postprocessing_tar
 
 $(database): $(project).tmp $(processing_targets)
 
-$(project).tmp: prep_*.py
-	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B prep_create_tables.py $(database)
+$(project).tmp: prep_*.sql prep_*.py
+	sqlite3 $(database) ".read prep_create_tables.sql"
+	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B prep_load_basic_data.py $(database)
 	PYTHONPATH=$(PYTHONPATH):`pwd` python3 -B prep_load_fluid_property_values.py $(database)
 	@touch $@
 
