@@ -249,6 +249,11 @@ CREATE TABLE instruments (
     FOREIGN KEY(instrument_class_id) REFERENCES instrument_classes(instrument_class_id)
 );
 
+CREATE TABLE models (
+    model_id   INTEGER PRIMARY KEY AUTOINCREMENT CHECK ( model_id > 0 ),
+    model_name TEXT DEFAULT NULL
+);
+
 /*
 Study sources (literature references)
 
@@ -278,6 +283,14 @@ CREATE TABLE instrument_sources (
     source_classification INTEGER NOT NULL DEFAULT 1 CHECK ( source_classification = 1 OR source_classification = 2 ),
     PRIMARY KEY(instrument_id, citation_key),
     FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id)
+);
+
+CREATE TABLE model_sources (
+    model_id     TEXT NOT NULL,
+    citation_key TEXT NOT NULL,
+    source_classification INTEGER NOT NULL DEFAULT 1 CHECK ( source_classification = 1 OR source_classification = 2 ),
+    PRIMARY KEY(model_id, citation_key),
+    FOREIGN KEY(model_id) REFERENCES models(model_id)
 );
 
 CREATE TABLE series_components (
@@ -444,6 +457,29 @@ WHEN EXISTS (
 )
 BEGIN
     SELECT RAISE( FAIL, "instrument value is not within the allowed bounds for the quantity" );
+END;
+
+CREATE TABLE model_values (
+    model_id          TEXT NOT NULL,
+    quantity_id       TEXT NOT NULL,
+    value_type_id     TEXT NOT NULL,
+    model_value       REAL NOT NULL,
+    model_uncertainty REAL DEFAULT NULL CHECK ( model_uncertainty >= 0.0 ),
+    PRIMARY KEY(model_id, quantity_id, value_type_id),
+    FOREIGN KEY(model_id) REFERENCES models(model_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
+);
+
+CREATE TRIGGER model_values_within_quantity_bounds
+AFTER INSERT ON model_values
+WHEN EXISTS (
+    SELECT ( minimum_value <= NEW.model_value AND NEW.model_value <= maximum_value ) AS model_value_in_bounds
+    FROM quantities
+    WHERE ( NEW.quantity_id = quantities.quantity_id AND model_value_in_bounds = 0 )
+)
+BEGIN
+    SELECT RAISE( FAIL, "model value is not within the allowed bounds for the quantity" );
 END;
 
 CREATE TABLE study_values_it (
@@ -633,6 +669,26 @@ CREATE TABLE instrument_value_notes (
     note_id       INTEGER NOT NULL,
     PRIMARY KEY(instrument_id, quantity_id, value_type_id, note_id),
     FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
+    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
+    FOREIGN KEY(note_id)       REFERENCES notes(note_id)
+);
+
+CREATE TABLE model_notes (
+    model_id TEXT NOT NULL,
+    note_id  INTEGER NOT NULL,
+    PRIMARY KEY(model_id, note_id),
+    FOREIGN KEY(model_id) REFERENCES models(model_id),
+    FOREIGN KEY(note_id)       REFERENCES notes(note_id)
+);
+
+CREATE TABLE model_value_notes (
+    model_id TEXT NOT NULL,
+    quantity_id   TEXT NOT NULL,
+    value_type_id TEXT NOT NULL,
+    note_id       INTEGER NOT NULL,
+    PRIMARY KEY(model_id, quantity_id, value_type_id, note_id),
+    FOREIGN KEY(model_id) REFERENCES models(model_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
     FOREIGN KEY(note_id)       REFERENCES notes(note_id)
