@@ -514,7 +514,7 @@ CREATE TABLE point_values_it (
 
 CREATE TABLE study_notes (
     study_id TEXT NOT NULL,
-    note_id  INTEGER NOT NULL CHECK ( note_id > 0 ),
+    note_id  INTEGER NOT NULL,
     PRIMARY KEY(study_id, note_id),
     FOREIGN KEY(study_id) REFERENCES studies(study_id),
     FOREIGN KEY(note_id)  REFERENCES notes(note_id)
@@ -526,7 +526,7 @@ CREATE TABLE study_value_notes (
     fluid_id       TEXT NOT NULL,
     value_type_id  TEXT NOT NULL,
     instrument_set INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
-    note_id        INTEGER NOT NULL CHECK ( note_id > 0 ),
+    note_id        INTEGER NOT NULL,
     PRIMARY KEY(study_id, quantity_id, fluid_id, value_type_id, instrument_set, note_id),
     FOREIGN KEY(study_id)      REFERENCES studies(study_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
@@ -537,7 +537,7 @@ CREATE TABLE study_value_notes (
 
 CREATE TABLE series_notes (
     series_id TEXT NOT NULL,
-    note_id   INTEGER NOT NULL CHECK ( note_id > 0 ),
+    note_id   INTEGER NOT NULL,
     PRIMARY KEY(series_id, note_id),
     FOREIGN KEY(series_id) REFERENCES series(series_id),
     FOREIGN KEY(note_id)   REFERENCES notes(note_id)
@@ -549,7 +549,7 @@ CREATE TABLE series_value_notes (
     fluid_id       TEXT NOT NULL,
     value_type_id  TEXT NOT NULL,
     instrument_set INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
-    note_id        INTEGER NOT NULL CHECK ( note_id > 0 ),
+    note_id        INTEGER NOT NULL,
     PRIMARY KEY(series_id, quantity_id, fluid_id, value_type_id, instrument_set, note_id),
     FOREIGN KEY(series_id)     REFERENCES series(series_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
@@ -560,7 +560,7 @@ CREATE TABLE series_value_notes (
 
 CREATE TABLE station_notes (
     station_id TEXT NOT NULL,
-    note_id    INTEGER NOT NULL CHECK ( note_id > 0 ),
+    note_id    INTEGER NOT NULL,
     PRIMARY KEY(station_id, note_id),
     FOREIGN KEY(station_id) REFERENCES stations(station_id),
     FOREIGN KEY(note_id)    REFERENCES notes(note_id)
@@ -572,7 +572,7 @@ CREATE TABLE station_value_notes (
     fluid_id       TEXT NOT NULL,
     value_type_id  TEXT NOT NULL,
     instrument_set INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
-    note_id        INTEGER NOT NULL CHECK ( note_id > 0 ),
+    note_id        INTEGER NOT NULL,
     PRIMARY KEY(station_id, quantity_id, fluid_id, value_type_id, instrument_set, note_id),
     FOREIGN KEY(station_id)    REFERENCES stations(station_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
@@ -583,7 +583,7 @@ CREATE TABLE station_value_notes (
 
 CREATE TABLE point_notes (
     point_id TEXT NOT NULL,
-    note_id  INTEGER NOT NULL CHECK ( note_id > 0 ),
+    note_id  INTEGER NOT NULL,
     PRIMARY KEY(point_id, note_id),
     FOREIGN KEY(point_id) REFERENCES points(point_id),
     FOREIGN KEY(note_id)  REFERENCES notes(note_id)
@@ -595,7 +595,7 @@ CREATE TABLE point_value_notes (
     fluid_id       TEXT NOT NULL,
     value_type_id  TEXT NOT NULL,
     instrument_set INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
-    note_id        INTEGER NOT NULL CHECK ( note_id > 0 ),
+    note_id        INTEGER NOT NULL,
     PRIMARY KEY(point_id, quantity_id, fluid_id, value_type_id, instrument_set, note_id),
     FOREIGN KEY(point_id)      REFERENCES points(point_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
@@ -606,7 +606,7 @@ CREATE TABLE point_value_notes (
 
 CREATE TABLE facility_notes (
     facility_id TEXT NOT NULL,
-    note_id     INTEGER NOT NULL CHECK ( note_id > 0 ),
+    note_id     INTEGER NOT NULL,
     PRIMARY KEY(facility_id, note_id),
     FOREIGN KEY(facility_id) REFERENCES facilities(facility_id),
     FOREIGN KEY(note_id)     REFERENCES notes(note_id)
@@ -616,7 +616,7 @@ CREATE TABLE facility_value_notes (
     facility_id   TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
-    note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
+    note_id       INTEGER NOT NULL,
     PRIMARY KEY(facility_id, quantity_id, value_type_id, note_id),
     FOREIGN KEY(facility_id)   REFERENCES facilities(facility_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
@@ -626,7 +626,7 @@ CREATE TABLE facility_value_notes (
 
 CREATE TABLE instrument_notes (
     instrument_id TEXT NOT NULL,
-    note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
+    note_id       INTEGER NOT NULL,
     PRIMARY KEY(instrument_id, note_id),
     FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id),
     FOREIGN KEY(note_id)       REFERENCES notes(note_id)
@@ -636,7 +636,7 @@ CREATE TABLE instrument_value_notes (
     instrument_id TEXT NOT NULL,
     quantity_id   TEXT NOT NULL,
     value_type_id TEXT NOT NULL,
-    note_id       INTEGER NOT NULL CHECK ( note_id > 0 ),
+    note_id       INTEGER NOT NULL,
     PRIMARY KEY(instrument_id, quantity_id, value_type_id, note_id),
     FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
