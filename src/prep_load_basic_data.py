@@ -569,22 +569,14 @@ quantities = []
 
 # Quantities, series
 quantities.append( Quantity( sd.Q_ANGLE_OF_ATTACK,                "angle of attack",                                                                                                                                 ) )
-quantities.append( Quantity( sd.Q_BODY_HEIGHT,                    "body height",                                             length_exponent=+1.0,                                                minimum_value=0.0, ) )
-quantities.append( Quantity( sd.Q_BODY_LENGTH,                    "body length",                                             length_exponent=+1.0,                                                minimum_value=0.0, ) )
-quantities.append( Quantity( sd.Q_BODY_PROJECTED_FRONTAL_AREA,    "body projected frontal area",                             length_exponent=+2.0,                                                minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_BODY_REYNOLDS_NUMBER,           "body Reynolds number",                                                                                                         minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_BODY_STROUHAL_NUMBER,           "body Strouhal number",                                                                                                         minimum_value=0.0, ) )
-quantities.append( Quantity( sd.Q_BODY_VOLUME,                    "body volume",                                             length_exponent=+3.0,                                                minimum_value=0.0, ) )
-quantities.append( Quantity( sd.Q_BODY_WETTED_SURFACE_AREA,       "body wetted surface area",                                length_exponent=+2.0,                                                minimum_value=0.0, ) )
-quantities.append( Quantity( sd.Q_BODY_WIDTH,                     "body width",                                              length_exponent=+1.0,                                                minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_DRAG_COEFFICIENT,               "drag coefficient",                                                                                                                                ) )
 quantities.append( Quantity( sd.Q_DRAG_FORCE,                     "drag force",                          time_exponent=-2.0, length_exponent=+1.0, mass_exponent=+1.0,                                               ) )
 quantities.append( Quantity( sd.Q_FREESTREAM_MACH_NUMBER,         "freestream Mach number",                                                                                                       minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_FREESTREAM_SPEED_OF_SOUND,      "freestream speed of sound",           time_exponent=-1.0, length_exponent=+1.0,                                                minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_FREESTREAM_TEMPERATURE,         "freestream temperature",                                                                            temperature_exponent=+1.0, minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_FREESTREAM_VELOCITY,            "freestream velocity",                 time_exponent=-1.0, length_exponent=+1.0,                                                                   ) )
-quantities.append( Quantity( sd.Q_LEADING_EDGE_LENGTH,            "leading edge length",                                     length_exponent=+1.0,                                                minimum_value=0.0, ) )
-quantities.append( Quantity( sd.Q_LEADING_EDGE_RADIUS,            "leading edge radius",                                     length_exponent=+1.0,                                                minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_LIFT_COEFFICIENT,               "lift coefficient",                                                                                                                                ) )
 quantities.append( Quantity( sd.Q_LIFT_FORCE,                     "lift force",                          time_exponent=-2.0, length_exponent=+1.0, mass_exponent=+1.0,                                               ) )
 quantities.append( Quantity( sd.Q_LIFT_TO_DRAG_RATIO,             "lift-to-drag ratio",                                                                                                                              ) )
@@ -791,6 +783,19 @@ quantities.append( Quantity( sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS, "distance betw
 quantities.append( Quantity( sd.Q_ORDER_OF_APPROXIMATION,         "order of approximation",                               minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_PROBE_INNER_DIAMETER,           "probe inner diameter",           length_exponent=+1.0, minimum_value=0.0, ) )
 quantities.append( Quantity( sd.Q_PROBE_OUTER_DIAMETER,           "probe outer diameter",           length_exponent=+1.0, minimum_value=0.0, ) )
+
+# Quantities, model
+quantities.append( Quantity( sd.Q_BODY_HEIGHT,                    "body height",                 length_exponent=+1.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_BODY_LENGTH,                    "body length",                 length_exponent=+1.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_BODY_PROJECTED_FRONTAL_AREA,    "body projected frontal area", length_exponent=+2.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_BODY_VOLUME,                    "body volume",                 length_exponent=+3.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_BODY_WETTED_SURFACE_AREA,       "body wetted surface area",    length_exponent=+2.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_BODY_WIDTH,                     "body width",                  length_exponent=+1.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_CHORD_LENGTH,                   "chord length",                length_exponent=+1.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_LEADING_EDGE_LENGTH,            "leading edge length",         length_exponent=+1.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_LEADING_EDGE_RADIUS,            "leading edge radius",         length_exponent=+1.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_TRAILING_EDGE_LENGTH,           "trailing edge length",        length_exponent=+1.0, minimum_value=0.0, ) )
+quantities.append( Quantity( sd.Q_TRAILING_EDGE_RADIUS,           "trailing edge radius",        length_exponent=+1.0, minimum_value=0.0, ) )
 
 for quantity in quantities:
     quantity.execute_query()

@@ -212,38 +212,24 @@ PL_LOWER_UPPER = [ PL_LOWER_EDGE, PL_LOWER_WALL,
                    PL_UPPER_EDGE, PL_UPPER_WALL, ]
 
 # Quantities, series
-Q_ANGLE_OF_ATTACK                = "AOA"
-Q_BODY_HEIGHT                    = "h_b"
-Q_BODY_LENGTH                    = "L_b"
-Q_BODY_PROJECTED_FRONTAL_AREA    = "A_f"
-Q_BODY_REYNOLDS_NUMBER           = "Re_inf"
-Q_BODY_STROUHAL_NUMBER           = "Sr"
-Q_BODY_VOLUME                    = "V_b"
-Q_BODY_WETTED_SURFACE_AREA       = "A_s"
-Q_BODY_WIDTH                     = "w_b"
-Q_DRAG_COEFFICIENT               = "C_D"
-Q_DRAG_FORCE                     = "F_D"
-Q_FREESTREAM_MACH_NUMBER         = "Ma_inf"
-Q_FREESTREAM_SPEED_OF_SOUND      = "a_inf"
-Q_FREESTREAM_TEMPERATURE         = "T_inf"
-Q_FREESTREAM_VELOCITY            = "{:s}_inf".format(STREAMWISE_VELOCITY_SYMBOL)
-Q_LEADING_EDGE_LENGTH            = "L_le"
-Q_LEADING_EDGE_RADIUS            = "R_le"
-Q_LIFT_COEFFICIENT               = "C_L"
-Q_LIFT_FORCE                     = "F_L"
-Q_LIFT_TO_DRAG_RATIO             = "L/D"
-Q_MASS_FLOW_RATE                 = "mdot"
-Q_SPANWISE_NUMBER_OF_POINTS      = "N_{:s}".format(SPANWISE_COORDINATE_SYMBOL)
-Q_STREAMWISE_NUMBER_OF_POINTS    = "N_{:s}".format(STREAMWISE_COORDINATE_SYMBOL)
-Q_TEST_LENGTH                    = "L_t"
-Q_TRANSVERSE_NUMBER_OF_POINTS    = "N_{:s}".format(TRANSVERSE_COORDINATE_SYMBOL)
-Q_VOLUMETRIC_FLOW_RATE           = "Vdot"
-
-Q_BODY_DIMENSIONS = {
-    D_STREAMWISE: Q_BODY_LENGTH,
-    D_TRANSVERSE: Q_BODY_HEIGHT,
-    D_SPANWISE:   Q_BODY_WIDTH,
-}
+Q_ANGLE_OF_ATTACK             = "AOA"
+Q_BODY_REYNOLDS_NUMBER        = "Re_inf"
+Q_BODY_STROUHAL_NUMBER        = "Sr"
+Q_DRAG_COEFFICIENT            = "C_D"
+Q_DRAG_FORCE                  = "F_D"
+Q_FREESTREAM_MACH_NUMBER      = "Ma_inf"
+Q_FREESTREAM_SPEED_OF_SOUND   = "a_inf"
+Q_FREESTREAM_TEMPERATURE      = "T_inf"
+Q_FREESTREAM_VELOCITY         = "{:s}_inf".format(STREAMWISE_VELOCITY_SYMBOL)
+Q_LIFT_COEFFICIENT            = "C_L"
+Q_LIFT_FORCE                  = "F_L"
+Q_LIFT_TO_DRAG_RATIO          = "L/D"
+Q_MASS_FLOW_RATE              = "mdot"
+Q_SPANWISE_NUMBER_OF_POINTS   = "N_{:s}".format(SPANWISE_COORDINATE_SYMBOL)
+Q_STREAMWISE_NUMBER_OF_POINTS = "N_{:s}".format(STREAMWISE_COORDINATE_SYMBOL)
+Q_TEST_LENGTH                 = "L_t"
+Q_TRANSVERSE_NUMBER_OF_POINTS = "N_{:s}".format(TRANSVERSE_COORDINATE_SYMBOL)
+Q_VOLUMETRIC_FLOW_RATE        = "Vdot"
 
 Q_NUMBER_OF_POINTS = {
     D_STREAMWISE: Q_STREAMWISE_NUMBER_OF_POINTS,
@@ -491,6 +477,25 @@ Q_DISTANCE_BETWEEN_PRESSURE_TAPS = "L_p"
 Q_ORDER_OF_APPROXIMATION         = "O_a"
 Q_PROBE_INNER_DIAMETER           = "d_pi"
 Q_PROBE_OUTER_DIAMETER           = "d_po"
+
+# Quantities, model
+Q_BODY_HEIGHT                 = "h_b"
+Q_BODY_LENGTH                 = "L_b"
+Q_BODY_PROJECTED_FRONTAL_AREA = "A_f"
+Q_BODY_VOLUME                 = "V_b"
+Q_BODY_WETTED_SURFACE_AREA    = "A_s"
+Q_BODY_WIDTH                  = "w_b"
+Q_CHORD_LENGTH                = "c"
+Q_LEADING_EDGE_LENGTH         = "L_le"
+Q_LEADING_EDGE_RADIUS         = "R_le"
+Q_TRAILING_EDGE_LENGTH        = "L_re"
+Q_TRAILING_EDGE_RADIUS        = "R_re"
+
+Q_BODY_DIMENSIONS = {
+    D_STREAMWISE: Q_BODY_LENGTH,
+    D_TRANSVERSE: Q_BODY_HEIGHT,
+    D_SPANWISE:   Q_BODY_WIDTH,
+}
 
 # Study types
 ST_DIRECT_NUMERICAL_SIMULATION = "DNS"
