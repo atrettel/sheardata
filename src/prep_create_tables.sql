@@ -50,7 +50,7 @@ CREATE TABLE phases (
 
 CREATE TABLE elements (
     atomic_number              INTEGER PRIMARY KEY CHECK ( atomic_number > 0 ),
-    element_symbol             TEXT UNIQUE NOT NULL CHECK ( length(element_symbol) = 1 OR length(element_symbol) = 2 ),
+    element_symbol             TEXT UNIQUE NOT NULL CHECK ( length(element_symbol) IN (1,2) ),
     element_name               TEXT UNIQUE NOT NULL,
     standard_atomic_weight_min REAL CHECK ( standard_atomic_weight_min > 0.0 ),
     standard_atomic_weight_max REAL CHECK ( standard_atomic_weight_max > 0.0 ),
