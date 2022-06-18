@@ -6,6 +6,14 @@ SPDX-License-Identifier: MIT
 
 PRAGMA foreign_keys = ON;
 
+CREATE TABLE booleans (
+    boolean_id   INTEGER PRIMARY KEY CHECK ( boolean_id IN (0,1) ),
+    boolean_name TEXT UNIQUE NOT NULL
+);
+
+INSERT INTO booleans VALUES( TRUE,  "true"  );
+INSERT INTO booleans VALUES( FALSE, "false" );
+
 CREATE TABLE value_types (
     value_type_id   TEXT PRIMARY KEY,
     value_type_name TEXT NOT NULL
@@ -73,8 +81,9 @@ CREATE TABLE geometries (
 CREATE TABLE instrument_classes (
     instrument_class_id        TEXT PRIMARY KEY,
     instrument_class_name      TEXT NOT NULL,
-    intrusive                  INTEGER NOT NULL DEFAULT 0 CHECK ( intrusive = 0 OR intrusive = 1 ),
+    intrusive                  INTEGER NOT NULL DEFAULT FALSE,
     instrument_class_parent_id TEXT DEFAULT NULL,
+    FOREIGN KEY(intrusive)                  REFERENCES booleans(boolean_id),
     FOREIGN KEY(instrument_class_parent_id) REFERENCES instrument_classes(instrument_class_id)
 );
 
@@ -149,10 +158,11 @@ CREATE TABLE fluid_property_values (
     quantity_id                TEXT NOT NULL,
     fluid_property_value       REAL NOT NULL,
     fluid_property_uncertainty REAL DEFAULT NULL CHECK ( fluid_property_uncertainty >= 0.0 ),
-    preferred                  INTEGER NOT NULL DEFAULT 0 CHECK ( preferred = 0 OR preferred = 1 ),
+    preferred                  INTEGER NOT NULL DEFAULT FALSE,
     PRIMARY KEY(pressure, temperature, fluid_id, citation_key, quantity_id),
     FOREIGN KEY(quantity_id) REFERENCES quantities(quantity_id),
-    FOREIGN KEY(fluid_id)    REFERENCES fluids(fluid_id)
+    FOREIGN KEY(fluid_id)    REFERENCES fluids(fluid_id),
+    FOREIGN KEY(preferred)   REFERENCES booleans(boolean_id)
 );
 
 CREATE TABLE study_types (
@@ -203,11 +213,12 @@ CREATE TABLE studies (
     year              INTEGER NOT NULL CHECK (        year  >= 0 AND         year <= 9999 ),
     study_number      INTEGER NOT NULL CHECK ( study_number >  0 AND study_number <=  999 ),
     study_type_id     TEXT NOT NULL,
-    outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
+    outlier           INTEGER NOT NULL DEFAULT FALSE,
     study_description TEXT DEFAULT NULL,
     study_provenance  TEXT DEFAULT NULL,
     FOREIGN KEY(flow_class_id) REFERENCES flow_classes(flow_class_id),
-    FOREIGN KEY(study_type_id) REFERENCES study_types(study_type_id)
+    FOREIGN KEY(study_type_id) REFERENCES study_types(study_type_id),
+    FOREIGN KEY(outlier)       REFERENCES booleans(boolean_id)
 );
 
 -- TODO: Should facilities be a series property?
@@ -220,13 +231,14 @@ CREATE TABLE series (
     geometry_id          TEXT DEFAULT NULL,
     facility_id          INTEGER DEFAULT NULL,
     model_id             INTEGER DEFAULT NULL,
-    outlier              INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
+    outlier              INTEGER NOT NULL DEFAULT FALSE,
     series_description   TEXT DEFAULT NULL,
     FOREIGN KEY(study_id)             REFERENCES studies(study_id),
     FOREIGN KEY(coordinate_system_id) REFERENCES coordinate_systems(coordinate_system_id),
     FOREIGN KEY(geometry_id)          REFERENCES geometries(geometry_id),
     FOREIGN KEY(facility_id)          REFERENCES facilities(facility_id),
-    FOREIGN KEY(model_id)             REFERENCES models(model_id)
+    FOREIGN KEY(model_id)             REFERENCES models(model_id),
+    FOREIGN KEY(outlier)              REFERENCES booleans(boolean_id)
 );
 
 CREATE TABLE stations (
@@ -238,14 +250,15 @@ CREATE TABLE stations (
     next_streamwise_station_id     TEXT DEFAULT NULL,
     previous_spanwise_station_id   TEXT DEFAULT NULL,
     next_spanwise_station_id       TEXT DEFAULT NULL,
-    outlier                        INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
+    outlier                        INTEGER NOT NULL DEFAULT FALSE,
     station_description            TEXT DEFAULT NULL,
     FOREIGN KEY(series_id)                      REFERENCES series(series_id),
     FOREIGN KEY(flow_regime_id)                 REFERENCES flow_regimes(flow_regime_id),
     FOREIGN KEY(previous_streamwise_station_id) REFERENCES stations(station_id),
     FOREIGN KEY(next_streamwise_station_id)     REFERENCES stations(station_id),
     FOREIGN KEY(previous_spanwise_station_id)   REFERENCES stations(station_id),
-    FOREIGN KEY(next_spanwise_station_id)       REFERENCES stations(station_id)
+    FOREIGN KEY(next_spanwise_station_id)       REFERENCES stations(station_id),
+    FOREIGN KEY(outlier)                        REFERENCES booleans(boolean_id)
 );
 
 CREATE TABLE points (
@@ -253,10 +266,11 @@ CREATE TABLE points (
     station_id        TEXT NOT NULL,
     point_number      INTEGER NOT NULL CHECK ( point_number > 0 AND point_number <= 9999 ),
     point_label_id    TEXT DEFAULT NULL,
-    outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
+    outlier           INTEGER NOT NULL DEFAULT FALSE,
     point_description TEXT DEFAULT NULL,
     FOREIGN KEY(station_id)     REFERENCES stations(station_id),
-    FOREIGN KEY(point_label_id) REFERENCES point_labels(point_label_id)
+    FOREIGN KEY(point_label_id) REFERENCES point_labels(point_label_id),
+    FOREIGN KEY(outlier)        REFERENCES booleans(boolean_id)
 );
 
 /*
@@ -314,13 +328,15 @@ CREATE TABLE study_values (
     instrument_set    INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
     study_value       REAL NOT NULL,
     study_uncertainty REAL DEFAULT NULL CHECK ( study_uncertainty >= 0.0 ),
-    corrected         INTEGER NOT NULL DEFAULT 0 CHECK ( corrected = 0 OR corrected = 1 ),
-    outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
+    corrected         INTEGER NOT NULL DEFAULT FALSE,
+    outlier           INTEGER NOT NULL DEFAULT FALSE,
     PRIMARY KEY(study_id, quantity_id, fluid_id, value_type_id, instrument_set),
     FOREIGN KEY(study_id)      REFERENCES studies(study_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
+    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
+    FOREIGN KEY(corrected)     REFERENCES booleans(boolean_id),
+    FOREIGN KEY(outlier)       REFERENCES booleans(boolean_id)
 );
 
 CREATE TRIGGER study_values_within_quantity_bounds
@@ -342,13 +358,15 @@ CREATE TABLE series_values (
     instrument_set     INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
     series_value       REAL NOT NULL,
     series_uncertainty REAL DEFAULT NULL CHECK ( series_uncertainty >= 0.0 ),
-    corrected          INTEGER NOT NULL DEFAULT 0 CHECK ( corrected = 0 OR corrected = 1 ),
-    outlier            INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
+    corrected          INTEGER NOT NULL DEFAULT FALSE,
+    outlier            INTEGER NOT NULL DEFAULT FALSE,
     PRIMARY KEY(series_id, quantity_id, fluid_id, value_type_id, instrument_set),
     FOREIGN KEY(series_id)     REFERENCES series(series_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
+    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
+    FOREIGN KEY(corrected)     REFERENCES booleans(boolean_id),
+    FOREIGN KEY(outlier)       REFERENCES booleans(boolean_id)
 );
 
 CREATE TRIGGER series_values_within_quantity_bounds
@@ -370,13 +388,15 @@ CREATE TABLE station_values (
     instrument_set      INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
     station_value       REAL NOT NULL,
     station_uncertainty REAL DEFAULT NULL CHECK ( station_uncertainty >= 0.0 ),
-    corrected           INTEGER NOT NULL DEFAULT 0 CHECK ( corrected = 0 OR corrected = 1 ),
-    outlier             INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
+    corrected           INTEGER NOT NULL DEFAULT FALSE,
+    outlier             INTEGER NOT NULL DEFAULT FALSE,
     PRIMARY KEY(station_id, quantity_id, fluid_id, value_type_id, instrument_set),
     FOREIGN KEY(station_id)    REFERENCES stations(station_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
+    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
+    FOREIGN KEY(corrected)     REFERENCES booleans(boolean_id),
+    FOREIGN KEY(outlier)       REFERENCES booleans(boolean_id)
 );
 
 CREATE TRIGGER station_values_within_quantity_bounds
@@ -398,13 +418,15 @@ CREATE TABLE point_values (
     instrument_set    INTEGER NOT NULL DEFAULT 1 CHECK ( instrument_set > 0 ),
     point_value       REAL NOT NULL,
     point_uncertainty REAL DEFAULT NULL CHECK ( point_uncertainty >= 0.0 ),
-    corrected         INTEGER NOT NULL DEFAULT 0 CHECK ( corrected = 0 OR corrected = 1 ),
-    outlier           INTEGER NOT NULL DEFAULT 0 CHECK ( outlier = 0 OR outlier = 1 ),
+    corrected         INTEGER NOT NULL DEFAULT FALSE,
+    outlier           INTEGER NOT NULL DEFAULT FALSE,
     PRIMARY KEY(point_id, quantity_id, fluid_id, value_type_id, instrument_set),
     FOREIGN KEY(point_id)      REFERENCES points(point_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(fluid_id)      REFERENCES fluids(fluid_id),
-    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
+    FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
+    FOREIGN KEY(corrected)     REFERENCES booleans(boolean_id),
+    FOREIGN KEY(outlier)       REFERENCES booleans(boolean_id)
 );
 
 CREATE TRIGGER point_values_within_quantity_bounds
