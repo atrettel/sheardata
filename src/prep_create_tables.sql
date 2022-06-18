@@ -16,31 +16,31 @@ INSERT INTO booleans VALUES( FALSE, "false" );
 
 CREATE TABLE value_types (
     value_type_id   TEXT PRIMARY KEY,
-    value_type_name TEXT NOT NULL
+    value_type_name TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE coordinate_systems (
     coordinate_system_id   TEXT PRIMARY KEY,
-    coordinate_system_name TEXT NOT NULL
+    coordinate_system_name TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE facility_classes (
     facility_class_id        TEXT PRIMARY KEY CHECK ( length(facility_class_id) = 1 ),
-    facility_class_name      TEXT NOT NULL,
+    facility_class_name      TEXT UNIQUE NOT NULL,
     facility_class_parent_id TEXT DEFAULT NULL,
     FOREIGN KEY(facility_class_parent_id) REFERENCES facility_classes(facility_class_id)
 );
 
 CREATE TABLE flow_classes (
     flow_class_id        TEXT PRIMARY KEY CHECK ( length(flow_class_id) = 1 ),
-    flow_class_name      TEXT NOT NULL,
+    flow_class_name      TEXT UNIQUE NOT NULL,
     flow_class_parent_id TEXT DEFAULT NULL,
     FOREIGN KEY(flow_class_parent_id) REFERENCES flow_classes(flow_class_id)
 );
 
 CREATE TABLE flow_regimes (
     flow_regime_id   TEXT PRIMARY KEY,
-    flow_regime_name TEXT NOT NULL
+    flow_regime_name TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE phases (
@@ -59,7 +59,7 @@ CREATE TABLE elements (
 
 CREATE TABLE fluids (
     fluid_id          TEXT PRIMARY KEY,
-    fluid_name        TEXT NOT NULL,
+    fluid_name        TEXT UNIQUE NOT NULL,
     phase_id          TEXT NOT NULL,
     molecular_formula TEXT DEFAULT NULL,
     FOREIGN KEY(phase_id) REFERENCES phases(phase_id)
@@ -75,12 +75,12 @@ cursor.execute(
 */
 CREATE TABLE geometries (
     geometry_id   TEXT PRIMARY KEY,
-    geometry_name TEXT NOT NULL
+    geometry_name TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE instrument_classes (
     instrument_class_id        TEXT PRIMARY KEY,
-    instrument_class_name      TEXT NOT NULL,
+    instrument_class_name      TEXT UNIQUE NOT NULL,
     intrusive                  INTEGER NOT NULL DEFAULT FALSE,
     instrument_class_parent_id TEXT DEFAULT NULL,
     FOREIGN KEY(intrusive)                  REFERENCES booleans(boolean_id),
@@ -89,12 +89,12 @@ CREATE TABLE instrument_classes (
 
 CREATE TABLE notes (
     note_id       INTEGER PRIMARY KEY CHECK ( note_id > 0 ),
-    note_contents TEXT NOT NULL
+    note_contents TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE point_labels (
     point_label_id   TEXT PRIMARY KEY,
-    point_label_name TEXT NOT NULL
+    point_label_name TEXT UNIQUE NOT NULL
 );
 
 /*
@@ -121,7 +121,7 @@ This benefit seems to favor a single table.
 */
 CREATE TABLE quantities (
     quantity_id          TEXT PRIMARY KEY,
-    quantity_name        TEXT NOT NULL UNIQUE,
+    quantity_name        TEXT UNIQUE NOT NULL,
     time_exponent        REAL NOT NULL DEFAULT 0.0,
     length_exponent      REAL NOT NULL DEFAULT 0.0,
     mass_exponent        REAL NOT NULL DEFAULT 0.0,
@@ -139,7 +139,7 @@ CREATE TABLE quantity_latex_codes (
     quantity_latex_definition TEXT DEFAULT NULL,
     notes                     TEXT DEFAULT NULL,
     PRIMARY KEY(quantity_id, value_type_id),
-    FOREIGN KEY(quantity_id) REFERENCES quantities(quantity_id),
+    FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id)
 );
 
@@ -183,7 +183,7 @@ TODO: Columns to add later:
 CREATE TABLE facilities (
     facility_id             INTEGER PRIMARY KEY AUTOINCREMENT CHECK ( facility_id > 0 ),
     facility_class_id       TEXT NOT NULL,
-    facility_name           TEXT NOT NULL,
+    facility_name           TEXT UNIQUE NOT NULL,
     iso_country_code        TEXT NOT NULL CHECK ( length(iso_country_code) = 3 ),
     organization_name       TEXT DEFAULT NULL,
     start_year              INTEGER DEFAULT NULL,
@@ -191,7 +191,7 @@ CREATE TABLE facilities (
     predecessor_facility_id INTEGER DEFAULT NULL,
     successor_facility_id   INTEGER DEFAULT NULL,
     FOREIGN KEY(facility_class_id)       REFERENCES facility_classes(facility_class_id),
-    FOREIGN KEY(predecessor_facility_id) REFERENCES facilities(facility_id)
+    FOREIGN KEY(predecessor_facility_id) REFERENCES facilities(facility_id),
     FOREIGN KEY(successor_facility_id)   REFERENCES facilities(facility_id)
 );
 
@@ -221,7 +221,6 @@ CREATE TABLE studies (
     FOREIGN KEY(outlier)       REFERENCES booleans(boolean_id)
 );
 
--- TODO: Should facilities be a series property?
 CREATE TABLE series (
     series_id            TEXT PRIMARY KEY,
     study_id             TEXT NOT NULL,
@@ -715,7 +714,7 @@ CREATE TABLE model_value_notes (
     value_type_id TEXT NOT NULL,
     note_id       INTEGER NOT NULL,
     PRIMARY KEY(model_id, quantity_id, value_type_id, note_id),
-    FOREIGN KEY(model_id) REFERENCES models(model_id),
+    FOREIGN KEY(model_id)      REFERENCES models(model_id),
     FOREIGN KEY(quantity_id)   REFERENCES quantities(quantity_id),
     FOREIGN KEY(value_type_id) REFERENCES value_types(value_type_id),
     FOREIGN KEY(note_id)       REFERENCES notes(note_id)
@@ -723,7 +722,7 @@ CREATE TABLE model_value_notes (
 
 CREATE TABLE compilations (
     compilation_id   INTEGER PRIMARY KEY CHECK ( compilation_id >= 0 ),
-    compilation_name TEXT NOT NULL
+    compilation_name TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE compilation_sources (
@@ -734,8 +733,8 @@ CREATE TABLE compilation_sources (
 );
 
 CREATE TABLE study_external_ids (
-    study_id       TEXT NOT NULL,
-    compilation_id INTEGER NOT NULL,
+    study_id          TEXT NOT NULL,
+    compilation_id    INTEGER NOT NULL,
     study_external_id TEXT NOT NULL,
     PRIMARY KEY(study_id, compilation_id),
     FOREIGN KEY(study_id)       REFERENCES studies(study_id),
@@ -743,8 +742,8 @@ CREATE TABLE study_external_ids (
 );
 
 CREATE TABLE series_external_ids (
-    series_id      TEXT NOT NULL,
-    compilation_id INTEGER NOT NULL,
+    series_id          TEXT NOT NULL,
+    compilation_id     INTEGER NOT NULL,
     series_external_id TEXT NOT NULL,
     PRIMARY KEY(series_id, compilation_id),
     FOREIGN KEY(series_id)      REFERENCES series(series_id),
@@ -752,8 +751,8 @@ CREATE TABLE series_external_ids (
 );
 
 CREATE TABLE station_external_ids (
-    station_id     TEXT NOT NULL,
-    compilation_id INTEGER NOT NULL,
+    station_id          TEXT NOT NULL,
+    compilation_id      INTEGER NOT NULL,
     station_external_id TEXT NOT NULL,
     PRIMARY KEY(station_id, compilation_id),
     FOREIGN KEY(station_id)     REFERENCES stations(station_id),
@@ -761,8 +760,8 @@ CREATE TABLE station_external_ids (
 );
 
 CREATE TABLE point_external_ids (
-    point_id       TEXT NOT NULL,
-    compilation_id INTEGER NOT NULL,
+    point_id          TEXT NOT NULL,
+    compilation_id    INTEGER NOT NULL,
     point_external_id TEXT NOT NULL,
     PRIMARY KEY(point_id, compilation_id),
     FOREIGN KEY(point_id)       REFERENCES points(point_id),
