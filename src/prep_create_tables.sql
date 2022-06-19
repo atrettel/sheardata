@@ -96,9 +96,16 @@ CREATE TABLE instrument_classes (
     instrument_class_id        TEXT PRIMARY KEY,
     instrument_class_name      TEXT UNIQUE NOT NULL,
     intrusive                  INTEGER NOT NULL DEFAULT FALSE,
-    instrument_class_parent_id TEXT DEFAULT NULL,
-    FOREIGN KEY(intrusive)                  REFERENCES booleans(boolean_id),
-    FOREIGN KEY(instrument_class_parent_id) REFERENCES instrument_classes(instrument_class_id)
+    FOREIGN KEY(intrusive) REFERENCES booleans(boolean_id)
+);
+
+CREATE TABLE instrument_class_paths (
+    instrument_class_ancestor_id   TEXT NOT NULL,
+    instrument_class_descendant_id TEXT NOT NULL,
+    instrument_class_path_length   INTEGER NOT NULL CHECK ( instrument_class_path_length >= 0 ),
+    PRIMARY KEY(instrument_class_ancestor_id, instrument_class_descendant_id),
+    FOREIGN KEY(instrument_class_ancestor_id)   REFERENCES instrument_classes(instrument_class_id),
+    FOREIGN KEY(instrument_class_descendant_id) REFERENCES instrument_classes(instrument_class_id)
 );
 
 CREATE TABLE notes (

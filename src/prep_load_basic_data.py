@@ -66,7 +66,7 @@ for source_classification_id in source_classifications:
 
 # Facility classes
 def add_facility_class( cursor, facility_class_id, facility_class_name,
-                    facility_class_parent_id=None ):
+                        facility_class_parent_id=None ):
     cursor.execute(
     """
     INSERT INTO facility_classes( facility_class_id, facility_class_name )
@@ -372,98 +372,86 @@ for geometry_id in geometries:
     )
 
 # Instrument classes
-class InstrumentClass:
-    _instrument_class_id        = None
-    _instrument_class_name      = None
-    _intrusive                  = None
-    _instrument_class_parent_id = None
-
-    def instrument_class_id( self ):
-        return self._instrument_class_id
-
-    def instrument_class_name( self ):
-        return self._instrument_class_name
-
-    def intrusive( self ):
-        return self._intrusive
-
-    def instrument_class_parent_id( self ):
-        return self._instrument_class_parent_id
-
-    def is_child( self ):
-        return self.instrument_class_parent_id() != None
-
-    def execute_query( self ):
+def add_instrument_class( cursor, instrument_class_id, instrument_class_name,
+                          instrument_class_parent_id=None, intrusive=False, ):
+    cursor.execute(
+    """
+    INSERT INTO instrument_classes( instrument_class_id, instrument_class_name,
+                                    intrusive )
+    VALUES( ?, ?, ? );
+    """,
+    (
+        str(instrument_class_id),
+        str(instrument_class_name),
+        intrusive,
+    )
+    )
+    if ( instrument_class_parent_id == None ):
         cursor.execute(
         """
-        INSERT INTO instrument_classes( instrument_class_id, instrument_class_name, intrusive )
-        VALUES( ?, ?, ? );
+        INSERT INTO instrument_class_paths( instrument_class_ancestor_id,
+                                      instrument_class_descendant_id,
+                                      instrument_class_path_length )
+        VALUES( ?, ?, 0 );
         """,
         (
-            self.instrument_class_id(),
-            self.instrument_class_name(),
-            self.intrusive(),
+            str(instrument_class_id),
+            str(instrument_class_id),
         )
         )
-
-    def __init__( self, instrument_class_id, instrument_class_name, instrument_class_parent_id, intrusive=False, ):
-        self._instrument_class_id        = instrument_class_id
-        self._instrument_class_name      = str(instrument_class_name)
-        self._instrument_class_parent_id = instrument_class_parent_id
-        self._intrusive                  = 1 if intrusive else 0
-
-instrument_classes = []
-instrument_classes.append( InstrumentClass( sd.IT_APPROXIMATION,                            "approximation",                            sd.IT_REASONING,                                    ) )
-instrument_classes.append( InstrumentClass( sd.IT_ASSUMPTION,                               "assumption",                               sd.IT_REASONING,                                    ) )
-instrument_classes.append( InstrumentClass( sd.IT_CALCULATION,                              "calculation",                              sd.IT_REASONING,                                    ) )
-instrument_classes.append( InstrumentClass( sd.IT_CLAIM,                                    "claim",                                    sd.IT_REASONING,                                    ) )
-instrument_classes.append( InstrumentClass( sd.IT_CLAUSER_METHOD,                           "Clauser method",                           sd.IT_VELOCITY_PROFILE_METHOD,                      ) )
-instrument_classes.append( InstrumentClass( sd.IT_CONSTANT_CURRENT_HOT_WIRE_ANEMOMETER,     "constant-current hot-wire anemometer",     sd.IT_HOT_WIRE_ANEMOMETER,          intrusive=True, ) )
-instrument_classes.append( InstrumentClass( sd.IT_CONSTANT_TEMPERATURE_HOT_WIRE_ANEMOMETER, "constant-temperature hot-wire anemometer", sd.IT_HOT_WIRE_ANEMOMETER,          intrusive=True, ) )
-instrument_classes.append( InstrumentClass( sd.IT_DIFFERENTIAL_PRESSURE_METHOD,             "differential pressure method",             sd.IT_OBSERVATION,                                  ) )
-instrument_classes.append( InstrumentClass( sd.IT_DIRECT_INJECTION_METHOD,                  "direct injection method",                  sd.IT_OPTICAL_SYSTEM,                               ) )
-instrument_classes.append( InstrumentClass( sd.IT_FLOATING_ELEMENT_BALANCE,                 "floating element balance",                 sd.IT_WALL_SHEAR_STRESS_METHOD,                     ) )
-instrument_classes.append( InstrumentClass( sd.IT_FLOWMETER,                                "flowmeter",                                sd.IT_OBSERVATION,                                  ) )
-instrument_classes.append( InstrumentClass( sd.IT_HOT_WIRE_ANEMOMETER,                      "hot-wire anemometer",                      sd.IT_THERMAL_ANEMOMETER,           intrusive=True, ) )
-instrument_classes.append( InstrumentClass( sd.IT_IMPACT_TUBE,                              "impact tube",                              sd.IT_DIFFERENTIAL_PRESSURE_METHOD, intrusive=True, ) )
-instrument_classes.append( InstrumentClass( sd.IT_INDEX_OF_REFRACTION_METHOD,               "index-of-refraction method",               sd.IT_OPTICAL_SYSTEM,                               ) )
-instrument_classes.append( InstrumentClass( sd.IT_LASER_DOPPLER_ANEMOMETER,                 "laser Doppler anemometer",                 sd.IT_OPTICAL_SYSTEM,                               ) )
-instrument_classes.append( InstrumentClass( sd.IT_MACH_ZEHNDER_INTERFEROMETER,              "Mach-Zehnder interferometer",              sd.IT_INDEX_OF_REFRACTION_METHOD,                   ) )
-instrument_classes.append( InstrumentClass( sd.IT_MOMENTUM_BALANCE,                         "momentum balance",                         sd.IT_WALL_SHEAR_STRESS_METHOD,                     ) )
-instrument_classes.append( InstrumentClass( sd.IT_OBSERVATION,                              "observation",                              sd.IT_ROOT,                                         ) )
-instrument_classes.append( InstrumentClass( sd.IT_OPTICAL_SYSTEM,                           "optical system",                           sd.IT_OBSERVATION,                                  ) )
-instrument_classes.append( InstrumentClass( sd.IT_PARTICLE_IMAGE_VELOCIMETER,               "particle image velocimeter",               sd.IT_OPTICAL_SYSTEM,                               ) )
-instrument_classes.append( InstrumentClass( sd.IT_PITOT_STATIC_TUBE,                        "Pitot-static tube",                        sd.IT_DIFFERENTIAL_PRESSURE_METHOD, intrusive=True, ) )
-instrument_classes.append( InstrumentClass( sd.IT_PRESTON_TUBE,                             "Preston tube",                             sd.IT_WALL_SHEAR_STRESS_METHOD,     intrusive=True, ) )
-instrument_classes.append( InstrumentClass( sd.IT_REASONING,                                "reasoning",                                sd.IT_ROOT,                                         ) )
-instrument_classes.append( InstrumentClass( sd.IT_ROOT,                                     "knowledge source",                         None,                                               ) )
-instrument_classes.append( InstrumentClass( sd.IT_SCHLIEREN_SYSTEM,                         "schlieren system",                         sd.IT_INDEX_OF_REFRACTION_METHOD,                   ) )
-instrument_classes.append( InstrumentClass( sd.IT_SHADOWGRAPH_SYSTEM,                       "shadowgraph system",                       sd.IT_INDEX_OF_REFRACTION_METHOD,                   ) )
-instrument_classes.append( InstrumentClass( sd.IT_SIMULATION,                               "simulation",                               sd.IT_REASONING,                                    ) )
-instrument_classes.append( InstrumentClass( sd.IT_STANTON_TUBE,                             "Stanton tube",                             sd.IT_WALL_SHEAR_STRESS_METHOD,     intrusive=True, ) )
-instrument_classes.append( InstrumentClass( sd.IT_THERMAL_ANEMOMETER,                       "thermal anemometer",                       sd.IT_OBSERVATION,                                  ) )
-instrument_classes.append( InstrumentClass( sd.IT_VELOCITY_PROFILE_METHOD,                  "velocity profile method",                  sd.IT_WALL_SHEAR_STRESS_METHOD,                     ) )
-instrument_classes.append( InstrumentClass( sd.IT_VISCOUS_SUBLAYER_SLOPE_METHOD,            "viscous sublayer slope method",            sd.IT_VELOCITY_PROFILE_METHOD,                      ) )
-instrument_classes.append( InstrumentClass( sd.IT_WALL_SHEAR_STRESS_METHOD,                 "wall shear stress method",                 sd.IT_OBSERVATION,                                  ) )
-instrument_classes.append( InstrumentClass( sd.IT_WEIGHING_METHOD,                          "weighing method",                          sd.IT_FLOWMETER,                                    ) )
-
-for instrument_class in instrument_classes:
-    instrument_class.execute_query()
-
-# Two separate loops MUST occur due to foreign key constraints.
-for instrument_class in instrument_classes:
-    if ( instrument_class.is_child() ):
+    else:
         cursor.execute(
         """
-        UPDATE instrument_classes
-        SET instrument_class_parent_id=?
-        WHERE instrument_class_id=?;
+        INSERT INTO instrument_class_paths( instrument_class_ancestor_id,
+                                      instrument_class_descendant_id,
+                                      instrument_class_path_length )
+        SELECT ?, ?, 0
+        UNION ALL
+        SELECT tmp.instrument_class_ancestor_id, ?, tmp.instrument_class_path_length+1
+        FROM instrument_class_paths as tmp
+        WHERE tmp.instrument_class_descendant_id = ?;
         """,
         (
-            instrument_class.instrument_class_parent_id(),
-            instrument_class.instrument_class_id(),
+            str(instrument_class_id),
+            str(instrument_class_id),
+            str(instrument_class_id),
+            str(instrument_class_parent_id),
         )
         )
+
+add_instrument_class( cursor, sd.IT_ROOT,                                     "knowledge source",                         None,                                               )
+add_instrument_class( cursor, sd.IT_OBSERVATION,                              "observation",                              sd.IT_ROOT,                                         )
+add_instrument_class( cursor, sd.IT_DIFFERENTIAL_PRESSURE_METHOD,             "differential pressure method",             sd.IT_OBSERVATION,                                  )
+add_instrument_class( cursor, sd.IT_IMPACT_TUBE,                              "impact tube",                              sd.IT_DIFFERENTIAL_PRESSURE_METHOD, intrusive=True, )
+add_instrument_class( cursor, sd.IT_PITOT_STATIC_TUBE,                        "Pitot-static tube",                        sd.IT_DIFFERENTIAL_PRESSURE_METHOD, intrusive=True, )
+add_instrument_class( cursor, sd.IT_FLOWMETER,                                "flowmeter",                                sd.IT_OBSERVATION,                                  )
+add_instrument_class( cursor, sd.IT_WEIGHING_METHOD,                          "weighing method",                          sd.IT_FLOWMETER,                                    )
+add_instrument_class( cursor, sd.IT_OPTICAL_SYSTEM,                           "optical system",                           sd.IT_OBSERVATION,                                  )
+add_instrument_class( cursor, sd.IT_DIRECT_INJECTION_METHOD,                  "direct injection method",                  sd.IT_OPTICAL_SYSTEM,                               )
+add_instrument_class( cursor, sd.IT_INDEX_OF_REFRACTION_METHOD,               "index-of-refraction method",               sd.IT_OPTICAL_SYSTEM,                               )
+add_instrument_class( cursor, sd.IT_MACH_ZEHNDER_INTERFEROMETER,              "Mach-Zehnder interferometer",              sd.IT_INDEX_OF_REFRACTION_METHOD,                   )
+add_instrument_class( cursor, sd.IT_SCHLIEREN_SYSTEM,                         "schlieren system",                         sd.IT_INDEX_OF_REFRACTION_METHOD,                   )
+add_instrument_class( cursor, sd.IT_SHADOWGRAPH_SYSTEM,                       "shadowgraph system",                       sd.IT_INDEX_OF_REFRACTION_METHOD,                   )
+add_instrument_class( cursor, sd.IT_LASER_DOPPLER_ANEMOMETER,                 "laser Doppler anemometer",                 sd.IT_OPTICAL_SYSTEM,                               )
+add_instrument_class( cursor, sd.IT_PARTICLE_IMAGE_VELOCIMETER,               "particle image velocimeter",               sd.IT_OPTICAL_SYSTEM,                               )
+add_instrument_class( cursor, sd.IT_THERMAL_ANEMOMETER,                       "thermal anemometer",                       sd.IT_OBSERVATION,                                  )
+add_instrument_class( cursor, sd.IT_HOT_WIRE_ANEMOMETER,                      "hot-wire anemometer",                      sd.IT_THERMAL_ANEMOMETER,           intrusive=True, )
+add_instrument_class( cursor, sd.IT_CONSTANT_CURRENT_HOT_WIRE_ANEMOMETER,     "constant-current hot-wire anemometer",     sd.IT_HOT_WIRE_ANEMOMETER,          intrusive=True, )
+add_instrument_class( cursor, sd.IT_CONSTANT_TEMPERATURE_HOT_WIRE_ANEMOMETER, "constant-temperature hot-wire anemometer", sd.IT_HOT_WIRE_ANEMOMETER,          intrusive=True, )
+add_instrument_class( cursor, sd.IT_WALL_SHEAR_STRESS_METHOD,                 "wall shear stress method",                 sd.IT_OBSERVATION,                                  )
+add_instrument_class( cursor, sd.IT_FLOATING_ELEMENT_BALANCE,                 "floating element balance",                 sd.IT_WALL_SHEAR_STRESS_METHOD,                     )
+add_instrument_class( cursor, sd.IT_MOMENTUM_BALANCE,                         "momentum balance",                         sd.IT_WALL_SHEAR_STRESS_METHOD,                     )
+add_instrument_class( cursor, sd.IT_PRESTON_TUBE,                             "Preston tube",                             sd.IT_WALL_SHEAR_STRESS_METHOD,     intrusive=True, )
+add_instrument_class( cursor, sd.IT_STANTON_TUBE,                             "Stanton tube",                             sd.IT_WALL_SHEAR_STRESS_METHOD,     intrusive=True, )
+add_instrument_class( cursor, sd.IT_VELOCITY_PROFILE_METHOD,                  "velocity profile method",                  sd.IT_WALL_SHEAR_STRESS_METHOD,                     )
+add_instrument_class( cursor, sd.IT_CLAUSER_METHOD,                           "Clauser method",                           sd.IT_VELOCITY_PROFILE_METHOD,                      )
+add_instrument_class( cursor, sd.IT_VISCOUS_SUBLAYER_SLOPE_METHOD,            "viscous sublayer slope method",            sd.IT_VELOCITY_PROFILE_METHOD,                      )
+add_instrument_class( cursor, sd.IT_REASONING,                                "reasoning",                                sd.IT_ROOT,                                         )
+add_instrument_class( cursor, sd.IT_APPROXIMATION,                            "approximation",                            sd.IT_REASONING,                                    )
+add_instrument_class( cursor, sd.IT_ASSUMPTION,                               "assumption",                               sd.IT_REASONING,                                    )
+add_instrument_class( cursor, sd.IT_CALCULATION,                              "calculation",                              sd.IT_REASONING,                                    )
+add_instrument_class( cursor, sd.IT_CLAIM,                                    "claim",                                    sd.IT_REASONING,                                    )
+add_instrument_class( cursor, sd.IT_SIMULATION,                               "simulation",                               sd.IT_REASONING,                                    )
 
 # Point labels
 point_labels = {}

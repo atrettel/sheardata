@@ -15,10 +15,12 @@ cursor.execute( "PRAGMA foreign_keys = ON;" )
 def create_instruments_tree( parent ):
     cursor.execute(
     """
-    SELECT instrument_class_id, instrument_class_name
-    FROM instrument_classes
-    WHERE instrument_class_parent_id=?
-    ORDER BY instrument_class_name COLLATE NOCASE;
+    SELECT instrument_classes.instrument_class_id, instrument_classes.instrument_class_name
+    FROM instrument_classes, instrument_class_paths
+    WHERE instrument_class_paths.instrument_class_ancestor_id=?
+      AND instrument_classes.instrument_class_id = instrument_class_paths.instrument_class_descendant_id
+      AND instrument_class_paths.instrument_class_path_length=1
+    ORDER BY instrument_classes.instrument_class_name COLLATE NOCASE;
     """,
     ( parent, )
     )
