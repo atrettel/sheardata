@@ -26,9 +26,16 @@ CREATE TABLE coordinate_systems (
 
 CREATE TABLE facility_classes (
     facility_class_id        TEXT PRIMARY KEY CHECK ( length(facility_class_id) = 1 ),
-    facility_class_name      TEXT UNIQUE NOT NULL,
-    facility_class_parent_id TEXT DEFAULT NULL,
-    FOREIGN KEY(facility_class_parent_id) REFERENCES facility_classes(facility_class_id)
+    facility_class_name      TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE facility_class_paths (
+    facility_class_ancestor_id   TEXT NOT NULL,
+    facility_class_descendant_id TEXT NOT NULL,
+    facility_class_path_length   INTEGER NOT NULL CHECK ( facility_class_path_length >= 0 ),
+    PRIMARY KEY(facility_class_ancestor_id, facility_class_descendant_id),
+    FOREIGN KEY(facility_class_ancestor_id)   REFERENCES facility_classes(facility_class_id),
+    FOREIGN KEY(facility_class_descendant_id) REFERENCES facility_classes(facility_class_id)
 );
 
 CREATE TABLE flow_classes (

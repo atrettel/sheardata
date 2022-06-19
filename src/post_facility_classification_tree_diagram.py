@@ -34,10 +34,10 @@ with open( "figure-facility-classification-tree-diagram.gv", "w" ) as f:
     
     cursor.execute(
     """
-    SELECT facility_class_parent_id, facility_class_id
-    FROM facility_classes
-    WHERE facility_class_parent_id IS NOT NULL
-    ORDER BY facility_class_parent_id;
+    SELECT facility_class_ancestor_id, facility_class_descendant_id
+    FROM facility_class_paths
+    WHERE facility_class_path_length=1
+    ORDER BY facility_class_ancestor_id;
     """
     )
     for result in cursor.fetchall():

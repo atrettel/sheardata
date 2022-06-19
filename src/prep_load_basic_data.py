@@ -65,78 +65,68 @@ for source_classification_id in source_classifications:
     )
 
 # Facility classes
-class FacilityClass:
-    _facility_class_id     = None
-    _facility_class_name   = None
-    _facility_class_parent = None
-
-    def facility_class_id( self ):
-        return self._facility_class_id
-
-    def facility_class_name( self ):
-        return self._facility_class_name
-
-    def facility_class_parent( self ):
-        return self._facility_class_parent
-
-    def is_child( self ):
-        return self.facility_class_parent() != None
-
-    def execute_query( self ):
+def add_facility_class( cursor, facility_class_id, facility_class_name,
+                    facility_class_parent_id=None ):
+    cursor.execute(
+    """
+    INSERT INTO facility_classes( facility_class_id, facility_class_name )
+    VALUES( ?, ? );
+    """,
+    (
+        str(facility_class_id),
+        str(facility_class_name),
+    )
+    )
+    if ( facility_class_parent_id == None ):
         cursor.execute(
         """
-        INSERT INTO facility_classes( facility_class_id, facility_class_name )
-        VALUES( ?, ? );
+        INSERT INTO facility_class_paths( facility_class_ancestor_id,
+                                      facility_class_descendant_id,
+                                      facility_class_path_length )
+        VALUES( ?, ?, 0 );
         """,
         (
-            self.facility_class_id(),
-            self.facility_class_name(),
+            str(facility_class_id),
+            str(facility_class_id),
         )
         )
-
-    def __init__( self, facility_class_id, facility_class_name, facility_class_parent ):
-        self._facility_class_id     = facility_class_id
-        self._facility_class_name   = facility_class_name
-        self._facility_class_parent = facility_class_parent
-
-facility_classes = []
-facility_classes.append( FacilityClass( sd.FT_FACILITY,                   "facility",                        None                        ) )
-
-facility_classes.append( FacilityClass( sd.FT_EXPERIMENTAL_FACILITY,      "experimental facility",           sd.FT_FACILITY              ) )
-facility_classes.append( FacilityClass( sd.FT_TUNNEL,                     "tunnel",                          sd.FT_EXPERIMENTAL_FACILITY ) )
-facility_classes.append( FacilityClass( sd.FT_WIND_TUNNEL,                "wind tunnel",                     sd.FT_TUNNEL                ) )
-facility_classes.append( FacilityClass( sd.FT_OPEN_CIRCUIT_WIND_TUNNEL,   "open-circuit wind tunnel",        sd.FT_WIND_TUNNEL           ) )
-facility_classes.append( FacilityClass( sd.FT_CLOSED_CIRCUIT_WIND_TUNNEL, "closed-circuit wind tunnel",      sd.FT_WIND_TUNNEL           ) )
-facility_classes.append( FacilityClass( sd.FT_BLOWDOWN_WIND_TUNNEL,       "blowdown wind tunnel",            sd.FT_WIND_TUNNEL           ) )
-facility_classes.append( FacilityClass( sd.FT_LUDWIEG_TUBE,               "Ludwieg tube",                    sd.FT_BLOWDOWN_WIND_TUNNEL  ) )
-facility_classes.append( FacilityClass( sd.FT_SHOCK_TUBE,                 "shock tube",                      sd.FT_BLOWDOWN_WIND_TUNNEL  ) )
-facility_classes.append( FacilityClass( sd.FT_WATER_TUNNEL,               "water tunnel",                    sd.FT_TUNNEL                ) )
-facility_classes.append( FacilityClass( sd.FT_RANGE,                      "range",                           sd.FT_EXPERIMENTAL_FACILITY ) )
-facility_classes.append( FacilityClass( sd.FT_TOWING_TANK,                "towing tank",                     sd.FT_EXPERIMENTAL_FACILITY ) )
-
-facility_classes.append( FacilityClass( sd.FT_NUMERICAL_FACILITY,         "numerical facility",              sd.FT_FACILITY              ) )
-facility_classes.append( FacilityClass( sd.FT_FINITE_DIFFERENCE_METHOD,   "finite-difference method",        sd.FT_NUMERICAL_FACILITY    ) )
-facility_classes.append( FacilityClass( sd.FT_FINITE_ELEMENT_METHOD,      "finite-element method",           sd.FT_NUMERICAL_FACILITY    ) )
-facility_classes.append( FacilityClass( sd.FT_FINITE_VOLUME_METHOD,       "finite-volume method",            sd.FT_NUMERICAL_FACILITY    ) )
-facility_classes.append( FacilityClass( sd.FT_SPECTRAL_METHOD,            "spectral method",                 sd.FT_NUMERICAL_FACILITY    ) )
-
-for facility_class in facility_classes:
-    facility_class.execute_query()
-
-# Two separate loops MUST occur due to foreign key constraints.
-for facility_class in facility_classes:
-    if ( facility_class.is_child() ):
+    else:
         cursor.execute(
         """
-        UPDATE facility_classes
-        SET facility_class_parent_id=?
-        WHERE facility_class_id=?;
+        INSERT INTO facility_class_paths( facility_class_ancestor_id,
+                                      facility_class_descendant_id,
+                                      facility_class_path_length )
+        SELECT ?, ?, 0
+        UNION ALL
+        SELECT tmp.facility_class_ancestor_id, ?, tmp.facility_class_path_length+1
+        FROM facility_class_paths as tmp
+        WHERE tmp.facility_class_descendant_id = ?;
         """,
         (
-            facility_class.facility_class_parent(),
-            facility_class.facility_class_id(),
+            str(facility_class_id),
+            str(facility_class_id),
+            str(facility_class_id),
+            str(facility_class_parent_id),
         )
         )
+
+add_facility_class( cursor, sd.FT_FACILITY,                   "facility",                   None                        )
+add_facility_class( cursor, sd.FT_EXPERIMENTAL_FACILITY,      "experimental facility",      sd.FT_FACILITY              )
+add_facility_class( cursor, sd.FT_TUNNEL,                     "tunnel",                     sd.FT_EXPERIMENTAL_FACILITY )
+add_facility_class( cursor, sd.FT_WIND_TUNNEL,                "wind tunnel",                sd.FT_TUNNEL                )
+add_facility_class( cursor, sd.FT_OPEN_CIRCUIT_WIND_TUNNEL,   "open-circuit wind tunnel",   sd.FT_WIND_TUNNEL           )
+add_facility_class( cursor, sd.FT_CLOSED_CIRCUIT_WIND_TUNNEL, "closed-circuit wind tunnel", sd.FT_WIND_TUNNEL           )
+add_facility_class( cursor, sd.FT_BLOWDOWN_WIND_TUNNEL,       "blowdown wind tunnel",       sd.FT_WIND_TUNNEL           )
+add_facility_class( cursor, sd.FT_LUDWIEG_TUBE,               "Ludwieg tube",               sd.FT_BLOWDOWN_WIND_TUNNEL  )
+add_facility_class( cursor, sd.FT_SHOCK_TUBE,                 "shock tube",                 sd.FT_BLOWDOWN_WIND_TUNNEL  )
+add_facility_class( cursor, sd.FT_WATER_TUNNEL,               "water tunnel",               sd.FT_TUNNEL                )
+add_facility_class( cursor, sd.FT_RANGE,                      "range",                      sd.FT_EXPERIMENTAL_FACILITY )
+add_facility_class( cursor, sd.FT_TOWING_TANK,                "towing tank",                sd.FT_EXPERIMENTAL_FACILITY )
+add_facility_class( cursor, sd.FT_NUMERICAL_FACILITY,         "numerical facility",         sd.FT_FACILITY              )
+add_facility_class( cursor, sd.FT_FINITE_DIFFERENCE_METHOD,   "finite-difference method",   sd.FT_NUMERICAL_FACILITY    )
+add_facility_class( cursor, sd.FT_FINITE_ELEMENT_METHOD,      "finite-element method",      sd.FT_NUMERICAL_FACILITY    )
+add_facility_class( cursor, sd.FT_FINITE_VOLUME_METHOD,       "finite-volume method",       sd.FT_NUMERICAL_FACILITY    )
+add_facility_class( cursor, sd.FT_SPECTRAL_METHOD,            "spectral method",            sd.FT_NUMERICAL_FACILITY    )
 
 # Flow classes
 def add_flow_class( cursor, flow_class_id, flow_class_name,
