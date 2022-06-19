@@ -45,6 +45,25 @@ for coordinate_system_id in coordinate_systems:
     ( coordinate_system_id, coordinate_systems[coordinate_system_id], )
     )
 
+# Source classifications
+source_classifications = {}
+source_classifications[   sd.PRIMARY_SOURCE ] =   "primary source"
+source_classifications[ sd.SECONDARY_SOURCE ] = "secondary source"
+source_classifications[  sd.TERTIARY_SOURCE ] =  "tertiary source"
+
+for source_classification_id in source_classifications:
+    cursor.execute(
+    """
+    INSERT INTO source_classifications( source_classification_id,
+                                        source_classification_name )
+    VALUES( ?, ? );
+    """,
+    (
+        source_classification_id,
+        source_classifications[source_classification_id],
+    )
+    )
+
 # Facility classes
 class FacilityClass:
     _facility_class_id     = None

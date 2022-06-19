@@ -36,7 +36,7 @@ with open( "table-all-studies.tex.tmp", "w" ) as f:
         """
         SELECT citation_key
         FROM study_sources
-        WHERE study_id=? AND source_classification=?
+        WHERE study_id=? AND source_classification_id=?
         ORDER BY citation_key COLLATE NOCASE;
         """,
         (

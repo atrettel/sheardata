@@ -273,42 +273,47 @@ CREATE TABLE points (
 );
 
 /*
-Study sources (literature references)
-
-The classification refers to whether this source (reference) is a primary
-source (1) created during the study or whether this source is a secondary
-source (2) created later.
+Sources (literature references)
 */
+CREATE TABLE source_classifications (
+    source_classification_id   INTEGER PRIMARY KEY CHECK ( source_classification_id IN (1,2,3) ),
+    source_classification_name TEXT NOT NULL
+);
+
 CREATE TABLE study_sources (
-    study_id              TEXT NOT NULL,
-    citation_key          TEXT NOT NULL,
-    source_classification INTEGER NOT NULL DEFAULT 1 CHECK ( source_classification = 1 OR source_classification = 2 ),
+    study_id                 TEXT NOT NULL,
+    citation_key             TEXT NOT NULL,
+    source_classification_id INTEGER NOT NULL,
     PRIMARY KEY(study_id, citation_key),
-    FOREIGN KEY(study_id) REFERENCES studies(study_id)
+    FOREIGN KEY(study_id)                 REFERENCES studies(study_id),
+    FOREIGN KEY(source_classification_id) REFERENCES source_classifications(source_classification_id)
 );
 
 CREATE TABLE facility_sources (
-    facility_id           TEXT NOT NULL,
-    citation_key          TEXT NOT NULL,
-    source_classification INTEGER NOT NULL DEFAULT 1 CHECK ( source_classification = 1 OR source_classification = 2 ),
+    facility_id              TEXT NOT NULL,
+    citation_key             TEXT NOT NULL,
+    source_classification_id INTEGER NOT NULL,
     PRIMARY KEY(facility_id, citation_key),
-    FOREIGN KEY(facility_id) REFERENCES facilities(facility_id)
+    FOREIGN KEY(facility_id) REFERENCES facilities(facility_id),
+    FOREIGN KEY(source_classification_id) REFERENCES source_classifications(source_classification_id)
 );
 
 CREATE TABLE instrument_sources (
-    instrument_id         TEXT NOT NULL,
-    citation_key          TEXT NOT NULL,
-    source_classification INTEGER NOT NULL DEFAULT 1 CHECK ( source_classification = 1 OR source_classification = 2 ),
+    instrument_id            TEXT NOT NULL,
+    citation_key             TEXT NOT NULL,
+    source_classification_id INTEGER NOT NULL,
     PRIMARY KEY(instrument_id, citation_key),
-    FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id)
+    FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id),
+    FOREIGN KEY(source_classification_id) REFERENCES source_classifications(source_classification_id)
 );
 
 CREATE TABLE model_sources (
-    model_id     TEXT NOT NULL,
-    citation_key TEXT NOT NULL,
-    source_classification INTEGER NOT NULL DEFAULT 1 CHECK ( source_classification = 1 OR source_classification = 2 ),
+    model_id                 TEXT NOT NULL,
+    citation_key             TEXT NOT NULL,
+    source_classification_id INTEGER NOT NULL,
     PRIMARY KEY(model_id, citation_key),
-    FOREIGN KEY(model_id) REFERENCES models(model_id)
+    FOREIGN KEY(model_id) REFERENCES models(model_id),
+    FOREIGN KEY(source_classification_id) REFERENCES source_classifications(source_classification_id)
 );
 
 CREATE TABLE series_components (

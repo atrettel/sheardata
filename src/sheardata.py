@@ -513,6 +513,7 @@ C_AGARD_AR_345 = 5 # AGARD-AR-345 (Test cases for LES)
 # Source classifications
 PRIMARY_SOURCE   = 1
 SECONDARY_SOURCE = 2
+TERTIARY_SOURCE  = 3
 
 def split_float( value ):
     if ( isinstance( value, float ) ):
@@ -838,16 +839,17 @@ def get_study_value( cursor, study_id, quantity_id,
     )
     return fetch_float( cursor )
 
-def add_study_source( cursor, study_id, citation_key, source_classification ):
+def add_study_source( cursor, study_id, citation_key,
+                      source_classification_id=PRIMARY_SOURCE ):
     cursor.execute(
     """
-    INSERT INTO study_sources( study_id, citation_key, source_classification )
+    INSERT INTO study_sources( study_id, citation_key, source_classification_id )
     VALUES( ?, ?, ? );
     """,
     (
         sanitize_identifier(study_id),
         str(citation_key),
-        int(source_classification),
+        int(source_classification_id),
     )
     )
 
@@ -1741,16 +1743,18 @@ def get_facility_value( cursor, facility_id, quantity_id,
     )
     return fetch_float( cursor )
 
-def add_facility_source( cursor, facility_id, citation_key, source_classification ):
+def add_facility_source( cursor, facility_id, citation_key,
+                         source_classification_id=PRIMARY_SOURCE ):
     cursor.execute(
     """
-    INSERT INTO facility_sources( facility_id, citation_key, source_classification )
+    INSERT INTO facility_sources( facility_id, citation_key,
+                                  source_classification_id )
     VALUES( ?, ?, ? );
     """,
     (
         int(facility_id),
         str(citation_key),
-        int(source_classification),
+        int(source_classification_id),
     )
     )
 
@@ -1857,16 +1861,18 @@ def get_instrument_value( cursor, instrument_id, quantity_id,
     )
     return fetch_float( cursor )
 
-def add_instrument_source( cursor, instrument_id, citation_key, source_classification ):
+def add_instrument_source( cursor, instrument_id, citation_key,
+                           source_classification_id=PRIMARY_SOURCE ):
     cursor.execute(
     """
-    INSERT INTO instrument_sources( instrument_id, citation_key, source_classification )
+    INSERT INTO instrument_sources( instrument_id, citation_key,
+                                    source_classification_id )
     VALUES( ?, ?, ? );
     """,
     (
         int(instrument_id),
         str(citation_key),
-        int(source_classification),
+        int(source_classification_id),
     )
     )
 
@@ -1971,16 +1977,17 @@ def get_model_value( cursor, model_id, quantity_id,
     )
     return fetch_float( cursor )
 
-def add_model_source( cursor, model_id, citation_key, source_classification ):
+def add_model_source( cursor, model_id, citation_key,
+                      source_classification_id=PRIMARY_SOURCE ):
     cursor.execute(
     """
-    INSERT INTO model_sources( model_id, citation_key, source_classification )
+    INSERT INTO model_sources( model_id, citation_key, source_classification_id )
     VALUES( ?, ?, ? );
     """,
     (
         int(model_id),
         str(citation_key),
-        int(source_classification),
+        int(source_classification_id),
     )
     )
 
