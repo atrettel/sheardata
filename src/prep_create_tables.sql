@@ -32,10 +32,17 @@ CREATE TABLE facility_classes (
 );
 
 CREATE TABLE flow_classes (
-    flow_class_id        TEXT PRIMARY KEY CHECK ( length(flow_class_id) = 1 ),
-    flow_class_name      TEXT UNIQUE NOT NULL,
-    flow_class_parent_id TEXT DEFAULT NULL,
-    FOREIGN KEY(flow_class_parent_id) REFERENCES flow_classes(flow_class_id)
+    flow_class_id   TEXT PRIMARY KEY CHECK ( length(flow_class_id) = 1 ),
+    flow_class_name TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE flow_class_paths (
+    flow_class_ancestor_id   TEXT NOT NULL,
+    flow_class_descendant_id TEXT NOT NULL,
+    flow_class_path_length   INTEGER NOT NULL CHECK ( flow_class_path_length >= 0 ),
+    PRIMARY KEY(flow_class_ancestor_id, flow_class_descendant_id),
+    FOREIGN KEY(flow_class_ancestor_id)   REFERENCES flow_classes(flow_class_id),
+    FOREIGN KEY(flow_class_descendant_id) REFERENCES flow_classes(flow_class_id)
 );
 
 CREATE TABLE flow_regimes (

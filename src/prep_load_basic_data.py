@@ -139,75 +139,67 @@ for facility_class in facility_classes:
         )
 
 # Flow classes
-class FlowClass:
-    _flow_class_id     = None
-    _flow_class_name   = None
-    _flow_class_parent = None
-
-    def flow_class_id( self ):
-        return self._flow_class_id
-
-    def flow_class_name( self ):
-        return self._flow_class_name
-
-    def flow_class_parent( self ):
-        return self._flow_class_parent
-
-    def is_child( self ):
-        return self.flow_class_parent() != None
-
-    def execute_query( self ):
+def add_flow_class( cursor, flow_class_id, flow_class_name,
+                    flow_class_parent_id=None ):
+    cursor.execute(
+    """
+    INSERT INTO flow_classes( flow_class_id, flow_class_name )
+    VALUES( ?, ? );
+    """,
+    (
+        str(flow_class_id),
+        str(flow_class_name),
+    )
+    )
+    if ( flow_class_parent_id == None ):
         cursor.execute(
         """
-        INSERT INTO flow_classes( flow_class_id, flow_class_name )
-        VALUES( ?, ? );
+        INSERT INTO flow_class_paths( flow_class_ancestor_id,
+                                      flow_class_descendant_id,
+                                      flow_class_path_length )
+        VALUES( ?, ?, 0 );
         """,
         (
-            self.flow_class_id(),
-            self.flow_class_name(),
+            str(flow_class_id),
+            str(flow_class_id),
         )
         )
-
-    def __init__( self, flow_class_id, flow_class_name, flow_class_parent ):
-        self._flow_class_id     = flow_class_id
-        self._flow_class_name   = flow_class_name
-        self._flow_class_parent = flow_class_parent
-
-flow_classes = []
-flow_classes.append( FlowClass( sd.FC_BOUNDARY_LAYER,       "boundary layer",            sd.FC_EXTERNAL_FLOW ) )
-flow_classes.append( FlowClass( sd.FC_DUCT_FLOW,            "duct flow",                 sd.FC_INTERNAL_FLOW ) )
-flow_classes.append( FlowClass( sd.FC_EXTERNAL_FLOW,        "external flow",         sd.FC_WALL_BOUNDED_FLOW ) )
-flow_classes.append( FlowClass( sd.FC_FREE_JET,             "free jet",                sd.FC_FREE_SHEAR_FLOW ) )
-flow_classes.append( FlowClass( sd.FC_FREE_SHEAR_FLOW,      "free shear flow",              sd.FC_SHEAR_FLOW ) )
-flow_classes.append( FlowClass( sd.FC_HOMOGENEOUS_FLOW,     "homogeneous flow",      sd.FC_UNCLASSIFIED_FLOW ) )
-flow_classes.append( FlowClass( sd.FC_INHOMOGENEOUS_FLOW,   "inhomogeneous flow",    sd.FC_UNCLASSIFIED_FLOW ) )
-flow_classes.append( FlowClass( sd.FC_INTERNAL_FLOW,        "internal flow",         sd.FC_WALL_BOUNDED_FLOW ) )
-flow_classes.append( FlowClass( sd.FC_ISOTROPIC_FLOW,       "isotropic flow",         sd.FC_HOMOGENEOUS_FLOW ) )
-flow_classes.append( FlowClass( sd.FC_MIXING_LAYER,         "mixing layer",            sd.FC_FREE_SHEAR_FLOW ) )
-flow_classes.append( FlowClass( sd.FC_BOUNDARY_DRIVEN_FLOW, "boundary-driven flow",      sd.FC_INTERNAL_FLOW ) )
-flow_classes.append( FlowClass( sd.FC_SHEAR_FLOW,           "shear flow",           sd.FC_INHOMOGENEOUS_FLOW ) )
-flow_classes.append( FlowClass( sd.FC_UNCLASSIFIED_FLOW,    "flow",                                     None ) )
-flow_classes.append( FlowClass( sd.FC_WAKE,                 "wake",                    sd.FC_FREE_SHEAR_FLOW ) )
-flow_classes.append( FlowClass( sd.FC_WALL_BOUNDED_FLOW,    "wall-bounded flow",            sd.FC_SHEAR_FLOW ) )
-flow_classes.append( FlowClass( sd.FC_WALL_JET,             "wall jet",                  sd.FC_EXTERNAL_FLOW ) )
-
-for flow_class in flow_classes:
-    flow_class.execute_query()
-
-# Two separate loops MUST occur due to foreign key constraints.
-for flow_class in flow_classes:
-    if ( flow_class.is_child() ):
+    else:
         cursor.execute(
         """
-        UPDATE flow_classes
-        SET flow_class_parent_id=?
-        WHERE flow_class_id=?;
+        INSERT INTO flow_class_paths( flow_class_ancestor_id,
+                                      flow_class_descendant_id,
+                                      flow_class_path_length )
+        SELECT ?, ?, 0
+        UNION ALL
+        SELECT tmp.flow_class_ancestor_id, ?, tmp.flow_class_path_length+1
+        FROM flow_class_paths as tmp
+        WHERE tmp.flow_class_descendant_id = ?;
         """,
         (
-            flow_class.flow_class_parent(),
-            flow_class.flow_class_id(),
+            str(flow_class_id),
+            str(flow_class_id),
+            str(flow_class_id),
+            str(flow_class_parent_id),
         )
         )
+        
+add_flow_class( cursor, sd.FC_UNCLASSIFIED_FLOW,    "flow",                                     None )
+add_flow_class( cursor, sd.FC_HOMOGENEOUS_FLOW,     "homogeneous flow",      sd.FC_UNCLASSIFIED_FLOW )
+add_flow_class( cursor, sd.FC_ISOTROPIC_FLOW,       "isotropic flow",         sd.FC_HOMOGENEOUS_FLOW )
+add_flow_class( cursor, sd.FC_INHOMOGENEOUS_FLOW,   "inhomogeneous flow",    sd.FC_UNCLASSIFIED_FLOW )
+add_flow_class( cursor, sd.FC_SHEAR_FLOW,           "shear flow",           sd.FC_INHOMOGENEOUS_FLOW )
+add_flow_class( cursor, sd.FC_FREE_SHEAR_FLOW,      "free shear flow",              sd.FC_SHEAR_FLOW )
+add_flow_class( cursor, sd.FC_FREE_JET,             "free jet",                sd.FC_FREE_SHEAR_FLOW )
+add_flow_class( cursor, sd.FC_MIXING_LAYER,         "mixing layer",            sd.FC_FREE_SHEAR_FLOW )
+add_flow_class( cursor, sd.FC_WAKE,                 "wake",                    sd.FC_FREE_SHEAR_FLOW )
+add_flow_class( cursor, sd.FC_WALL_BOUNDED_FLOW,    "wall-bounded flow",            sd.FC_SHEAR_FLOW )
+add_flow_class( cursor, sd.FC_EXTERNAL_FLOW,        "external flow",         sd.FC_WALL_BOUNDED_FLOW )
+add_flow_class( cursor, sd.FC_INTERNAL_FLOW,        "internal flow",         sd.FC_WALL_BOUNDED_FLOW )
+add_flow_class( cursor, sd.FC_BOUNDARY_LAYER,       "boundary layer",            sd.FC_EXTERNAL_FLOW )
+add_flow_class( cursor, sd.FC_WALL_JET,             "wall jet",                  sd.FC_EXTERNAL_FLOW )
+add_flow_class( cursor, sd.FC_DUCT_FLOW,            "duct flow",                 sd.FC_INTERNAL_FLOW )
+add_flow_class( cursor, sd.FC_BOUNDARY_DRIVEN_FLOW, "boundary-driven flow",      sd.FC_INTERNAL_FLOW )
 
 # Flow regimes
 flow_regimes = {}
