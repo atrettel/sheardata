@@ -79,19 +79,6 @@ CREATE TABLE fluids (
     FOREIGN KEY(phase_id) REFERENCES phases(phase_id)
 );
 
-/*
-TODO: consider creating a hierarchy of geometries organized by the number of
-sides an object has.  For example, rectangles are a particular form of
-quadrilaterals, and circles are a particular form of ellipses, etc.  The point
-of this is to be able to select different duct flow cross sections or airfoil
-sections in a useful manner.  I still need to think about this more.
-cursor.execute(
-*/
-CREATE TABLE geometries (
-    geometry_id   TEXT PRIMARY KEY,
-    geometry_name TEXT UNIQUE NOT NULL
-);
-
 CREATE TABLE instrument_classes (
     instrument_class_id        TEXT PRIMARY KEY,
     instrument_class_name      TEXT UNIQUE NOT NULL,
@@ -106,6 +93,20 @@ CREATE TABLE instrument_class_paths (
     PRIMARY KEY(instrument_class_ancestor_id, instrument_class_descendant_id),
     FOREIGN KEY(instrument_class_ancestor_id)   REFERENCES instrument_classes(instrument_class_id),
     FOREIGN KEY(instrument_class_descendant_id) REFERENCES instrument_classes(instrument_class_id)
+);
+
+CREATE TABLE model_classes (
+    model_class_id   TEXT PRIMARY KEY,
+    model_class_name TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE model_class_paths (
+    model_class_ancestor_id   TEXT NOT NULL,
+    model_class_descendant_id TEXT NOT NULL,
+    model_class_path_length   INTEGER NOT NULL CHECK ( model_class_path_length >= 0 ),
+    PRIMARY KEY(model_class_ancestor_id, model_class_descendant_id),
+    FOREIGN KEY(model_class_ancestor_id)   REFERENCES model_classes(model_class_id),
+    FOREIGN KEY(model_class_descendant_id) REFERENCES model_classes(model_class_id)
 );
 
 CREATE TABLE notes (
@@ -224,8 +225,10 @@ CREATE TABLE instruments (
 );
 
 CREATE TABLE models (
-    model_id   INTEGER PRIMARY KEY AUTOINCREMENT CHECK ( model_id > 0 ),
-    model_name TEXT DEFAULT NULL
+    model_id       INTEGER PRIMARY KEY AUTOINCREMENT CHECK ( model_id > 0 ),
+    model_class_id TEXT NOT NULL,
+    model_name     TEXT DEFAULT NULL,
+    FOREIGN KEY(model_class_id) REFERENCES model_classes(model_class_id)
 );
 
 CREATE TABLE studies (
@@ -248,14 +251,12 @@ CREATE TABLE series (
     series_number        INTEGER NOT NULL CHECK ( series_number > 0 AND series_number <= 999 ),
     number_of_dimensions INTEGER NOT NULL DEFAULT 2 CHECK ( number_of_dimensions > 0 AND number_of_dimensions <= 3 ),
     coordinate_system_id TEXT NOT NULL DEFAULT 'XYZ',
-    geometry_id          TEXT DEFAULT NULL,
     facility_id          INTEGER DEFAULT NULL,
     model_id             INTEGER DEFAULT NULL,
     outlier              INTEGER NOT NULL DEFAULT FALSE,
     series_description   TEXT DEFAULT NULL,
     FOREIGN KEY(study_id)             REFERENCES studies(study_id),
     FOREIGN KEY(coordinate_system_id) REFERENCES coordinate_systems(coordinate_system_id),
-    FOREIGN KEY(geometry_id)          REFERENCES geometries(geometry_id),
     FOREIGN KEY(facility_id)          REFERENCES facilities(facility_id),
     FOREIGN KEY(model_id)             REFERENCES models(model_id),
     FOREIGN KEY(outlier)              REFERENCES booleans(boolean_id)

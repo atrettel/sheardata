@@ -357,20 +357,6 @@ fluids.append( Fluid( sd.F_LIQUID_WATER,              "liquid water",           
 for fluid in fluids:
     fluid.execute_query()
 
-# Geometries
-geometries = {}
-geometries[ sd.GM_ELLIPTICAL  ] =  "elliptical geometry"
-geometries[ sd.GM_RECTANGULAR ] = "rectangular geometry"
-
-for geometry_id in geometries:
-    cursor.execute(
-    """
-    INSERT INTO geometries( geometry_id, geometry_name )
-    VALUES( ?, ? );
-    """,
-    ( geometry_id, geometries[geometry_id], )
-    )
-
 # Instrument classes
 def add_instrument_class( cursor, instrument_class_id, instrument_class_name,
                           instrument_class_parent_id=None, intrusive=False, ):
@@ -383,7 +369,7 @@ def add_instrument_class( cursor, instrument_class_id, instrument_class_name,
     (
         str(instrument_class_id),
         str(instrument_class_name),
-        intrusive,
+        int(intrusive),
     )
     )
     if ( instrument_class_parent_id == None ):
@@ -452,6 +438,73 @@ add_instrument_class( cursor, sd.IT_ASSUMPTION,                               "a
 add_instrument_class( cursor, sd.IT_CALCULATION,                              "calculation",                              sd.IT_REASONING,                                    )
 add_instrument_class( cursor, sd.IT_CLAIM,                                    "claim",                                    sd.IT_REASONING,                                    )
 add_instrument_class( cursor, sd.IT_SIMULATION,                               "simulation",                               sd.IT_REASONING,                                    )
+
+
+# Model classes
+def add_model_class( cursor, model_class_id, model_class_name,
+                          model_class_parent_id=None, intrusive=False, ):
+    cursor.execute(
+    """
+    INSERT INTO model_classes( model_class_id, model_class_name )
+    VALUES( ?, ? );
+    """,
+    (
+        str(model_class_id),
+        str(model_class_name),
+    )
+    )
+    if ( model_class_parent_id == None ):
+        cursor.execute(
+        """
+        INSERT INTO model_class_paths( model_class_ancestor_id,
+                                       model_class_descendant_id,
+                                       model_class_path_length )
+        VALUES( ?, ?, 0 );
+        """,
+        (
+            str(model_class_id),
+            str(model_class_id),
+        )
+        )
+    else:
+        cursor.execute(
+        """
+        INSERT INTO model_class_paths( model_class_ancestor_id,
+                                       model_class_descendant_id,
+                                       model_class_path_length )
+        SELECT ?, ?, 0
+        UNION ALL
+        SELECT tmp.model_class_ancestor_id, ?, tmp.model_class_path_length+1
+        FROM model_class_paths as tmp
+        WHERE tmp.model_class_descendant_id = ?;
+        """,
+        (
+            str(model_class_id),
+            str(model_class_id),
+            str(model_class_id),
+            str(model_class_parent_id),
+        )
+        )
+
+add_model_class( cursor, sd.MC_MODEL,                                "model",                                     None,                                       )
+add_model_class( cursor, sd.MC_INTERIOR_MODEL,                       "interior model",                            sd.MC_MODEL,                                )
+add_model_class( cursor, sd.MC_INTERIOR_CONSTANT_CROSS_SECTION,      "constant cross-section interior model",     sd.MC_INTERIOR_MODEL,                       )
+add_model_class( cursor, sd.MC_INTERIOR_POLYGONAL_CROSS_SECTION,     "polygonal cross-section interior model",    sd.MC_INTERIOR_CONSTANT_CROSS_SECTION,      )
+add_model_class( cursor, sd.MC_INTERIOR_RECTANGULAR_CROSS_SECTION,   "rectangular cross-section interior model",  sd.MC_INTERIOR_POLYGONAL_CROSS_SECTION,     )
+add_model_class( cursor, sd.MC_INTERIOR_ELLIPTICAL_CROSS_SECTION,    "elliptical cross-section interior model",   sd.MC_INTERIOR_CONSTANT_CROSS_SECTION,      )
+add_model_class( cursor, sd.MC_INTERIOR_VARIABLE_CROSS_SECTION,      "variable cross-section interior model",     sd.MC_INTERIOR_MODEL,                       )
+add_model_class( cursor, sd.MC_EXTERIOR_MODEL,                       "exterior model",                            sd.MC_MODEL,                                )
+add_model_class( cursor, sd.MC_EXTERIOR_BODY,                        "body",                                      sd.MC_EXTERIOR_MODEL,                       )
+add_model_class( cursor, sd.MC_EXTERIOR_ELLIPSOID,                   "ellipsoid",                                 sd.MC_EXTERIOR_ELLIPSOID,                   )
+add_model_class( cursor, sd.MC_EXTERIOR_ELLIPTIC_CONE,               "elliptic cone",                             sd.MC_EXTERIOR_ELLIPTIC_CONE,               )
+add_model_class( cursor, sd.MC_EXTERIOR_WING,                        "wing",                                      sd.MC_EXTERIOR_MODEL,                       )
+add_model_class( cursor, sd.MC_EXTERIOR_CONSTANT_CROSS_SECTION_WING, "constant cross-section wing",               sd.MC_EXTERIOR_WING,                        )
+add_model_class( cursor, sd.MC_EXTERIOR_PLATE,                       "plate",                                     sd.MC_EXTERIOR_CONSTANT_CROSS_SECTION_WING, )
+add_model_class( cursor, sd.MC_EXTERIOR_WEDGE,                       "wedge",                                     sd.MC_EXTERIOR_CONSTANT_CROSS_SECTION_WING, )
+add_model_class( cursor, sd.MC_EXTERIOR_CYLINDER,                    "cylinder",                                  sd.MC_EXTERIOR_CONSTANT_CROSS_SECTION_WING, )
+add_model_class( cursor, sd.MC_EXTERIOR_DIAMOND_WING,                "diamond wing",                              sd.MC_EXTERIOR_CONSTANT_CROSS_SECTION_WING, )
+add_model_class( cursor, sd.MC_EXTERIOR_VARIABLE_CROSS_SECTION_WING, "variable cross-section wing",               sd.MC_EXTERIOR_WING,                        )
+
 
 # Point labels
 point_labels = {}

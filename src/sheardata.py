@@ -146,11 +146,7 @@ F_GASEOUS_XENON             = "Xe(g)"
 F_LIQUID_WATER              = "H2O(l)"
 F_GASEOUS_WATER             = "H2O(g)"
 
-# Geometries
-GM_ELLIPTICAL  = "E"
-GM_RECTANGULAR = "R"
-
-# Instruments and methods (and other sources of information)
+# Classes for instruments and methods (and other sources of information)
 IT_APPROXIMATION                            = "APP"
 IT_ASSUMPTION                               = "ASM"
 IT_CALCULATION                              = "CLC"
@@ -186,6 +182,26 @@ IT_WALL_SHEAR_STRESS_METHOD                 = "TWL"
 IT_WEIGHING_METHOD                          = "QWM"
 
 PRIMARY_IT_SET = 1
+
+# Model classes
+MC_MODEL                                = "ML"
+MC_INTERIOR_MODEL                       = "IM"
+MC_INTERIOR_CONSTANT_CROSS_SECTION      = "IC"
+MC_INTERIOR_POLYGONAL_CROSS_SECTION     = "IP"
+MC_INTERIOR_RECTANGULAR_CROSS_SECTION   = "IR"
+MC_INTERIOR_ELLIPTICAL_CROSS_SECTION    = "IE"
+MC_INTERIOR_VARIABLE_CROSS_SECTION      = "IV"
+MC_EXTERIOR_MODEL                       = "XM"
+MC_EXTERIOR_BODY                        = "BD"
+MC_EXTERIOR_ELLIPSOID                   = "EL"
+MC_EXTERIOR_ELLIPTIC_CONE               = "EC"
+MC_EXTERIOR_WING                        = "WG"
+MC_EXTERIOR_CONSTANT_CROSS_SECTION_WING = "WC"
+MC_EXTERIOR_PLATE                       = "PL",
+MC_EXTERIOR_WEDGE                       = "WD"
+MC_EXTERIOR_CYLINDER                    = "CY"
+MC_EXTERIOR_DIAMOND_WING                = "DW"
+MC_EXTERIOR_VARIABLE_CROSS_SECTION_WING = "WV"
 
 # Point labels
 PL_CENTER_LINE = "CL"
@@ -913,19 +929,6 @@ def add_series( cursor, flow_class_id, year, study_number, series_number,  \
         )
 
     return series_id
-
-def update_series_geometry( cursor, series_id, geometry_id ):
-    cursor.execute(
-    """
-    UPDATE series
-    SET geometry_id=?
-    WHERE series_id=?;
-    """,
-    (
-        str(geometry_id),
-        sanitize_identifier(series_id),
-    )
-    )
 
 def update_series_description( cursor, series_id, series_description ):
     cursor.execute(
@@ -1876,13 +1879,14 @@ def add_instrument_source( cursor, instrument_id, citation_key,
     )
     )
 
-def add_model( cursor, model_name=None, note_ids=[] ):
+def add_model( cursor, model_class_id, model_name=None, note_ids=[] ):
     cursor.execute(
     """
-    INSERT INTO models( model_name )
-    VALUES( ? );
+    INSERT INTO models( model_class_id, model_name )
+    VALUES( ?, ? );
     """,
     (
+        str(model_class_id),
         model_name,
     )
     )
