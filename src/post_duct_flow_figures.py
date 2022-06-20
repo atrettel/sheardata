@@ -33,23 +33,23 @@ cursor.execute( "PRAGMA foreign_keys = ON;" )
 # - Stations that have the quantity of interest
 
 class DuctType:
-    geometry          = None
+    model_class_id    = None
     coordinate_system = None
     min_aspect_ratio  = None
     max_aspect_ratio  = None
     laminar_constant  = None
 
-    def __init__( self, geometry, coordinate_system, min_aspect_ratio, \
+    def __init__( self, model_class_id, coordinate_system, min_aspect_ratio, \
                   max_aspect_ratio, laminar_constant ):
-        self.geometry          =   str(geometry)
+        self.model_class_id    =   str(model_class_id)
         self.coordinate_system =   str(coordinate_system)
         self.min_aspect_ratio  = float(min_aspect_ratio)
         self.max_aspect_ratio  = float(max_aspect_ratio)
         self.laminar_constant  = float(laminar_constant)
 
 duct_types = {}
-duct_types["channel"] = DuctType( sd.GM_RECTANGULAR, sd.CS_RECTANGULAR, 7.0, float("inf"), 24.0 )
-duct_types["pipe"]    = DuctType( sd.GM_ELLIPTICAL,  sd.CS_CYLINDRICAL, 1.0,          1.0, 16.0 )
+duct_types["channel"] = DuctType( sd.MC_INTERIOR_RECTANGULAR_CROSS_SECTION, sd.CS_RECTANGULAR, 7.0, float("inf"), 24.0 )
+duct_types["pipe"]    = DuctType( sd.MC_INTERIOR_ELLIPTICAL_CROSS_SECTION,  sd.CS_CYLINDRICAL, 1.0,          1.0, 16.0 )
 
 max_inner_layer_roughness_height = 1.0
 min_bulk_mach_number = 0.0
@@ -137,7 +137,11 @@ for duct_type in duct_types:
             WHERE series_id IN (
                 SELECT series_id
                 FROM series
-                WHERE number_of_dimensions=? AND coordinate_system_id=? AND geometry_id=?
+                WHERE number_of_dimensions=? AND coordinate_system_id=? AND model_id IN (
+                    SELECT model_id
+                    FROM models
+                    WHERE model_class_id=?
+                )
             )
             INTERSECT
             SELECT station_id
@@ -190,7 +194,7 @@ for duct_type in duct_types:
                 study_type_id,
                 int(2),
                 duct_types[duct_type].coordinate_system,
-                duct_types[duct_type].geometry,
+                duct_types[duct_type].model_class_id,
                 sd.Q_INNER_LAYER_ROUGHNESS_HEIGHT,
                 max_inner_layer_roughness_height,
                 sd.Q_CROSS_SECTIONAL_ASPECT_RATIO,
