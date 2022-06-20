@@ -57,13 +57,8 @@ series_id = sd.add_series(
 
 freestream_velocity = sd.sdfloat(16.0)
 
+# TODO: Add the model and the geometry of the model.
 sd.set_series_value( cursor, series_id, sd.Q_FREESTREAM_VELOCITY, freestream_velocity, )
-
-sd.update_series_geometry(
-    cursor,
-    series_id,
-    sd.GM_RECTANGULAR
-)
 
 globals_filename = "../data/{:s}/globals.csv".format( study_id )
 with open( globals_filename, "r" ) as globals_file:

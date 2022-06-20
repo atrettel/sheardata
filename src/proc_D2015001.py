@@ -41,6 +41,13 @@ study_id = sd.add_study(
 sd.add_study_source( cursor, study_id, "TrettelA+2015+eng+THES", sd.PRIMARY_SOURCE )
 sd.add_study_source( cursor, study_id, "TrettelA+2016+eng+JOUR", sd.PRIMARY_SOURCE )
 
+model_id = sd.add_model(
+    cursor,
+    sd.MC_INTERIOR_RECTANGULAR_CROSS_SECTION,
+)
+
+# TODO: Add model values.
+
 zeroth_order_approximation_id = sd.add_instrument(
     cursor,
     sd.IT_APPROXIMATION,
@@ -116,13 +123,8 @@ with open( globals_filename, "r" ) as globals_file:
             series_number=series_number,
             number_of_dimensions=2,
             coordinate_system_id=sd.CS_RECTANGULAR,
+            model_id=model_id,
             series_external_ids={ sd.C_SELF : originators_identifier },
-        )
-
-        sd.update_series_geometry(
-            cursor,
-            series_id,
-            sd.GM_RECTANGULAR
         )
 
         station_number = 1

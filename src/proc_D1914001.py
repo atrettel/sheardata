@@ -144,6 +144,26 @@ with open( pipes_filename, "r" ) as pipes_file:
               str(pipes_row[3]),
         )
 
+model_ids = {}
+for pipe in pipes:
+    model_ids[pipe] = sd.add_model(
+        cursor,
+        sd.MC_INTERIOR_ELLIPTICAL_CROSS_SECTION,
+        pipe,
+    )
+    sd.set_model_value(
+        cursor,
+        model_ids[pipe],
+        sd.Q_INNER_DIAMETER,
+        sd.sdfloat(0.0,0.0),
+    )
+    sd.set_model_value(
+        cursor,
+        model_ids[pipe],
+        sd.Q_OUTER_DIAMETER,
+        pipes[pipe].diameter,
+    )
+
 # Wall shear stress method
 #
 # p. 203
@@ -161,7 +181,12 @@ for pipe in pipes:
     momentum_balance_ids[pipe] = sd.add_instrument( cursor, sd.IT_MOMENTUM_BALANCE, "Pipe {:s}".format(pipe) )
     distance_between_pressure_taps = pipes[pipe].distance_between_pressure_taps
     if ( distance_between_pressure_taps != None ):
-        sd.set_instrument_value( cursor, momentum_balance_ids[pipe], sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS, distance_between_pressure_taps, )
+        sd.set_instrument_value(
+            cursor,
+            momentum_balance_ids[pipe],
+            sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS,
+            distance_between_pressure_taps,
+        )
 
 # p. 203
 #
@@ -277,6 +302,8 @@ with open( ratio_filename, "r" ) as ratio_file:
             )
         Ma_bulk = bulk_velocity / speed_of_sound
 
+        # TODO: Create model
+
         series_id = sd.add_series(
             cursor,
             flow_class_id=flow_class,
@@ -285,15 +312,10 @@ with open( ratio_filename, "r" ) as ratio_file:
             series_number=series_number,
             number_of_dimensions=2,
             coordinate_system_id=sd.CS_CYLINDRICAL,
+            model_id=model_ids[pipe],
         )
 
         # TODO: set working fluids.
-
-        sd.update_series_geometry(
-            cursor,
-            series_id,
-            sd.GM_ELLIPTICAL
-        )
 
         station_number = 1
         station_id = sd.add_station(
@@ -422,6 +444,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             series_number=series_number,
             number_of_dimensions=2,
             coordinate_system_id=sd.CS_CYLINDRICAL,
+            model_id=model_ids[pipe],
             outlier=outlier,
         )
 
@@ -443,12 +466,6 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             )
         Ma_bulk = bulk_velocity     / speed_of_sound
         Ma_tau  = friction_velocity / speed_of_sound
-
-        sd.update_series_geometry(
-            cursor,
-            series_id,
-            sd.GM_ELLIPTICAL
-        )
 
         station_number = 1
         station_id = sd.add_station(

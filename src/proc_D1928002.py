@@ -53,6 +53,13 @@ hydraulic_diameter   = 2.0 * width * height / ( width + height )
 cross_sectional_area = width * height
 wetted_perimeter     = 2.0 * ( width + height )
 
+model_id = sd.add_model(
+    cursor,
+    sd.MC_INTERIOR_RECTANGULAR_CROSS_SECTION,
+)
+
+# TODO: Add model values.
+
 # p. 692
 #
 # \begin{quote}
@@ -198,15 +205,10 @@ with open( globals_filename, "r" ) as globals_file:
             series_number=series_number,
             number_of_dimensions=2,
             coordinate_system_id=sd.CS_RECTANGULAR,
+            model_id=model_id,
         )
 
         # TODO: set liquid water as the working fluid.
-
-        sd.update_series_geometry(
-            cursor,
-            series_id,
-            sd.GM_RECTANGULAR
-        )
 
         station_number = 1
         station_id = sd.add_station(

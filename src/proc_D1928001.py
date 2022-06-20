@@ -75,6 +75,39 @@ with open( series_filename, "r" ) as series_file:
 
 height_uncertainty = ( SSE / ( n - 1 ) )**0.5
 
+# TODO: Is there only one model?  Check this later.
+
+# p. 107
+width              = sd.sdfloat( 2.540e-2 )
+development_length = sd.sdfloat( 0.100e-2 )
+
+# p. 107
+#
+# Page 107 gives the height of the duct as approximately 0.025 cm, but
+# later gives a corrected value of the height to 0.0238 cm.  Using this
+# corrected height moves friction factor onto the laminar curve.
+# Without the correction, the values are too high, likely due to the
+# development length being very short.
+#
+# Rather than accept the correction, instead calculate the uncertainty
+# of the depth measurements using the table on p. 95.
+height = sd.sdfloat( 0.025e-2, height_uncertainty )
+
+half_height          = 0.5 * height
+aspect_ratio         = width / height
+cross_sectional_area = width * height
+wetted_perimeter     = 2.0 * ( width + height )
+hydraulic_diameter   = 4.0 * cross_sectional_area / wetted_perimeter
+
+outer_layer_development_length = development_length / hydraulic_diameter
+
+model_id = sd.add_model(
+    cursor,
+    sd.MC_INTERIOR_RECTANGULAR_CROSS_SECTION,
+)
+
+# TODO: Add model values.
+
 series_number = 0
 globals_filename = "../data/{:s}/globals.csv".format( study_id, )
 with open( globals_filename, "r" ) as globals_file:
@@ -87,30 +120,6 @@ with open( globals_filename, "r" ) as globals_file:
     next(globals_reader)
     for globals_row in globals_reader:
         series_number += 1
-
-        # p. 107
-        width              = sd.sdfloat( 2.540e-2 )
-        development_length = sd.sdfloat( 0.100e-2 )
-
-        # p. 107
-        #
-        # Page 107 gives the height of the duct as approximately 0.025 cm, but
-        # later gives a corrected value of the height to 0.0238 cm.  Using this
-        # corrected height moves friction factor onto the laminar curve.
-        # Without the correction, the values are too high, likely due to the
-        # development length being very short.
-        #
-        # Rather than accept the correction, instead calculate the uncertainty
-        # of the depth measurements using the table on p. 95.
-        height = sd.sdfloat( 0.025e-2, height_uncertainty )
-
-        half_height          = 0.5 * height
-        aspect_ratio         = width / height
-        cross_sectional_area = width * height
-        wetted_perimeter     = 2.0 * ( width + height )
-        hydraulic_diameter   = 4.0 * cross_sectional_area / wetted_perimeter
-
-        outer_layer_development_length = development_length / hydraulic_diameter
 
         test_number = int(globals_row[0])
         originators_identifier = "Series 11, test {:d}".format(
@@ -191,12 +200,6 @@ with open( globals_filename, "r" ) as globals_file:
         )
 
         # TODO: set liquid water as the working fluid.
-
-        sd.update_series_geometry(
-            cursor,
-            series_id,
-            sd.GM_RECTANGULAR
-        )
 
         station_number = 1
         station_id = sd.add_station(

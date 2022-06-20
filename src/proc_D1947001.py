@@ -94,6 +94,19 @@ with open( globals_filename, "r" ) as globals_file:
             float(globals_row[2]) * sd.METERS_PER_FOOT
         )
 
+model_ids = {}
+for duct in ducts:
+    model_class_id = sd.MC_INTERIOR_RECTANGULAR_CROSS_SECTION
+    if ( duct == "Round" ):
+        model_class_id = sd.MC_INTERIOR_ELLIPTICAL_CROSS_SECTION
+    
+    model_ids[duct] = sd.add_model(
+        cursor,
+        model_class_id,
+        duct,
+    )
+
+# TODO: Add model values.
 
 series_number = 0
 for duct in ducts:
@@ -208,13 +221,8 @@ for duct in ducts:
                     series_number=series_number,
                     number_of_dimensions=2,
                     coordinate_system_id=sd.CS_CYLINDRICAL,
+                    model_id=model_ids[duct],
                     series_external_ids={ sd.C_SELF : originators_identifier },
-                )
-
-                sd.update_series_geometry(
-                    cursor,
-                    series_id,
-                    sd.GM_ELLIPTICAL
                 )
             else:
                 series_id = sd.add_series(
@@ -225,13 +233,8 @@ for duct in ducts:
                     series_number=series_number,
                     number_of_dimensions=2,
                     coordinate_system_id=sd.CS_RECTANGULAR,
+                    model_id=model_ids[duct],
                     series_external_ids={ sd.C_SELF : originators_identifier },
-                )
-
-                sd.update_series_geometry(
-                    cursor,
-                    series_id,
-                    sd.GM_RECTANGULAR
                 )
 
             # TODO: set air as the working fluid.

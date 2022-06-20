@@ -88,6 +88,24 @@ with open( globals_filename, "r" ) as globals_file:
         # that it is very large for the rough wall cases.
         is_rough_wall = ( int(globals_row[1]) == 1 )
 
+        # TODO: Determine if the "series 5" model is the same as "series 4".
+        model_id = sd.add_model(
+            cursor,
+            sd.MC_INTERIOR_ELLIPTICAL_CROSS_SECTION,
+        )
+        sd.set_model_value(
+            cursor,
+            model_id,
+            sd.Q_INNER_DIAMETER,
+            sd.sdfloat(0.0,0.0),
+        )
+        sd.set_model_value(
+            cursor,
+            model_id,
+            sd.Q_OUTER_DIAMETER,
+            diameter,
+        )
+
         series_id = sd.add_series(
             cursor,
             flow_class_id=flow_class,
@@ -96,6 +114,7 @@ with open( globals_filename, "r" ) as globals_file:
             series_number=series_number,
             number_of_dimensions=2,
             coordinate_system_id=sd.CS_CYLINDRICAL,
+            model_id=model_id,
         )
 
         # Working fluid
@@ -107,12 +126,6 @@ with open( globals_filename, "r" ) as globals_file:
         # \end{quote}
 
         # TODO: set air as the working fluid.
-
-        sd.update_series_geometry(
-            cursor,
-            series_id,
-            sd.GM_ELLIPTICAL
-        )
 
         station_number = 1
         station_id = sd.add_station(
