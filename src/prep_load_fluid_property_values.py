@@ -28,6 +28,12 @@ scales = {
         ( sd.F_LIQUID_WATER, sd.Q_MASS_DENSITY      ): 1.0,
 
     },
+    "ParryWT+2000+eng+BOOK": {
+        ( sd.F_LIQUID_WATER, sd.Q_SPECIFIC_VOLUME      ): 1.0,
+        ( sd.F_LIQUID_WATER, sd.Q_SPEED_OF_SOUND       ): 1.0,
+        ( sd.F_LIQUID_WATER, sd.Q_DYNAMIC_VISCOSITY    ): 1.0e-6,
+        ( sd.F_LIQUID_WATER, sd.Q_THERMAL_CONDUCTIVITY ): 1.0e-3,
+    },
     "TouloukianYS+1970+eng+BOOK+V3": {
         ( sd.F_GASEOUS_AIR,  sd.Q_THERMAL_CONDUCTIVITY ): 1.0e-1,
         ( sd.F_LIQUID_WATER, sd.Q_THERMAL_CONDUCTIVITY ): 1.0e-1,
@@ -52,6 +58,8 @@ for citation_key in scales:
         pressure_scale    = 0.0
         if ( pressure_label == "Pressure [Pa]" ):
             pressure_scale = 1.0
+        if ( pressure_label == "Pressure [MPa]" ):
+            pressure_scale = 1.0e6
         elif ( pressure_label == "Pressure [atm]" ):
             pressure_scale = sd.STANDARD_ATMOSPHERIC_PRESSURE
         elif ( pressure_label == "Pressure [bar]" ):
@@ -87,13 +95,18 @@ for citation_key in scales:
             assert( quantity_id not in [
                 sd.Q_KINEMATIC_VISCOSITY,
                 sd.Q_PRANDTL_NUMBER,
-                sd.Q_SPECIFIC_VOLUME,
                 sd.Q_THERMAL_DIFFUSIVITY,
             ] )
 
             combined_value = sd.sdfloat(value)
             if ( uncertainty_label == "Uncertainty percent" and uncertainty_element != "" ):
                 combined_value = sd.uniform_distribution_sdfloat_percent( value, float(uncertainty_element) )
+
+            final_value       = combined_value
+            final_quantity_id = quantity_id
+            if ( quantity_id == sd.Q_SPECIFIC_VOLUME ):
+                final_value       = 1.0 / combined_value
+                final_quantity_id = sd.Q_MASS_DENSITY
 
             cursor.execute(
             """
@@ -109,9 +122,9 @@ for citation_key in scales:
                 temperature,
                 fluid_id,
                 citation_key,
-                quantity_id,
-                sd.sdfloat_value(combined_value),
-                sd.sdfloat_uncertainty(combined_value),
+                final_quantity_id,
+                sd.sdfloat_value(final_value),
+                sd.sdfloat_uncertainty(final_value),
                 preferred,
             )
             )
