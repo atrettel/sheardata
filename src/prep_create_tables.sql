@@ -39,7 +39,7 @@ CREATE TABLE facility_class_paths (
 );
 
 CREATE TABLE flow_classes (
-    flow_class_id   TEXT PRIMARY KEY CHECK ( length(flow_class_id) = 1 ),
+    flow_class_id   TEXT PRIMARY KEY CHECK ( length(flow_class_id) = 1 AND flow_class_id != 'O' ),
     flow_class_name TEXT UNIQUE NOT NULL
 );
 
