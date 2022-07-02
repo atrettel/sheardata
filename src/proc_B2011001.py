@@ -30,3 +30,7 @@ sd.add_study_source( cursor, study_id, "PirozzoliS+2011+eng+JOUR", sd.PRIMARY_SO
 
 conn.commit()
 conn.close()
+exit()
+
+conn.commit()
+conn.close()

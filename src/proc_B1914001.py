@@ -30,6 +30,10 @@ study_id = sd.add_study(
 sd.add_study_source( cursor, study_id, "RiabouchinskyD+1914+fra+JOUR",   sd.PRIMARY_SOURCE )
 sd.add_study_source( cursor, study_id, "ColesDE+1969+eng+BOOK",        sd.SECONDARY_SOURCE )
 
+conn.commit()
+conn.close()
+exit()
+
 station_4_velocity_note = sd.add_note(
     cursor,
     "../data/{:s}/note_station_4_velocity.tex".format( study_id ),

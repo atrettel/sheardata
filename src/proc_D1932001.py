@@ -37,6 +37,10 @@ sd.add_study_source( cursor, study_id, "MillerB+1949+eng+JOUR",       sd.SECONDA
 sd.add_study_source( cursor, study_id, "RobertsonJM+1957+eng+CPAPER", sd.SECONDARY_SOURCE )
 sd.add_study_source( cursor, study_id, "RossD+1953+eng+CPAPER",       sd.SECONDARY_SOURCE )
 
+conn.commit()
+conn.close()
+exit()
+
 
 conn.commit()
 conn.close()

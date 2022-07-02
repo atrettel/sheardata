@@ -29,6 +29,10 @@ study_id = sd.add_study(
 sd.add_study_source( cursor, study_id, "StantonTE+1914+eng+JOUR",   sd.PRIMARY_SOURCE )
 sd.add_study_source( cursor, study_id, "ObotNT+1988+eng+JOUR",    sd.SECONDARY_SOURCE )
 
+conn.commit()
+conn.close()
+exit()
+
 assumption_id = sd.add_instrument( cursor, sd.IC_ASSUMPTION, )
 
 # Methods for flow rate and center-line velocities

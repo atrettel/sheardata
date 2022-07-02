@@ -31,6 +31,10 @@ sd.add_study_source( cursor, study_id, "DeanRB+1974+eng+RPRT",   sd.SECONDARY_SO
 sd.add_study_source( cursor, study_id, "JonesOC+1976+eng+JOUR",  sd.SECONDARY_SOURCE )
 sd.add_study_source( cursor, study_id, "DeanRB+1978+eng+JOUR",   sd.SECONDARY_SOURCE )
 
+conn.commit()
+conn.close()
+exit()
+
 series_11_note = sd.add_note(
     cursor,
     "../data/{:s}/note_series_11.tex".format( study_id ),

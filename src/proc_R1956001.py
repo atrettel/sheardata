@@ -31,3 +31,7 @@ sd.add_study_source( cursor, study_id, "ReichardtH+1959+deu+RPRT", sd.PRIMARY_SO
 
 conn.commit()
 conn.close()
+exit()
+
+conn.commit()
+conn.close()

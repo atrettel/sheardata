@@ -30,3 +30,7 @@ sd.add_study_source( cursor, study_id, "RoosFW+1971+eng+JOUR", sd.PRIMARY_SOURCE
 
 conn.commit()
 conn.close()
+exit()
+
+conn.commit()
+conn.close()

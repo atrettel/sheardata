@@ -28,6 +28,10 @@ study_id = sd.add_study(
 
 sd.add_study_source( cursor, study_id, "SchultzGrunowF+1940+deu+JOUR", sd.PRIMARY_SOURCE )
 
+conn.commit()
+conn.close()
+exit()
+
 reynolds_number_typo_note = sd.add_note(
     cursor,
     "../data/{:s}/note_reynolds_number_typo.tex".format( study_id ),

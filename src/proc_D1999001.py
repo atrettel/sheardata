@@ -28,6 +28,10 @@ study_id = sd.add_study(
 
 sd.add_study_source( cursor, study_id, "MoserRD+1999+eng+JOUR", sd.PRIMARY_SOURCE )
 
+conn.commit()
+conn.close()
+exit()
+
 # The primary difficulty with this data is that only the friction Reynolds
 # number is given.  The rest of the data is dimensionless profiles.  The trick
 # is to manipulate some of the basic equations to be in terms of the bulk

@@ -14,6 +14,10 @@ conn   = sqlite3.connect( sys.argv[1] )
 cursor = conn.cursor()
 cursor.execute( "PRAGMA foreign_keys = ON;" )
 
+conn.commit()
+conn.close()
+exit()
+
 scales = {
     "HilsenrathJ+1955+eng+BOOK": {
         ( sd.F_GASEOUS_AIR, sd.Q_MASS_DENSITY         ): 1293.04,

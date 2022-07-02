@@ -28,6 +28,10 @@ study_id = sd.add_study(
 
 sd.add_study_source( cursor, study_id, "HuebscherRG+1947+eng+JOUR", sd.PRIMARY_SOURCE )
 
+conn.commit()
+conn.close()
+exit()
+
 assumption_id = sd.add_instrument( cursor, sd.IC_ASSUMPTION, )
 
 # p. 128

@@ -21,6 +21,10 @@ conn   = sqlite3.connect( sys.argv[1] )
 cursor = conn.cursor()
 cursor.execute( "PRAGMA foreign_keys = ON;" )
 
+conn.commit()
+conn.close()
+exit()
+
 # Intersection of
 # - Stations in duct flow experimental studies
 # - Stations in 2D series in cylindrical coordinates with elliptical

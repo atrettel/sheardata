@@ -30,6 +30,10 @@ sd.add_study_source( cursor, study_id, "CornishRJ+1928+eng+JOUR",   sd.PRIMARY_S
 sd.add_study_source( cursor, study_id, "JonesOC+1976+eng+JOUR",   sd.SECONDARY_SOURCE )
 sd.add_study_source( cursor, study_id, "ObotNT+1988+eng+JOUR",    sd.SECONDARY_SOURCE )
 
+conn.commit()
+conn.close()
+exit()
+
 # p. 691
 #
 # \begin{quote}

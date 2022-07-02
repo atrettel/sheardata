@@ -41,6 +41,10 @@ study_id = sd.add_study(
 sd.add_study_source( cursor, study_id, "TrettelA+2015+eng+THES", sd.PRIMARY_SOURCE )
 sd.add_study_source( cursor, study_id, "TrettelA+2016+eng+JOUR", sd.PRIMARY_SOURCE )
 
+conn.commit()
+conn.close()
+exit()
+
 model_id = sd.add_model(
     cursor,
     sd.MC_INTERIOR_RECTANGULAR_CROSS_SECTION,

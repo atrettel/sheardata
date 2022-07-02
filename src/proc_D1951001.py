@@ -31,3 +31,7 @@ sd.add_study_source( cursor, study_id, "SenecalVE+1953+eng+JOUR", sd.PRIMARY_SOU
 
 conn.commit()
 conn.close()
+exit()
+
+conn.commit()
+conn.close()
