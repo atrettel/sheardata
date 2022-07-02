@@ -267,19 +267,34 @@ CREATE TABLE stations (
     series_id                      TEXT NOT NULL,
     station_number                 INTEGER NOT NULL CHECK ( station_number > 0 AND station_number <= 999 ),
     flow_regime_id                 TEXT DEFAULT NULL,
-    previous_streamwise_station_id TEXT DEFAULT NULL,
-    next_streamwise_station_id     TEXT DEFAULT NULL,
-    previous_spanwise_station_id   TEXT DEFAULT NULL,
-    next_spanwise_station_id       TEXT DEFAULT NULL,
+    streamwise_periodic            INTEGER NOT NULL DEFAULT FALSE,
+    spanwise_periodic              INTEGER NOT NULL DEFAULT TRUE,
     outlier                        INTEGER NOT NULL DEFAULT FALSE,
     station_description            TEXT DEFAULT NULL,
-    FOREIGN KEY(series_id)                      REFERENCES series(series_id),
-    FOREIGN KEY(flow_regime_id)                 REFERENCES flow_regimes(flow_regime_id),
-    FOREIGN KEY(previous_streamwise_station_id) REFERENCES stations(station_id),
-    FOREIGN KEY(next_streamwise_station_id)     REFERENCES stations(station_id),
-    FOREIGN KEY(previous_spanwise_station_id)   REFERENCES stations(station_id),
-    FOREIGN KEY(next_spanwise_station_id)       REFERENCES stations(station_id),
-    FOREIGN KEY(outlier)                        REFERENCES booleans(boolean_id)
+    FOREIGN KEY(series_id)           REFERENCES series(series_id),
+    FOREIGN KEY(flow_regime_id)      REFERENCES flow_regimes(flow_regime_id),
+    FOREIGN KEY(streamwise_periodic) REFERENCES booleans(boolean_id),
+    FOREIGN KEY(spanwise_periodic)   REFERENCES booleans(boolean_id),
+    FOREIGN KEY(outlier)             REFERENCES booleans(boolean_id)
+);
+
+/*
+TODO: Come up with a better way to represent this.  I currently have
+implemented this using a closure table approach, but I want to ensure that the
+stations can be marked as periodic too.  As a kludge, I added a column the
+stations table to mark it as periodic in that particular direct.
+
+TODO: At the moment I have implemented this as a single table for both
+streamwise and spanwise variations in the station locations.  At the moment,
+this appears to be more general, but I am unsure about this as a design choice.
+*/
+CREATE TABLE station_paths (
+    station_ancestor_id   TEXT NOT NULL,
+    station_descendant_id TEXT NOT NULL,
+    station_path_length   INTEGER NOT NULL CHECK ( station_path_length >= 0 ),
+    PRIMARY KEY(station_ancestor_id, station_descendant_id),
+    FOREIGN KEY(station_ancestor_id)   REFERENCES stations(station_id),
+    FOREIGN KEY(station_descendant_id) REFERENCES stations(station_id)
 );
 
 CREATE TABLE points (

@@ -247,10 +247,10 @@ for duct in ducts:
                 study_number=study_number,
                 series_number=series_number,
                 station_number=station_number,
+                streamwise_periodic=True,
+                spanwise_periodic=True,
                 station_external_ids={ sd.C_SELF : originators_identifier },
             )
-
-            sd.mark_station_as_periodic( cursor, station_id )
 
             sd.set_station_value( cursor, station_id, sd.Q_HYDRAULIC_DIAMETER,             hydraulic_diameter,                                                                )
             sd.set_station_value( cursor, station_id, sd.Q_DEVELOPMENT_LENGTH,             ducts[duct].length,                                                                )

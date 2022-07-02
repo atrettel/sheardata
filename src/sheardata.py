@@ -1101,8 +1101,10 @@ def is_air_working_fluid( cursor, series_id ):
             return False
     return True
 
-def add_station( cursor, flow_class_id, year, study_number, series_number, \
-                station_number, outlier=False, note_ids=[], station_external_ids={}, ):
+def add_station( cursor, flow_class_id, year, study_number, series_number,
+                 station_number, streamwise_periodic=False,
+                 spanwise_periodic=True, outlier=False, note_ids=[],
+                 station_external_ids={}, ):
     station_id = identify_station(
         flow_class_id,
         year,
@@ -1118,13 +1120,16 @@ def add_station( cursor, flow_class_id, year, study_number, series_number, \
     )
     cursor.execute(
     """
-    INSERT INTO stations( station_id, series_id, station_number, outlier )
-    VALUES( ?, ?, ?, ? );
+    INSERT INTO stations( station_id, series_id, station_number,
+                          streamwise_periodic, spanwise_periodic, outlier )
+    VALUES( ?, ?, ?, ?, ?, ? );
     """,
     (
         station_id,
         series_id,
         int(station_number),
+        int(streamwise_periodic),
+        int(spanwise_periodic),
         int(outlier),
     )
     )
@@ -2172,35 +2177,6 @@ def calculate_ideal_gas_specific_isobaric_heat_capacity_from_amount_fractions( c
 def calculate_ideal_gas_heat_capacity_ratio_from_amount_fractions( cursor, amount_fractions ):
     mass_fractions = calculate_mass_fractions_from_amount_fractions( cursor, amount_fractions )
     return calculate_ideal_gas_heat_capacity_ratio_from_mass_fractions( cursor, mass_fractions )
-
-def mark_station_as_periodic( cursor, station_id, \
-                              streamwise=True, spanwise=False ):
-    if ( streamwise ):
-        cursor.execute(
-        """
-        UPDATE stations
-        SET previous_streamwise_station_id=?, next_streamwise_station_id=?
-        WHERE station_id=?;
-        """,
-        (
-            sanitize_identifier( station_id ),
-            sanitize_identifier( station_id ),
-            sanitize_identifier( station_id ),
-        )
-        )
-    if ( spanwise ):
-        cursor.execute(
-        """
-        UPDATE stations
-        SET previous_spanwise_station_id=?, next_spanwise_station_id=?
-        WHERE station_id=?;
-        """,
-        (
-            sanitize_identifier( station_id ),
-            sanitize_identifier( station_id ),
-            sanitize_identifier( station_id ),
-        )
-        )
 
 def count_studies( identifiers ):
     study_ids = {}

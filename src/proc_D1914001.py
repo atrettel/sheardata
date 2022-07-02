@@ -325,9 +325,9 @@ with open( ratio_filename, "r" ) as ratio_file:
             study_number=study_number,
             series_number=series_number,
             station_number=station_number,
+            streamwise_periodic=True,
+            spanwise_periodic=True,
         )
-
-        sd.mark_station_as_periodic( cursor, station_id )
 
         sd.set_station_value( cursor, station_id, sd.Q_HYDRAULIC_DIAMETER,             diameter,                                                                                            )
         sd.set_station_value( cursor, station_id, sd.Q_DEVELOPMENT_LENGTH,             development_length,              instrument_ids=[assumption_id], note_ids=[development_length_note], )
@@ -475,10 +475,10 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
             study_number=study_number,
             series_number=series_number,
             station_number=station_number,
+            streamwise_periodic=True,
+            spanwise_periodic=True,
             outlier=outlier,
         )
-
-        sd.mark_station_as_periodic( cursor, station_id )
 
         sd.set_station_value( cursor, station_id, sd.Q_DEVELOPMENT_LENGTH,             development_length,             instrument_ids=[assumption_id], note_ids=[development_length_note], )
         sd.set_station_value( cursor, station_id, sd.Q_OUTER_LAYER_DEVELOPMENT_LENGTH, outer_layer_development_length, instrument_ids=[assumption_id], note_ids=[development_length_note], )

@@ -146,7 +146,7 @@ for duct_type in duct_types:
             INTERSECT
             SELECT station_id
             FROM stations
-            WHERE previous_streamwise_station_id=next_streamwise_station_id
+            WHERE streamwise_periodic=TRUE AND spanwise_periodic=TRUE
             INTERSECT
             SELECT station_id
             FROM points

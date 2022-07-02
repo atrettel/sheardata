@@ -135,9 +135,9 @@ with open( globals_filename, "r" ) as globals_file:
             study_number=study_number,
             series_number=series_number,
             station_number=station_number,
+            streamwise_periodic=True,
+            spanwise_periodic=True,
         )
-
-        sd.mark_station_as_periodic( cursor, station_id )
 
         station_filename = "../data/{:s}/series_{:d}.csv".format(
             study_id,
