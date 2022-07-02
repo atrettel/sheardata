@@ -29,7 +29,7 @@ study_id = sd.add_study(
 sd.add_study_source( cursor, study_id, "StantonTE+1911+eng+JOUR",   sd.PRIMARY_SOURCE )
 sd.add_study_source( cursor, study_id, "KooEC+1932+eng+THES",     sd.SECONDARY_SOURCE )
 
-assumption_id = sd.add_instrument( cursor, sd.IT_ASSUMPTION, )
+assumption_id = sd.add_instrument( cursor, sd.IC_ASSUMPTION, )
 
 # Velocity method
 #
@@ -40,7 +40,7 @@ assumption_id = sd.add_instrument( cursor, sd.IT_ASSUMPTION, )
 # in a small Pitot tube facing the current and that in a small orifice in the
 # side of the pipe.
 # \end{quote}
-pitot_static_tube_id = sd.add_instrument( cursor, sd.IT_PITOT_STATIC_TUBE, )
+pitot_static_tube_id = sd.add_instrument( cursor, sd.IC_PITOT_STATIC_TUBE, )
 
 center_line_velocity_note = sd.add_note(
     cursor,

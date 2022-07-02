@@ -50,7 +50,7 @@ model_id = sd.add_model(
 
 zeroth_order_approximation_id = sd.add_instrument(
     cursor,
-    sd.IT_APPROXIMATION,
+    sd.IC_APPROXIMATION,
 )
 sd.set_instrument_value(
     cursor,

@@ -118,11 +118,11 @@ distances_between_pressure_taps[2] = point_gamma - point_beta
 # of water was found by measuring with a stop watch (calibrated every day) the
 # time to fill vessels whose volume was known within 0.1 per cent.
 # \end{quote}
-assumption_id        = sd.add_instrument( cursor, sd.IT_ASSUMPTION,      )
-weighing_method_id   = sd.add_instrument( cursor, sd.IT_WEIGHING_METHOD, )
+assumption_id        = sd.add_instrument( cursor, sd.IC_ASSUMPTION,      )
+weighing_method_id   = sd.add_instrument( cursor, sd.IC_WEIGHING_METHOD, )
 momentum_balance_ids = {}
 for data_set in distances_between_pressure_taps:
-    momentum_balance_ids[data_set] = sd.add_instrument( cursor, sd.IT_MOMENTUM_BALANCE, "Series {:d} gauge holes".format(data_set) )
+    momentum_balance_ids[data_set] = sd.add_instrument( cursor, sd.IC_MOMENTUM_BALANCE, "Series {:d} gauge holes".format(data_set) )
     sd.set_instrument_value( cursor, momentum_balance_ids[data_set], sd.Q_DISTANCE_BETWEEN_PRESSURE_TAPS, distances_between_pressure_taps[data_set], )
 
 series_number = 0

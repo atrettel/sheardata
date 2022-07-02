@@ -28,7 +28,7 @@ study_id = sd.add_study(
 
 sd.add_study_source( cursor, study_id, "HuebscherRG+1947+eng+JOUR", sd.PRIMARY_SOURCE )
 
-assumption_id = sd.add_instrument( cursor, sd.IT_ASSUMPTION, )
+assumption_id = sd.add_instrument( cursor, sd.IC_ASSUMPTION, )
 
 # p. 128
 #
@@ -39,10 +39,10 @@ assumption_id = sd.add_instrument( cursor, sd.IT_ASSUMPTION, )
 # and equiped with throat static taps.  \ldots  The nozzles were calibrated in
 # place by impact tube traverses at the throat over the full flow range.
 # \end{quote}
-impact_tube_id = sd.add_instrument( cursor, sd.IT_IMPACT_TUBE, )
+impact_tube_id = sd.add_instrument( cursor, sd.IC_IMPACT_TUBE, )
 
 # p. 129
-momentum_balance_id = sd.add_instrument( cursor, sd.IT_MOMENTUM_BALANCE, )
+momentum_balance_id = sd.add_instrument( cursor, sd.IC_MOMENTUM_BALANCE, )
 
 mass_density_note = sd.add_note(
     cursor,

@@ -29,7 +29,7 @@ study_id = sd.add_study(
 sd.add_study_source( cursor, study_id, "StantonTE+1914+eng+JOUR",   sd.PRIMARY_SOURCE )
 sd.add_study_source( cursor, study_id, "ObotNT+1988+eng+JOUR",    sd.SECONDARY_SOURCE )
 
-assumption_id = sd.add_instrument( cursor, sd.IT_ASSUMPTION, )
+assumption_id = sd.add_instrument( cursor, sd.IC_ASSUMPTION, )
 
 # Methods for flow rate and center-line velocities
 #
@@ -54,7 +54,7 @@ assumption_id = sd.add_instrument( cursor, sd.IT_ASSUMPTION, )
 #
 # In addition to that, the paper contains no information on the
 # uncertainty of the flow rate measuremnt.
-impact_tube_id = sd.add_instrument( cursor, sd.IT_IMPACT_TUBE, )
+impact_tube_id = sd.add_instrument( cursor, sd.IC_IMPACT_TUBE, )
 
 development_length_note = sd.add_note(
     cursor,
@@ -178,7 +178,7 @@ for pipe in pipes:
 # \end{quote}
 momentum_balance_ids = {}
 for pipe in pipes:
-    momentum_balance_ids[pipe] = sd.add_instrument( cursor, sd.IT_MOMENTUM_BALANCE, "Pipe {:s}".format(pipe) )
+    momentum_balance_ids[pipe] = sd.add_instrument( cursor, sd.IC_MOMENTUM_BALANCE, "Pipe {:s}".format(pipe) )
     distance_between_pressure_taps = pipes[pipe].distance_between_pressure_taps
     if ( distance_between_pressure_taps != None ):
         sd.set_instrument_value(
@@ -452,7 +452,7 @@ with open( shear_stress_filename, "r" ) as shear_stress_file:
 
         # Without knowing precisely what "thick oil" is it is difficult to
         # assume anything else.
-        speed_of_sound_method = sd.IT_ASSUMPTION
+        speed_of_sound_method = sd.IC_ASSUMPTION
         speed_of_sound = sd.sdfloat("inf")
         if ( working_fluid == "Air" ):
             speed_of_sound = sd.calculate_ideal_gas_speed_of_sound_from_amount_fractions( cursor, temperature, sd.dry_air_amount_fractions() )

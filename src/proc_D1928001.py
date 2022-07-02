@@ -45,9 +45,9 @@ series_11_note = sd.add_note(
 # employing either mercury or water as a fluid according to the range of
 # pressure.
 # \end{quote}
-assumption_id       = sd.add_instrument( cursor, sd.IT_ASSUMPTION,       )
-weighing_method_id  = sd.add_instrument( cursor, sd.IT_WEIGHING_METHOD,  )
-momentum_balance_id = sd.add_instrument( cursor, sd.IT_MOMENTUM_BALANCE, )
+assumption_id       = sd.add_instrument( cursor, sd.IC_ASSUMPTION,       )
+weighing_method_id  = sd.add_instrument( cursor, sd.IC_WEIGHING_METHOD,  )
+momentum_balance_id = sd.add_instrument( cursor, sd.IC_MOMENTUM_BALANCE, )
 
 # p. 107
 distance_between_pressure_taps = sd.sdfloat( 0.780e-2 )

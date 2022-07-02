@@ -40,8 +40,8 @@ galilean_transformation_note = sd.add_note(
     "../data/{:s}/note_galilean_transformation.tex".format( study_id ),
 )
 
-impact_tube_id = sd.add_instrument( cursor, sd.IT_IMPACT_TUBE, )
-assumption_id  = sd.add_instrument( cursor, sd.IT_ASSUMPTION,  )
+impact_tube_id = sd.add_instrument( cursor, sd.IC_IMPACT_TUBE, )
+assumption_id  = sd.add_instrument( cursor, sd.IC_ASSUMPTION,  )
 
 series_number = 1
 series_id = sd.add_series(
