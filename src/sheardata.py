@@ -1103,8 +1103,8 @@ def is_air_working_fluid( cursor, series_id ):
 
 def add_station( cursor, flow_class_id, year, study_number, series_number,
                  station_number, streamwise_periodic=False,
-                 spanwise_periodic=True, outlier=False, note_ids=[],
-                 station_external_ids={}, ):
+                 spanwise_periodic=True, outlier=False, parent_station_id=None,
+                 note_ids=[], station_external_ids={}, ):
     station_id = identify_station(
         flow_class_id,
         year,
@@ -1133,6 +1133,39 @@ def add_station( cursor, flow_class_id, year, study_number, series_number,
         int(outlier),
     )
     )
+
+    if ( parent_station_id == None ):
+        cursor.execute(
+        """
+        INSERT INTO station_paths( station_ancestor_id,
+                                   station_descendant_id,
+                                   station_path_length )
+        VALUES( ?, ?, 0 );
+        """,
+        (
+            str(station_id),
+            str(station_id),
+        )
+        )
+    else:
+        cursor.execute(
+        """
+        INSERT INTO station_paths( station_ancestor_id,
+                                   station_descendant_id,
+                                   station_path_length )
+        SELECT ?, ?, 0
+        UNION ALL
+        SELECT tmp.station_ancestor_id, ?, tmp.station_path_length+1
+        FROM station_paths as tmp
+        WHERE tmp.station_descendant_id = ?;
+        """,
+        (
+            str(station_id),
+            str(station_id),
+            str(station_id),
+            str(parent_station_id),
+        )
+        )
 
     for note_id in note_ids:
         cursor.execute(
