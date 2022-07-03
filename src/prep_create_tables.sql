@@ -559,10 +559,6 @@ CREATE VIEW spanwise_wall_distance AS
               OR ( spanwise_coordinate.instrument_id IS NULL
                   AND wall_spanwise_coordinate.instrument_id IS NULL ) );
 
-/*
-TODO: Create UNION for wall point itself, to avoid singularity at the value for
-the uncertainty.
-*/
 CREATE VIEW wall_distance AS
      SELECT points.station_id AS station_id,
             points.point_id   AS point_id,
@@ -602,5 +598,36 @@ CREATE VIEW wall_distance AS
         AND streamwise_wall_distance.time_id  = spanwise_wall_distance.time_id
         AND ( ( streamwise_wall_distance.instrument_id = spanwise_wall_distance.instrument_id )
               OR ( streamwise_wall_distance.instrument_id IS NULL
-                  AND spanwise_wall_distance.instrument_id IS NULL ) );
+                  AND spanwise_wall_distance.instrument_id IS NULL ) )
+      WHERE ( points.point_label_id IS NULL OR points.point_label_id != "W" )
+  UNION ALL
+     SELECT points.station_id AS station_id,
+            points.point_id   AS point_id,
+            streamwise_wall_distance.time_id       AS time_id,
+            streamwise_wall_distance.instrument_id AS instrument_id,
+            SQRT(
+                streamwise_wall_distance.value * streamwise_wall_distance.value
+              + transverse_wall_distance.value * transverse_wall_distance.value
+              +   spanwise_wall_distance.value *   spanwise_wall_distance.value
+            ) AS value,
+            0.0 AS uncertainty,
+            ( streamwise_wall_distance.outlier = TRUE ) OR
+            ( transverse_wall_distance.outlier = TRUE ) OR
+            (   spanwise_wall_distance.outlier = TRUE ) AS outlier
+       FROM points
+ INNER JOIN streamwise_wall_distance
+         ON points.point_id = streamwise_wall_distance.point_id
+ INNER JOIN transverse_wall_distance
+         ON                   points.point_id      = transverse_wall_distance.point_id
+        AND streamwise_wall_distance.time_id       = transverse_wall_distance.time_id
+        AND ( ( streamwise_wall_distance.instrument_id = transverse_wall_distance.instrument_id )
+              OR ( streamwise_wall_distance.instrument_id IS NULL
+                  AND transverse_wall_distance.instrument_id IS NULL ) )
+ INNER JOIN spanwise_wall_distance
+         ON                   points.point_id = spanwise_wall_distance.point_id
+        AND streamwise_wall_distance.time_id  = spanwise_wall_distance.time_id
+        AND ( ( streamwise_wall_distance.instrument_id = spanwise_wall_distance.instrument_id )
+              OR ( streamwise_wall_distance.instrument_id IS NULL
+                  AND spanwise_wall_distance.instrument_id IS NULL ) )
+      WHERE points.point_label_id = "W";
 
