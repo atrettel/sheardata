@@ -585,9 +585,9 @@ CREATE VIEW wall_distance AS
               + transverse_wall_distance.value * transverse_wall_distance.value
               +   spanwise_wall_distance.value *   spanwise_wall_distance.value
             ) AS uncertainty,
-            ( streamwise_wall_distance = TRUE ) OR
-            ( transverse_wall_distance = TRUE ) OR
-            (   spanwise_wall_distance = TRUE ) AS outlier
+            ( streamwise_wall_distance.outlier = TRUE ) OR
+            ( transverse_wall_distance.outlier = TRUE ) OR
+            (   spanwise_wall_distance.outlier = TRUE ) AS outlier
        FROM points
  INNER JOIN streamwise_wall_distance
          ON points.point_id = streamwise_wall_distance.point_id
