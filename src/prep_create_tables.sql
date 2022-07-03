@@ -490,3 +490,66 @@ CREATE VIEW wall_spanwise_coordinate AS
          ON points.point_id   = spanwise_coordinate.point_id
         AND points.point_type = 'W';
 
+CREATE VIEW streamwise_wall_distance AS
+     SELECT                points.station_id              AS station_id,
+                           points.point_id                AS point_id,
+            streamwise_coordinate.time_id                 AS time_id,
+            streamwise_coordinate.instrument_id           AS instrument_id,
+                   streamwise_coordinate.value
+            - wall_streamwise_coordinate.value            AS value,
+            SQRT(
+                     streamwise_coordinate.uncertainty *      streamwise_coordinate.uncertainty
+              + wall_streamwise_coordinate.uncertainty * wall_streamwise_coordinate.uncertainty
+            )                                             AS uncertainty,
+            (      streamwise_coordinate.outlier = TRUE )
+         OR ( wall_streamwise_coordinate.outlier = TRUE ) AS outlier
+       FROM streamwise_coordinate
+ INNER JOIN points
+         ON points.point_id = streamwise_coordinate.point_id
+ INNER JOIN wall_streamwise_coordinate
+         ON                points.station_id    = wall_streamwise_coordinate.station_id
+        AND streamwise_coordinate.time_id       = wall_streamwise_coordinate.time_id
+        AND streamwise_coordinate.instrument_id = wall_streamwise_coordinate.instrument_id;
+
+CREATE VIEW transverse_wall_distance AS
+     SELECT                points.station_id              AS station_id,
+                           points.point_id                AS point_id,
+            transverse_coordinate.time_id                 AS time_id,
+            transverse_coordinate.instrument_id           AS instrument_id,
+                   transverse_coordinate.value
+            - wall_transverse_coordinate.value            AS value,
+            SQRT(
+                     transverse_coordinate.uncertainty *      transverse_coordinate.uncertainty
+              + wall_transverse_coordinate.uncertainty * wall_transverse_coordinate.uncertainty
+            )                                             AS uncertainty,
+            (      transverse_coordinate.outlier = TRUE )
+         OR ( wall_transverse_coordinate.outlier = TRUE ) AS outlier
+       FROM transverse_coordinate
+ INNER JOIN points
+         ON points.point_id = transverse_coordinate.point_id
+ INNER JOIN wall_transverse_coordinate
+         ON                points.station_id    = wall_transverse_coordinate.station_id
+        AND transverse_coordinate.time_id       = wall_transverse_coordinate.time_id
+        AND transverse_coordinate.instrument_id = wall_transverse_coordinate.instrument_id;
+
+CREATE VIEW spanwise_wall_distance AS
+     SELECT              points.station_id              AS station_id,
+                         points.point_id                AS point_id,
+            spanwise_coordinate.time_id                 AS time_id,
+            spanwise_coordinate.instrument_id           AS instrument_id,
+                   spanwise_coordinate.value
+            - wall_spanwise_coordinate.value            AS value,
+            SQRT(
+                     spanwise_coordinate.uncertainty *      spanwise_coordinate.uncertainty
+              + wall_spanwise_coordinate.uncertainty * wall_spanwise_coordinate.uncertainty
+            )                                           AS uncertainty,
+            (      spanwise_coordinate.outlier = TRUE )
+         OR ( wall_spanwise_coordinate.outlier = TRUE ) AS outlier
+       FROM spanwise_coordinate
+ INNER JOIN points
+         ON points.point_id = spanwise_coordinate.point_id
+ INNER JOIN wall_spanwise_coordinate
+         ON              points.station_id    = wall_spanwise_coordinate.station_id
+        AND spanwise_coordinate.time_id       = wall_spanwise_coordinate.time_id
+        AND spanwise_coordinate.instrument_id = wall_spanwise_coordinate.instrument_id;
+
