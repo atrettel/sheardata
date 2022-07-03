@@ -491,18 +491,18 @@ CREATE VIEW wall_spanwise_coordinate AS
         AND points.point_type = 'W';
 
 CREATE VIEW streamwise_wall_distance AS
-     SELECT                points.station_id              AS station_id,
-                           points.point_id                AS point_id,
-            streamwise_coordinate.time_id                 AS time_id,
-            streamwise_coordinate.instrument_id           AS instrument_id,
+     SELECT                points.station_id    AS station_id,
+                           points.point_id      AS point_id,
+            streamwise_coordinate.time_id       AS time_id,
+            streamwise_coordinate.instrument_id AS instrument_id,
                    streamwise_coordinate.value
-            - wall_streamwise_coordinate.value            AS value,
+            - wall_streamwise_coordinate.value  AS value,
             SQRT(
                      streamwise_coordinate.uncertainty *      streamwise_coordinate.uncertainty
               + wall_streamwise_coordinate.uncertainty * wall_streamwise_coordinate.uncertainty
-            )                                             AS uncertainty,
-            (      streamwise_coordinate.outlier = TRUE )
-         OR ( wall_streamwise_coordinate.outlier = TRUE ) AS outlier
+            ) AS uncertainty,
+            (      streamwise_coordinate.outlier = TRUE ) OR
+            ( wall_streamwise_coordinate.outlier = TRUE ) AS outlier
        FROM streamwise_coordinate
  INNER JOIN points
          ON points.point_id = streamwise_coordinate.point_id
@@ -512,18 +512,18 @@ CREATE VIEW streamwise_wall_distance AS
         AND streamwise_coordinate.instrument_id = wall_streamwise_coordinate.instrument_id;
 
 CREATE VIEW transverse_wall_distance AS
-     SELECT                points.station_id              AS station_id,
-                           points.point_id                AS point_id,
-            transverse_coordinate.time_id                 AS time_id,
-            transverse_coordinate.instrument_id           AS instrument_id,
+     SELECT                points.station_id     AS station_id,
+                           points.point_id       AS point_id,
+            transverse_coordinate.time_id        AS time_id,
+            transverse_coordinate.instrument_id  AS instrument_id,
                    transverse_coordinate.value
-            - wall_transverse_coordinate.value            AS value,
+            - wall_transverse_coordinate.value   AS value,
             SQRT(
                      transverse_coordinate.uncertainty *      transverse_coordinate.uncertainty
               + wall_transverse_coordinate.uncertainty * wall_transverse_coordinate.uncertainty
-            )                                             AS uncertainty,
-            (      transverse_coordinate.outlier = TRUE )
-         OR ( wall_transverse_coordinate.outlier = TRUE ) AS outlier
+            ) AS uncertainty,
+            (      transverse_coordinate.outlier = TRUE ) OR
+            ( wall_transverse_coordinate.outlier = TRUE ) AS outlier
        FROM transverse_coordinate
  INNER JOIN points
          ON points.point_id = transverse_coordinate.point_id
@@ -533,18 +533,18 @@ CREATE VIEW transverse_wall_distance AS
         AND transverse_coordinate.instrument_id = wall_transverse_coordinate.instrument_id;
 
 CREATE VIEW spanwise_wall_distance AS
-     SELECT              points.station_id              AS station_id,
-                         points.point_id                AS point_id,
-            spanwise_coordinate.time_id                 AS time_id,
-            spanwise_coordinate.instrument_id           AS instrument_id,
+     SELECT              points.station_id    AS station_id,
+                         points.point_id      AS point_id,
+            spanwise_coordinate.time_id       AS time_id,
+            spanwise_coordinate.instrument_id AS instrument_id,
                    spanwise_coordinate.value
-            - wall_spanwise_coordinate.value            AS value,
+            - wall_spanwise_coordinate.value  AS value,
             SQRT(
                      spanwise_coordinate.uncertainty *      spanwise_coordinate.uncertainty
               + wall_spanwise_coordinate.uncertainty * wall_spanwise_coordinate.uncertainty
-            )                                           AS uncertainty,
-            (      spanwise_coordinate.outlier = TRUE )
-         OR ( wall_spanwise_coordinate.outlier = TRUE ) AS outlier
+            ) AS uncertainty,
+            (      spanwise_coordinate.outlier = TRUE ) OR
+            ( wall_spanwise_coordinate.outlier = TRUE ) AS outlier
        FROM spanwise_coordinate
  INNER JOIN points
          ON points.point_id = spanwise_coordinate.point_id
@@ -552,4 +552,45 @@ CREATE VIEW spanwise_wall_distance AS
          ON              points.station_id    = wall_spanwise_coordinate.station_id
         AND spanwise_coordinate.time_id       = wall_spanwise_coordinate.time_id
         AND spanwise_coordinate.instrument_id = wall_spanwise_coordinate.instrument_id;
+
+/*
+TODO: Create UNION for wall point itself, to avoid singularity at the value for
+the uncertainty.
+*/
+CREATE VIEW wall_distance AS
+     SELECT points.station_id AS station_id,
+            points.point_id   AS point_id,
+            streamwise_wall_distance.time_id       AS time_id,
+            streamwise_wall_distance.instrument_id AS instrument_id,
+            SQRT(
+                streamwise_wall_distance.value * streamwise_wall_distance.value
+              + transverse_wall_distance.value * transverse_wall_distance.value
+              +   spanwise_wall_distance.value *   spanwise_wall_distance.value
+            ) AS value,
+            SQRT(
+                streamwise_wall_distance.value       * streamwise_wall_distance.value
+              * streamwise_wall_distance.uncertainty * streamwise_wall_distance.uncertainty
+              + transverse_wall_distance.value       * transverse_wall_distance.value
+              * transverse_wall_distance.uncertainty * transverse_wall_distance.uncertainty
+              +   spanwise_wall_distance.value       *   spanwise_wall_distance.value
+              *   spanwise_wall_distance.uncertainty *   spanwise_wall_distance.uncertainty
+            ) / SQRT(
+                streamwise_wall_distance.value * streamwise_wall_distance.value
+              + transverse_wall_distance.value * transverse_wall_distance.value
+              +   spanwise_wall_distance.value *   spanwise_wall_distance.value
+            ) AS uncertainty,
+            ( streamwise_wall_distance = TRUE ) OR
+            ( transverse_wall_distance = TRUE ) OR
+            (   spanwise_wall_distance = TRUE ) AS outlier
+       FROM points
+ INNER JOIN streamwise_wall_distance
+         ON points.point_id = streamwise_wall_distance.point_id
+ INNER JOIN transverse_wall_distance
+         ON                   points.point_id      = transverse_wall_distance.point_id
+        AND streamwise_wall_distance.time_id       = transverse_wall_distance.time_id
+        AND streamwise_wall_distance.instrument_id = transverse_wall_distance.instrument_id
+ INNER JOIN spanwise_wall_distance
+         ON                   points.point_id      = spanwise_wall_distance.point_id
+        AND streamwise_wall_distance.time_id       = spanwise_wall_distance.time_id
+        AND streamwise_wall_distance.instrument_id = spanwise_wall_distance.instrument_id;
 
