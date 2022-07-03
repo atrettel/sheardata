@@ -451,3 +451,42 @@ CREATE TABLE spanwise_coordinate (
     FOREIGN KEY(outlier)       REFERENCES booleans(boolean_id)
 );
 
+CREATE VIEW wall_streamwise_coordinate AS
+     SELECT                points.station_id    AS station_id,
+                           points.point_id      AS point_id,
+            streamwise_coordinate.time_id       AS time_id,
+            streamwise_coordinate.instrument_id AS instrument_id,
+            streamwise_coordinate.value         AS value,
+            streamwise_coordinate.uncertainty   AS uncertainty,
+            streamwise_coordinate.outlier       AS outlier
+       FROM streamwise_coordinate
+ INNER JOIN points
+         ON points.point_id   = streamwise_coordinate.point_id
+        AND points.point_type = 'W';
+
+CREATE VIEW wall_transverse_coordinate AS
+     SELECT                points.station_id    AS station_id,
+                           points.point_id      AS point_id,
+            transverse_coordinate.time_id       AS time_id,
+            transverse_coordinate.instrument_id AS instrument_id,
+            transverse_coordinate.value         AS value,
+            transverse_coordinate.uncertainty   AS uncertainty,
+            transverse_coordinate.outlier       AS outlier
+       FROM transverse_coordinate
+ INNER JOIN points
+         ON points.point_id   = transverse_coordinate.point_id
+        AND points.point_type = 'W';
+
+CREATE VIEW wall_spanwise_coordinate AS
+     SELECT              points.station_id    AS station_id,
+                         points.point_id      AS point_id,
+            spanwise_coordinate.time_id       AS time_id,
+            spanwise_coordinate.instrument_id AS instrument_id,
+            spanwise_coordinate.value         AS value,
+            spanwise_coordinate.uncertainty   AS uncertainty,
+            spanwise_coordinate.outlier       AS outlier
+       FROM spanwise_coordinate
+ INNER JOIN points
+         ON points.point_id   = spanwise_coordinate.point_id
+        AND points.point_type = 'W';
+
