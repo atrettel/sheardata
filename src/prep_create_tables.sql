@@ -396,3 +396,58 @@ CREATE TABLE point_external_ids (
     FOREIGN KEY(compilation_id) REFERENCES compilations(compilation_id)
 );
 
+-- AKA time instances
+CREATE TABLE times (
+    time_id       INTEGER PRIMARY KEY AUTOINCREMENT CHECK ( time_id > 0 ),
+    series_id     TEXT NOT NULL,
+    instrument_id INTEGER DEFAULT NULL,
+    value         REAL DEFAULT NULL,
+    uncertainty   REAL DEFAULT NULL CHECK ( uncertainty >= 0.0 ),
+    outlier       INTEGER NOT NULL DEFAULT FALSE,
+    FOREIGN KEY(series_id)     REFERENCES series(series_id),
+    FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id),
+    FOREIGN KEY(outlier)       REFERENCES booleans(boolean_id)
+);
+
+CREATE TABLE streamwise_coordinate (
+    point_id      TEXT NOT NULL,
+    time_id       INTEGER NOT NULL,
+    instrument_id INTEGER DEFAULT NULL,
+    value         REAL NOT NULL,
+    uncertainty   REAL DEFAULT NULL CHECK ( uncertainty >= 0.0 ),
+    outlier       INTEGER NOT NULL DEFAULT FALSE,
+    PRIMARY KEY(point_id, time_id, instrument_id),
+    FOREIGN KEY(point_id)      REFERENCES points(point_id),
+    FOREIGN KEY(time_id)       REFERENCES times(time_id),
+    FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id),
+    FOREIGN KEY(outlier)       REFERENCES booleans(boolean_id)
+);
+
+CREATE TABLE transverse_coordinate (
+    point_id      TEXT NOT NULL,
+    time_id       INTEGER NOT NULL,
+    instrument_id INTEGER DEFAULT NULL,
+    value         REAL NOT NULL,
+    uncertainty   REAL DEFAULT NULL CHECK ( uncertainty >= 0.0 ),
+    outlier       INTEGER NOT NULL DEFAULT FALSE,
+    PRIMARY KEY(point_id, time_id, instrument_id),
+    FOREIGN KEY(point_id)      REFERENCES points(point_id),
+    FOREIGN KEY(time_id)       REFERENCES times(time_id),
+    FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id),
+    FOREIGN KEY(outlier)       REFERENCES booleans(boolean_id)
+);
+
+CREATE TABLE spanwise_coordinate (
+    point_id      TEXT NOT NULL,
+    time_id       INTEGER NOT NULL,
+    instrument_id INTEGER DEFAULT NULL,
+    value         REAL NOT NULL,
+    uncertainty   REAL DEFAULT NULL CHECK ( uncertainty >= 0.0 ),
+    outlier       INTEGER NOT NULL DEFAULT FALSE,
+    PRIMARY KEY(point_id, time_id, instrument_id),
+    FOREIGN KEY(point_id)      REFERENCES points(point_id),
+    FOREIGN KEY(time_id)       REFERENCES times(time_id),
+    FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id),
+    FOREIGN KEY(outlier)       REFERENCES booleans(boolean_id)
+);
+
