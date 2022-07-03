@@ -187,10 +187,10 @@ CREATE TABLE series (
     model_id             INTEGER DEFAULT NULL,
     outlier              INTEGER NOT NULL DEFAULT FALSE,
     series_description   TEXT DEFAULT NULL,
-    FOREIGN KEY(study_id)             REFERENCES studies(study_id),
-    FOREIGN KEY(facility_id)          REFERENCES facilities(facility_id),
-    FOREIGN KEY(model_id)             REFERENCES models(model_id),
-    FOREIGN KEY(outlier)              REFERENCES booleans(boolean_id)
+    FOREIGN KEY(study_id)    REFERENCES studies(study_id),
+    FOREIGN KEY(facility_id) REFERENCES facilities(facility_id),
+    FOREIGN KEY(model_id)    REFERENCES models(model_id),
+    FOREIGN KEY(outlier)     REFERENCES booleans(boolean_id)
 );
 
 CREATE TABLE stations (
@@ -461,8 +461,8 @@ CREATE VIEW wall_streamwise_coordinate AS
             streamwise_coordinate.outlier       AS outlier
        FROM streamwise_coordinate
  INNER JOIN points
-         ON points.point_id   = streamwise_coordinate.point_id
-        AND points.point_type = 'W';
+         ON points.point_id       = streamwise_coordinate.point_id
+        AND points.point_label_id = 'W';
 
 CREATE VIEW wall_transverse_coordinate AS
      SELECT                points.station_id    AS station_id,
@@ -474,8 +474,8 @@ CREATE VIEW wall_transverse_coordinate AS
             transverse_coordinate.outlier       AS outlier
        FROM transverse_coordinate
  INNER JOIN points
-         ON points.point_id   = transverse_coordinate.point_id
-        AND points.point_type = 'W';
+         ON points.point_id       = transverse_coordinate.point_id
+        AND points.point_label_id = 'W';
 
 CREATE VIEW wall_spanwise_coordinate AS
      SELECT              points.station_id    AS station_id,
@@ -487,8 +487,8 @@ CREATE VIEW wall_spanwise_coordinate AS
             spanwise_coordinate.outlier       AS outlier
        FROM spanwise_coordinate
  INNER JOIN points
-         ON points.point_id   = spanwise_coordinate.point_id
-        AND points.point_type = 'W';
+         ON points.point_id       = spanwise_coordinate.point_id
+        AND points.point_label_id = 'W';
 
 CREATE VIEW streamwise_wall_distance AS
      SELECT                points.station_id    AS station_id,
@@ -503,38 +503,42 @@ CREATE VIEW streamwise_wall_distance AS
             ) AS uncertainty,
             (      streamwise_coordinate.outlier = TRUE ) OR
             ( wall_streamwise_coordinate.outlier = TRUE ) AS outlier
-       FROM streamwise_coordinate
- INNER JOIN points
+       FROM points
+ INNER JOIN streamwise_coordinate
          ON points.point_id = streamwise_coordinate.point_id
  INNER JOIN wall_streamwise_coordinate
-         ON                points.station_id    = wall_streamwise_coordinate.station_id
-        AND streamwise_coordinate.time_id       = wall_streamwise_coordinate.time_id
-        AND streamwise_coordinate.instrument_id = wall_streamwise_coordinate.instrument_id;
+         ON                points.station_id = wall_streamwise_coordinate.station_id
+        AND streamwise_coordinate.time_id    = wall_streamwise_coordinate.time_id
+        AND ( ( streamwise_coordinate.instrument_id = wall_streamwise_coordinate.instrument_id )
+              OR ( streamwise_coordinate.instrument_id IS NULL
+                  AND wall_streamwise_coordinate.instrument_id IS NULL ) );
 
 CREATE VIEW transverse_wall_distance AS
-     SELECT                points.station_id     AS station_id,
-                           points.point_id       AS point_id,
-            transverse_coordinate.time_id        AS time_id,
-            transverse_coordinate.instrument_id  AS instrument_id,
+     SELECT                points.station_id    AS station_id,
+                           points.point_id      AS point_id,
+            transverse_coordinate.time_id       AS time_id,
+            transverse_coordinate.instrument_id AS instrument_id,
                    transverse_coordinate.value
-            - wall_transverse_coordinate.value   AS value,
+            - wall_transverse_coordinate.value  AS value,
             SQRT(
                      transverse_coordinate.uncertainty *      transverse_coordinate.uncertainty
               + wall_transverse_coordinate.uncertainty * wall_transverse_coordinate.uncertainty
             ) AS uncertainty,
             (      transverse_coordinate.outlier = TRUE ) OR
             ( wall_transverse_coordinate.outlier = TRUE ) AS outlier
-       FROM transverse_coordinate
- INNER JOIN points
+       FROM points
+ INNER JOIN transverse_coordinate
          ON points.point_id = transverse_coordinate.point_id
  INNER JOIN wall_transverse_coordinate
-         ON                points.station_id    = wall_transverse_coordinate.station_id
-        AND transverse_coordinate.time_id       = wall_transverse_coordinate.time_id
-        AND transverse_coordinate.instrument_id = wall_transverse_coordinate.instrument_id;
+         ON                points.station_id = wall_transverse_coordinate.station_id
+        AND transverse_coordinate.time_id    = wall_transverse_coordinate.time_id
+        AND ( ( transverse_coordinate.instrument_id = wall_transverse_coordinate.instrument_id )
+              OR ( transverse_coordinate.instrument_id IS NULL
+                  AND wall_transverse_coordinate.instrument_id IS NULL ) );
 
 CREATE VIEW spanwise_wall_distance AS
-     SELECT              points.station_id    AS station_id,
-                         points.point_id      AS point_id,
+     SELECT                points.station_id  AS station_id,
+                           points.point_id    AS point_id,
             spanwise_coordinate.time_id       AS time_id,
             spanwise_coordinate.instrument_id AS instrument_id,
                    spanwise_coordinate.value
@@ -545,13 +549,15 @@ CREATE VIEW spanwise_wall_distance AS
             ) AS uncertainty,
             (      spanwise_coordinate.outlier = TRUE ) OR
             ( wall_spanwise_coordinate.outlier = TRUE ) AS outlier
-       FROM spanwise_coordinate
- INNER JOIN points
+       FROM points
+ INNER JOIN spanwise_coordinate
          ON points.point_id = spanwise_coordinate.point_id
  INNER JOIN wall_spanwise_coordinate
-         ON              points.station_id    = wall_spanwise_coordinate.station_id
-        AND spanwise_coordinate.time_id       = wall_spanwise_coordinate.time_id
-        AND spanwise_coordinate.instrument_id = wall_spanwise_coordinate.instrument_id;
+         ON              points.station_id = wall_spanwise_coordinate.station_id
+        AND spanwise_coordinate.time_id    = wall_spanwise_coordinate.time_id
+        AND ( ( spanwise_coordinate.instrument_id = wall_spanwise_coordinate.instrument_id )
+              OR ( spanwise_coordinate.instrument_id IS NULL
+                  AND wall_spanwise_coordinate.instrument_id IS NULL ) );
 
 /*
 TODO: Create UNION for wall point itself, to avoid singularity at the value for
@@ -588,9 +594,13 @@ CREATE VIEW wall_distance AS
  INNER JOIN transverse_wall_distance
          ON                   points.point_id      = transverse_wall_distance.point_id
         AND streamwise_wall_distance.time_id       = transverse_wall_distance.time_id
-        AND streamwise_wall_distance.instrument_id = transverse_wall_distance.instrument_id
+        AND ( ( streamwise_wall_distance.instrument_id = transverse_wall_distance.instrument_id )
+              OR ( streamwise_wall_distance.instrument_id IS NULL
+                  AND transverse_wall_distance.instrument_id IS NULL ) )
  INNER JOIN spanwise_wall_distance
-         ON                   points.point_id      = spanwise_wall_distance.point_id
-        AND streamwise_wall_distance.time_id       = spanwise_wall_distance.time_id
-        AND streamwise_wall_distance.instrument_id = spanwise_wall_distance.instrument_id;
+         ON                   points.point_id = spanwise_wall_distance.point_id
+        AND streamwise_wall_distance.time_id  = spanwise_wall_distance.time_id
+        AND ( ( streamwise_wall_distance.instrument_id = spanwise_wall_distance.instrument_id )
+              OR ( streamwise_wall_distance.instrument_id IS NULL
+                  AND spanwise_wall_distance.instrument_id IS NULL ) );
 
