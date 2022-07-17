@@ -17,7 +17,11 @@ To create the database with the flow data in it, run
 
 Requirements to make the database:
 
-- SQLite
+- SQLite with built-in mathematical SQL functions
+
+    - <https://www.sqlite.org/lang_mathfunc.html>
+
+    - This requirement may need a custom-compiled version of SQLite.
 
 - Python 3
 

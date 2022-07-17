@@ -4,10 +4,9 @@ Shear layer data compilation
 Flow data from shear layer experiments and simulations presented in an open,
 modern, and unified format.
 
-
 NOTE: This project is on hold as I investigate improvements in the database
-design.  I want to move more analysis from being written in Python to being
-written more directly as SQL code.
+design.  I want to move more analysis from being written as Python code to
+being written directly as SQL code.
 
 
 Goals
