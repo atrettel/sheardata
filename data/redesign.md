@@ -134,5 +134,5 @@ TOOD: Complete the table.
 
 Copyright © 2022 Andrew Trettel
 
-SPDX-License-Identifier: MIT
+SPDX-License-Identifier: CC-BY-4.0
 
