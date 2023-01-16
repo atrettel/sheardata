@@ -4,12 +4,12 @@ Shear layer data compilation
 Flow data from shear layer experiments and simulations presented in an open,
 modern, and unified format.
 
-NOTE: This project is on hold as I investigate improvements in the database
-design and analysis framework.  I am investigating moving the
-extract-transform-load stages to C or Fortran, with goals of making the project
-faster and more portable (less dependent on the Python ecosystem and the quirks
-of the SQLite version of a given Python distribution).  I am also investigating
-moving more analysis code from Python to SQL.
+NOTE: This project is going through a redesign from the ground up.  I am
+investigating moving the extract-transform-load stages to C or Fortran, with
+goals of making the project faster and more portable (less dependent on the
+Python ecosystem and the quirks of the SQLite version of a given Python
+distribution).  I am also investigating moving more analysis code from Python
+to SQL.
 
 
 Goals
