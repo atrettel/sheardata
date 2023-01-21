@@ -97,9 +97,9 @@ categories for ease of use.
 | Cross-sectional aspect ratio                 | `AR_cs = w_cs / h_cs`                         | Model section                   | View       |
 | Development length                           | `l_d`                                         | Station                         | Data table |
 | Displacement thickness                       | `delta_1`                                     | Station                         | Data table |
-| Displacement thickness Reynolds number       | `Re_delta_1 = u_e * delta_1 / nu_e            | Station, edge points            | View       |
+| Displacement thickness Reynolds number       | `Re_delta_1 = u_e * delta_1 / nu_e`           | Station, edge points            | View       |
 | Momentum thickness                           | `delta_2`                                     | Station                         | Data table |
-| Momentum thickness Reynolds number           | `Re_delta_2 = u_e * delta_2 / nu_e            | Station, edge points            | View       |
+| Momentum thickness Reynolds number           | `Re_delta_2 = u_e * delta_2 / nu_e`           | Station, edge points            | View       |
 | Modified momentum thickness Reynolds number  | `Re_delta_2 = rho_e * u_e * delta_2 / mu_w`   | Station, edge points            | View       |
 | Energy thickness                             | `delta_3`                                     | Station                         | Data table |
 | Shape factor 1-to-2                          | `H_12 = delta_1 / delta_2`                    | Station                         | View       |
