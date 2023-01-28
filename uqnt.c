@@ -138,8 +138,23 @@ uqnt uqnt_divide( uqnt a, uqnt b )
 
 void uqnt_print( uqnt a )
 {
-    printf( "( %+8.5e +/- %+8.5e ) m^%+g kg^%+g s^%+g K^%+g",
-        uqnt_value(a), uqnt_uncertainty(a),
-        uqnt_length_d(a), uqnt_mass_d(a)/1000.0, uqnt_time_d(a), uqnt_temperature_d(a)
-    );
+    printf( "( %+8.5e +/- %+8.5e )", uqnt_value(a), uqnt_uncertainty(a) );
+
+    if ( uqnt_length_d(a) != 0.0 )
+    {
+        printf( " m^%+g", uqnt_length_d(a) );
+    }
+    if ( uqnt_mass_d(a) != 0.0 )
+    {
+        printf( " m^%+g", uqnt_mass_d(a) );
+    }
+    if ( uqnt_time_d(a) != 0.0 )
+    {
+        printf( " m^%+g", uqnt_time_d(a) );
+    }
+    if ( uqnt_temperature_d(a) != 0.0 )
+    {
+        printf( " m^%+g", uqnt_temperature_d(a) );
+    }
+
 }
