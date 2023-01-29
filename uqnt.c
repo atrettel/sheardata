@@ -190,6 +190,11 @@ uqnt uqnt_pow( uqnt a, uqnt b )
     return c;
 }
 
+uqnt uqnt_sqrt( uqnt a )
+{
+    return uqnt_pow( a, uqnt_num(0.5) );
+}
+
 void uqnt_print( uqnt a )
 {
     printf( "( %+8.5e +/- %+8.5e )", uqnt_val(a), uqnt_unc(a) );

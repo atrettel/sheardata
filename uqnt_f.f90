@@ -115,6 +115,19 @@ module uqnt_f
    end interface operator (**)
 
    interface
+      function uqnt_sqrt(a) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: uqnt_sqrt
+         type(uqnt), intent(in), value :: a
+      end function uqnt_sqrt
+   end interface
+
+   interface sqrt
+      procedure uqnt_sqrt
+   end interface sqrt
+
+   interface
       subroutine uqnt_print(a) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
