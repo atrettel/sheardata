@@ -1,6 +1,7 @@
 // Copyright (C) 2023 Andrew Trettel
 #include <assert.h>
 #include <math.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include "uqnt.h"
 
@@ -54,12 +55,33 @@ uqnt uqnt_init( double value, double uncertainty, uqnt units )
     return a;
 }
 
+_Bool uqnt_same_dimensions( uqnt a, uqnt b )
+{
+    if ( uqnt_length_d(a) != uqnt_length_d(b) )
+    {
+        return false;
+    }
+    else if ( uqnt_mass_d(a) != uqnt_mass_d(b) )
+    {
+        return false;
+    }
+    else if ( uqnt_time_d(a) != uqnt_time_d(b) )
+    {
+        return false;
+    }
+    else if ( uqnt_temperature_d(a) != uqnt_temperature_d(b) )
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
 uqnt uqnt_add( uqnt a, uqnt b )
 {
-    assert(      uqnt_length_d(a) ==      uqnt_length_d(b) );
-    assert(        uqnt_mass_d(a) ==        uqnt_mass_d(b) );
-    assert(        uqnt_time_d(a) ==        uqnt_time_d(b) );
-    assert( uqnt_temperature_d(a) == uqnt_temperature_d(b) );
+    assert( uqnt_same_dimensions(a,b) );
 
     double a_u = uqnt_uncertainty(a);
     double b_u = uqnt_uncertainty(b);
@@ -77,10 +99,7 @@ uqnt uqnt_add( uqnt a, uqnt b )
 
 uqnt uqnt_subtract( uqnt a, uqnt b )
 {
-    assert(      uqnt_length_d(a) ==      uqnt_length_d(b) );
-    assert(        uqnt_mass_d(a) ==        uqnt_mass_d(b) );
-    assert(        uqnt_time_d(a) ==        uqnt_time_d(b) );
-    assert( uqnt_temperature_d(a) == uqnt_temperature_d(b) );
+    assert( uqnt_same_dimensions(a,b) );
 
     double a_u = uqnt_uncertainty(a);
     double b_u = uqnt_uncertainty(b);

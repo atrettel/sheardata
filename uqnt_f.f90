@@ -22,6 +22,15 @@ module uqnt_f
    end interface
 
    interface
+      function uqnt_same_dimensions(a, b) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         logical(c_bool) :: uqnt_same_dimensions
+         type(uqnt), value :: a, b
+      end function uqnt_same_dimensions
+   end interface
+
+   interface
       function uqnt_add(a, b) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
