@@ -55,6 +55,13 @@ uqnt uqnt_norm( double value, double uncertainty, uqnt units )
     return a;
 }
 
+uqnt uqnt_unif( double min_value, double max_value, uqnt units )
+{
+    double value = 0.5 * ( min_value + max_value );
+    double uncertainty = ( max_value - min_value ) / sqrt(12.0);
+    return uqnt_norm( value, uncertainty, units );
+}
+
 _Bool uqnt_same_dimensions( uqnt a, uqnt b )
 {
     if ( uqnt_length_d(a) != uqnt_length_d(b) )

@@ -22,6 +22,16 @@ module uqnt_f
    end interface
 
    interface
+      function uqnt_unif(a, b, units) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: uqnt_unif
+         real(c_double), value :: a, b
+         type(uqnt), value :: units
+      end function uqnt_unif
+   end interface
+
+   interface
       function uqnt_same_dimensions(a, b) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
