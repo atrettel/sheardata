@@ -43,10 +43,11 @@ double uqnt_temp_d( uqnt a )
 
 uqnt uqnt_norm( double val, double unc, uqnt units )
 {
+    double u_v = uqnt_val(units);
     uqnt a =
     {
-        .val    = val * uqnt_val(units),
-        .unc    = unc * uqnt_val(units),
+        .val    = val *      u_v,
+        .unc    = unc * fabs(u_v),
         .len_d  =  uqnt_len_d(units),
         .mass_d = uqnt_mass_d(units),
         .time_d = uqnt_time_d(units),
