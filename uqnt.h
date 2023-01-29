@@ -2,7 +2,7 @@
 
 typedef struct {
     double value, uncertainty;
-    double length_d, mass_d, time_d, temperature_d;
+    double len_d, mass_d, time_d, temp_d;
 } uqnt;
 
 
@@ -14,10 +14,10 @@ extern const uqnt deg_kelvin;
 
 double uqnt_value( uqnt a );
 double uqnt_uncertainty( uqnt a );
-double uqnt_length_d( uqnt a );
+double uqnt_len_d( uqnt a );
 double uqnt_mass_d( uqnt a );
 double uqnt_time_d( uqnt a );
-double uqnt_temperature_d( uqnt a );
+double uqnt_temp_d( uqnt a );
 uqnt uqnt_norm( double value, double uncertainty, uqnt units );
 uqnt uqnt_unif( double min_value, double max_value, uqnt units );
 uqnt uqnt_num( double value );

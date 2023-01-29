@@ -5,11 +5,11 @@
 #include <stdio.h>
 #include "uqnt.h"
 
-const uqnt one        = { .value = 1.0, .uncertainty = 0.0, .length_d = 0.0, .mass_d = 0.0, .time_d = 0.0, .temperature_d = 0.0 };
-const uqnt meter      = { .value = 1.0, .uncertainty = 0.0, .length_d = 1.0, .mass_d = 0.0, .time_d = 0.0, .temperature_d = 0.0 };
-const uqnt gram       = { .value = 1.0, .uncertainty = 0.0, .length_d = 0.0, .mass_d = 1.0, .time_d = 0.0, .temperature_d = 0.0 };
-const uqnt second     = { .value = 1.0, .uncertainty = 0.0, .length_d = 0.0, .mass_d = 0.0, .time_d = 1.0, .temperature_d = 0.0 };
-const uqnt deg_kelvin = { .value = 1.0, .uncertainty = 0.0, .length_d = 0.0, .mass_d = 0.0, .time_d = 0.0, .temperature_d = 1.0 };
+const uqnt one        = { .value = 1.0, .uncertainty = 0.0, .len_d = 0.0, .mass_d = 0.0, .time_d = 0.0, .temp_d = 0.0 };
+const uqnt meter      = { .value = 1.0, .uncertainty = 0.0, .len_d = 1.0, .mass_d = 0.0, .time_d = 0.0, .temp_d = 0.0 };
+const uqnt gram       = { .value = 1.0, .uncertainty = 0.0, .len_d = 0.0, .mass_d = 1.0, .time_d = 0.0, .temp_d = 0.0 };
+const uqnt second     = { .value = 1.0, .uncertainty = 0.0, .len_d = 0.0, .mass_d = 0.0, .time_d = 1.0, .temp_d = 0.0 };
+const uqnt deg_kelvin = { .value = 1.0, .uncertainty = 0.0, .len_d = 0.0, .mass_d = 0.0, .time_d = 0.0, .temp_d = 1.0 };
 
 double uqnt_value( uqnt a )
 {
@@ -21,9 +21,9 @@ double uqnt_uncertainty( uqnt a )
     return a.uncertainty;
 }
 
-double uqnt_length_d( uqnt a )
+double uqnt_len_d( uqnt a )
 {
-    return a.length_d;
+    return a.len_d;
 }
 
 double uqnt_mass_d( uqnt a )
@@ -36,9 +36,9 @@ double uqnt_time_d( uqnt a )
     return a.time_d;
 }
 
-double uqnt_temperature_d( uqnt a )
+double uqnt_temp_d( uqnt a )
 {
-    return a.temperature_d;
+    return a.temp_d;
 }
 
 uqnt uqnt_norm( double value, double uncertainty, uqnt units )
@@ -47,10 +47,10 @@ uqnt uqnt_norm( double value, double uncertainty, uqnt units )
     {
         .value         =       value * uqnt_value(units),
         .uncertainty   = uncertainty * uqnt_value(units),
-        .length_d      =            uqnt_length_d(units),
+        .len_d      =            uqnt_len_d(units),
         .mass_d        =              uqnt_mass_d(units),
         .time_d        =              uqnt_time_d(units), 
-        .temperature_d =       uqnt_temperature_d(units)
+        .temp_d =       uqnt_temp_d(units)
     };
     return a;
 }
@@ -69,7 +69,7 @@ uqnt uqnt_num( double value )
 
 _Bool uqnt_same_dim( uqnt a, uqnt b )
 {
-    if ( uqnt_length_d(a) != uqnt_length_d(b) )
+    if ( uqnt_len_d(a) != uqnt_len_d(b) )
     {
         return false;
     }
@@ -81,7 +81,7 @@ _Bool uqnt_same_dim( uqnt a, uqnt b )
     {
         return false;
     }
-    else if ( uqnt_temperature_d(a) != uqnt_temperature_d(b) )
+    else if ( uqnt_temp_d(a) != uqnt_temp_d(b) )
     {
         return false;
     }
@@ -101,10 +101,10 @@ uqnt uqnt_add( uqnt a, uqnt b )
     {
         .value         = uqnt_value(a) + uqnt_value(b),
         .uncertainty   = sqrt( a_u * a_u + b_u * b_u ),
-        .length_d      =      uqnt_length_d(a),
+        .len_d      =      uqnt_len_d(a),
         .mass_d        =        uqnt_mass_d(a),
         .time_d        =        uqnt_time_d(a), 
-        .temperature_d = uqnt_temperature_d(a)
+        .temp_d = uqnt_temp_d(a)
     };
     return c;
 }
@@ -119,10 +119,10 @@ uqnt uqnt_subt( uqnt a, uqnt b )
     {
         .value         = uqnt_value(a) - uqnt_value(b),
         .uncertainty   = sqrt( a_u * a_u + b_u * b_u ),
-        .length_d      =      uqnt_length_d(a),
+        .len_d      =      uqnt_len_d(a),
         .mass_d        =        uqnt_mass_d(a),
         .time_d        =        uqnt_time_d(a), 
-        .temperature_d = uqnt_temperature_d(a)
+        .temp_d = uqnt_temp_d(a)
     };
     return c;
 }
@@ -139,10 +139,10 @@ uqnt uqnt_mult( uqnt a, uqnt b )
         .value         = c_v,
         .uncertainty   = fabs(c_v) * sqrt( a_u * a_u / ( a_v * a_v )
                                          + b_u * b_u / ( b_v * b_v ) ),
-        .length_d      =      uqnt_length_d(a) +      uqnt_length_d(b),
+        .len_d      =      uqnt_len_d(a) +      uqnt_len_d(b),
         .mass_d        =        uqnt_mass_d(a) +        uqnt_mass_d(b),
         .time_d        =        uqnt_time_d(a) +        uqnt_time_d(b), 
-        .temperature_d = uqnt_temperature_d(a) + uqnt_temperature_d(b)
+        .temp_d = uqnt_temp_d(a) + uqnt_temp_d(b)
     };
     return c;
 }
@@ -159,10 +159,10 @@ uqnt uqnt_div( uqnt a, uqnt b )
         .value         = c_v,
         .uncertainty   = fabs(c_v) * sqrt( a_u * a_u / ( a_v * a_v )
                                          + b_u * b_u / ( b_v * b_v ) ),
-        .length_d      =      uqnt_length_d(a) -      uqnt_length_d(b),
+        .len_d      =      uqnt_len_d(a) -      uqnt_len_d(b),
         .mass_d        =        uqnt_mass_d(a) -        uqnt_mass_d(b),
         .time_d        =        uqnt_time_d(a) -        uqnt_time_d(b), 
-        .temperature_d = uqnt_temperature_d(a) - uqnt_temperature_d(b)
+        .temp_d = uqnt_temp_d(a) - uqnt_temp_d(b)
     };
     return c;
 }
@@ -171,9 +171,9 @@ void uqnt_print( uqnt a )
 {
     printf( "( %+8.5e +/- %+8.5e )", uqnt_value(a), uqnt_uncertainty(a) );
 
-    if ( uqnt_length_d(a) != 0.0 )
+    if ( uqnt_len_d(a) != 0.0 )
     {
-        printf( " m^%+g", uqnt_length_d(a) );
+        printf( " m^%+g", uqnt_len_d(a) );
     }
     if ( uqnt_mass_d(a) != 0.0 )
     {
@@ -183,8 +183,8 @@ void uqnt_print( uqnt a )
     {
         printf( " m^%+g", uqnt_time_d(a) );
     }
-    if ( uqnt_temperature_d(a) != 0.0 )
+    if ( uqnt_temp_d(a) != 0.0 )
     {
-        printf( " m^%+g", uqnt_temperature_d(a) );
+        printf( " m^%+g", uqnt_temp_d(a) );
     }
 }
