@@ -5,11 +5,11 @@
 #include <stdio.h>
 #include "uqnt.h"
 
-uqnt one        = { .value = 1.0, .uncertainty = 0.0, .length_d = 0.0, .mass_d = 0.0, .time_d = 0.0, .temperature_d = 0.0 };
-uqnt meter      = { .value = 1.0, .uncertainty = 0.0, .length_d = 1.0, .mass_d = 0.0, .time_d = 0.0, .temperature_d = 0.0 };
-uqnt gram       = { .value = 1.0, .uncertainty = 0.0, .length_d = 0.0, .mass_d = 1.0, .time_d = 0.0, .temperature_d = 0.0 };
-uqnt second     = { .value = 1.0, .uncertainty = 0.0, .length_d = 0.0, .mass_d = 0.0, .time_d = 1.0, .temperature_d = 0.0 };
-uqnt deg_kelvin = { .value = 1.0, .uncertainty = 0.0, .length_d = 0.0, .mass_d = 0.0, .time_d = 0.0, .temperature_d = 1.0 };
+const uqnt one        = { .value = 1.0, .uncertainty = 0.0, .length_d = 0.0, .mass_d = 0.0, .time_d = 0.0, .temperature_d = 0.0 };
+const uqnt meter      = { .value = 1.0, .uncertainty = 0.0, .length_d = 1.0, .mass_d = 0.0, .time_d = 0.0, .temperature_d = 0.0 };
+const uqnt gram       = { .value = 1.0, .uncertainty = 0.0, .length_d = 0.0, .mass_d = 1.0, .time_d = 0.0, .temperature_d = 0.0 };
+const uqnt second     = { .value = 1.0, .uncertainty = 0.0, .length_d = 0.0, .mass_d = 0.0, .time_d = 1.0, .temperature_d = 0.0 };
+const uqnt deg_kelvin = { .value = 1.0, .uncertainty = 0.0, .length_d = 0.0, .mass_d = 0.0, .time_d = 0.0, .temperature_d = 1.0 };
 
 double uqnt_value( uqnt a )
 {

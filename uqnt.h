@@ -6,11 +6,11 @@ typedef struct {
 } uqnt;
 
 
-uqnt one;
-uqnt meter;
-uqnt gram;
-uqnt second;
-uqnt deg_kelvin;
+extern const uqnt one;
+extern const uqnt meter;
+extern const uqnt gram;
+extern const uqnt second;
+extern const uqnt deg_kelvin;
 
 double uqnt_value( uqnt a );
 double uqnt_uncertainty( uqnt a );
