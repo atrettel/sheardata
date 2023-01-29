@@ -54,8 +54,12 @@ module uqnt_f
          use, intrinsic :: iso_c_binding
          import uqnt
          type(uqnt) :: uqnt_add
-         type(uqnt), value :: a, b
+         type(uqnt), intent(in), value :: a, b
       end function uqnt_add
+   end interface
+
+   interface operator (+)
+      module procedure uqnt_add
    end interface
 
    interface
@@ -63,8 +67,12 @@ module uqnt_f
          use, intrinsic :: iso_c_binding
          import uqnt
          type(uqnt) :: uqnt_subt
-         type(uqnt), value :: a, b
+         type(uqnt), intent(in), value :: a, b
       end function uqnt_subt
+   end interface
+
+   interface operator (-)
+      module procedure uqnt_subt
    end interface
 
    interface
@@ -72,8 +80,12 @@ module uqnt_f
          use, intrinsic :: iso_c_binding
          import uqnt
          type(uqnt) :: uqnt_mult
-         type(uqnt), value :: a, b
+         type(uqnt), intent(in), value :: a, b
       end function uqnt_mult
+   end interface
+
+   interface operator (*)
+      module procedure uqnt_mult
    end interface
 
    interface
@@ -81,8 +93,12 @@ module uqnt_f
          use, intrinsic :: iso_c_binding
          import uqnt
          type(uqnt) :: uqnt_div
-         type(uqnt), value :: a, b
+         type(uqnt), intent(in), value :: a, b
       end function uqnt_div
+   end interface
+
+   interface operator (/)
+      module procedure uqnt_div
    end interface
 
    interface
