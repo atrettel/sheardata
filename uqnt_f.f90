@@ -12,31 +12,31 @@ module uqnt_f
    type(uqnt), bind(c) :: one, meter, gram, second, deg_kelvin
 
    interface
-      function uqnt_norm(a, b, units) bind(c)
+      function uqnt_norm(val, unc, units) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
          type(uqnt) :: uqnt_norm
-         real(c_double), value :: a, b
+         real(c_double), value :: val, unc
          type(uqnt), value :: units
       end function uqnt_norm
    end interface
 
    interface
-      function uqnt_unif(a, b, units) bind(c)
+      function uqnt_unif(min_val, max_val, units) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
          type(uqnt) :: uqnt_unif
-         real(c_double), value :: a, b
+         real(c_double), value :: min_val, max_val
          type(uqnt), value :: units
       end function uqnt_unif
    end interface
 
    interface
-      function uqnt_num(a) bind(c)
+      function uqnt_num(val) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
          type(uqnt) :: uqnt_num
-         real(c_double), value :: a
+         real(c_double), value :: val
       end function uqnt_num
    end interface
 
