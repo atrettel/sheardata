@@ -45,12 +45,12 @@ uqnt uqnt_norm( double val, double unc, uqnt units )
 {
     uqnt a =
     {
-        .val         =       val * uqnt_val(units),
-        .unc   = unc * uqnt_val(units),
-        .len_d      =            uqnt_len_d(units),
-        .mass_d        =              uqnt_mass_d(units),
-        .time_d        =              uqnt_time_d(units), 
-        .temp_d =       uqnt_temp_d(units)
+        .val    = val * uqnt_val(units),
+        .unc    = unc * uqnt_val(units),
+        .len_d  =  uqnt_len_d(units),
+        .mass_d = uqnt_mass_d(units),
+        .time_d = uqnt_time_d(units),
+        .temp_d = uqnt_temp_d(units)
     };
     return a;
 }
@@ -99,11 +99,11 @@ uqnt uqnt_add( uqnt a, uqnt b )
     double b_u = uqnt_unc(b);
     uqnt c =
     {
-        .val         = uqnt_val(a) + uqnt_val(b),
-        .unc   = sqrt( a_u * a_u + b_u * b_u ),
-        .len_d      =      uqnt_len_d(a),
-        .mass_d        =        uqnt_mass_d(a),
-        .time_d        =        uqnt_time_d(a), 
+        .val    = uqnt_val(a) + uqnt_val(b),
+        .unc    = sqrt( a_u * a_u + b_u * b_u ),
+        .len_d  =  uqnt_len_d(a),
+        .mass_d = uqnt_mass_d(a),
+        .time_d = uqnt_time_d(a),
         .temp_d = uqnt_temp_d(a)
     };
     return c;
@@ -117,11 +117,11 @@ uqnt uqnt_subt( uqnt a, uqnt b )
     double b_u = uqnt_unc(b);
     uqnt c =
     {
-        .val         = uqnt_val(a) - uqnt_val(b),
-        .unc   = sqrt( a_u * a_u + b_u * b_u ),
-        .len_d      =      uqnt_len_d(a),
-        .mass_d        =        uqnt_mass_d(a),
-        .time_d        =        uqnt_time_d(a), 
+        .val    = uqnt_val(a) - uqnt_val(b),
+        .unc    = sqrt( a_u * a_u + b_u * b_u ),
+        .len_d  =  uqnt_len_d(a),
+        .mass_d = uqnt_mass_d(a),
+        .time_d = uqnt_time_d(a),
         .temp_d = uqnt_temp_d(a)
     };
     return c;
@@ -136,12 +136,12 @@ uqnt uqnt_mult( uqnt a, uqnt b )
     double b_u = uqnt_unc(b);
     uqnt c =
     {
-        .val         = c_v,
-        .unc   = fabs(c_v) * sqrt( a_u * a_u / ( a_v * a_v )
-                                         + b_u * b_u / ( b_v * b_v ) ),
-        .len_d      =      uqnt_len_d(a) +      uqnt_len_d(b),
-        .mass_d        =        uqnt_mass_d(a) +        uqnt_mass_d(b),
-        .time_d        =        uqnt_time_d(a) +        uqnt_time_d(b), 
+        .val    = c_v,
+        .unc    = fabs(c_v) * sqrt( a_u * a_u / ( a_v * a_v )
+                                  + b_u * b_u / ( b_v * b_v ) ),
+        .len_d  =  uqnt_len_d(a) +  uqnt_len_d(b),
+        .mass_d = uqnt_mass_d(a) + uqnt_mass_d(b),
+        .time_d = uqnt_time_d(a) + uqnt_time_d(b),
         .temp_d = uqnt_temp_d(a) + uqnt_temp_d(b)
     };
     return c;
@@ -156,12 +156,12 @@ uqnt uqnt_div( uqnt a, uqnt b )
     double b_u = uqnt_unc(b);
     uqnt c =
     {
-        .val         = c_v,
-        .unc   = fabs(c_v) * sqrt( a_u * a_u / ( a_v * a_v )
-                                         + b_u * b_u / ( b_v * b_v ) ),
-        .len_d      =      uqnt_len_d(a) -      uqnt_len_d(b),
-        .mass_d        =        uqnt_mass_d(a) -        uqnt_mass_d(b),
-        .time_d        =        uqnt_time_d(a) -        uqnt_time_d(b), 
+        .val    = c_v,
+        .unc    = fabs(c_v) * sqrt( a_u * a_u / ( a_v * a_v )
+                                  + b_u * b_u / ( b_v * b_v ) ),
+        .len_d  =  uqnt_len_d(a) -  uqnt_len_d(b),
+        .mass_d = uqnt_mass_d(a) - uqnt_mass_d(b),
+        .time_d = uqnt_time_d(a) - uqnt_time_d(b),
         .temp_d = uqnt_temp_d(a) - uqnt_temp_d(b)
     };
     return c;
