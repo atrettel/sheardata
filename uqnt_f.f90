@@ -12,13 +12,13 @@ module uqnt_f
    type(uqnt), bind(c) :: one, meter, gram, second, degree_Kelvin
 
    interface
-      function uqnt_init(a, b, units) bind(c)
+      function uqnt_norm(a, b, units) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
-         type(uqnt) :: uqnt_init
+         type(uqnt) :: uqnt_norm
          real(c_double), value :: a, b
          type(uqnt), value :: units
-      end function uqnt_init
+      end function uqnt_norm
    end interface
 
    interface

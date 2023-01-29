@@ -41,7 +41,7 @@ double uqnt_temperature_d( uqnt a )
     return a.temperature_d;
 }
 
-uqnt uqnt_init( double value, double uncertainty, uqnt units )
+uqnt uqnt_norm( double value, double uncertainty, uqnt units )
 {
     uqnt a =
     {

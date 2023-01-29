@@ -18,7 +18,7 @@ double uqnt_length_d( uqnt a );
 double uqnt_mass_d( uqnt a );
 double uqnt_time_d( uqnt a );
 double uqnt_temperature_d( uqnt a );
-uqnt uqnt_init( double value, double uncertainty, uqnt units );
+uqnt uqnt_norm( double value, double uncertainty, uqnt units );
 _Bool uqnt_same_dimensions( uqnt a, uqnt b );
 uqnt uqnt_add( uqnt a, uqnt b );
 uqnt uqnt_subtract( uqnt a, uqnt b );
