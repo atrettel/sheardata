@@ -32,12 +32,12 @@ module uqnt_f
    end interface
 
    interface
-      function uqnt_same_dimensions(a, b) bind(c)
+      function uqnt_same_dim(a, b) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
-         logical(c_bool) :: uqnt_same_dimensions
+         logical(c_bool) :: uqnt_same_dim
          type(uqnt), value :: a, b
-      end function uqnt_same_dimensions
+      end function uqnt_same_dim
    end interface
 
    interface
@@ -50,30 +50,30 @@ module uqnt_f
    end interface
 
    interface
-      function uqnt_subtract(a, b) bind(c)
+      function uqnt_subt(a, b) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
-         type(uqnt) :: uqnt_subtract
+         type(uqnt) :: uqnt_subt
          type(uqnt), value :: a, b
-      end function uqnt_subtract
+      end function uqnt_subt
    end interface
 
    interface
-      function uqnt_multiply(a, b) bind(c)
+      function uqnt_mult(a, b) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
-         type(uqnt) :: uqnt_multiply
+         type(uqnt) :: uqnt_mult
          type(uqnt), value :: a, b
-      end function uqnt_multiply
+      end function uqnt_mult
    end interface
 
    interface
-      function uqnt_divide(a, b) bind(c)
+      function uqnt_div(a, b) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
-         type(uqnt) :: uqnt_divide
+         type(uqnt) :: uqnt_div
          type(uqnt), value :: a, b
-      end function uqnt_divide
+      end function uqnt_div
    end interface
 
    interface

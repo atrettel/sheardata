@@ -62,7 +62,7 @@ uqnt uqnt_unif( double min_value, double max_value, uqnt units )
     return uqnt_norm( value, uncertainty, units );
 }
 
-_Bool uqnt_same_dimensions( uqnt a, uqnt b )
+_Bool uqnt_same_dim( uqnt a, uqnt b )
 {
     if ( uqnt_length_d(a) != uqnt_length_d(b) )
     {
@@ -88,7 +88,7 @@ _Bool uqnt_same_dimensions( uqnt a, uqnt b )
 
 uqnt uqnt_add( uqnt a, uqnt b )
 {
-    assert( uqnt_same_dimensions(a,b) );
+    assert( uqnt_same_dim(a,b) );
 
     double a_u = uqnt_uncertainty(a);
     double b_u = uqnt_uncertainty(b);
@@ -104,9 +104,9 @@ uqnt uqnt_add( uqnt a, uqnt b )
     return c;
 }
 
-uqnt uqnt_subtract( uqnt a, uqnt b )
+uqnt uqnt_subt( uqnt a, uqnt b )
 {
-    assert( uqnt_same_dimensions(a,b) );
+    assert( uqnt_same_dim(a,b) );
 
     double a_u = uqnt_uncertainty(a);
     double b_u = uqnt_uncertainty(b);
@@ -122,7 +122,7 @@ uqnt uqnt_subtract( uqnt a, uqnt b )
     return c;
 }
 
-uqnt uqnt_multiply( uqnt a, uqnt b )
+uqnt uqnt_mult( uqnt a, uqnt b )
 {
     double a_v = uqnt_value(a);
     double b_v = uqnt_value(b);
@@ -142,7 +142,7 @@ uqnt uqnt_multiply( uqnt a, uqnt b )
     return c;
 }
 
-uqnt uqnt_divide( uqnt a, uqnt b )
+uqnt uqnt_div( uqnt a, uqnt b )
 {
     double a_v = uqnt_value(a);
     double b_v = uqnt_value(b);
