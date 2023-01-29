@@ -244,33 +244,11 @@ _Bool uqnt_gt( uqnt a, uqnt b )
 
 _Bool uqnt_le( uqnt a, uqnt b )
 {
-    if ( uqnt_eq(a,b) )
-    {
-        return true;
-    }
-    else if ( uqnt_lt(a,b) )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return ! uqnt_gt(a,b);
 }
 
 _Bool uqnt_ge( uqnt a, uqnt b )
 {
-    if ( uqnt_eq(a,b) )
-    {
-        return true;
-    }
-    else if ( uqnt_lt(a,b) )
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
+    return ! uqnt_lt(a,b);
 }
 
