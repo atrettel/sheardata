@@ -204,6 +204,12 @@ _Bool uqnt_eq( uqnt a, uqnt b )
     }
 }
 
+_Bool uqnt_ne( uqnt a, uqnt b )
+{
+    return ! uqnt_eq(a,b);
+}
+
+
 _Bool uqnt_lt( uqnt a, uqnt b )
 {
     if ( uqnt_eq(a,b) )

@@ -123,6 +123,19 @@ module uqnt_f
    end interface operator (==)
 
    interface
+      function uqnt_ne(a,b) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         logical(c_bool) :: uqnt_ne
+         type(uqnt), intent(in), value :: a, b
+      end function uqnt_ne
+   end interface
+
+   interface operator (/=)
+      module procedure uqnt_ne
+   end interface operator (/=)
+
+   interface
       function uqnt_lt(a,b) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
