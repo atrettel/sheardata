@@ -194,10 +194,7 @@ void uqnt_print( uqnt a )
 
 _Bool uqnt_eq( uqnt a, uqnt b )
 {
-    double a_v = uqnt_val(a);
-    double b_v = uqnt_val(b);
-
-    if ( fabs( a_v - b_v ) < DBL_EPSILON )
+    if ( fabs( uqnt_val(a) - uqnt_val(b) ) < DBL_EPSILON )
     {
         return true;
     }
@@ -206,3 +203,68 @@ _Bool uqnt_eq( uqnt a, uqnt b )
         return false;
     }
 }
+
+_Bool uqnt_lt( uqnt a, uqnt b )
+{
+    if ( uqnt_eq(a,b) )
+    {
+        return false;
+    }
+    else if ( uqnt_val(a) < uqnt_val(b) )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+_Bool uqnt_gt( uqnt a, uqnt b )
+{
+    if ( uqnt_eq(a,b) )
+    {
+        return false;
+    }
+    else if ( uqnt_lt(a,b) )
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
+_Bool uqnt_le( uqnt a, uqnt b )
+{
+    if ( uqnt_eq(a,b) )
+    {
+        return true;
+    }
+    else if ( uqnt_lt(a,b) )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+_Bool uqnt_ge( uqnt a, uqnt b )
+{
+    if ( uqnt_eq(a,b) )
+    {
+        return true;
+    }
+    else if ( uqnt_lt(a,b) )
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+

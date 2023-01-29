@@ -28,4 +28,8 @@ uqnt uqnt_mult( uqnt a, uqnt b );
 uqnt uqnt_div( uqnt a, uqnt b );
 void uqnt_print( uqnt a );
 _Bool uqnt_eq( uqnt a, uqnt b );
+_Bool uqnt_lt( uqnt a, uqnt b );
+_Bool uqnt_gt( uqnt a, uqnt b );
+_Bool uqnt_le( uqnt a, uqnt b );
+_Bool uqnt_ge( uqnt a, uqnt b );
 
