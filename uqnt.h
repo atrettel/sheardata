@@ -10,7 +10,7 @@ uqnt one;
 uqnt meter;
 uqnt gram;
 uqnt second;
-uqnt degree_kelvin;
+uqnt deg_kelvin;
 
 double uqnt_value( uqnt a );
 double uqnt_uncertainty( uqnt a );
