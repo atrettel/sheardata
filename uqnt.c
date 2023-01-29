@@ -170,6 +170,26 @@ uqnt uqnt_div( uqnt a, uqnt b )
     return c;
 }
 
+uqnt uqnt_pow( uqnt a, uqnt b )
+{
+    double a_v = uqnt_val(a);
+    double b_v = uqnt_val(b);
+    double c_v = pow(a_v,b_v);
+    double a_u = uqnt_unc(a);
+    double b_u = uqnt_unc(b);
+    uqnt c =
+    {
+        .val    = c_v,
+        .unc    = sqrt( pow( b_v * pow(a_v,b_v-1.0) * a_u, 2.0 )
+                      + pow( log(a_v) * c_v * b_u,         2.0 ) ),
+        .len_d  =  uqnt_len_d(a) -  uqnt_len_d(b),
+        .mass_d = uqnt_mass_d(a) - uqnt_mass_d(b),
+        .time_d = uqnt_time_d(a) - uqnt_time_d(b),
+        .temp_d = uqnt_temp_d(a) - uqnt_temp_d(b)
+    };
+    return c;
+}
+
 void uqnt_print( uqnt a )
 {
     printf( "( %+8.5e +/- %+8.5e )", uqnt_val(a), uqnt_unc(a) );
