@@ -20,6 +20,7 @@ double uqnt_time_d( uqnt a );
 double uqnt_temperature_d( uqnt a );
 uqnt uqnt_norm( double value, double uncertainty, uqnt units );
 uqnt uqnt_unif( double min_value, double max_value, uqnt units );
+uqnt uqnt_num( double value );
 _Bool uqnt_same_dim( uqnt a, uqnt b );
 uqnt uqnt_add( uqnt a, uqnt b );
 uqnt uqnt_subt( uqnt a, uqnt b );

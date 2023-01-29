@@ -62,6 +62,11 @@ uqnt uqnt_unif( double min_value, double max_value, uqnt units )
     return uqnt_norm( value, uncertainty, units );
 }
 
+uqnt uqnt_num( double value )
+{
+    return uqnt_norm( value, 0.0, one );
+}
+
 _Bool uqnt_same_dim( uqnt a, uqnt b )
 {
     if ( uqnt_length_d(a) != uqnt_length_d(b) )

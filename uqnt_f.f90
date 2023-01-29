@@ -32,6 +32,15 @@ module uqnt_f
    end interface
 
    interface
+      function uqnt_num(a) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: uqnt_num
+         real(c_double), value :: a
+      end function uqnt_num
+   end interface
+
+   interface
       function uqnt_same_dim(a, b) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
