@@ -60,7 +60,7 @@ module uqnt_f
 
    interface operator (+)
       module procedure uqnt_add
-   end interface
+   end interface operator (+)
 
    interface
       function uqnt_subt(a, b) bind(c)
@@ -73,7 +73,7 @@ module uqnt_f
 
    interface operator (-)
       module procedure uqnt_subt
-   end interface
+   end interface operator (-)
 
    interface
       function uqnt_mult(a, b) bind(c)
@@ -86,7 +86,7 @@ module uqnt_f
 
    interface operator (*)
       module procedure uqnt_mult
-   end interface
+   end interface operator (*)
 
    interface
       function uqnt_div(a, b) bind(c)
@@ -99,7 +99,7 @@ module uqnt_f
 
    interface operator (/)
       module procedure uqnt_div
-   end interface
+   end interface operator (/)
 
    interface
       subroutine uqnt_print(a) bind(c)
@@ -114,43 +114,63 @@ module uqnt_f
          use, intrinsic :: iso_c_binding
          import uqnt
          logical(c_bool) :: uqnt_eq
-         type(uqnt), value :: a, b
+         type(uqnt), intent(in), value :: a, b
       end function uqnt_eq
    end interface
+
+   interface operator (==)
+      module procedure uqnt_eq
+   end interface operator (==)
 
    interface
       function uqnt_lt(a,b) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
          logical(c_bool) :: uqnt_lt
-         type(uqnt), value :: a, b
+         type(uqnt), intent(in), value :: a, b
       end function uqnt_lt
    end interface
+
+   interface operator (<)
+      module procedure uqnt_lt
+   end interface operator (<)
 
    interface
       function uqnt_gt(a,b) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
          logical(c_bool) :: uqnt_gt
-         type(uqnt), value :: a, b
+         type(uqnt), intent(in), value :: a, b
       end function uqnt_gt
    end interface
+
+   interface operator (>)
+      module procedure uqnt_gt
+   end interface operator (>)
 
    interface
       function uqnt_le(a,b) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
          logical(c_bool) :: uqnt_le
-         type(uqnt), value :: a, b
+         type(uqnt), intent(in), value :: a, b
       end function uqnt_le
    end interface
+
+   interface operator (<=)
+      module procedure uqnt_le
+   end interface operator (<=)
 
    interface
       function uqnt_ge(a,b) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
          logical(c_bool) :: uqnt_ge
-         type(uqnt), value :: a, b
+         type(uqnt), intent(in), value :: a, b
       end function uqnt_ge
    end interface
+
+   interface operator (>=)
+      module procedure uqnt_ge
+   end interface operator (>=)
 end module uqnt_f
