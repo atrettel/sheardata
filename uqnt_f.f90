@@ -9,7 +9,7 @@ module uqnt_f
       real(c_double) :: length_d, mass_d, time_d, temperature_d
    end type uqnt
 
-   type(uqnt), bind(c) :: meter, gram, second, degree_Kelvin
+   type(uqnt), bind(c) :: one, meter, gram, second, degree_Kelvin
 
    interface
       function uqnt_init(a, b, units) bind(c)

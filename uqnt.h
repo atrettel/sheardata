@@ -6,7 +6,7 @@ typedef struct {
 } uqnt;
 
 
-uqnt unit;
+uqnt one;
 uqnt meter;
 uqnt gram;
 uqnt second;
