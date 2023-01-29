@@ -1,8 +1,10 @@
 // Copyright (C) 2023 Andrew Trettel
 #include <assert.h>
+#include <float.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
+
 #include "uqnt.h"
 
 const uqnt one        = { .val = 1.0, .unc = 0.0, .len_d = 0.0, .mass_d = 0.0, .time_d = 0.0, .temp_d = 0.0 };
@@ -187,5 +189,20 @@ void uqnt_print( uqnt a )
     if ( uqnt_temp_d(a) != 0.0 )
     {
         printf( " m^%+g", uqnt_temp_d(a) );
+    }
+}
+
+_Bool uqnt_eq( uqnt a, uqnt b )
+{
+    double a_v = uqnt_val(a);
+    double b_v = uqnt_val(b);
+
+    if ( fabs( a_v - b_v ) < DBL_EPSILON )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }

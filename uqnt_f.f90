@@ -92,4 +92,13 @@ module uqnt_f
          type(uqnt), value :: a
       end subroutine uqnt_print
    end interface
+
+   interface
+      function uqnt_eq(a,b) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         logical(c_bool) :: uqnt_eq
+         type(uqnt), value :: a, b
+      end function uqnt_eq
+   end interface
 end module uqnt_f

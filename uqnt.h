@@ -27,4 +27,5 @@ uqnt uqnt_subt( uqnt a, uqnt b );
 uqnt uqnt_mult( uqnt a, uqnt b );
 uqnt uqnt_div( uqnt a, uqnt b );
 void uqnt_print( uqnt a );
+_Bool uqnt_eq( uqnt a, uqnt b );
 
