@@ -156,5 +156,4 @@ void uqnt_print( uqnt a )
     {
         printf( " m^%+g", uqnt_temperature_d(a) );
     }
-
 }
