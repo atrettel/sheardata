@@ -110,8 +110,18 @@ module uqnt_f
       end function uqnt_pow
    end interface
 
+   interface
+      function uqnt_dpow(a, b) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: uqnt_dpow
+         type(uqnt), intent(in), value :: a
+         real(c_double), intent(in), value :: b
+      end function uqnt_dpow
+   end interface
+
    interface operator (**)
-      module procedure uqnt_pow
+      module procedure uqnt_pow, uqnt_dpow
    end interface operator (**)
 
    interface

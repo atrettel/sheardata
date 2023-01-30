@@ -170,8 +170,17 @@ uqnt uqnt_div( uqnt a, uqnt b )
     return c;
 }
 
+/*
+Exponentation presents an issue when considering uncertainty quantities with
+dimensions.  For exponents with uncertainty, the dimensions of the result
+become uncertain.  This issue emerges even with the assumption that the
+exponent is always dimensionless.  For now, to avoid this issue, I assume that
+the arguments for this function are dimensionless.
+*/
 uqnt uqnt_pow( uqnt a, uqnt b )
 {
+    assert( uqnt_same_dim( a, one ) );
+    assert( uqnt_same_dim( b, one ) );
     double a_v = uqnt_val(a);
     double b_v = uqnt_val(b);
     double c_v = pow(a_v,b_v);
@@ -182,17 +191,38 @@ uqnt uqnt_pow( uqnt a, uqnt b )
         .val    = c_v,
         .unc    = sqrt( pow( b_v * pow(a_v,b_v-1.0) * a_u, 2.0 )
                       + pow( log(a_v) * c_v * b_u,         2.0 ) ),
-        .len_d  =  uqnt_len_d(a) -  uqnt_len_d(b),
-        .mass_d = uqnt_mass_d(a) - uqnt_mass_d(b),
-        .time_d = uqnt_time_d(a) - uqnt_time_d(b),
-        .temp_d = uqnt_temp_d(a) - uqnt_temp_d(b)
+        .len_d  = 0.0,
+        .mass_d = 0.0,
+        .time_d = 0.0,
+        .temp_d = 0.0
+    };
+    return c;
+}
+
+/*
+This function avoids the issues with the dimensions entirely, since the
+exponent is always a certain, dimensionless number.
+*/
+uqnt uqnt_dpow( uqnt a, double b )
+{
+    double a_v = uqnt_val(a);
+    double c_v = pow(a_v,b);
+    double a_u = uqnt_unc(a);
+    uqnt c =
+    {
+        .val    = c_v,
+        .unc    = c_v * fabs(b) * a_u / a_v,
+        .len_d  = b *  uqnt_len_d(a),
+        .mass_d = b * uqnt_mass_d(a),
+        .time_d = b * uqnt_time_d(a),
+        .temp_d = b * uqnt_temp_d(a)
     };
     return c;
 }
 
 uqnt uqnt_sqrt( uqnt a )
 {
-    return uqnt_pow( a, uqnt_num(0.5) );
+    return uqnt_dpow( a, 0.5 );
 }
 
 void uqnt_print( uqnt a )
