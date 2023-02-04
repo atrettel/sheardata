@@ -8,7 +8,6 @@
 
 #include "uqnt.h"
 
-
 int gcd( int a, int b )
 {
     if ( b == 0 )
@@ -32,6 +31,38 @@ int lcm( int a, int b )
     {
         return abs(a) * abs(b) / c;
     }
+}
+
+rat rat_init( int num, int den )
+{
+    assert( den != 0 );
+    int c = gcd(num,den);
+    rat a =
+    {
+        .num = num * den / ( c * abs(den) ),
+        .den = abs(den) / c,
+    };
+    return a;
+}
+
+int rat_num( rat a )
+{
+    return a.num;
+}
+
+int rat_den( rat a )
+{
+    return a.den;
+}
+
+double rat_to_double( rat a )
+{
+    return ( (double) rat_num(a) ) / ( (double) rat_den(a) );
+}
+
+void rat_print( rat a )
+{
+    printf( "%+d/%d", rat_num(a), rat_den(a) );
 }
 
 const uqnt one        = { .val = 1.0, .unc = 0.0, .len_d = 0.0, .mass_d = 0.0, .time_d = 0.0, .temp_d = 0.0 };

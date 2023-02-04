@@ -1,7 +1,16 @@
 // Copyright (C) 2023 Andrew Trettel
 
+typedef struct {
+    int num, den;
+} rat;
+
 int gcd( int a, int b );
 int lcm( int a, int b );
+rat rat_init( int num, int den );
+int rat_num( rat a );
+int rat_den( rat a );
+double rat_to_double( rat a );
+void rat_print( rat a );
 
 typedef struct {
     double val, unc;
