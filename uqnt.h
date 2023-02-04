@@ -1,10 +1,12 @@
 // Copyright (C) 2023 Andrew Trettel
 
+int gcd( int a, int b );
+int lcm( int a, int b );
+
 typedef struct {
     double val, unc;
     double len_d, mass_d, time_d, temp_d;
 } uqnt;
-
 
 extern const uqnt one;
 extern const uqnt meter;

@@ -4,8 +4,35 @@
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "uqnt.h"
+
+
+int gcd( int a, int b )
+{
+    if ( b == 0 )
+    {
+        return a;
+    }
+    else
+    {
+        return gcd( b, a % b );
+    }
+}
+
+int lcm( int a, int b )
+{
+    int c = gcd(a,b);
+    if ( c == 0 )
+    {
+        return 0;
+    }
+    else
+    {
+        return abs(a) * abs(b) / c;
+    }
+}
 
 const uqnt one        = { .val = 1.0, .unc = 0.0, .len_d = 0.0, .mass_d = 0.0, .time_d = 0.0, .temp_d = 0.0 };
 const uqnt meter      = { .val = 1.0, .unc = 0.0, .len_d = 1.0, .mass_d = 0.0, .time_d = 0.0, .temp_d = 0.0 };
