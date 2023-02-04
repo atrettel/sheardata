@@ -45,6 +45,7 @@ double uqnt_temp_d( uqnt a )
 
 uqnt uqnt_norm( double val, double unc, uqnt units )
 {
+    assert( unc >= 0.0 );
     double u_v = uqnt_val(units);
     uqnt a =
     {
