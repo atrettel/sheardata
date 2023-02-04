@@ -58,11 +58,16 @@ uqnt uqnt_norm( double val, double unc, uqnt units )
     return a;
 }
 
-uqnt uqnt_unif( double min_val, double max_val, uqnt units )
+uqnt uqnt_unifb( double min_val, double max_val, uqnt units )
 {
     double val = 0.5 * ( min_val + max_val );
     double unc = ( max_val - min_val ) / sqrt(12.0);
     return uqnt_norm( val, unc, units );
+}
+
+uqnt uqnt_unif( double val, double half_width, uqnt units )
+{
+    return uqnt_unifb( val-half_width, val+half_width, units );
 }
 
 uqnt uqnt_num( double val )

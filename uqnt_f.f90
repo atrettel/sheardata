@@ -22,11 +22,21 @@ module uqnt_f
    end interface
 
    interface
-      function uqnt_unif(min_val, max_val, units) bind(c)
+      function uqnt_unifb(min_val, max_val, units) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: uqnt_unifb
+         real(c_double), value :: min_val, max_val
+         type(uqnt), value :: units
+      end function uqnt_unifb
+   end interface
+
+   interface
+      function uqnt_unif(val, half_width, units) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
          type(uqnt) :: uqnt_unif
-         real(c_double), value :: min_val, max_val
+         real(c_double), value :: val, half_width
          type(uqnt), value :: units
       end function uqnt_unif
    end interface
