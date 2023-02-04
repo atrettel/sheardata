@@ -37,7 +37,6 @@ rat rat_init( int num, int den )
 {
     assert( den != 0 );
     int c = gcd(num,den);
-    printf("gcd(%d,%d) = %d\n", num, den, c );
     rat a =
     {
         .num = num * den / abs(c * den),
