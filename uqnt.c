@@ -37,10 +37,11 @@ rat rat_init( int num, int den )
 {
     assert( den != 0 );
     int c = gcd(num,den);
+    printf("gcd(%d,%d) = %d\n", num, den, c );
     rat a =
     {
-        .num = num * den / ( c * abs(den) ),
-        .den = abs(den) / c,
+        .num = num * den / abs(c * den),
+        .den = abs(den / c)
     };
     return a;
 }
@@ -58,6 +59,38 @@ int rat_den( rat a )
 double rat_to_double( rat a )
 {
     return ( (double) rat_num(a) ) / ( (double) rat_den(a) );
+}
+
+rat rat_add( rat a, rat b )
+{
+    return rat_init(
+        rat_num(a) * rat_den(b) + rat_num(b) * rat_den(a),
+        rat_den(a) * rat_den(b)
+    );
+}
+
+rat rat_subt( rat a, rat b )
+{
+    return rat_init(
+        rat_num(a) * rat_den(b) - rat_num(b) * rat_den(a),
+        rat_den(a) * rat_den(b)
+    );
+}
+
+rat rat_mult( rat a, rat b )
+{
+    return rat_init(
+        rat_num(a) * rat_num(b),
+        rat_den(a) * rat_den(b)
+    );
+}
+
+rat rat_div( rat a, rat b )
+{
+    return rat_init(
+        rat_num(a) * rat_den(b),
+        rat_den(a) * rat_num(b)
+    );
 }
 
 void rat_print( rat a )

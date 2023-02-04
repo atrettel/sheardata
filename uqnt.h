@@ -10,6 +10,10 @@ rat rat_init( int num, int den );
 int rat_num( rat a );
 int rat_den( rat a );
 double rat_to_double( rat a );
+rat rat_add( rat a, rat b );
+rat rat_subt( rat a, rat b );
+rat rat_mult( rat a, rat b );
+rat rat_div( rat a, rat b );
 void rat_print( rat a );
 
 typedef struct {
