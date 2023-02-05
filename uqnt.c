@@ -36,13 +36,25 @@ int lcm( int a, int b )
 rat rat_init( int num, int den )
 {
     assert( den != 0 );
-    int c = gcd(num,den);
-    rat a =
+    int c = abs(gcd(num,den));
+    if ( den > 0 )
     {
-        .num = num * den / abs(c * den),
-        .den = abs(den / c)
-    };
-    return a;
+        rat a =
+        {
+            .num = num / c,
+            .den = den / c
+        };
+        return a;
+    }
+    else
+    {
+        rat a =
+        {
+            .num = -num / c,
+            .den = -den / c
+        };
+        return a;
+    }
 }
 
 int rat_num( rat a )
