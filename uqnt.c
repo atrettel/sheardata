@@ -122,7 +122,14 @@ rat rat_div( rat a, rat b )
 
 void rat_print( rat a )
 {
-    printf( "%+d/%d", rat_num(a), rat_den(a) );
+    if ( rat_den(a) == 1 )
+    {
+        printf( "%+d", rat_num(a) );
+    }
+    else
+    {
+        printf( "%+d/%d", rat_num(a), rat_den(a) );
+    }
 }
 
 const uqnt one        = { .val = 1.0, .unc = 0.0, .prop_unc  = true, .len_d = 0.0, .mass_d = 0.0, .time_d = 0.0, .temp_d = 0.0 };
@@ -451,7 +458,6 @@ _Bool uqnt_ne( uqnt a, uqnt b )
 {
     return ! uqnt_eq(a,b);
 }
-
 
 _Bool uqnt_lt( uqnt a, uqnt b )
 {
