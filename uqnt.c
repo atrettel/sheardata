@@ -422,7 +422,14 @@ uqnt uqnt_sqrt( uqnt a )
 
 void uqnt_print( uqnt a )
 {
-    printf( "( %+8.5e +/- %+8.5e )", uqnt_val(a), uqnt_unc(a) );
+    if ( uqnt_prop_unc(a) )
+    {
+        printf( "( %+8.5e +/- %+8.5e )", uqnt_val(a), uqnt_unc(a) );
+    }
+    else
+    {
+        printf( "%+8.5e", uqnt_val(a) );
+    }
 
     if ( uqnt_len_d(a) != 0.0 )
     {
