@@ -31,6 +31,7 @@ extern const uqnt deg_kelvin;
 
 double uqnt_val( uqnt a );
 double uqnt_unc( uqnt a );
+_Bool uqnt_prop_unc( uqnt a );
 double uqnt_len_d( uqnt a );
 double uqnt_mass_d( uqnt a );
 double uqnt_time_d( uqnt a );

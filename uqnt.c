@@ -141,6 +141,11 @@ double uqnt_unc( uqnt a )
     return a.unc;
 }
 
+_Bool uqnt_prop_unc( uqnt a )
+{
+    return a.prop_unc;
+}
+
 double uqnt_len_d( uqnt a )
 {
     return a.len_d;
@@ -225,11 +230,17 @@ uqnt uqnt_add( uqnt a, uqnt b )
 
     double a_u = uqnt_unc(a);
     double b_u = uqnt_unc(b);
+    _Bool prop_unc = uqnt_prop_unc(a) && uqnt_prop_unc(b);
+    double c_u = 0.0;
+    if ( prop_unc )
+    {
+        c_u = sqrt( a_u * a_u + b_u * b_u );
+    }
     uqnt c =
     {
         .val      = uqnt_val(a) + uqnt_val(b),
-        .unc      = sqrt( a_u * a_u + b_u * b_u ),
-        .prop_unc = true,
+        .unc      = c_u,
+        .prop_unc = prop_unc,
         .len_d    =  uqnt_len_d(a),
         .mass_d   = uqnt_mass_d(a),
         .time_d   = uqnt_time_d(a),
@@ -244,11 +255,17 @@ uqnt uqnt_subt( uqnt a, uqnt b )
 
     double a_u = uqnt_unc(a);
     double b_u = uqnt_unc(b);
+    _Bool prop_unc = uqnt_prop_unc(a) && uqnt_prop_unc(b);
+    double c_u = 0.0;
+    if ( prop_unc )
+    {
+        c_u = sqrt( a_u * a_u + b_u * b_u );
+    }
     uqnt c =
     {
         .val      = uqnt_val(a) - uqnt_val(b),
-        .unc      = sqrt( a_u * a_u + b_u * b_u ),
-        .prop_unc = true,
+        .unc      = c_u,
+        .prop_unc = prop_unc,
         .len_d    =  uqnt_len_d(a),
         .mass_d   = uqnt_mass_d(a),
         .time_d   = uqnt_time_d(a),
@@ -264,12 +281,18 @@ uqnt uqnt_mult( uqnt a, uqnt b )
     double c_v = a_v * b_v;
     double a_u = uqnt_unc(a);
     double b_u = uqnt_unc(b);
+    _Bool prop_unc = uqnt_prop_unc(a) && uqnt_prop_unc(b);
+    double c_u = 0.0;
+    if ( prop_unc )
+    {
+        c_u = fabs(c_v) * sqrt( a_u * a_u / ( a_v * a_v )
+                              + b_u * b_u / ( b_v * b_v ) );
+    }
     uqnt c =
     {
         .val      = c_v,
-        .unc      = fabs(c_v) * sqrt( a_u * a_u / ( a_v * a_v )
-                                    + b_u * b_u / ( b_v * b_v ) ),
-        .prop_unc = true,
+        .unc      = c_u,
+        .prop_unc = prop_unc,
         .len_d    =  uqnt_len_d(a) +  uqnt_len_d(b),
         .mass_d   = uqnt_mass_d(a) + uqnt_mass_d(b),
         .time_d   = uqnt_time_d(a) + uqnt_time_d(b),
@@ -285,12 +308,18 @@ uqnt uqnt_div( uqnt a, uqnt b )
     double c_v = a_v / b_v;
     double a_u = uqnt_unc(a);
     double b_u = uqnt_unc(b);
+    _Bool prop_unc = uqnt_prop_unc(a) && uqnt_prop_unc(b);
+    double c_u = 0.0;
+    if ( prop_unc )
+    {
+        c_u = fabs(c_v) * sqrt( a_u * a_u / ( a_v * a_v )
+                              + b_u * b_u / ( b_v * b_v ) );
+    }
     uqnt c =
     {
         .val      = c_v,
-        .unc      = fabs(c_v) * sqrt( a_u * a_u / ( a_v * a_v )
-                                    + b_u * b_u / ( b_v * b_v ) ),
-        .prop_unc = true,
+        .unc      = c_u,
+        .prop_unc = prop_unc,
         .len_d    =  uqnt_len_d(a) -  uqnt_len_d(b),
         .mass_d   = uqnt_mass_d(a) - uqnt_mass_d(b),
         .time_d   = uqnt_time_d(a) - uqnt_time_d(b),
@@ -315,12 +344,18 @@ uqnt uqnt_pow( uqnt a, uqnt b )
     double c_v = pow(a_v,b_v);
     double a_u = uqnt_unc(a);
     double b_u = uqnt_unc(b);
+    _Bool prop_unc = uqnt_prop_unc(a) && uqnt_prop_unc(b);
+    double c_u = 0.0;
+    if ( prop_unc )
+    {
+        c_u = sqrt( pow( b_v * pow(a_v,b_v-1.0) * a_u, 2.0 )
+                  + pow( log(a_v) * c_v * b_u,         2.0 ) );
+    }
     uqnt c =
     {
         .val      = c_v,
-        .unc      = sqrt( pow( b_v * pow(a_v,b_v-1.0) * a_u, 2.0 )
-                        + pow( log(a_v) * c_v * b_u,         2.0 ) ),
-        .prop_unc = true,
+        .unc      = c_u,
+        .prop_unc = prop_unc,
         .len_d    = 0.0,
         .mass_d   = 0.0,
         .time_d   = 0.0,
@@ -338,11 +373,17 @@ uqnt uqnt_dpow( uqnt a, double b )
     double a_v = uqnt_val(a);
     double c_v = pow(a_v,b);
     double a_u = uqnt_unc(a);
+    _Bool prop_unc = uqnt_prop_unc(a);
+    double c_u = 0.0;
+    if ( prop_unc )
+    {
+        c_u = c_v * fabs(b) * a_u / a_v;
+    }
     uqnt c =
     {
         .val      = c_v,
-        .unc      = c_v * fabs(b) * a_u / a_v,
-        .prop_unc = true,
+        .unc      = c_u,
+        .prop_unc = prop_unc,
         .len_d    = b *  uqnt_len_d(a),
         .mass_d   = b * uqnt_mass_d(a),
         .time_d   = b * uqnt_time_d(a),

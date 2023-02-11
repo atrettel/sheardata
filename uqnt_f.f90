@@ -13,6 +13,33 @@ module uqnt_f
    type(uqnt), bind(c) :: one, meter, gram, second, deg_kelvin
 
    interface
+      function uqnt_val(a) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         real(c_double) :: uqnt_val
+         type(uqnt), value :: a
+      end function uqnt_val
+   end interface
+
+   interface
+      function uqnt_unc(a) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         real(c_double) :: uqnt_unc
+         type(uqnt), value :: a
+      end function uqnt_unc
+   end interface
+
+   interface
+      function uqnt_prop_unc(a) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         logical(c_bool) :: uqnt_prop_unc
+         type(uqnt), value :: a
+      end function uqnt_prop_unc
+   end interface
+
+   interface
       function uqnt_norm(val, unc, units) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
