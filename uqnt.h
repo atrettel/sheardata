@@ -23,12 +23,6 @@ typedef struct {
     double len_d, mass_d, time_d, temp_d;
 } uqnt;
 
-extern const uqnt one;
-extern const uqnt meter;
-extern const uqnt gram;
-extern const uqnt second;
-extern const uqnt deg_kelvin;
-
 double uqnt_val( uqnt a );
 double uqnt_unc( uqnt a );
 _Bool uqnt_prop_unc( uqnt a );
@@ -57,3 +51,10 @@ _Bool uqnt_gt( uqnt a, uqnt b );
 _Bool uqnt_le( uqnt a, uqnt b );
 _Bool uqnt_ge( uqnt a, uqnt b );
 
+uqnt unit_one(void);
+uqnt unit_meter(void);
+uqnt unit_gram(void);
+uqnt unit_second(void);
+uqnt unit_kelvin(void);
+
+uqnt unit_kilogram(void);

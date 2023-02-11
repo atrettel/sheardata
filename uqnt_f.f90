@@ -10,8 +10,6 @@ module uqnt_f
       real(c_double)  :: len_d, mass_d, time_d, temp_d
    end type uqnt
 
-   type(uqnt), bind(c) :: one, meter, gram, second, deg_kelvin
-
    interface
       function uqnt_val(a) bind(c)
          use, intrinsic :: iso_c_binding
@@ -270,4 +268,52 @@ module uqnt_f
    interface operator (>=)
       module procedure uqnt_ge
    end interface operator (>=)
+
+   interface
+      function unit_one() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_one
+      end function unit_one
+   end interface
+
+   interface
+      function unit_meter() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_meter
+      end function unit_meter
+   end interface
+
+   interface
+      function unit_gram() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_gram
+      end function unit_gram
+   end interface
+
+   interface
+      function unit_second() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_second
+      end function unit_second
+   end interface
+
+   interface
+      function unit_kelvin() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_kelvin
+      end function unit_kelvin
+   end interface
+
+   interface
+      function unit_kilogram() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_kilogram
+      end function unit_kilogram
+   end interface
 end module uqnt_f

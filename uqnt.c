@@ -132,12 +132,6 @@ void rat_print( rat a )
     }
 }
 
-const uqnt one        = { .val = 1.0, .unc = 0.0, .prop_unc  = true, .len_d = 0.0, .mass_d = 0.0, .time_d = 0.0, .temp_d = 0.0 };
-const uqnt meter      = { .val = 1.0, .unc = 0.0, .prop_unc  = true, .len_d = 1.0, .mass_d = 0.0, .time_d = 0.0, .temp_d = 0.0 };
-const uqnt gram       = { .val = 1.0, .unc = 0.0, .prop_unc  = true, .len_d = 0.0, .mass_d = 1.0, .time_d = 0.0, .temp_d = 0.0 };
-const uqnt second     = { .val = 1.0, .unc = 0.0, .prop_unc  = true, .len_d = 0.0, .mass_d = 0.0, .time_d = 1.0, .temp_d = 0.0 };
-const uqnt deg_kelvin = { .val = 1.0, .unc = 0.0, .prop_unc  = true, .len_d = 0.0, .mass_d = 0.0, .time_d = 0.0, .temp_d = 1.0 };
-
 double uqnt_val( uqnt a )
 {
     return a.val;
@@ -220,7 +214,7 @@ uqnt uqnt_blk( double val, uqnt units )
 
 uqnt uqnt_num( double val )
 {
-    return uqnt_norm( val, 0.0, one );
+    return uqnt_norm( val, 0.0, unit_one() );
 }
 
 _Bool uqnt_same_dim( uqnt a, uqnt b )
@@ -360,8 +354,8 @@ the arguments for this function are dimensionless.
 */
 uqnt uqnt_pow( uqnt a, uqnt b )
 {
-    assert( uqnt_same_dim( a, one ) );
-    assert( uqnt_same_dim( b, one ) );
+    assert( uqnt_same_dim( a, unit_one() ) );
+    assert( uqnt_same_dim( b, unit_one() ) );
     double a_v = uqnt_val(a);
     double b_v = uqnt_val(b);
     double c_v = pow(a_v,b_v);
@@ -508,3 +502,82 @@ _Bool uqnt_ge( uqnt a, uqnt b )
     return ! uqnt_lt(a,b);
 }
 
+uqnt unit_one(void)
+{
+    uqnt a =
+    {
+        .val      = 1.0,
+        .unc      = 0.0,
+        .prop_unc = true,
+        .len_d    = 0.0,
+        .mass_d   = 0.0,
+        .time_d   = 0.0,
+        .temp_d   = 0.0
+    };
+    return a;
+}
+
+uqnt unit_meter(void)
+{
+    uqnt a =
+    {
+        .val      = 1.0,
+        .unc      = 0.0,
+        .prop_unc = true,
+        .len_d    = 1.0,
+        .mass_d   = 0.0,
+        .time_d   = 0.0,
+        .temp_d   = 0.0
+    };
+    return a;
+}
+
+uqnt unit_gram(void)
+{
+    uqnt a =
+    {
+        .val      = 1.0,
+        .unc      = 0.0,
+        .prop_unc = true,
+        .len_d    = 0.0,
+        .mass_d   = 1.0,
+        .time_d   = 0.0,
+        .temp_d   = 0.0
+    };
+    return a;
+}
+
+uqnt unit_second(void)
+{
+    uqnt a =
+    {
+        .val      = 1.0,
+        .unc      = 0.0,
+        .prop_unc = true,
+        .len_d    = 0.0,
+        .mass_d   = 0.0,
+        .time_d   = 1.0,
+        .temp_d   = 0.0
+    };
+    return a;
+}
+
+uqnt unit_kelvin(void)
+{
+    uqnt a =
+    {
+        .val      = 1.0,
+        .unc      = 0.0,
+        .prop_unc = true,
+        .len_d    = 0.0,
+        .mass_d   = 0.0,
+        .time_d   = 0.0,
+        .temp_d   = 1.0
+    };
+    return a;
+}
+
+uqnt unit_kilogram(void)
+{
+    return uqnt_mult( uqnt_num(1000.0), unit_gram() );
+}
