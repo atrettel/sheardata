@@ -5,8 +5,9 @@ module uqnt_f
    implicit none
 
    type, bind(c) :: uqnt
-      real(c_double) :: value, uncertainty
-      real(c_double) :: len_d, mass_d, time_d, temp_d
+      real(c_double)  :: val, unc
+      logical(c_bool) :: prop_unc
+      real(c_double)  :: len_d, mass_d, time_d, temp_d
    end type uqnt
 
    type(uqnt), bind(c) :: one, meter, gram, second, deg_kelvin

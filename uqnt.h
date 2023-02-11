@@ -19,6 +19,7 @@ void rat_print( rat a );
 
 typedef struct {
     double val, unc;
+    _Bool prop_unc;
     double len_d, mass_d, time_d, temp_d;
 } uqnt;
 

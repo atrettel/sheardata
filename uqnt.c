@@ -125,11 +125,11 @@ void rat_print( rat a )
     printf( "%+d/%d", rat_num(a), rat_den(a) );
 }
 
-const uqnt one        = { .val = 1.0, .unc = 0.0, .len_d = 0.0, .mass_d = 0.0, .time_d = 0.0, .temp_d = 0.0 };
-const uqnt meter      = { .val = 1.0, .unc = 0.0, .len_d = 1.0, .mass_d = 0.0, .time_d = 0.0, .temp_d = 0.0 };
-const uqnt gram       = { .val = 1.0, .unc = 0.0, .len_d = 0.0, .mass_d = 1.0, .time_d = 0.0, .temp_d = 0.0 };
-const uqnt second     = { .val = 1.0, .unc = 0.0, .len_d = 0.0, .mass_d = 0.0, .time_d = 1.0, .temp_d = 0.0 };
-const uqnt deg_kelvin = { .val = 1.0, .unc = 0.0, .len_d = 0.0, .mass_d = 0.0, .time_d = 0.0, .temp_d = 1.0 };
+const uqnt one        = { .val = 1.0, .unc = 0.0, .prop_unc  = true, .len_d = 0.0, .mass_d = 0.0, .time_d = 0.0, .temp_d = 0.0 };
+const uqnt meter      = { .val = 1.0, .unc = 0.0, .prop_unc  = true, .len_d = 1.0, .mass_d = 0.0, .time_d = 0.0, .temp_d = 0.0 };
+const uqnt gram       = { .val = 1.0, .unc = 0.0, .prop_unc  = true, .len_d = 0.0, .mass_d = 1.0, .time_d = 0.0, .temp_d = 0.0 };
+const uqnt second     = { .val = 1.0, .unc = 0.0, .prop_unc  = true, .len_d = 0.0, .mass_d = 0.0, .time_d = 1.0, .temp_d = 0.0 };
+const uqnt deg_kelvin = { .val = 1.0, .unc = 0.0, .prop_unc  = true, .len_d = 0.0, .mass_d = 0.0, .time_d = 0.0, .temp_d = 1.0 };
 
 double uqnt_val( uqnt a )
 {
@@ -167,12 +167,13 @@ uqnt uqnt_norm( double val, double unc, uqnt units )
     double u_v = uqnt_val(units);
     uqnt a =
     {
-        .val    = val *      u_v,
-        .unc    = unc * fabs(u_v),
-        .len_d  =  uqnt_len_d(units),
-        .mass_d = uqnt_mass_d(units),
-        .time_d = uqnt_time_d(units),
-        .temp_d = uqnt_temp_d(units)
+        .val      = val *      u_v,
+        .unc      = unc * fabs(u_v),
+        .prop_unc = true,
+        .len_d    =  uqnt_len_d(units),
+        .mass_d   = uqnt_mass_d(units),
+        .time_d   = uqnt_time_d(units),
+        .temp_d   = uqnt_temp_d(units)
     };
     return a;
 }
@@ -226,12 +227,13 @@ uqnt uqnt_add( uqnt a, uqnt b )
     double b_u = uqnt_unc(b);
     uqnt c =
     {
-        .val    = uqnt_val(a) + uqnt_val(b),
-        .unc    = sqrt( a_u * a_u + b_u * b_u ),
-        .len_d  =  uqnt_len_d(a),
-        .mass_d = uqnt_mass_d(a),
-        .time_d = uqnt_time_d(a),
-        .temp_d = uqnt_temp_d(a)
+        .val      = uqnt_val(a) + uqnt_val(b),
+        .unc      = sqrt( a_u * a_u + b_u * b_u ),
+        .prop_unc = true,
+        .len_d    =  uqnt_len_d(a),
+        .mass_d   = uqnt_mass_d(a),
+        .time_d   = uqnt_time_d(a),
+        .temp_d   = uqnt_temp_d(a)
     };
     return c;
 }
@@ -244,12 +246,13 @@ uqnt uqnt_subt( uqnt a, uqnt b )
     double b_u = uqnt_unc(b);
     uqnt c =
     {
-        .val    = uqnt_val(a) - uqnt_val(b),
-        .unc    = sqrt( a_u * a_u + b_u * b_u ),
-        .len_d  =  uqnt_len_d(a),
-        .mass_d = uqnt_mass_d(a),
-        .time_d = uqnt_time_d(a),
-        .temp_d = uqnt_temp_d(a)
+        .val      = uqnt_val(a) - uqnt_val(b),
+        .unc      = sqrt( a_u * a_u + b_u * b_u ),
+        .prop_unc = true,
+        .len_d    =  uqnt_len_d(a),
+        .mass_d   = uqnt_mass_d(a),
+        .time_d   = uqnt_time_d(a),
+        .temp_d   = uqnt_temp_d(a)
     };
     return c;
 }
@@ -263,13 +266,14 @@ uqnt uqnt_mult( uqnt a, uqnt b )
     double b_u = uqnt_unc(b);
     uqnt c =
     {
-        .val    = c_v,
-        .unc    = fabs(c_v) * sqrt( a_u * a_u / ( a_v * a_v )
-                                  + b_u * b_u / ( b_v * b_v ) ),
-        .len_d  =  uqnt_len_d(a) +  uqnt_len_d(b),
-        .mass_d = uqnt_mass_d(a) + uqnt_mass_d(b),
-        .time_d = uqnt_time_d(a) + uqnt_time_d(b),
-        .temp_d = uqnt_temp_d(a) + uqnt_temp_d(b)
+        .val      = c_v,
+        .unc      = fabs(c_v) * sqrt( a_u * a_u / ( a_v * a_v )
+                                    + b_u * b_u / ( b_v * b_v ) ),
+        .prop_unc = true,
+        .len_d    =  uqnt_len_d(a) +  uqnt_len_d(b),
+        .mass_d   = uqnt_mass_d(a) + uqnt_mass_d(b),
+        .time_d   = uqnt_time_d(a) + uqnt_time_d(b),
+        .temp_d   = uqnt_temp_d(a) + uqnt_temp_d(b)
     };
     return c;
 }
@@ -283,13 +287,14 @@ uqnt uqnt_div( uqnt a, uqnt b )
     double b_u = uqnt_unc(b);
     uqnt c =
     {
-        .val    = c_v,
-        .unc    = fabs(c_v) * sqrt( a_u * a_u / ( a_v * a_v )
-                                  + b_u * b_u / ( b_v * b_v ) ),
-        .len_d  =  uqnt_len_d(a) -  uqnt_len_d(b),
-        .mass_d = uqnt_mass_d(a) - uqnt_mass_d(b),
-        .time_d = uqnt_time_d(a) - uqnt_time_d(b),
-        .temp_d = uqnt_temp_d(a) - uqnt_temp_d(b)
+        .val      = c_v,
+        .unc      = fabs(c_v) * sqrt( a_u * a_u / ( a_v * a_v )
+                                    + b_u * b_u / ( b_v * b_v ) ),
+        .prop_unc = true,
+        .len_d    =  uqnt_len_d(a) -  uqnt_len_d(b),
+        .mass_d   = uqnt_mass_d(a) - uqnt_mass_d(b),
+        .time_d   = uqnt_time_d(a) - uqnt_time_d(b),
+        .temp_d   = uqnt_temp_d(a) - uqnt_temp_d(b)
     };
     return c;
 }
@@ -312,13 +317,14 @@ uqnt uqnt_pow( uqnt a, uqnt b )
     double b_u = uqnt_unc(b);
     uqnt c =
     {
-        .val    = c_v,
-        .unc    = sqrt( pow( b_v * pow(a_v,b_v-1.0) * a_u, 2.0 )
-                      + pow( log(a_v) * c_v * b_u,         2.0 ) ),
-        .len_d  = 0.0,
-        .mass_d = 0.0,
-        .time_d = 0.0,
-        .temp_d = 0.0
+        .val      = c_v,
+        .unc      = sqrt( pow( b_v * pow(a_v,b_v-1.0) * a_u, 2.0 )
+                        + pow( log(a_v) * c_v * b_u,         2.0 ) ),
+        .prop_unc = true,
+        .len_d    = 0.0,
+        .mass_d   = 0.0,
+        .time_d   = 0.0,
+        .temp_d   = 0.0
     };
     return c;
 }
@@ -334,12 +340,13 @@ uqnt uqnt_dpow( uqnt a, double b )
     double a_u = uqnt_unc(a);
     uqnt c =
     {
-        .val    = c_v,
-        .unc    = c_v * fabs(b) * a_u / a_v,
-        .len_d  = b *  uqnt_len_d(a),
-        .mass_d = b * uqnt_mass_d(a),
-        .time_d = b * uqnt_time_d(a),
-        .temp_d = b * uqnt_temp_d(a)
+        .val      = c_v,
+        .unc      = c_v * fabs(b) * a_u / a_v,
+        .prop_unc = true,
+        .len_d    = b *  uqnt_len_d(a),
+        .mass_d   = b * uqnt_mass_d(a),
+        .time_d   = b * uqnt_time_d(a),
+        .temp_d   = b * uqnt_temp_d(a)
     };
     return c;
 }
