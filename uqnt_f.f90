@@ -70,6 +70,16 @@ module uqnt_f
    end interface
 
    interface
+      function uqnt_blk(val, units) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: uqnt_blk
+         real(c_double), value :: val
+         type(uqnt), value :: units
+      end function uqnt_blk
+   end interface
+
+   interface
       function uqnt_num(val) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt

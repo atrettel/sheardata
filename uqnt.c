@@ -195,6 +195,22 @@ uqnt uqnt_unif( double val, double half_width, uqnt units )
     return uqnt_unifb( val-half_width, val+half_width, units );
 }
 
+// Blocks uncertainty propagation.
+uqnt uqnt_blk( double val, uqnt units )
+{
+    uqnt a =
+    {
+        .val      = val * uqnt_val(units),
+        .unc      = 0.0,
+        .prop_unc = false,
+        .len_d    =  uqnt_len_d(units),
+        .mass_d   = uqnt_mass_d(units),
+        .time_d   = uqnt_time_d(units),
+        .temp_d   = uqnt_temp_d(units)
+    };
+    return a;
+}
+
 uqnt uqnt_num( double val )
 {
     return uqnt_norm( val, 0.0, one );

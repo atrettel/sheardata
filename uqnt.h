@@ -39,6 +39,7 @@ double uqnt_temp_d( uqnt a );
 uqnt uqnt_norm( double val, double unc, uqnt units );
 uqnt uqnt_unifb( double min_val, double max_val, uqnt units );
 uqnt uqnt_unif( double val, double half_width, uqnt units );
+uqnt uqnt_blk( double val, uqnt units );
 uqnt uqnt_num( double val );
 _Bool uqnt_same_dim( uqnt a, uqnt b );
 uqnt uqnt_add( uqnt a, uqnt b );
