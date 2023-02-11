@@ -16,6 +16,7 @@ rat rat_subt( rat a, rat b );
 rat rat_mult( rat a, rat b );
 rat rat_div( rat a, rat b );
 void rat_print( rat a );
+_Bool rat_eq( rat a, rat b );
 
 typedef struct {
     double val, unc;

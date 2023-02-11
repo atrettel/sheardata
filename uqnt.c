@@ -132,6 +132,11 @@ void rat_print( rat a )
     }
 }
 
+_Bool rat_eq( rat a, rat b )
+{
+    return ( rat_num(a) == rat_num(b) ) && ( rat_den(a) == rat_den(b) );
+}
+
 double uqnt_val( uqnt a )
 {
     return a.val;
