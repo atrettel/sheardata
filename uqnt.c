@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "uqnt.h"
 
@@ -55,6 +56,21 @@ rat rat_frac( int num, int den )
         };
         return a;
     }
+}
+
+rat rat_str( char str[] )
+{
+    int num, den;
+    if ( strchr( str, '/' ) == NULL )
+    {
+        sscanf( str, "%d", &num );
+        den = 1;
+    }
+    else
+    {
+        sscanf( str, "%d/%d", &num, &den );
+    }
+    return rat_frac(num,den);
 }
 
 int rat_num( rat a )
