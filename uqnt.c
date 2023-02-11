@@ -33,7 +33,7 @@ int lcm( int a, int b )
     }
 }
 
-rat rat_init( int num, int den )
+rat rat_frac( int num, int den )
 {
     assert( den != 0 );
     int c = abs(gcd(num,den));
@@ -74,7 +74,7 @@ double rat_to_double( rat a )
 
 rat rat_add( rat a, rat b )
 {
-    return rat_init(
+    return rat_frac(
         rat_num(a) * rat_den(b) + rat_num(b) * rat_den(a),
         rat_den(a) * rat_den(b)
     );
@@ -82,7 +82,7 @@ rat rat_add( rat a, rat b )
 
 rat rat_subt( rat a, rat b )
 {
-    return rat_init(
+    return rat_frac(
         rat_num(a) * rat_den(b) - rat_num(b) * rat_den(a),
         rat_den(a) * rat_den(b)
     );
@@ -90,7 +90,7 @@ rat rat_subt( rat a, rat b )
 
 rat rat_mult( rat a, rat b )
 {
-    return rat_init(
+    return rat_frac(
         rat_num(a) * rat_num(b),
         rat_den(a) * rat_den(b)
     );
@@ -98,7 +98,7 @@ rat rat_mult( rat a, rat b )
 
 rat rat_div( rat a, rat b )
 {
-    return rat_init(
+    return rat_frac(
         rat_num(a) * rat_den(b),
         rat_den(a) * rat_num(b)
     );

@@ -6,7 +6,7 @@ typedef struct {
 
 int gcd( int a, int b );
 int lcm( int a, int b );
-rat rat_init( int num, int den );
+rat rat_frac( int num, int den );
 int rat_num( rat a );
 int rat_den( rat a );
 double rat_to_double( rat a );
