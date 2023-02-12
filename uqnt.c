@@ -320,10 +320,10 @@ uqnt uqnt_mult( uqnt a, uqnt b )
         .val      = c_v,
         .unc      = c_u,
         .prop_unc = prop_unc,
-        .len_d    = rat_add( uqnt_len_d(a),  uqnt_len_d(b) ),
-        .mass_d   = rat_add(uqnt_mass_d(a), uqnt_mass_d(b) ),
-        .time_d   = rat_add(uqnt_time_d(a), uqnt_time_d(b) ),
-        .temp_d   = rat_add(uqnt_temp_d(a), uqnt_temp_d(b) )
+        .len_d    = rat_add(  uqnt_len_d(a),  uqnt_len_d(b) ),
+        .mass_d   = rat_add( uqnt_mass_d(a), uqnt_mass_d(b) ),
+        .time_d   = rat_add( uqnt_time_d(a), uqnt_time_d(b) ),
+        .temp_d   = rat_add( uqnt_temp_d(a), uqnt_temp_d(b) )
     };
     return c;
 }
@@ -347,10 +347,10 @@ uqnt uqnt_div( uqnt a, uqnt b )
         .val      = c_v,
         .unc      = c_u,
         .prop_unc = prop_unc,
-        .len_d    = rat_subt( uqnt_len_d(a),  uqnt_len_d(b) ),
-        .mass_d   = rat_subt(uqnt_mass_d(a), uqnt_mass_d(b) ),
-        .time_d   = rat_subt(uqnt_time_d(a), uqnt_time_d(b) ),
-        .temp_d   = rat_subt(uqnt_temp_d(a), uqnt_temp_d(b) )
+        .len_d    = rat_subt(  uqnt_len_d(a),  uqnt_len_d(b) ),
+        .mass_d   = rat_subt( uqnt_mass_d(a), uqnt_mass_d(b) ),
+        .time_d   = rat_subt( uqnt_time_d(a), uqnt_time_d(b) ),
+        .temp_d   = rat_subt( uqnt_temp_d(a), uqnt_temp_d(b) )
     };
     return c;
 }
