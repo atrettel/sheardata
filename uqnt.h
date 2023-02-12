@@ -57,7 +57,7 @@ _Bool uqnt_ge( uqnt a, uqnt b );
 
 uqnt unit_one(void);
 uqnt unit_meter(void);
-uqnt unit_gram(void);
+uqnt unit_kilogram(void);
 uqnt unit_second(void);
 uqnt unit_kelvin(void);
 
@@ -65,7 +65,7 @@ uqnt unit_foot(void);
 uqnt unit_inch(void);
 uqnt unit_yard(void);
 
-uqnt unit_kilogram(void);
+uqnt unit_gram(void);
 uqnt unit_pound_mass(void);
 
 uqnt unit_newton(void);

@@ -454,7 +454,7 @@ void uqnt_print( uqnt a )
     if ( ratnum_ne( uqnt_mass_d(a), ratnum_frac( 0, 1 ) ) )
     {
         printf( " kg^" );
-        ratnum_print( ratnum_div( uqnt_mass_d(a), ratnum_frac( 1000, 1 ) ) );
+        ratnum_print( uqnt_mass_d(a) );
     }
     if ( ratnum_ne( uqnt_time_d(a), ratnum_frac( 0, 1 ) ) )
     {
@@ -557,7 +557,7 @@ uqnt unit_meter(void)
     return a;
 }
 
-uqnt unit_gram(void)
+uqnt unit_kilogram(void)
 {
     uqnt a =
     {
@@ -617,9 +617,9 @@ uqnt unit_yard(void)
     return uqnt_mult( uqnt_num(0.9144), unit_meter() );
 }
 
-uqnt unit_kilogram(void)
+uqnt unit_gram(void)
 {
-    return uqnt_mult( uqnt_num(1000.0), unit_gram() );
+    return uqnt_div( unit_kilogram(), uqnt_num(1000.0) );
 }
 
 uqnt unit_pound_mass(void)
