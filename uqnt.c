@@ -624,7 +624,7 @@ uqnt unit_gram(void)
 
 uqnt unit_pound_mass(void)
 {
-    return uqnt_mult( uqnt_num(0.45359237), unit_meter() );
+    return uqnt_mult( uqnt_num(0.45359237), unit_kilogram() );
 }
 
 uqnt unit_newton(void)
