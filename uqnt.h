@@ -17,20 +17,21 @@ rat rat_mult( rat a, rat b );
 rat rat_div( rat a, rat b );
 void rat_print( rat a );
 _Bool rat_eq( rat a, rat b );
+_Bool rat_ne( rat a, rat b );
 
 typedef struct {
     double val, unc;
     _Bool prop_unc;
-    double len_d, mass_d, time_d, temp_d;
+    rat len_d, mass_d, time_d, temp_d;
 } uqnt;
 
 double uqnt_val( uqnt a );
 double uqnt_unc( uqnt a );
 _Bool uqnt_prop_unc( uqnt a );
-double uqnt_len_d( uqnt a );
-double uqnt_mass_d( uqnt a );
-double uqnt_time_d( uqnt a );
-double uqnt_temp_d( uqnt a );
+rat uqnt_len_d( uqnt a );
+rat uqnt_mass_d( uqnt a );
+rat uqnt_time_d( uqnt a );
+rat uqnt_temp_d( uqnt a );
 uqnt uqnt_norm( double val, double unc, uqnt units );
 uqnt uqnt_unifb( double min_val, double max_val, uqnt units );
 uqnt uqnt_unif( double val, double half_width, uqnt units );
@@ -42,7 +43,7 @@ uqnt uqnt_subt( uqnt a, uqnt b );
 uqnt uqnt_mult( uqnt a, uqnt b );
 uqnt uqnt_div( uqnt a, uqnt b );
 uqnt uqnt_pow( uqnt a, uqnt b );
-uqnt uqnt_dpow( uqnt a, double b );
+uqnt uqnt_rpow( uqnt a, rat b );
 uqnt uqnt_sqrt( uqnt a );
 void uqnt_print( uqnt a );
 _Bool uqnt_eq( uqnt a, uqnt b );
