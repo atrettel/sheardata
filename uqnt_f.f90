@@ -4,10 +4,59 @@ module uqnt_f
 
    implicit none
 
+   type, bind(c) :: ratnum
+      integer(c_int) :: num, den
+   end type ratnum
+
+   interface
+      function ratnum_frac(num, den) bind(c)
+         use, intrinsic :: iso_c_binding
+         import ratnum
+         type(ratnum) :: ratnum_frac
+         integer(c_int), value :: num, den
+      end function ratnum_frac
+   end interface
+
+   interface
+      function ratnum_str(str) bind(c)
+         use, intrinsic :: iso_c_binding
+         import ratnum
+         type(ratnum) :: ratnum_str
+         character(kind=c_char), dimension(*) :: str
+      end function ratnum_str
+   end interface
+
+   interface
+      function ratnum_num(a) bind(c)
+         use, intrinsic :: iso_c_binding
+         import ratnum
+         integer(c_int) :: ratnum_num
+         type(ratnum), value :: a
+      end function ratnum_num
+   end interface
+
+   interface
+      function ratnum_den(a) bind(c)
+         use, intrinsic :: iso_c_binding
+         import ratnum
+         integer(c_int) :: ratnum_den
+         type(ratnum), value :: a
+      end function ratnum_den
+   end interface
+
+   interface
+      function ratnum_to_double(a) bind(c)
+         use, intrinsic :: iso_c_binding
+         import ratnum
+         real(c_double) :: ratnum_to_double
+         type(ratnum), value :: a
+      end function ratnum_to_double
+   end interface
+
    type, bind(c) :: uqnt
       real(c_double)  :: val, unc
       logical(c_bool) :: prop_unc
-      real(c_double)  :: len_d, mass_d, time_d, temp_d
+      type(ratnum)    :: len_d, mass_d, time_d, temp_d
    end type uqnt
 
    interface
@@ -157,17 +206,17 @@ module uqnt_f
    end interface
 
    interface
-      function uqnt_dpow(a, b) bind(c)
+      function uqnt_rpow(a, b) bind(c)
          use, intrinsic :: iso_c_binding
-         import uqnt
-         type(uqnt) :: uqnt_dpow
+         import ratnum, uqnt
+         type(uqnt) :: uqnt_rpow
          type(uqnt), intent(in), value :: a
-         real(c_double), intent(in), value :: b
-      end function uqnt_dpow
+         type(ratnum), intent(in), value :: b
+      end function uqnt_rpow
    end interface
 
    interface operator (**)
-      module procedure uqnt_pow, uqnt_dpow
+      module procedure uqnt_pow, uqnt_rpow
    end interface operator (**)
 
    interface
