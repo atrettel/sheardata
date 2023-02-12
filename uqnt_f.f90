@@ -262,15 +262,6 @@ module uqnt_f
    end interface
 
    interface
-      function uqnt_sqrt(a) bind(c)
-         use, intrinsic :: iso_c_binding
-         import uqnt
-         type(uqnt) :: uqnt_sqrt
-         type(uqnt), intent(in), value :: a
-      end function uqnt_sqrt
-   end interface
-
-   interface
       function uqnt_rpow_int(a, b) bind(c)
          use, intrinsic :: iso_c_binding
          import ratnum, uqnt
@@ -290,9 +281,14 @@ module uqnt_f
       end function uqnt_rpow_str
    end interface
 
-   interface sqrt
-      procedure uqnt_sqrt
-   end interface sqrt
+   interface
+      function uqnt_sqrt(a) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: uqnt_sqrt
+         type(uqnt), intent(in), value :: a
+      end function uqnt_sqrt
+   end interface
 
    interface
       subroutine uqnt_print(a) bind(c)
@@ -533,8 +529,12 @@ module uqnt_f
    end interface operator (/)
 
    interface operator (**)
-      module procedure uqnt_pow, uqnt_rpow, uqnt_rpow_int
+      module procedure uqnt_pow_f, uqnt_rpow_f, uqnt_rpow_int_f
    end interface operator (**)
+
+   interface sqrt
+      procedure uqnt_sqrt_f
+   end interface sqrt
 
    interface operator (==)
       module procedure ratnum_eq, uqnt_eq
@@ -583,4 +583,30 @@ contains
       type(uqnt) :: c
       c = uqnt_div(a,b)
    end function uqnt_div_f
+
+   impure elemental function uqnt_pow_f(a, b) result(c)
+      type(uqnt), intent(in) :: a, b
+      type(uqnt) :: c
+      c = uqnt_pow(a,b)
+   end function uqnt_pow_f
+
+   impure elemental function uqnt_rpow_f(a, b) result(c)
+      type(uqnt), intent(in) :: a
+      type(ratnum), intent(in) :: b
+      type(uqnt) :: c
+      c = uqnt_rpow(a,b)
+   end function uqnt_rpow_f
+
+   impure elemental function uqnt_rpow_int_f(a, b) result(c)
+      type(uqnt), intent(in) :: a
+      integer(c_int), intent(in) :: b
+      type(uqnt) :: c
+      c = uqnt_rpow_int(a,b)
+   end function uqnt_rpow_int_f
+
+   impure elemental function uqnt_sqrt_f(a) result(b)
+      type(uqnt), intent(in) :: a
+      type(uqnt) :: b
+      b = uqnt_sqrt(a)
+   end function uqnt_sqrt_f
 end module uqnt_f
