@@ -61,4 +61,22 @@ uqnt unit_gram(void);
 uqnt unit_second(void);
 uqnt unit_kelvin(void);
 
+uqnt unit_foot(void);
+uqnt unit_inch(void);
+uqnt unit_yard(void);
+
 uqnt unit_kilogram(void);
+uqnt unit_pound_mass(void);
+
+uqnt unit_newton(void);
+uqnt unit_pound_force(void);
+
+uqnt unit_atmosphere(void);
+uqnt unit_bar(void);
+uqnt unit_inch_of_mercury(void);
+uqnt unit_pascal(void);
+uqnt unit_pound_per_square_inch(void);
+
+uqnt absolute_zero(void);
+uqnt standard_atmospheric_pressure(void);
+uqnt standard_gravitational_acceleration(void);

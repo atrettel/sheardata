@@ -602,7 +602,96 @@ uqnt unit_kelvin(void)
     return a;
 }
 
+uqnt unit_foot(void)
+{
+    return uqnt_div( unit_yard(), uqnt_num(3.0) );
+}
+
+uqnt unit_inch(void)
+{
+    return uqnt_div( unit_foot(), uqnt_num(12.0) );
+}
+
+uqnt unit_yard(void)
+{
+    return uqnt_mult( uqnt_num(0.9144), unit_meter() );
+}
+
 uqnt unit_kilogram(void)
 {
     return uqnt_mult( uqnt_num(1000.0), unit_gram() );
 }
+
+uqnt unit_pound_mass(void)
+{
+    return uqnt_mult( uqnt_num(0.45359237), unit_meter() );
+}
+
+uqnt unit_newton(void)
+{
+    return uqnt_div(
+        uqnt_mult( unit_kilogram(), unit_meter() ),
+        uqnt_mult( unit_second(), unit_second() )
+    );
+}
+
+uqnt unit_pound_force(void)
+{
+    return uqnt_mult(
+        unit_pound_mass(),
+        standard_gravitational_acceleration()
+    );
+}
+
+uqnt unit_atmosphere(void)
+{
+    return standard_atmospheric_pressure();
+}
+
+uqnt unit_bar(void)
+{
+    return uqnt_mult( uqnt_num(100000.0), unit_pascal() );
+}
+
+uqnt unit_inch_of_mercury(void)
+{
+    return uqnt_mult( uqnt_num(3376.85), unit_pascal() );
+}
+
+uqnt unit_pascal(void)
+{
+    return uqnt_div(
+        unit_newton(),
+        uqnt_mult( unit_meter(), unit_meter() )
+    );
+}
+
+uqnt unit_pound_per_square_inch(void)
+{
+    return uqnt_div(
+        unit_pound_force(),
+        uqnt_mult( unit_inch(), unit_inch() )
+    );
+}
+
+uqnt absolute_zero(void)
+{
+    return uqnt_mult( uqnt_num(273.15), unit_kelvin() );
+}
+
+uqnt standard_atmospheric_pressure(void)
+{
+    return uqnt_mult( uqnt_num(101325.0), unit_pascal() );
+}
+
+uqnt standard_gravitational_acceleration(void)
+{
+    return uqnt_mult(
+        uqnt_num(9.80665),
+        uqnt_div(
+            unit_meter(),
+            uqnt_mult( unit_second(), unit_second() )
+        )
+    );
+}
+
