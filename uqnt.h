@@ -44,6 +44,8 @@ uqnt uqnt_mult( uqnt a, uqnt b );
 uqnt uqnt_div( uqnt a, uqnt b );
 uqnt uqnt_pow( uqnt a, uqnt b );
 uqnt uqnt_rpow( uqnt a, ratnum b );
+uqnt uqnt_rpow_int( uqnt a, int b );
+uqnt uqnt_rpow_str( uqnt a, char str[] );
 uqnt uqnt_sqrt( uqnt a );
 void uqnt_print( uqnt a );
 _Bool uqnt_eq( uqnt a, uqnt b );

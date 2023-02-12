@@ -425,6 +425,16 @@ uqnt uqnt_sqrt( uqnt a )
     return uqnt_rpow( a, ratnum_frac( 1, 2 ) );
 }
 
+uqnt uqnt_rpow_int( uqnt a, int b )
+{
+    return uqnt_rpow( a, ratnum_frac( b, 1 ) );
+}
+
+uqnt uqnt_rpow_str( uqnt a, char str[] )
+{
+    return uqnt_rpow( a, ratnum_str(str) );
+}
+
 void uqnt_print( uqnt a )
 {
     if ( uqnt_prop_unc(a) )

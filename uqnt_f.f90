@@ -270,6 +270,26 @@ module uqnt_f
       end function uqnt_sqrt
    end interface
 
+   interface
+      function uqnt_rpow_int(a, b) bind(c)
+         use, intrinsic :: iso_c_binding
+         import ratnum, uqnt
+         type(uqnt) :: uqnt_rpow_int
+         type(uqnt), intent(in), value :: a
+         integer(c_int), intent(in), value :: b
+      end function uqnt_rpow_int
+   end interface
+
+   interface
+      function uqnt_rpow_str(a, str) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: uqnt_rpow_str
+         type(uqnt), intent(in), value :: a
+         character(kind=c_char), intent(in), dimension(*) :: str
+      end function uqnt_rpow_str
+   end interface
+
    interface sqrt
       procedure uqnt_sqrt
    end interface sqrt
@@ -401,7 +421,7 @@ module uqnt_f
    end interface operator (/)
 
    interface operator (**)
-      module procedure uqnt_pow, uqnt_rpow
+      module procedure uqnt_pow, uqnt_rpow, uqnt_rpow_int
    end interface operator (**)
 
    interface operator (==)
