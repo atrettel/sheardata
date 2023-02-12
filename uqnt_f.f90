@@ -517,19 +517,19 @@ module uqnt_f
    end interface
 
    interface operator (+)
-      module procedure ratnum_add, uqnt_add
+      module procedure ratnum_add, uqnt_add_f
    end interface operator (+)
 
    interface operator (-)
-      module procedure ratnum_subt, uqnt_subt
+      module procedure ratnum_subt, uqnt_subt_f
    end interface operator (-)
 
    interface operator (*)
-      module procedure ratnum_mult, uqnt_mult
+      module procedure ratnum_mult, uqnt_mult_f
    end interface operator (*)
 
    interface operator (/)
-      module procedure ratnum_div, uqnt_div
+      module procedure ratnum_div, uqnt_div_f
    end interface operator (/)
 
    interface operator (**)
@@ -559,4 +559,28 @@ module uqnt_f
    interface operator (>=)
       module procedure uqnt_ge
    end interface operator (>=)
+contains
+   impure elemental function uqnt_add_f(a, b) result(c)
+      type(uqnt), intent(in) :: a, b
+      type(uqnt) :: c
+      c = uqnt_add(a,b)
+   end function uqnt_add_f
+
+   impure elemental function uqnt_subt_f(a, b) result(c)
+      type(uqnt), intent(in) :: a, b
+      type(uqnt) :: c
+      c = uqnt_subt(a,b)
+   end function uqnt_subt_f
+
+   impure elemental function uqnt_mult_f(a, b) result(c)
+      type(uqnt), intent(in) :: a, b
+      type(uqnt) :: c
+      c = uqnt_mult(a,b)
+   end function uqnt_mult_f
+
+   impure elemental function uqnt_div_f(a, b) result(c)
+      type(uqnt), intent(in) :: a, b
+      type(uqnt) :: c
+      c = uqnt_div(a,b)
+   end function uqnt_div_f
 end module uqnt_f
