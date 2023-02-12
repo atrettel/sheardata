@@ -53,6 +53,68 @@ module uqnt_f
       end function ratnum_to_double
    end interface
 
+   interface
+      function ratnum_add(a, b) bind(c)
+         use, intrinsic :: iso_c_binding
+         import ratnum
+         type(ratnum) :: ratnum_add
+         type(ratnum), intent(in), value :: a, b
+      end function ratnum_add
+   end interface
+
+   interface
+      function ratnum_subt(a, b) bind(c)
+         use, intrinsic :: iso_c_binding
+         import ratnum
+         type(ratnum) :: ratnum_subt
+         type(ratnum), intent(in), value :: a, b
+      end function ratnum_subt
+   end interface
+
+   interface
+      function ratnum_mult(a, b) bind(c)
+         use, intrinsic :: iso_c_binding
+         import ratnum
+         type(ratnum) :: ratnum_mult
+         type(ratnum), intent(in), value :: a, b
+      end function ratnum_mult
+   end interface
+
+   interface
+      function ratnum_div(a, b) bind(c)
+         use, intrinsic :: iso_c_binding
+         import ratnum
+         type(ratnum) :: ratnum_div
+         type(ratnum), intent(in), value :: a, b
+      end function ratnum_div
+   end interface
+
+   interface
+      subroutine ratnum_print(a) bind(c)
+         use, intrinsic :: iso_c_binding
+         import ratnum
+         type(ratnum), value :: a
+      end subroutine ratnum_print
+   end interface
+
+   interface
+      function ratnum_eq(a, b) bind(c)
+         use, intrinsic :: iso_c_binding
+         import ratnum
+         logical(c_bool) :: ratnum_eq
+         type(ratnum), intent(in), value :: a, b
+      end function ratnum_eq
+   end interface
+
+   interface
+      function ratnum_ne(a, b) bind(c)
+         use, intrinsic :: iso_c_binding
+         import ratnum
+         logical(c_bool) :: ratnum_ne
+         type(ratnum), intent(in), value :: a, b
+      end function ratnum_ne
+   end interface
+
    type, bind(c) :: uqnt
       real(c_double)  :: val, unc
       logical(c_bool) :: prop_unc
@@ -153,10 +215,6 @@ module uqnt_f
       end function uqnt_add
    end interface
 
-   interface operator (+)
-      module procedure uqnt_add
-   end interface operator (+)
-
    interface
       function uqnt_subt(a, b) bind(c)
          use, intrinsic :: iso_c_binding
@@ -165,10 +223,6 @@ module uqnt_f
          type(uqnt), intent(in), value :: a, b
       end function uqnt_subt
    end interface
-
-   interface operator (-)
-      module procedure uqnt_subt
-   end interface operator (-)
 
    interface
       function uqnt_mult(a, b) bind(c)
@@ -179,10 +233,6 @@ module uqnt_f
       end function uqnt_mult
    end interface
 
-   interface operator (*)
-      module procedure uqnt_mult
-   end interface operator (*)
-
    interface
       function uqnt_div(a, b) bind(c)
          use, intrinsic :: iso_c_binding
@@ -191,10 +241,6 @@ module uqnt_f
          type(uqnt), intent(in), value :: a, b
       end function uqnt_div
    end interface
-
-   interface operator (/)
-      module procedure uqnt_div
-   end interface operator (/)
 
    interface
       function uqnt_pow(a, b) bind(c)
@@ -214,10 +260,6 @@ module uqnt_f
          type(ratnum), intent(in), value :: b
       end function uqnt_rpow
    end interface
-
-   interface operator (**)
-      module procedure uqnt_pow, uqnt_rpow
-   end interface operator (**)
 
    interface
       function uqnt_sqrt(a) bind(c)
@@ -249,10 +291,6 @@ module uqnt_f
       end function uqnt_eq
    end interface
 
-   interface operator (==)
-      module procedure uqnt_eq
-   end interface operator (==)
-
    interface
       function uqnt_ne(a,b) bind(c)
          use, intrinsic :: iso_c_binding
@@ -261,10 +299,6 @@ module uqnt_f
          type(uqnt), intent(in), value :: a, b
       end function uqnt_ne
    end interface
-
-   interface operator (/=)
-      module procedure uqnt_ne
-   end interface operator (/=)
 
    interface
       function uqnt_lt(a,b) bind(c)
@@ -275,10 +309,6 @@ module uqnt_f
       end function uqnt_lt
    end interface
 
-   interface operator (<)
-      module procedure uqnt_lt
-   end interface operator (<)
-
    interface
       function uqnt_gt(a,b) bind(c)
          use, intrinsic :: iso_c_binding
@@ -287,10 +317,6 @@ module uqnt_f
          type(uqnt), intent(in), value :: a, b
       end function uqnt_gt
    end interface
-
-   interface operator (>)
-      module procedure uqnt_gt
-   end interface operator (>)
 
    interface
       function uqnt_le(a,b) bind(c)
@@ -301,10 +327,6 @@ module uqnt_f
       end function uqnt_le
    end interface
 
-   interface operator (<=)
-      module procedure uqnt_le
-   end interface operator (<=)
-
    interface
       function uqnt_ge(a,b) bind(c)
          use, intrinsic :: iso_c_binding
@@ -313,10 +335,6 @@ module uqnt_f
          type(uqnt), intent(in), value :: a, b
       end function uqnt_ge
    end interface
-
-   interface operator (>=)
-      module procedure uqnt_ge
-   end interface operator (>=)
 
    interface
       function unit_one() bind(c)
@@ -365,4 +383,48 @@ module uqnt_f
          type(uqnt) :: unit_kilogram
       end function unit_kilogram
    end interface
+
+   interface operator (+)
+      module procedure ratnum_add, uqnt_add
+   end interface operator (+)
+
+   interface operator (-)
+      module procedure ratnum_subt, uqnt_subt
+   end interface operator (-)
+
+   interface operator (*)
+      module procedure ratnum_mult, uqnt_mult
+   end interface operator (*)
+
+   interface operator (/)
+      module procedure ratnum_div, uqnt_div
+   end interface operator (/)
+
+   interface operator (**)
+      module procedure uqnt_pow, uqnt_rpow
+   end interface operator (**)
+
+   interface operator (==)
+      module procedure ratnum_eq, uqnt_eq
+   end interface operator (==)
+
+   interface operator (/=)
+      module procedure ratnum_ne, uqnt_ne
+   end interface operator (/=)
+
+   interface operator (<)
+      module procedure uqnt_lt
+   end interface operator (<)
+
+   interface operator (>)
+      module procedure uqnt_gt
+   end interface operator (>)
+
+   interface operator (<=)
+      module procedure uqnt_le
+   end interface operator (<=)
+
+   interface operator (>=)
+      module procedure uqnt_ge
+   end interface operator (>=)
 end module uqnt_f
