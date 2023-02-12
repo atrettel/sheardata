@@ -373,11 +373,11 @@ module uqnt_f
    end interface
 
    interface
-      function unit_gram() bind(c)
+      function unit_kilogram() bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
-         type(uqnt) :: unit_gram
-      end function unit_gram
+         type(uqnt) :: unit_kilogram
+      end function unit_kilogram
    end interface
 
    interface
@@ -397,11 +397,123 @@ module uqnt_f
    end interface
 
    interface
-      function unit_kilogram() bind(c)
+      function unit_foot() bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
-         type(uqnt) :: unit_kilogram
-      end function unit_kilogram
+         type(uqnt) :: unit_foot
+      end function unit_foot
+   end interface
+
+   interface
+      function unit_inch() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_inch
+      end function unit_inch
+   end interface
+
+   interface
+      function unit_yard() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_yard
+      end function unit_yard
+   end interface
+
+   interface
+      function unit_gram() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_gram
+      end function unit_gram
+   end interface
+
+   interface
+      function unit_pound_mass() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_pound_mass
+      end function unit_pound_mass
+   end interface
+
+   interface
+      function unit_newton() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_newton
+      end function unit_newton
+   end interface
+
+   interface
+      function unit_pound_force() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_pound_force
+      end function unit_pound_force
+   end interface
+
+   interface
+      function unit_atmosphere() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_atmosphere
+      end function unit_atmosphere
+   end interface
+
+   interface
+      function unit_bar() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_bar
+      end function unit_bar
+   end interface
+
+   interface
+      function unit_inch_of_mercury() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_inch_of_mercury
+      end function unit_inch_of_mercury
+   end interface
+
+   interface
+      function unit_pascal() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_pascal
+      end function unit_pascal
+   end interface
+
+   interface
+      function absolute_zero() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: absolute_zero
+      end function absolute_zero
+   end interface
+
+   interface
+      function standard_atmospheric_pressure() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: standard_atmospheric_pressure
+      end function standard_atmospheric_pressure
+   end interface
+
+   interface
+      function standard_gravitational_acceleration() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: standard_gravitational_acceleration
+      end function standard_gravitational_acceleration
+   end interface
+
+   interface
+      function unit_pound_per_square_inch() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_pound_per_square_inch
+      end function unit_pound_per_square_inch
    end interface
 
    interface operator (+)
