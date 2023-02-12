@@ -2,36 +2,36 @@
 
 typedef struct {
     int num, den;
-} rat;
+} ratnum;
 
 int gcd( int a, int b );
 int lcm( int a, int b );
-rat rat_frac( int num, int den );
-rat rat_str( char str[] );
-int rat_num( rat a );
-int rat_den( rat a );
-double rat_to_double( rat a );
-rat rat_add( rat a, rat b );
-rat rat_subt( rat a, rat b );
-rat rat_mult( rat a, rat b );
-rat rat_div( rat a, rat b );
-void rat_print( rat a );
-_Bool rat_eq( rat a, rat b );
-_Bool rat_ne( rat a, rat b );
+ratnum ratnum_frac( int num, int den );
+ratnum ratnum_str( char str[] );
+int ratnum_num( ratnum a );
+int ratnum_den( ratnum a );
+double ratnum_to_double( ratnum a );
+ratnum ratnum_add( ratnum a, ratnum b );
+ratnum ratnum_subt( ratnum a, ratnum b );
+ratnum ratnum_mult( ratnum a, ratnum b );
+ratnum ratnum_div( ratnum a, ratnum b );
+void ratnum_print( ratnum a );
+_Bool ratnum_eq( ratnum a, ratnum b );
+_Bool ratnum_ne( ratnum a, ratnum b );
 
 typedef struct {
     double val, unc;
     _Bool prop_unc;
-    rat len_d, mass_d, time_d, temp_d;
+    ratnum len_d, mass_d, time_d, temp_d;
 } uqnt;
 
 double uqnt_val( uqnt a );
 double uqnt_unc( uqnt a );
 _Bool uqnt_prop_unc( uqnt a );
-rat uqnt_len_d( uqnt a );
-rat uqnt_mass_d( uqnt a );
-rat uqnt_time_d( uqnt a );
-rat uqnt_temp_d( uqnt a );
+ratnum uqnt_len_d( uqnt a );
+ratnum uqnt_mass_d( uqnt a );
+ratnum uqnt_time_d( uqnt a );
+ratnum uqnt_temp_d( uqnt a );
 uqnt uqnt_norm( double val, double unc, uqnt units );
 uqnt uqnt_unifb( double min_val, double max_val, uqnt units );
 uqnt uqnt_unif( double val, double half_width, uqnt units );
@@ -43,7 +43,7 @@ uqnt uqnt_subt( uqnt a, uqnt b );
 uqnt uqnt_mult( uqnt a, uqnt b );
 uqnt uqnt_div( uqnt a, uqnt b );
 uqnt uqnt_pow( uqnt a, uqnt b );
-uqnt uqnt_rpow( uqnt a, rat b );
+uqnt uqnt_rpow( uqnt a, ratnum b );
 uqnt uqnt_sqrt( uqnt a );
 void uqnt_print( uqnt a );
 _Bool uqnt_eq( uqnt a, uqnt b );

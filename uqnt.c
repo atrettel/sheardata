@@ -34,13 +34,13 @@ int lcm( int a, int b )
     }
 }
 
-rat rat_frac( int num, int den )
+ratnum ratnum_frac( int num, int den )
 {
     assert( den != 0 );
     int c = abs(gcd(num,den));
     if ( den > 0 )
     {
-        rat a =
+        ratnum a =
         {
             .num = num / c,
             .den = den / c
@@ -49,7 +49,7 @@ rat rat_frac( int num, int den )
     }
     else
     {
-        rat a =
+        ratnum a =
         {
             .num = -num / c,
             .den = -den / c
@@ -58,7 +58,7 @@ rat rat_frac( int num, int den )
     }
 }
 
-rat rat_str( char str[] )
+ratnum ratnum_str( char str[] )
 {
     int num, den;
     if ( strchr( str, '/' ) == NULL )
@@ -70,76 +70,76 @@ rat rat_str( char str[] )
     {
         sscanf( str, "%d/%d", &num, &den );
     }
-    return rat_frac(num,den);
+    return ratnum_frac(num,den);
 }
 
-int rat_num( rat a )
+int ratnum_num( ratnum a )
 {
     return a.num;
 }
 
-int rat_den( rat a )
+int ratnum_den( ratnum a )
 {
     return a.den;
 }
 
-double rat_to_double( rat a )
+double ratnum_to_double( ratnum a )
 {
-    return ( (double) rat_num(a) ) / ( (double) rat_den(a) );
+    return ( (double) ratnum_num(a) ) / ( (double) ratnum_den(a) );
 }
 
-rat rat_add( rat a, rat b )
+ratnum ratnum_add( ratnum a, ratnum b )
 {
-    return rat_frac(
-        rat_num(a) * rat_den(b) + rat_num(b) * rat_den(a),
-        rat_den(a) * rat_den(b)
+    return ratnum_frac(
+        ratnum_num(a) * ratnum_den(b) + ratnum_num(b) * ratnum_den(a),
+        ratnum_den(a) * ratnum_den(b)
     );
 }
 
-rat rat_subt( rat a, rat b )
+ratnum ratnum_subt( ratnum a, ratnum b )
 {
-    return rat_frac(
-        rat_num(a) * rat_den(b) - rat_num(b) * rat_den(a),
-        rat_den(a) * rat_den(b)
+    return ratnum_frac(
+        ratnum_num(a) * ratnum_den(b) - ratnum_num(b) * ratnum_den(a),
+        ratnum_den(a) * ratnum_den(b)
     );
 }
 
-rat rat_mult( rat a, rat b )
+ratnum ratnum_mult( ratnum a, ratnum b )
 {
-    return rat_frac(
-        rat_num(a) * rat_num(b),
-        rat_den(a) * rat_den(b)
+    return ratnum_frac(
+        ratnum_num(a) * ratnum_num(b),
+        ratnum_den(a) * ratnum_den(b)
     );
 }
 
-rat rat_div( rat a, rat b )
+ratnum ratnum_div( ratnum a, ratnum b )
 {
-    return rat_frac(
-        rat_num(a) * rat_den(b),
-        rat_den(a) * rat_num(b)
+    return ratnum_frac(
+        ratnum_num(a) * ratnum_den(b),
+        ratnum_den(a) * ratnum_num(b)
     );
 }
 
-void rat_print( rat a )
+void ratnum_print( ratnum a )
 {
-    if ( rat_den(a) == 1 )
+    if ( ratnum_den(a) == 1 )
     {
-        printf( "%+d", rat_num(a) );
+        printf( "%+d", ratnum_num(a) );
     }
     else
     {
-        printf( "%+d/%d", rat_num(a), rat_den(a) );
+        printf( "%+d/%d", ratnum_num(a), ratnum_den(a) );
     }
 }
 
-_Bool rat_eq( rat a, rat b )
+_Bool ratnum_eq( ratnum a, ratnum b )
 {
-    return ( rat_num(a) == rat_num(b) ) && ( rat_den(a) == rat_den(b) );
+    return ( ratnum_num(a) == ratnum_num(b) ) && ( ratnum_den(a) == ratnum_den(b) );
 }
 
-_Bool rat_ne( rat a, rat b )
+_Bool ratnum_ne( ratnum a, ratnum b )
 {
-    return ! rat_eq(a,b);
+    return ! ratnum_eq(a,b);
 }
 
 double uqnt_val( uqnt a )
@@ -157,22 +157,22 @@ _Bool uqnt_prop_unc( uqnt a )
     return a.prop_unc;
 }
 
-rat uqnt_len_d( uqnt a )
+ratnum uqnt_len_d( uqnt a )
 {
     return a.len_d;
 }
 
-rat uqnt_mass_d( uqnt a )
+ratnum uqnt_mass_d( uqnt a )
 {
     return a.mass_d;
 }
 
-rat uqnt_time_d( uqnt a )
+ratnum uqnt_time_d( uqnt a )
 {
     return a.time_d;
 }
 
-rat uqnt_temp_d( uqnt a )
+ratnum uqnt_temp_d( uqnt a )
 {
     return a.temp_d;
 }
@@ -229,19 +229,19 @@ uqnt uqnt_num( double val )
 
 _Bool uqnt_same_dim( uqnt a, uqnt b )
 {
-    if ( rat_ne( uqnt_len_d(a), uqnt_len_d(b) ) )
+    if ( ratnum_ne( uqnt_len_d(a), uqnt_len_d(b) ) )
     {
         return false;
     }
-    else if ( rat_ne( uqnt_mass_d(a), uqnt_mass_d(b) ) )
+    else if ( ratnum_ne( uqnt_mass_d(a), uqnt_mass_d(b) ) )
     {
         return false;
     }
-    else if ( rat_ne( uqnt_time_d(a), uqnt_time_d(b) ) )
+    else if ( ratnum_ne( uqnt_time_d(a), uqnt_time_d(b) ) )
     {
         return false;
     }
-    else if ( rat_ne( uqnt_temp_d(a), uqnt_temp_d(b) ) )
+    else if ( ratnum_ne( uqnt_temp_d(a), uqnt_temp_d(b) ) )
     {
         return false;
     }
@@ -320,10 +320,10 @@ uqnt uqnt_mult( uqnt a, uqnt b )
         .val      = c_v,
         .unc      = c_u,
         .prop_unc = prop_unc,
-        .len_d    = rat_add(  uqnt_len_d(a),  uqnt_len_d(b) ),
-        .mass_d   = rat_add( uqnt_mass_d(a), uqnt_mass_d(b) ),
-        .time_d   = rat_add( uqnt_time_d(a), uqnt_time_d(b) ),
-        .temp_d   = rat_add( uqnt_temp_d(a), uqnt_temp_d(b) )
+        .len_d    = ratnum_add(  uqnt_len_d(a),  uqnt_len_d(b) ),
+        .mass_d   = ratnum_add( uqnt_mass_d(a), uqnt_mass_d(b) ),
+        .time_d   = ratnum_add( uqnt_time_d(a), uqnt_time_d(b) ),
+        .temp_d   = ratnum_add( uqnt_temp_d(a), uqnt_temp_d(b) )
     };
     return c;
 }
@@ -347,10 +347,10 @@ uqnt uqnt_div( uqnt a, uqnt b )
         .val      = c_v,
         .unc      = c_u,
         .prop_unc = prop_unc,
-        .len_d    = rat_subt(  uqnt_len_d(a),  uqnt_len_d(b) ),
-        .mass_d   = rat_subt( uqnt_mass_d(a), uqnt_mass_d(b) ),
-        .time_d   = rat_subt( uqnt_time_d(a), uqnt_time_d(b) ),
-        .temp_d   = rat_subt( uqnt_temp_d(a), uqnt_temp_d(b) )
+        .len_d    = ratnum_subt(  uqnt_len_d(a),  uqnt_len_d(b) ),
+        .mass_d   = ratnum_subt( uqnt_mass_d(a), uqnt_mass_d(b) ),
+        .time_d   = ratnum_subt( uqnt_time_d(a), uqnt_time_d(b) ),
+        .temp_d   = ratnum_subt( uqnt_temp_d(a), uqnt_temp_d(b) )
     };
     return c;
 }
@@ -383,10 +383,10 @@ uqnt uqnt_pow( uqnt a, uqnt b )
         .val      = c_v,
         .unc      = c_u,
         .prop_unc = prop_unc,
-        .len_d    = rat_frac( 0, 1 ),
-        .mass_d   = rat_frac( 0, 1 ),
-        .time_d   = rat_frac( 0, 1 ),
-        .temp_d   = rat_frac( 0, 1 )
+        .len_d    = ratnum_frac( 0, 1 ),
+        .mass_d   = ratnum_frac( 0, 1 ),
+        .time_d   = ratnum_frac( 0, 1 ),
+        .temp_d   = ratnum_frac( 0, 1 )
     };
     return c;
 }
@@ -395,10 +395,10 @@ uqnt uqnt_pow( uqnt a, uqnt b )
 This function avoids the issues with the dimensions entirely, since the
 exponent is always a certain, dimensionless number.
 */
-uqnt uqnt_rpow( uqnt a, rat b )
+uqnt uqnt_rpow( uqnt a, ratnum b )
 {
     double a_v = uqnt_val(a);
-    double b_v = rat_to_double(b);
+    double b_v = ratnum_to_double(b);
     double c_v = pow(a_v,b_v);
     double a_u = uqnt_unc(a);
     _Bool prop_unc = uqnt_prop_unc(a);
@@ -412,17 +412,17 @@ uqnt uqnt_rpow( uqnt a, rat b )
         .val      = c_v,
         .unc      = c_u,
         .prop_unc = prop_unc,
-        .len_d    = rat_mult( b,  uqnt_len_d(a) ),
-        .mass_d   = rat_mult( b, uqnt_mass_d(a) ),
-        .time_d   = rat_mult( b, uqnt_time_d(a) ),
-        .temp_d   = rat_mult( b, uqnt_temp_d(a) )
+        .len_d    = ratnum_mult( b,  uqnt_len_d(a) ),
+        .mass_d   = ratnum_mult( b, uqnt_mass_d(a) ),
+        .time_d   = ratnum_mult( b, uqnt_time_d(a) ),
+        .temp_d   = ratnum_mult( b, uqnt_temp_d(a) )
     };
     return c;
 }
 
 uqnt uqnt_sqrt( uqnt a )
 {
-    return uqnt_rpow( a, rat_frac( 1, 2 ) );
+    return uqnt_rpow( a, ratnum_frac( 1, 2 ) );
 }
 
 void uqnt_print( uqnt a )
@@ -436,25 +436,25 @@ void uqnt_print( uqnt a )
         printf( "%+8.5e", uqnt_val(a) );
     }
 
-    if ( rat_ne( uqnt_len_d(a), rat_frac( 0, 1 ) ) )
+    if ( ratnum_ne( uqnt_len_d(a), ratnum_frac( 0, 1 ) ) )
     {
         printf( " m^" );
-        rat_print( uqnt_len_d(a) );
+        ratnum_print( uqnt_len_d(a) );
     }
-    if ( rat_ne( uqnt_mass_d(a), rat_frac( 0, 1 ) ) )
+    if ( ratnum_ne( uqnt_mass_d(a), ratnum_frac( 0, 1 ) ) )
     {
         printf( " kg^" );
-        rat_print( rat_div( uqnt_mass_d(a), rat_frac( 1000, 1 ) ) );
+        ratnum_print( ratnum_div( uqnt_mass_d(a), ratnum_frac( 1000, 1 ) ) );
     }
-    if ( rat_ne( uqnt_time_d(a), rat_frac( 0, 1 ) ) )
+    if ( ratnum_ne( uqnt_time_d(a), ratnum_frac( 0, 1 ) ) )
     {
         printf( " s^" );
-        rat_print( uqnt_time_d(a) );
+        ratnum_print( uqnt_time_d(a) );
     }
-    if ( rat_ne( uqnt_temp_d(a), rat_frac( 0, 1 ) ) )
+    if ( ratnum_ne( uqnt_temp_d(a), ratnum_frac( 0, 1 ) ) )
     {
         printf( " K^" );
-        rat_print( uqnt_temp_d(a) );
+        ratnum_print( uqnt_temp_d(a) );
     }
 }
 
@@ -524,10 +524,10 @@ uqnt unit_one(void)
         .val      = 1.0,
         .unc      = 0.0,
         .prop_unc = true,
-        .len_d    = rat_frac( 0, 1 ),
-        .mass_d   = rat_frac( 0, 1 ),
-        .time_d   = rat_frac( 0, 1 ),
-        .temp_d   = rat_frac( 0, 1 )
+        .len_d    = ratnum_frac( 0, 1 ),
+        .mass_d   = ratnum_frac( 0, 1 ),
+        .time_d   = ratnum_frac( 0, 1 ),
+        .temp_d   = ratnum_frac( 0, 1 )
     };
     return a;
 }
@@ -539,10 +539,10 @@ uqnt unit_meter(void)
         .val      = 1.0,
         .unc      = 0.0,
         .prop_unc = true,
-        .len_d    = rat_frac( 1, 1 ),
-        .mass_d   = rat_frac( 0, 1 ),
-        .time_d   = rat_frac( 0, 1 ),
-        .temp_d   = rat_frac( 0, 1 )
+        .len_d    = ratnum_frac( 1, 1 ),
+        .mass_d   = ratnum_frac( 0, 1 ),
+        .time_d   = ratnum_frac( 0, 1 ),
+        .temp_d   = ratnum_frac( 0, 1 )
     };
     return a;
 }
@@ -554,10 +554,10 @@ uqnt unit_gram(void)
         .val      = 1.0,
         .unc      = 0.0,
         .prop_unc = true,
-        .len_d    = rat_frac( 0, 1 ),
-        .mass_d   = rat_frac( 1, 1 ),
-        .time_d   = rat_frac( 0, 1 ),
-        .temp_d   = rat_frac( 0, 1 )
+        .len_d    = ratnum_frac( 0, 1 ),
+        .mass_d   = ratnum_frac( 1, 1 ),
+        .time_d   = ratnum_frac( 0, 1 ),
+        .temp_d   = ratnum_frac( 0, 1 )
     };
     return a;
 }
@@ -569,10 +569,10 @@ uqnt unit_second(void)
         .val      = 1.0,
         .unc      = 0.0,
         .prop_unc = true,
-        .len_d    = rat_frac( 0, 1 ),
-        .mass_d   = rat_frac( 0, 1 ),
-        .time_d   = rat_frac( 1, 1 ),
-        .temp_d   = rat_frac( 0, 1 )
+        .len_d    = ratnum_frac( 0, 1 ),
+        .mass_d   = ratnum_frac( 0, 1 ),
+        .time_d   = ratnum_frac( 1, 1 ),
+        .temp_d   = ratnum_frac( 0, 1 )
     };
     return a;
 }
@@ -584,10 +584,10 @@ uqnt unit_kelvin(void)
         .val      = 1.0,
         .unc      = 0.0,
         .prop_unc = true,
-        .len_d    = rat_frac( 0, 1 ),
-        .mass_d   = rat_frac( 0, 1 ),
-        .time_d   = rat_frac( 0, 1 ),
-        .temp_d   = rat_frac( 1, 1 )
+        .len_d    = ratnum_frac( 0, 1 ),
+        .mass_d   = ratnum_frac( 0, 1 ),
+        .time_d   = ratnum_frac( 0, 1 ),
+        .temp_d   = ratnum_frac( 1, 1 )
     };
     return a;
 }
