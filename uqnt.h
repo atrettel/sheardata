@@ -1,5 +1,10 @@
 // Copyright (C) 2023 Andrew Trettel
 
+/*
+ * Rational number data type
+ *
+ * integer:  numerator, denominator
+ */
 typedef struct {
     int num, den;
 } ratnum;
@@ -19,6 +24,14 @@ void ratnum_print( ratnum a );
 _Bool ratnum_eq( ratnum a, ratnum b );
 _Bool ratnum_ne( ratnum a, ratnum b );
 
+/*
+ * Uncertainty quantity data type
+ *
+ * double:          mean value, standard uncertainty
+ * Boolean:         propagate uncertainties or not?
+ * rational number: length dimension, mass dimension, time dimension,
+ *                  temperature_dimension
+ */
 typedef struct {
     double val, unc;
     _Bool prop_unc;
