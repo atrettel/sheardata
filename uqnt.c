@@ -838,6 +838,18 @@ uqnt celsius_norm( double val, double unc )
     );
 }
 
+uqnt celsius_unif( double val, double half_width )
+{
+    uqnt tmp = uqnt_unif( val, half_width, unit_one() );
+    return celsius_norm( uqnt_val(tmp), uqnt_unc(tmp) );
+}
+
+uqnt celsius_blk( double val )
+{
+    uqnt tmp = celsius_norm( val, 0.0 );
+    return uqnt_blk( uqnt_val(tmp), unit_kelvin() );
+}
+
 // Convert Fahrenheit to Kelvin.
 uqnt fahrenheit_norm( double val, double unc )
 {
@@ -848,4 +860,16 @@ uqnt fahrenheit_norm( double val, double unc )
         ),
         absolute_zero()
     );
+}
+
+uqnt fahrenheit_unif( double val, double half_width )
+{
+    uqnt tmp = uqnt_unif( val, half_width, unit_one() );
+    return fahrenheit_norm( uqnt_val(tmp), uqnt_unc(tmp) );
+}
+
+uqnt fahrenheit_blk( double val )
+{
+    uqnt tmp = fahrenheit_norm( val, 0.0 );
+    return uqnt_blk( uqnt_val(tmp), unit_kelvin() );
 }

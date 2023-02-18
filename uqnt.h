@@ -124,4 +124,8 @@ uqnt standard_atmospheric_pressure(void);
 uqnt standard_gravitational_acceleration(void);
 
 uqnt celsius_norm( double val, double unc );
+uqnt celsius_unif( double val, double half_width );
+uqnt celsius_blk( double val );
 uqnt fahrenheit_norm( double val, double unc );
+uqnt fahrenheit_unif( double val, double half_width );
+uqnt fahrenheit_blk( double val );

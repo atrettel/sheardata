@@ -698,12 +698,48 @@ module uqnt_f
    end interface
 
    interface
+      function celsius_unif(val, half_width) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: celsius_unif
+         real(c_double), value :: val, half_width
+      end function celsius_unif
+   end interface
+
+   interface
+      function celsius_blk(val) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: celsius_blk
+         real(c_double), value :: val
+      end function celsius_blk
+   end interface
+
+   interface
       function fahrenheit_norm(val, unc) bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
          type(uqnt) :: fahrenheit_norm
          real(c_double), value :: val, unc
       end function fahrenheit_norm
+   end interface
+
+   interface
+      function fahrenheit_unif(val, half_width) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: fahrenheit_unif
+         real(c_double), value :: val, half_width
+      end function fahrenheit_unif
+   end interface
+
+   interface
+      function fahrenheit_blk(val) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: fahrenheit_blk
+         real(c_double), value :: val
+      end function fahrenheit_blk
    end interface
 
    interface operator (+)
