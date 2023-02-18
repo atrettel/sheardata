@@ -80,10 +80,13 @@ uqnt unit_yard(void);
 
 uqnt unit_gram(void);
 uqnt unit_pound_mass(void);
+uqnt unit_avoirdupois_ounce(void);
 
 uqnt unit_minute(void);
 uqnt unit_hour(void);
 uqnt unit_day(void);
+
+uqnt unit_rankine(void);
 
 uqnt unit_hertz(void);
 
@@ -92,6 +95,10 @@ uqnt unit_steradian(void);
 uqnt unit_degree(void);
 
 uqnt unit_liter(void);
+uqnt unit_imperial_gallon(void);
+uqnt unit_us_gallon(void);
+uqnt unit_imperial_fluid_ounce(void);
+uqnt unit_us_fluid_ounce(void);
 
 uqnt unit_newton(void);
 uqnt unit_pound_force(void);
@@ -104,7 +111,9 @@ uqnt unit_pound_per_square_inch(void);
 uqnt unit_torr(void);
 
 uqnt unit_joule(void);
-uqnt unit_calorie(void);
+uqnt unit_gram_calorie(void);
+uqnt unit_kilogram_calorie(void);
+uqnt unit_british_thermal_unit(void);
 
 uqnt unit_watt(void);
 

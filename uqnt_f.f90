@@ -433,6 +433,14 @@ module uqnt_f
    end interface
 
    interface
+      function unit_avoirdupois_ounce() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_avoirdupois_ounce
+      end function unit_avoirdupois_ounce
+   end interface
+
+   interface
       function unit_minute() bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
@@ -454,6 +462,14 @@ module uqnt_f
          import uqnt
          type(uqnt) :: unit_day
       end function unit_day
+   end interface
+
+   interface
+      function unit_rankine() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_rankine
+      end function unit_rankine
    end interface
 
    interface
@@ -494,6 +510,38 @@ module uqnt_f
          import uqnt
          type(uqnt) :: unit_liter
       end function unit_liter
+   end interface
+
+   interface
+      function unit_imperial_gallon() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_imperial_gallon
+      end function unit_imperial_gallon
+   end interface
+
+   interface
+      function unit_us_gallon() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_us_gallon
+      end function unit_us_gallon
+   end interface
+
+   interface
+      function unit_imperial_fluid_ounce() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_imperial_fluid_ounce
+      end function unit_imperial_fluid_ounce
+   end interface
+
+   interface
+      function unit_us_fluid_ounce() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_us_fluid_ounce
+      end function unit_us_fluid_ounce
    end interface
 
    interface
@@ -593,11 +641,27 @@ module uqnt_f
    end interface
 
    interface
-      function unit_calorie() bind(c)
+      function unit_gram_calorie() bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
-         type(uqnt) :: unit_calorie
-      end function unit_calorie
+         type(uqnt) :: unit_gram_calorie
+      end function unit_gram_calorie
+   end interface
+
+   interface
+      function unit_kilogram_calorie() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_kilogram_calorie
+      end function unit_kilogram_calorie
+   end interface
+
+   interface
+      function unit_british_thermal_unit() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_british_thermal_unit
+      end function unit_british_thermal_unit
    end interface
 
    interface

@@ -627,6 +627,11 @@ uqnt unit_pound_mass(void)
     return uqnt_mult( uqnt_num(0.45359237), unit_kilogram() );
 }
 
+uqnt unit_avoirdupois_ounce(void)
+{
+    return uqnt_div( unit_pound_mass(), uqnt_num(16.0) );
+}
+
 uqnt unit_minute(void)
 {
     return uqnt_mult( uqnt_num(60.0), unit_second() );
@@ -640,6 +645,11 @@ uqnt unit_hour(void)
 uqnt unit_day(void)
 {
     return uqnt_mult( uqnt_num(24.0), unit_hour() );
+}
+
+uqnt unit_rankine(void)
+{
+    return uqnt_mult( uqnt_num(9.0/5.0), unit_kelvin() );
 }
 
 uqnt unit_hertz(void)
@@ -671,6 +681,29 @@ uqnt unit_liter(void)
         uqnt_num(0.001),
         uqnt_rpow( unit_meter(), ratnum_frac(3,1) )
     );
+}
+
+uqnt unit_imperial_gallon(void)
+{
+    return uqnt_mult( uqnt_num(4.54609), unit_liter() );
+}
+
+uqnt unit_us_gallon(void)
+{
+    return uqnt_mult(
+        uqnt_num(231.0),
+        uqnt_rpow( unit_inch(), ratnum_frac(3,1) )
+    );
+}
+
+uqnt unit_imperial_fluid_ounce(void)
+{
+    return uqnt_div( unit_imperial_gallon(), uqnt_num(160.0) );
+}
+
+uqnt unit_us_fluid_ounce(void)
+{
+    return uqnt_div( unit_us_gallon(), uqnt_num(160.0) );
 }
 
 uqnt unit_newton(void)
@@ -730,9 +763,25 @@ uqnt unit_joule(void)
     return uqnt_mult( unit_newton(), unit_meter() );
 }
 
-uqnt unit_calorie(void)
+uqnt unit_gram_calorie(void)
 {
     return uqnt_mult( uqnt_num(4.184), unit_joule() );
+}
+
+uqnt unit_kilogram_calorie(void)
+{
+    return uqnt_mult( uqnt_num(1000.0), unit_gram_calorie() );
+}
+
+uqnt unit_british_thermal_unit(void)
+{
+    return uqnt_div(
+        uqnt_mult(
+            unit_kilogram_calorie(),
+            uqnt_div( unit_pound_mass(), unit_kilogram() )
+        ),
+        uqnt_div( unit_rankine(), unit_kelvin() )
+    );
 }
 
 uqnt unit_watt(void)
