@@ -122,3 +122,6 @@ uqnt unit_watt(void);
 uqnt absolute_zero(void);
 uqnt standard_atmospheric_pressure(void);
 uqnt standard_gravitational_acceleration(void);
+
+uqnt celsius_norm( double val, double unc );
+uqnt fahrenheit_norm( double val, double unc );

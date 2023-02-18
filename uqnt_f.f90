@@ -609,30 +609,6 @@ module uqnt_f
    end interface
 
    interface
-      function absolute_zero() bind(c)
-         use, intrinsic :: iso_c_binding
-         import uqnt
-         type(uqnt) :: absolute_zero
-      end function absolute_zero
-   end interface
-
-   interface
-      function standard_atmospheric_pressure() bind(c)
-         use, intrinsic :: iso_c_binding
-         import uqnt
-         type(uqnt) :: standard_atmospheric_pressure
-      end function standard_atmospheric_pressure
-   end interface
-
-   interface
-      function standard_gravitational_acceleration() bind(c)
-         use, intrinsic :: iso_c_binding
-         import uqnt
-         type(uqnt) :: standard_gravitational_acceleration
-      end function standard_gravitational_acceleration
-   end interface
-
-   interface
       function unit_pound_per_square_inch() bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
@@ -686,6 +662,48 @@ module uqnt_f
          import uqnt
          type(uqnt) :: unit_watt
       end function unit_watt
+   end interface
+
+   interface
+      function absolute_zero() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: absolute_zero
+      end function absolute_zero
+   end interface
+
+   interface
+      function standard_atmospheric_pressure() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: standard_atmospheric_pressure
+      end function standard_atmospheric_pressure
+   end interface
+
+   interface
+      function standard_gravitational_acceleration() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: standard_gravitational_acceleration
+      end function standard_gravitational_acceleration
+   end interface
+
+   interface
+      function celsius_norm(val, unc) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: celsius_norm
+         real(c_double), value :: val, unc
+      end function celsius_norm
+   end interface
+
+   interface
+      function fahrenheit_norm(val, unc) bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: fahrenheit_norm
+         real(c_double), value :: val, unc
+      end function fahrenheit_norm
    end interface
 
    interface operator (+)

@@ -649,7 +649,7 @@ uqnt unit_day(void)
 
 uqnt unit_rankine(void)
 {
-    return uqnt_mult( uqnt_num(9.0/5.0), unit_kelvin() );
+    return uqnt_mult( uqnt_num(5.0/9.0), unit_kelvin() );
 }
 
 uqnt unit_hertz(void)
@@ -829,3 +829,23 @@ uqnt standard_gravitational_acceleration(void)
     );
 }
 
+// Convert Celsius to Kelvin.
+uqnt celsius_norm( double val, double unc )
+{
+    return uqnt_add(
+        uqnt_norm( val, unc, unit_kelvin() ),
+        absolute_zero()
+    );
+}
+
+// Convert Fahrenheit to Kelvin.
+uqnt fahrenheit_norm( double val, double unc )
+{
+    return uqnt_add(
+        uqnt_subt(
+            uqnt_norm(  val, unc, unit_rankine() ),
+            uqnt_norm( 32.0, 0.0, unit_rankine() )
+        ),
+        absolute_zero()
+    );
+}
