@@ -433,6 +433,70 @@ module uqnt_f
    end interface
 
    interface
+      function unit_minute() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_minute
+      end function unit_minute
+   end interface
+
+   interface
+      function unit_hour() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_hour
+      end function unit_hour
+   end interface
+
+   interface
+      function unit_day() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_day
+      end function unit_day
+   end interface
+
+   interface
+      function unit_hertz() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_hertz
+      end function unit_hertz
+   end interface
+
+   interface
+      function unit_radian() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_radian
+      end function unit_radian
+   end interface
+
+   interface
+      function unit_steradian() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_steradian
+      end function unit_steradian
+   end interface
+
+   interface
+      function unit_degree() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_degree
+      end function unit_degree
+   end interface
+
+   interface
+      function unit_liter() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_liter
+      end function unit_liter
+   end interface
+
+   interface
       function unit_newton() bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
@@ -510,6 +574,38 @@ module uqnt_f
          import uqnt
          type(uqnt) :: unit_pound_per_square_inch
       end function unit_pound_per_square_inch
+   end interface
+
+   interface
+      function unit_torr() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_torr
+      end function unit_torr
+   end interface
+
+   interface
+      function unit_joule() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_joule
+      end function unit_joule
+   end interface
+
+   interface
+      function unit_calorie() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_calorie
+      end function unit_calorie
+   end interface
+
+   interface
+      function unit_watt() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_watt
+      end function unit_watt
    end interface
 
    interface operator (+)

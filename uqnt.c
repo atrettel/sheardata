@@ -627,6 +627,52 @@ uqnt unit_pound_mass(void)
     return uqnt_mult( uqnt_num(0.45359237), unit_kilogram() );
 }
 
+uqnt unit_minute(void)
+{
+    return uqnt_mult( uqnt_num(60.0), unit_second() );
+}
+
+uqnt unit_hour(void)
+{
+    return uqnt_mult( uqnt_num(60.0), unit_minute() );
+}
+
+uqnt unit_day(void)
+{
+    return uqnt_mult( uqnt_num(24.0), unit_hour() );
+}
+
+uqnt unit_hertz(void)
+{
+    return uqnt_div( unit_one(), unit_second() );
+}
+
+uqnt unit_radian(void)
+{
+    return uqnt_div( unit_meter(), unit_meter() );
+}
+
+uqnt unit_steradian(void)
+{
+    return uqnt_div(
+        uqnt_mult( unit_meter(), unit_meter() ),
+        uqnt_mult( unit_meter(), unit_meter() )
+    );
+}
+
+uqnt unit_degree(void)
+{
+    return uqnt_mult( uqnt_num(atan(1.0)/45.0), unit_radian() );
+}
+
+uqnt unit_liter(void)
+{
+    return uqnt_mult(
+        uqnt_num(0.001),
+        uqnt_rpow( unit_meter(), ratnum_frac(3,1) )
+    );
+}
+
 uqnt unit_newton(void)
 {
     return uqnt_div(
@@ -672,6 +718,26 @@ uqnt unit_pound_per_square_inch(void)
         unit_pound_force(),
         uqnt_mult( unit_inch(), unit_inch() )
     );
+}
+
+uqnt unit_torr(void)
+{
+    return uqnt_div( standard_atmospheric_pressure(), uqnt_num(760.0) );
+}
+
+uqnt unit_joule(void)
+{
+    return uqnt_mult( unit_newton(), unit_meter() );
+}
+
+uqnt unit_calorie(void)
+{
+    return uqnt_mult( uqnt_num(4.184), unit_joule() );
+}
+
+uqnt unit_watt(void)
+{
+    return uqnt_div( unit_joule(), unit_second() );
 }
 
 uqnt absolute_zero(void)
