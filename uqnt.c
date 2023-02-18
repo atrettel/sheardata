@@ -732,9 +732,28 @@ uqnt unit_bar(void)
     return uqnt_mult( uqnt_num(100000.0), unit_pascal() );
 }
 
+uqnt unit_millimeter_of_mercury(void)
+{
+    return uqnt_mult( uqnt_num(133.322387415), unit_pascal() );
+}
+
 uqnt unit_inch_of_mercury(void)
 {
-    return uqnt_mult( uqnt_num(3376.85), unit_pascal() );
+    return uqnt_mult(
+        uqnt_div(
+            unit_inch(),
+            uqnt_div(
+                unit_meter(),
+                uqnt_num(1000.0)
+            )
+        ),
+        unit_millimeter_of_mercury()
+    );
+}
+
+uqnt unit_inch_of_water(void)
+{
+    return uqnt_mult( uqnt_num(249.0889), unit_pascal() );
 }
 
 uqnt unit_pascal(void)

@@ -577,11 +577,27 @@ module uqnt_f
    end interface
 
    interface
+      function unit_millimeter_of_mercury() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_millimeter_of_mercury
+      end function unit_millimeter_of_mercury
+   end interface
+
+   interface
       function unit_inch_of_mercury() bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
          type(uqnt) :: unit_inch_of_mercury
       end function unit_inch_of_mercury
+   end interface
+
+   interface
+      function unit_inch_of_water() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_inch_of_water
+      end function unit_inch_of_water
    end interface
 
    interface

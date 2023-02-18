@@ -105,7 +105,9 @@ uqnt unit_pound_force(void);
 
 uqnt unit_atmosphere(void);
 uqnt unit_bar(void);
+uqnt unit_millimeter_of_mercury(void);
 uqnt unit_inch_of_mercury(void);
+uqnt unit_inch_of_water(void);
 uqnt unit_pascal(void);
 uqnt unit_pound_per_square_inch(void);
 uqnt unit_torr(void);
