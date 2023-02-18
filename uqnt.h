@@ -69,6 +69,20 @@ _Bool uqnt_le( uqnt a, uqnt b );
 _Bool uqnt_ge( uqnt a, uqnt b );
 
 uqnt unit_one(void);
+
+uqnt unit_tera(void);
+uqnt unit_giga(void);
+uqnt unit_mega(void);
+uqnt unit_kilo(void);
+uqnt unit_hecto(void);
+uqnt unit_deca(void);
+uqnt unit_deci(void);
+uqnt unit_centi(void);
+uqnt unit_milli(void);
+uqnt unit_micro(void);
+uqnt unit_nano(void);
+uqnt unit_pico(void);
+
 uqnt unit_meter(void);
 uqnt unit_kilogram(void);
 uqnt unit_second(void);

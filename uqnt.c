@@ -542,6 +542,66 @@ uqnt unit_one(void)
     return a;
 }
 
+uqnt unit_tera(void)
+{
+    return uqnt_num(1.0e+12);
+}
+
+uqnt unit_giga(void)
+{
+    return uqnt_num(1.0e+9);
+}
+
+uqnt unit_mega(void)
+{
+    return uqnt_num(1.0e+6);
+}
+
+uqnt unit_kilo(void)
+{
+    return uqnt_num(1.0e+3);
+}
+
+uqnt unit_hecto(void)
+{
+    return uqnt_num(1.0e+2);
+}
+
+uqnt unit_deca(void)
+{
+    return uqnt_num(1.0e+1);
+}
+
+uqnt unit_deci(void)
+{
+    return uqnt_num(1.0e-1);
+}
+
+uqnt unit_centi(void)
+{
+    return uqnt_num(1.0e-2);
+}
+
+uqnt unit_milli(void)
+{
+    return uqnt_num(1.0e-3);
+}
+
+uqnt unit_micro(void)
+{
+    return uqnt_num(1.0e-6);
+}
+
+uqnt unit_nano(void)
+{
+    return uqnt_num(1.0e-9);
+}
+
+uqnt unit_pico(void)
+{
+    return uqnt_num(1.0e-12);
+}
+
 uqnt unit_meter(void)
 {
     uqnt a =

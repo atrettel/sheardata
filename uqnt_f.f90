@@ -361,6 +361,102 @@ module uqnt_f
    end interface
 
    interface
+      function unit_tera() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_tera
+      end function unit_tera
+   end interface
+
+   interface
+      function unit_giga() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_giga
+      end function unit_giga
+   end interface
+
+   interface
+      function unit_mega() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_mega
+      end function unit_mega
+   end interface
+
+   interface
+      function unit_kilo() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_kilo
+      end function unit_kilo
+   end interface
+
+   interface
+      function unit_hecto() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_hecto
+      end function unit_hecto
+   end interface
+
+   interface
+      function unit_deca() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_deca
+      end function unit_deca
+   end interface
+
+   interface
+      function unit_deci() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_deci
+      end function unit_deci
+   end interface
+
+   interface
+      function unit_centi() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_centi
+      end function unit_centi
+   end interface
+
+   interface
+      function unit_milli() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_milli
+      end function unit_milli
+   end interface
+
+   interface
+      function unit_micro() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_micro
+      end function unit_micro
+   end interface
+
+   interface
+      function unit_nano() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_nano
+      end function unit_nano
+   end interface
+
+   interface
+      function unit_pico() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: unit_pico
+      end function unit_pico
+   end interface
+
+   interface
       function unit_meter() bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
