@@ -277,10 +277,10 @@ Licenses for the shear layer data compilation
 ---------------------------------------------
 
 The nature of the project requires two different licenses: one for data and
-another for the source code and documentation.  The data is located in the
-`data` directory.  All files in the `data` directory are licensed under the
-Creative Commons Attribution 4.0 International license (`CC-BY-4.0`).  All
-other files are licensed under the MIT License (`MIT`).
+another for the source code.  All files in the `data` and `docs` directories
+are licensed under the Creative Commons Attribution 4.0 International license
+(`CC-BY-4.0`).  All files in the `src` directory are licensed under the MIT
+License (`MIT`).
 
 A copy of the Creative Commons Attribution 4.0 International license
 (`CC-BY-4.0`) is located at `data/LICENSE.txt`.  A copy of the MIT License
