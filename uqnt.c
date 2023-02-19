@@ -868,6 +868,59 @@ uqnt unit_watt(void)
     return uqnt_div( unit_joule(), unit_second() );
 }
 
+uqnt  u_km(void) { return uqnt_mult( unit_kilo(),  unit_meter() ); }
+uqnt   u_m(void) { return                          unit_meter();   }
+uqnt  u_cm(void) { return uqnt_mult( unit_centi(), unit_meter() ); }
+uqnt  u_mm(void) { return uqnt_mult( unit_milli(), unit_meter() ); }
+uqnt  u_um(void) { return uqnt_mult( unit_micro(), unit_meter() ); }
+uqnt  u_nm(void) { return uqnt_mult( unit_nano(),  unit_meter() ); }
+
+uqnt u_kg(void) { return unit_kilogram(); }
+uqnt  u_g(void) { return     unit_gram(); }
+
+uqnt   u_s(void) { return                          unit_second();   }
+uqnt  u_ms(void) { return uqnt_mult( unit_milli(), unit_second() ); }
+uqnt  u_us(void) { return uqnt_mult( unit_micro(), unit_second() ); }
+uqnt  u_ns(void) { return uqnt_mult( unit_nano(),  unit_second() ); }
+
+uqnt u_K(void) { return unit_kelvin(); };
+
+uqnt u_lbm(void) { return unit_pound_mass(); }
+
+uqnt u_GHz(void) { return uqnt_mult( unit_giga(), unit_hertz() ); }
+uqnt u_MHz(void) { return uqnt_mult( unit_mega(), unit_hertz() ); }
+uqnt u_kHz(void) { return uqnt_mult( unit_kilo(), unit_hertz() ); }
+uqnt  u_Hz(void) { return                         unit_hertz();   }
+
+uqnt u_rad(void) { return unit_radian(); }
+
+uqnt u_sr(void) { return unit_steradian(); }
+
+uqnt   u_L(void) { return                          unit_liter();   }
+uqnt  u_mL(void) { return uqnt_mult( unit_milli(), unit_liter() ); }
+
+uqnt u_N(void) { return unit_newton(); }
+
+uqnt u_lbf(void) { return unit_pound_force(); }
+
+uqnt u_atm(void) { return unit_atmosphere(); };
+
+uqnt  u_kbar(void) { return uqnt_mult( unit_kilo(),  unit_bar() ); }
+uqnt   u_bar(void) { return                          unit_bar();   }
+uqnt  u_mbar(void) { return uqnt_mult( unit_milli(), unit_bar() ); }
+
+uqnt u_GPa(void) { return uqnt_mult( unit_giga(),  unit_pascal() ); }
+uqnt u_MPa(void) { return uqnt_mult( unit_mega(),  unit_pascal() ); }
+uqnt u_kPa(void) { return uqnt_mult( unit_kilo(),  unit_pascal() ); }
+uqnt u_hPa(void) { return uqnt_mult( unit_hecto(), unit_pascal() ); }
+uqnt  u_Pa(void) { return                          unit_pascal();   }
+
+uqnt u_J(void) { return unit_joule(); }
+
+uqnt u_Btu(void) { return unit_british_thermal_unit(); }
+
+uqnt u_W(void) { return unit_watt(); }
+
 uqnt absolute_zero(void)
 {
     return uqnt_mult( uqnt_num(273.15), unit_kelvin() );

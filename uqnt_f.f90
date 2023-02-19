@@ -761,6 +761,294 @@ module uqnt_f
    end interface
 
    interface
+      function u_km() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_km
+      end function u_km
+   end interface
+
+   interface
+      function u_m() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_m
+      end function u_m
+   end interface
+
+   interface
+      function u_cm() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_cm
+      end function u_cm
+   end interface
+
+   interface
+      function u_mm() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_mm
+      end function u_mm
+   end interface
+
+   interface
+      function u_um() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_um
+      end function u_um
+   end interface
+
+   interface
+      function u_nm() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_nm
+      end function u_nm
+   end interface
+
+   interface
+      function u_kg() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_kg
+      end function u_kg
+   end interface
+
+   interface
+      function u_g() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_g
+      end function u_g
+   end interface
+
+   interface
+      function u_s() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_s
+      end function u_s
+   end interface
+
+   interface
+      function u_ms() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_ms
+      end function u_ms
+   end interface
+
+   interface
+      function u_us() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_us
+      end function u_us
+   end interface
+
+   interface
+      function u_ns() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_ns
+      end function u_ns
+   end interface
+
+   interface
+      function u_K() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_K
+      end function u_K
+   end interface
+
+   interface
+      function u_lbm() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_lbm
+      end function u_lbm
+   end interface
+
+   interface
+      function u_GHz() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_GHz
+      end function u_GHz
+   end interface
+
+   interface
+      function u_MHz() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_MHz
+      end function u_MHz
+   end interface
+
+   interface
+      function u_kHz() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_kHz
+      end function u_kHz
+   end interface
+
+   interface
+      function u_Hz() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_Hz
+      end function u_Hz
+   end interface
+
+   interface
+      function u_rad() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_rad
+      end function u_rad
+   end interface
+
+   interface
+      function u_sr() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_sr
+      end function u_sr
+   end interface
+
+   interface
+      function u_L() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_L
+      end function u_L
+   end interface
+
+   interface
+      function u_mL() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_mL
+      end function u_mL
+   end interface
+
+   interface
+      function u_N() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_N
+      end function u_N
+   end interface
+
+   interface
+      function u_lbf() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_lbf
+      end function u_lbf
+   end interface
+
+   interface
+      function u_atm() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_atm
+      end function u_atm
+   end interface
+
+   interface
+      function u_kbar() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_kbar
+      end function u_kbar
+   end interface
+
+   interface
+      function u_bar() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_bar
+      end function u_bar
+   end interface
+
+   interface
+      function u_mbar() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_mbar
+      end function u_mbar
+   end interface
+
+   interface
+      function u_GPa() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_GPa
+      end function u_GPa
+   end interface
+
+   interface
+      function u_MPa() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_MPa
+      end function u_MPa
+   end interface
+
+   interface
+      function u_kPa() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_kPa
+      end function u_kPa
+   end interface
+
+   interface
+      function u_hPa() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_hPa
+      end function u_hPa
+   end interface
+
+   interface
+      function u_Pa() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_Pa
+      end function u_Pa
+   end interface
+
+   interface
+      function u_J() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_J
+      end function u_J
+   end interface
+
+   interface
+      function u_Btu() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_Btu
+      end function u_Btu
+   end interface
+
+   interface
+      function u_W() bind(c)
+         use, intrinsic :: iso_c_binding
+         import uqnt
+         type(uqnt) :: u_W
+      end function u_W
+   end interface
+
+   interface
       function absolute_zero() bind(c)
          use, intrinsic :: iso_c_binding
          import uqnt
