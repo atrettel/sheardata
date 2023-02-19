@@ -1,4 +1,6 @@
 ! Copyright (C) 2023 Andrew Trettel
+!
+! SPDX-License-Identifier: MIT
 module uqnt_f
    use, intrinsic :: iso_c_binding
 

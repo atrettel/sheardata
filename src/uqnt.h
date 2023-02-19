@@ -1,4 +1,8 @@
-// Copyright (C) 2023 Andrew Trettel
+/*
+ * Copyright (C) 2023 Andrew Trettel
+ *
+ * SPDX-License-Identifier: MIT
+ */
 
 /*
  * Rational number data type
