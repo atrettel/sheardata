@@ -1,4 +1,4 @@
-# Copyright (C) 2020-2022 Andrew Trettel
+# Copyright (C) 2020-2023 Andrew Trettel
 #
 # SPDX-License-Identifier: MIT
 
@@ -38,7 +38,7 @@ figure-%-tree-diagram.tex.tmp: $(postprocessing_targets)
 	sed -i "s/article/standalone/g" $@
 	sed -i "/enlarge/d" $@
 
-$(project).tex: ../data/main.tex
+$(project).tex: ../docs/main.tex
 	cp -v $< $@
 
 $(project).pdf: $(tex_dependencies)
@@ -52,7 +52,7 @@ $(project).bcf: $(project).bib
 	$(bib_compiler) $(project)
 	$(latex_compiler) $(project).tex
 
-$(project).bib: ../data/references.bib
+$(project).bib: ../docs/references.bib
 	cp -v $^ $@
 
 .PHONY: clean
